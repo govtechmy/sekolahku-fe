@@ -1,2 +1,0 @@
-# sekolahku-fe
-Sekolahku Frontend
