@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate, useParams } from "react-router-dom";
-import LangWrapper from "./LangWrapper";
+import LangWrapper from "./components/layout/LangWrapper";
 import HomePage from "./pages/Home";
 import AboutPage from "./pages/About";
 import ErrorPage from "./pages/Error";
