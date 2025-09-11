@@ -21,7 +21,7 @@ export default function SectionItemNews({
   return (
     <div className=" w-full">
       <HorizontalCard mainTitle={mainTitle}>
-        {dataItemNews.map((item: any, index: any) => (
+        {dataItemNews.map((item: NewsItem, index: number) => (
           <div
             key={index}
             className="border border-otl-gray-200 rounded-lg p-3 h-[354px] !w-[247px] flex-shrink-0 flex flex-col gap-4.5"

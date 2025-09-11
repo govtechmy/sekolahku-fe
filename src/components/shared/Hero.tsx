@@ -5,9 +5,7 @@ export default function Hero({
   background,
 }: {
   title: string;
-  subtitle?: string;
   search?: React.ReactNode;
-  splaskPrivacyPolicy?: boolean;
   links?: React.ReactNode;
   background?: React.ReactNode;
 }) {

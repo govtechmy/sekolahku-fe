@@ -15,7 +15,7 @@ export default function SectionItemAnalytics({
 }: SectionItemAnalyticsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 border border-otl-gray-200 rounded-lg overflow-hidden">
-      {dataItemAnalytics.map((item: any, index: number) => (
+      {dataItemAnalytics.map((item: AnalyticsItem, index: number) => (
         <div
           key={index}
           className={`
@@ -35,7 +35,7 @@ export default function SectionItemAnalytics({
       `}
         >
           <div className="size-16 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
-            {React.cloneElement(item.icon, { className: "w-8 h-8" })}
+            {React.cloneElement(item.icon as any, { className: "w-8 h-8" })}
           </div>
           <div>
             <div className="text-txt-primary font-body text-body-xl font-semibold">

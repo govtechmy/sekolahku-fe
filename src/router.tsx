@@ -38,9 +38,19 @@ function Redirect404Page() {
 }
 
 function RedirectHomePage() {
-  const { lang } = useParams<{ lang: string | any }>();
+  const { lang } = useParams<{ lang?: string }>();
   const allowedLangs = ["en", "ms"];
-  let langStorage = localStorage.getItem("lang");
-  const targetLang = allowedLangs.includes(lang) ? lang : langStorage;
+  const langStorage = localStorage.getItem("lang");
+
+  let targetLang: string;
+
+  if (lang && allowedLangs.includes(lang)) {
+    targetLang = lang;
+  } else if (langStorage && allowedLangs.includes(langStorage)) {
+    targetLang = langStorage;
+  } else {
+    targetLang = "en"; // fallback
+  }
+
   return <Navigate to={`/${targetLang}/home`} replace />;
 }

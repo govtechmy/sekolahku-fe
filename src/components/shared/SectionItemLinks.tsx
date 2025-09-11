@@ -16,7 +16,7 @@ export default function SectionItemLinks({
 }: SectionItemLinksProps) {
   return (
     <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2  xl:grid-cols-3 ">
-      {dataItemLinks.map((item: any, index: number) => {
+      {dataItemLinks.map((item: LinkItem, index: number) => {
         return (
           <div key={index}>
             <Button
