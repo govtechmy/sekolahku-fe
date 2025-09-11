@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
-import { GlobeIcon, JataNegaraIcon } from "@govtechmy/myds-react/icon";
+import { GlobeIcon } from "@govtechmy/myds-react/icon";
 import {
   Navbar,
-  NavbarLogo,
   NavbarMenu,
   NavbarMenuItem,
   NavbarAction,
