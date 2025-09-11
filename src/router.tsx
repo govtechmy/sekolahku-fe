@@ -13,7 +13,9 @@ export default function AppRoutes() {
       <Route path="/" element={<Navigate to={`/${lang}`} replace />} />
       <Route path=":lang" element={<LangWrapper />}>
         <Route element={<LayoutMain />}>
-          <Route index element={<HomePage />} />
+          {/* no home is not on / but on /home  so redirect */}
+          <Route index element={<RedirectHomePage />} />
+          <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route
             path="testingpage"
@@ -33,4 +35,22 @@ function Redirect404Page() {
   let langStorage = localStorage.getItem("lang");
   const targetLang = allowedLangs.includes(lang) ? lang : langStorage;
   return <Navigate to={`/${targetLang}/404`} replace />;
+}
+
+function RedirectHomePage() {
+  const { lang } = useParams<{ lang?: string }>();
+  const allowedLangs = ["en", "ms"];
+  const langStorage = localStorage.getItem("lang");
+
+  let targetLang: string;
+
+  if (lang && allowedLangs.includes(lang)) {
+    targetLang = lang;
+  } else if (langStorage && allowedLangs.includes(langStorage)) {
+    targetLang = langStorage;
+  } else {
+    targetLang = "en"; // fallback
+  }
+
+  return <Navigate to={`/${targetLang}/home`} replace />;
 }
