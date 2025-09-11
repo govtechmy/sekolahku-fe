@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
-import { SearchIcon, GlobeIcon } from "@govtechmy/myds-react/icon";
+import { GlobeIcon, JataNegaraIcon } from "@govtechmy/myds-react/icon";
 import {
   Navbar,
   NavbarLogo,
   NavbarMenu,
   NavbarMenuItem,
-  NavbarMenuDropdown,
   NavbarAction,
 } from "@govtechmy/myds-react/navbar";
 import {
@@ -19,6 +18,7 @@ import {
 } from "@govtechmy/myds-react/select";
 import { ThemeSwitch } from "@govtechmy/myds-react/theme-switch";
 import i18n from "../../i18n";
+import CartIcon from "../../icons/CartIcon";
 
 export default function NavbarMyds() {
   const navigate = useNavigate();
@@ -49,26 +49,19 @@ export default function NavbarMyds() {
 
   return (
     <Navbar>
-      <NavbarLogo
-        src="https://d2391uizq0pg2.cloudfront.net/common/logo.svg"
-        alt="Malaysian Government Design System"
-      >
-        MYDS
-      </NavbarLogo>
-
+      <div className="flex items-center gap-2.5">
+        <img src="/JataNegara.svg" />
+        <div className="font-heading text-body-lg font-semibold">Sekolahku</div>
+      </div>
       <NavbarMenu
         classNameNavDesktop=""
         classNameNavMobile={`top-[-4vh] ${isHidden ? "block" : "hidden"}`}
       >
-        <NavbarMenuItem href="/menu1">Menu 1</NavbarMenuItem>
-        <NavbarMenuItem href="/menu2">Menu 2</NavbarMenuItem>
-        <NavbarMenuDropdown title="Menu Dropdown">
-          <NavbarMenuItem href="/submenu1">Submenu 1</NavbarMenuItem>
-          <NavbarMenuItem href="/submenu2">Submenu 2</NavbarMenuItem>
-          <NavbarMenuItem href="/submenu3">Submenu 3</NavbarMenuItem>
-          <NavbarMenuItem href="/submenu4">Submenu 4</NavbarMenuItem>
-        </NavbarMenuDropdown>
-        <NavbarMenuItem href="/menu3">Menu 3</NavbarMenuItem>
+        <NavbarMenuItem href="/menu1">Utama</NavbarMenuItem>
+        <NavbarMenuItem href="/menu2">Analitik</NavbarMenuItem>
+        <NavbarMenuItem href="/menu3">Carian Sekolah</NavbarMenuItem>
+        <NavbarMenuItem href="/menu4">Siaran</NavbarMenuItem>
+        <NavbarMenuItem href="/menu5">Acara</NavbarMenuItem>
       </NavbarMenu>
 
       <NavbarAction onClick={() => setIsHidden((prev) => !prev)}>
@@ -80,7 +73,7 @@ export default function NavbarMyds() {
           size="small"
         >
           <ButtonIcon>
-            <SearchIcon />
+            <CartIcon />
           </ButtonIcon>
         </Button>
 
@@ -100,11 +93,12 @@ export default function NavbarMyds() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent align="end" className="font-body rounded-[4px] py-1">
-              <SelectItem value="en">en</SelectItem>
-              <SelectItem value="ms">ms</SelectItem>
+              <SelectItem value="en">BI</SelectItem>
+              <SelectItem value="ms">BM</SelectItem>
             </SelectContent>
           </Select>
         </div>
+        <Button>Log Masuk</Button>
       </NavbarAction>
     </Navbar>
   );
