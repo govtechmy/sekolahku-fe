@@ -13,20 +13,51 @@ import {
 } from "@govtechmy/myds-react/icon";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@govtechmy/myds-react/select";
 
-function SearchBar({ query, setQuery, setFilteredMarkers, markersToShow, setSelected }: any) {
+type SchoolMarker = {
+  lat: number;
+  lng: number;
+  namaSekolah: string;
+  kodSekolah?: string;
+  noTelefon?: string;
+  email?: string;
+  alamatSurat?: string;
+  poskodSurat?: string;
+  bandarSurat?: string;
+  negeri?: string;
+  jenisLabel?: string;
+  kluster?: string;
+  lokasi?: string;
+  skm_150?: boolean;
+  ppd?: string;
+  gred?: string;
+  sesi?: string;
+  bantuan?: string;
+  tarikhTubuh?: string;
+  distance?: number;
+};
+
+type SearchBarProps = {
+  query: string;
+  setQuery: (val: string) => void;
+  setFilteredMarkers: (markers: SchoolMarker[]) => void;
+  markersToShow: SchoolMarker[];
+  setSelected: (marker: SchoolMarker | null) => void;
+};
+
+function SearchBar({ query, setQuery, setFilteredMarkers, markersToShow, setSelected }: SearchBarProps) {
   const map = useMap();
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [suggestions, setSuggestions] = useState<SchoolMarker[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [selectedNegeri, setSelectedNegeri] = useState("");
   const [selectedJenis, setSelectedJenis] = useState("");
 
   const negeriList = useMemo(() => {
-    const unique = Array.from(new Set(markersToShow.map((m: any) => m.negeri).filter(Boolean)));
+    const unique = Array.from(new Set(markersToShow.map((m: SchoolMarker) => m.negeri).filter(Boolean)));
     return unique;
   }, [markersToShow]);
 
-  const jenisList = Array.from(new Set(markersToShow.map((m: any) => m.jenisLabel))).sort();
+  const jenisList = Array.from(new Set(markersToShow.map((m: SchoolMarker) => m.jenisLabel))).sort();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -40,17 +71,17 @@ function SearchBar({ query, setQuery, setFilteredMarkers, markersToShow, setSele
     let filtered = markersToShow;
 
     if (value) {
-      filtered = filtered.filter((marker: any) =>
+      filtered = filtered.filter((marker: SchoolMarker) =>
         marker.namaSekolah.toLowerCase().includes(value.toLowerCase())
       );
     }
 
     if (negeri && negeri !== "all") {
-      filtered = filtered.filter((marker: any) => marker.negeri === negeri);
+      filtered = filtered.filter((marker: SchoolMarker) => marker.negeri === negeri);
     }
 
     if (jenis && jenis !== "all") {
-      filtered = filtered.filter((marker: any) => marker.jenisLabel === jenis);
+      filtered = filtered.filter((marker: SchoolMarker) => marker.jenisLabel === jenis);
     }
 
     setFilteredMarkers(filtered);
@@ -58,7 +89,7 @@ function SearchBar({ query, setQuery, setFilteredMarkers, markersToShow, setSele
   };
 
 
-  const handleSelect = (school: any) => {
+  const handleSelect = (school: SchoolMarker) => {
     setQuery(school.namaSekolah);
     setFilteredMarkers([school]);
     setSelected(school);
@@ -111,8 +142,8 @@ function SearchBar({ query, setQuery, setFilteredMarkers, markersToShow, setSele
                   setFilteredMarkers(markersToShow);
                   setSuggestions([]);
                   setSelected(null);
-                  setSelectedNegeri("");
-                  setSelectedJenis("");
+                  setSelectedNegeri("all");
+                  setSelectedJenis("all");
                 }}
                 className="text-gray-500 hover:text-gray-700"
               >
@@ -138,7 +169,7 @@ function SearchBar({ query, setQuery, setFilteredMarkers, markersToShow, setSele
               >
                 <SelectTrigger 
                   aria-label="Pilih Negeri"
-                  className="w-[150px] justify-between"
+                  className="w-[155px] justify-between"
                 >
                   <SelectValue placeholder="Jenis Negeri" />
                 </SelectTrigger>
@@ -146,11 +177,13 @@ function SearchBar({ query, setQuery, setFilteredMarkers, markersToShow, setSele
                 >
                   <SelectGroup >
                     <SelectItem value="all">Semua Negeri</SelectItem>
-                    {negeriList.map((n: any, idx: number) => (
-                      <SelectItem key={idx} value={n}>
-                        {n}
-                      </SelectItem>
-                    ))}
+                    {negeriList
+                      .filter((n): n is string => typeof n === "string")
+                      .map((n, idx) => (
+                        <SelectItem key={idx} value={n}>
+                          {n}
+                        </SelectItem>
+                      ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -166,18 +199,20 @@ function SearchBar({ query, setQuery, setFilteredMarkers, markersToShow, setSele
               >
                 <SelectTrigger 
                   aria-label="Pilih Jenis"
-                  className="w-[150px] justify-between"
+                  className="w-[155px] justify-between"
                 >
                   <SelectValue placeholder="Jenis Sekolah" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     <SelectItem value="all">Semua Jenis</SelectItem>
-                    {jenisList.map((x: any, idx: number) => (
-                      <SelectItem key={idx} value={x}>
-                        {x}
-                      </SelectItem>
-                    ))}
+                    {jenisList
+                      .filter((x): x is string => typeof x === "string")
+                      .map((x, idx: number) => (
+                        <SelectItem key={idx} value={x}>
+                          {x}
+                        </SelectItem>
+                      ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -233,9 +268,9 @@ function SearchBar({ query, setQuery, setFilteredMarkers, markersToShow, setSele
 export default function SchoolMaps() {
   const initialPosition = { lat: 4.1969, lng: 101.2561 };
   const markersToShow = useMemo(() => schoolMarkers, []);
-  const [selected, setSelected] = useState<any | null>(null);
+  const [selected, setSelected] = useState<SchoolMarker | null>(null);
   const [query, setQuery] = useState("");
-  const [filteredMarkers, setFilteredMarkers] = useState(markersToShow);
+  const [filteredMarkers, setFilteredMarkers] = useState<SchoolMarker[]>(markersToShow);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(initialPosition);
   const [zoom, setZoom] = useState(7);
 
@@ -254,8 +289,8 @@ export default function SchoolMaps() {
           streetViewControl={false}
           mapTypeControl={false}
           fullscreenControl={false}
-          onZoomChanged={(e: any) => setZoom(e.detail.zoom)}
-          onCenterChanged={(e: any) => {
+          onZoomChanged={(e) => setZoom(e.detail.zoom)}
+          onCenterChanged={(e) => {
             const center = e.detail.center;
             setUserLocation(center);
           }}
@@ -278,7 +313,6 @@ export default function SchoolMaps() {
               position={{ lat: selected.lat, lng: selected.lng }}
               onCloseClick={() => {
                 setSelected(null);
-                setFilteredMarkers(markersToShow);
                 setFilteredMarkers(markersToShow);
               }}
               disableAutoPan={false}
