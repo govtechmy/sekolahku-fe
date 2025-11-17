@@ -1,48 +1,82 @@
 import { Button } from "@govtechmy/myds-react/button";
 import CustomChart from "./Chart";
-import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
-export default function Statistic() {
+interface YearlyData {
+  [year: string]: {
+    spm: { daily: number; total: string };
+    stem: { daily: number; total: string };
+    koku: { daily: number; total: string };
+  };
+}
+
+interface ChartBaseData {
+  [category: string]: {
+    [year: string]: number[];
+  };
+}
+
+interface StatisticProps {
+  yearlyData: YearlyData;
+  chartBaseData: ChartBaseData;
+}
+
+export default function Statistic({
+  yearlyData,
+  chartBaseData,
+}: StatisticProps) {
   const [selectedCategory, setSelectedCategory] = useState("Murid");
-  const [selectedYearRange, setSelectedYearRange] = useState({ start: 2020, end: 2021 });
-  const [isDragging, setIsDragging] = useState<'start' | 'end' | null>(null);
+  const [selectedYearRange, setSelectedYearRange] = useState({
+    start: 2020,
+    end: 2021,
+  });
+  const [isDragging, setIsDragging] = useState<"start" | "end" | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
   };
 
-  // Sample data for different years (you can replace with real data)
-  const yearlyData = useMemo(() => ({
-    2020: { spm: { daily: 500, total: "250,000" }, stem: { daily: 150, total: "60,000" }, koku: { daily: 8, total: "280,000" } },
-    2021: { spm: { daily: 600, total: "275,000" }, stem: { daily: 180, total: "65,000" }, koku: { daily: 9, total: "295,000" } },
-    2022: { spm: { daily: 680, total: "295,000" }, stem: { daily: 210, total: "72,000" }, koku: { daily: 10, total: "305,000" } },
-    2023: { spm: { daily: 733, total: "313,352" }, stem: { daily: 231, total: "78,828" }, koku: { daily: 11, total: "313,352" } }
-  }), []);
-
   // Calculate cumulative data based on year range
   const getDataForRange = useCallback(() => {
     const startYear = selectedYearRange.start;
     const endYear = selectedYearRange.end;
-    
-    const cumulativeData = { spm: { daily: 0, total: 0 }, stem: { daily: 0, total: 0 }, koku: { daily: 0, total: 0 } };
-    
+
+    const cumulativeData = {
+      spm: { daily: 0, total: 0 },
+      stem: { daily: 0, total: 0 },
+      koku: { daily: 0, total: 0 },
+    };
+
     for (let year = startYear; year <= endYear; year++) {
       if (yearlyData[year as keyof typeof yearlyData]) {
         const data = yearlyData[year as keyof typeof yearlyData];
         cumulativeData.spm.daily += data.spm.daily;
-        cumulativeData.spm.total += parseInt(data.spm.total.replace(/,/g, ''));
+        cumulativeData.spm.total += parseInt(data.spm.total.replace(/,/g, ""));
         cumulativeData.stem.daily += data.stem.daily;
-        cumulativeData.stem.total += parseInt(data.stem.total.replace(/,/g, ''));
+        cumulativeData.stem.total += parseInt(
+          data.stem.total.replace(/,/g, "")
+        );
         cumulativeData.koku.daily += data.koku.daily;
-        cumulativeData.koku.total += parseInt(data.koku.total.replace(/,/g, ''));
+        cumulativeData.koku.total += parseInt(
+          data.koku.total.replace(/,/g, "")
+        );
       }
     }
-    
+
     return {
-      spm: { daily: cumulativeData.spm.daily, total: cumulativeData.spm.total.toLocaleString() },
-      stem: { daily: cumulativeData.stem.daily, total: cumulativeData.stem.total.toLocaleString() },
-      koku: { daily: cumulativeData.koku.daily, total: cumulativeData.koku.total.toLocaleString() }
+      spm: {
+        daily: cumulativeData.spm.daily,
+        total: cumulativeData.spm.total.toLocaleString(),
+      },
+      stem: {
+        daily: cumulativeData.stem.daily,
+        total: cumulativeData.stem.total.toLocaleString(),
+      },
+      koku: {
+        daily: cumulativeData.koku.daily,
+        total: cumulativeData.koku.total.toLocaleString(),
+      },
     };
   }, [selectedYearRange, yearlyData]);
 
@@ -51,56 +85,68 @@ export default function Statistic() {
   // Convert position to year
   const positionToYear = useCallback((clientX: number) => {
     if (!sliderRef.current) return 2020;
-    
+
     const rect = sliderRef.current.getBoundingClientRect();
-    const percentage = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+    const percentage = Math.max(
+      0,
+      Math.min(100, ((clientX - rect.left) / rect.width) * 100)
+    );
     const yearRange = 2023 - 2020;
     return Math.round(2020 + (percentage / 100) * yearRange);
   }, []);
 
-  const handleSliderClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging) return; // Don't handle clicks while dragging
-    
-    const clickedYear = positionToYear(event.clientX);
-    const { start, end } = selectedYearRange;
-    
-    // Determine which handle to move based on proximity
-    const distanceToStart = Math.abs(clickedYear - start);
-    const distanceToEnd = Math.abs(clickedYear - end);
-    
-    if (distanceToStart <= distanceToEnd) {
-      // Move start handle, but don't let it go beyond end
-      setSelectedYearRange({ start: Math.min(clickedYear, end), end });
-    } else {
-      // Move end handle, but don't let it go before start
-      setSelectedYearRange({ start, end: Math.max(clickedYear, start) });
-    }
-  }, [isDragging, positionToYear, selectedYearRange]);
+  const handleSliderClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (isDragging) return; // Don't handle clicks while dragging
 
-  const handleMouseDown = useCallback((handle: 'start' | 'end') => (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setIsDragging(handle);
-  }, []);
+      const clickedYear = positionToYear(event.clientX);
+      const { start, end } = selectedYearRange;
 
-  const handleMouseMove = useCallback((event: MouseEvent) => {
-    if (!isDragging) return;
-    
-    const newYear = positionToYear(event.clientX);
-    
-    if (isDragging === 'start') {
-      // Don't let start year go beyond end year
-      setSelectedYearRange(prev => ({ 
-        start: Math.min(newYear, prev.end), 
-        end: prev.end 
-      }));
-    } else if (isDragging === 'end') {
-      // Don't let end year go before start year
-      setSelectedYearRange(prev => ({ 
-        start: prev.start, 
-        end: Math.max(newYear, prev.start) 
-      }));
-    }
-  }, [isDragging, positionToYear]);
+      // Determine which handle to move based on proximity
+      const distanceToStart = Math.abs(clickedYear - start);
+      const distanceToEnd = Math.abs(clickedYear - end);
+
+      if (distanceToStart <= distanceToEnd) {
+        // Move start handle, but don't let it go beyond end
+        setSelectedYearRange({ start: Math.min(clickedYear, end), end });
+      } else {
+        // Move end handle, but don't let it go before start
+        setSelectedYearRange({ start, end: Math.max(clickedYear, start) });
+      }
+    },
+    [isDragging, positionToYear, selectedYearRange]
+  );
+
+  const handleMouseDown = useCallback(
+    (handle: "start" | "end") => (event: React.MouseEvent) => {
+      event.stopPropagation();
+      setIsDragging(handle);
+    },
+    []
+  );
+
+  const handleMouseMove = useCallback(
+    (event: MouseEvent) => {
+      if (!isDragging) return;
+
+      const newYear = positionToYear(event.clientX);
+
+      if (isDragging === "start") {
+        // Don't let start year go beyond end year
+        setSelectedYearRange((prev) => ({
+          start: Math.min(newYear, prev.end),
+          end: prev.end,
+        }));
+      } else if (isDragging === "end") {
+        // Don't let end year go before start year
+        setSelectedYearRange((prev) => ({
+          start: prev.start,
+          end: Math.max(newYear, prev.start),
+        }));
+      }
+    },
+    [isDragging, positionToYear]
+  );
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(null);
@@ -109,18 +155,19 @@ export default function Statistic() {
   // Add global mouse event listeners for dragging
   useEffect(() => {
     if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+
       return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
       };
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
   // Calculate slider positions based on selected year range
-  const startPosition = ((selectedYearRange.start - 2020) / (2023 - 2020)) * 100;
+  const startPosition =
+    ((selectedYearRange.start - 2020) / (2023 - 2020)) * 100;
   const endPosition = ((selectedYearRange.end - 2020) / (2023 - 2020)) * 100;
 
   return (
@@ -170,29 +217,44 @@ export default function Statistic() {
             <div className="flex flex-col md:flex-row gap-12 overflow-x-auto">
               <div className="w-full md:w-1/3">
                 <CustomChart
-                  title={`SPM ${selectedYearRange.start === selectedYearRange.end ? selectedYearRange.end : `${selectedYearRange.start}-${selectedYearRange.end}`}`}
+                  title={`SPM ${
+                    selectedYearRange.start === selectedYearRange.end
+                      ? selectedYearRange.end
+                      : `${selectedYearRange.start}-${selectedYearRange.end}`
+                  }`}
                   daily={currentData.spm.daily}
                   total={currentData.spm.total}
                   dataKey="spm"
                   selectedYearRange={selectedYearRange}
+                  chartBaseData={chartBaseData}
                 />
               </div>
               <div className="w-full md:w-1/3">
                 <CustomChart
-                  title={`STEM ${selectedYearRange.start === selectedYearRange.end ? selectedYearRange.end : `${selectedYearRange.start}-${selectedYearRange.end}`}`}
+                  title={`STEM ${
+                    selectedYearRange.start === selectedYearRange.end
+                      ? selectedYearRange.end
+                      : `${selectedYearRange.start}-${selectedYearRange.end}`
+                  }`}
                   daily={currentData.stem.daily}
                   total={currentData.stem.total}
                   dataKey="stem"
                   selectedYearRange={selectedYearRange}
+                  chartBaseData={chartBaseData}
                 />
               </div>
               <div className="w-full md:w-1/3">
                 <CustomChart
-                  title={`Kokurikulum ${selectedYearRange.start === selectedYearRange.end ? selectedYearRange.end : `${selectedYearRange.start}-${selectedYearRange.end}`}`}
+                  title={`Kokurikulum ${
+                    selectedYearRange.start === selectedYearRange.end
+                      ? selectedYearRange.end
+                      : `${selectedYearRange.start}-${selectedYearRange.end}`
+                  }`}
                   daily={currentData.koku.daily}
                   total={currentData.koku.total}
                   dataKey="koku"
                   selectedYearRange={selectedYearRange}
+                  chartBaseData={chartBaseData}
                 />
               </div>
             </div>
@@ -200,58 +262,39 @@ export default function Statistic() {
             {/* Time Series Slider */}
             <div className="flex items-center gap-3 w-full">
               <span className="text-txt-black-500 text-sm">2020</span>
-              <div 
+              <div
                 ref={sliderRef}
                 className="flex-1 h-1.5 bg-otl-gray-200 rounded-full relative cursor-pointer"
                 onClick={handleSliderClick}
               >
                 {/* Fill between start and end handles */}
-                <div 
+                <div
                   className="absolute h-1.5 bg-bg-black-400 rounded-full transition-all duration-200"
-                  style={{ 
-                    left: `${startPosition}%`, 
-                    width: `${endPosition - startPosition}%` 
+                  style={{
+                    left: `${startPosition}%`,
+                    width: `${endPosition - startPosition}%`,
                   }}
                 ></div>
-                
+
                 {/* Start handle */}
-                <div 
+                <div
                   className="absolute w-4.5 h-4.5 bg-white border-2 border-bg-black-400 rounded-full shadow top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center transition-all duration-200 cursor-grab active:cursor-grabbing hover:scale-110 z-10"
                   style={{ left: `${startPosition}%` }}
-                  onMouseDown={handleMouseDown('start')}
-                >
-                  <div className="w-1.5 h-1.5 bg-bg-black-400 rounded-full"></div>
-                </div>
-                
-                {/* End handle */}
-                <div 
-                  className="absolute w-4.5 h-4.5 bg-white border-2 border-bg-black-400 rounded-full shadow top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center transition-all duration-200 cursor-grab active:cursor-grabbing hover:scale-110 z-10"
-                  style={{ left: `${endPosition}%` }}
-                  onMouseDown={handleMouseDown('end')}
+                  onMouseDown={handleMouseDown("start")}
                 >
                   <div className="w-1.5 h-1.5 bg-bg-black-400 rounded-full"></div>
                 </div>
 
-                {/* Year markers */}
-                <div className="absolute top-6 left-0 transform -translate-x-1/2">
-                  <span className="text-xs text-txt-black-400">2020</span>
-                </div>
-                <div className="absolute top-6 left-1/3 transform -translate-x-1/2">
-                  <span className="text-xs text-txt-black-400">2021</span>
-                </div>
-                <div className="absolute top-6 left-2/3 transform -translate-x-1/2">
-                  <span className="text-xs text-txt-black-400">2022</span>
-                </div>
-                <div className="absolute top-6 right-0 transform translate-x-1/2">
-                  <span className="text-xs text-txt-black-400">2023</span>
+                {/* End handle */}
+                <div
+                  className="absolute w-4.5 h-4.5 bg-white border-2 border-bg-black-400 rounded-full shadow top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center transition-all duration-200 cursor-grab active:cursor-grabbing hover:scale-110 z-10"
+                  style={{ left: `${endPosition}%` }}
+                  onMouseDown={handleMouseDown("end")}
+                >
+                  <div className="w-1.5 h-1.5 bg-bg-black-400 rounded-full"></div>
                 </div>
               </div>
               <span className="text-txt-black-500 text-sm">2023</span>
-            </div>
-            
-            {/* Year Range Display */}
-            <div className="text-center text-txt-black-700 text-sm font-medium">
-              Data dari tahun {selectedYearRange.start} hingga {selectedYearRange.end}
             </div>
           </div>
         </div>

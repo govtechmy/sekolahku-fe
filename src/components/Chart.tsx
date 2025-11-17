@@ -14,6 +14,12 @@ interface ChartDataPoint {
   year: number;
 }
 
+interface ChartBaseData {
+  [category: string]: {
+    [year: string]: number[];
+  };
+}
+
 interface ChartProps {
   title: string;
   daily: number;
@@ -21,55 +27,58 @@ interface ChartProps {
   dataKey: string;
   chartData?: ChartDataPoint[];
   selectedYearRange?: { start: number; end: number };
+  chartBaseData: ChartBaseData;
 }
 
 // Generate dynamic chart data based on year range
-const generateChartData = (dataKey: string, yearRange: { start: number; end: number }) => {
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  
-  // Base data for different categories and years
-  const baseData = {
-    spm: {
-      2020: [30, 120, 280, 480, 440, 420, 350, 520, 580, 620, 650, 680],
-      2021: [40, 150, 320, 550, 510, 480, 400, 580, 640, 690, 720, 750],
-      2022: [35, 140, 300, 520, 480, 460, 380, 560, 610, 660, 690, 720],
-      2023: [40, 170, 360, 610, 570, 540, 450, 645, 700, 750, 780, 800],
-    },
-    stem: {
-      2020: [45, 110, 250, 450, 410, 390, 320, 490, 550, 590, 620, 650],
-      2021: [60, 140, 290, 520, 480, 450, 370, 550, 610, 660, 690, 720],
-      2022: [50, 130, 270, 490, 450, 430, 350, 530, 580, 630, 660, 690],
-      2023: [60, 150, 320, 580, 530, 510, 400, 600, 660, 710, 740, 770],
-    },
-    koku: {
-      2020: [35, 130, 270, 470, 430, 410, 330, 510, 570, 610, 640, 670],
-      2021: [50, 160, 310, 540, 500, 470, 390, 570, 630, 680, 710, 740],
-      2022: [45, 150, 290, 510, 470, 450, 370, 550, 600, 650, 680, 710],
-      2023: [50, 160, 340, 590, 550, 520, 420, 620, 680, 730, 760, 790],
-    },
-  };
+const generateChartData = (
+  dataKey: string,
+  yearRange: { start: number; end: number },
+  baseData: ChartBaseData
+) => {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   const data: ChartDataPoint[] = [];
-  
+
   // Generate cumulative data for the selected year range
   for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
     let cumulativeValue = 0;
-    
+
     // Sum up values from start year to end year for each month
     for (let year = yearRange.start; year <= yearRange.end; year++) {
-      if (baseData[dataKey as keyof typeof baseData] && baseData[dataKey as keyof typeof baseData][year as keyof typeof baseData[keyof typeof baseData]]) {
-        const yearData = baseData[dataKey as keyof typeof baseData][year as keyof typeof baseData[keyof typeof baseData]] as number[];
+      if (
+        baseData[dataKey as keyof typeof baseData] &&
+        baseData[dataKey as keyof typeof baseData][
+          year as keyof (typeof baseData)[keyof typeof baseData]
+        ]
+      ) {
+        const yearData = baseData[dataKey as keyof typeof baseData][
+          year as keyof (typeof baseData)[keyof typeof baseData]
+        ] as number[];
         cumulativeValue += yearData[monthIndex] || 0;
       }
     }
-    
+
     data.push({
       month: months[monthIndex],
       value: cumulativeValue,
       year: yearRange.end,
     });
   }
-  
+
   return data;
 };
 
@@ -79,8 +88,13 @@ export default function CustomChart({
   total,
   dataKey,
   selectedYearRange = { start: 2020, end: 2023 },
+  chartBaseData,
 }: ChartProps) {
-  const chartData = generateChartData(dataKey, selectedYearRange);
+  const chartData = generateChartData(
+    dataKey,
+    selectedYearRange,
+    chartBaseData
+  );
 
   return (
     <div>
