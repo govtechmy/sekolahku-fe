@@ -150,7 +150,7 @@ export default function CustomChart({
               fontSize={10}
               tickLine={false}
               axisLine={false}
-              width={30}
+              width={40}
             />
             <Tooltip
               contentStyle={{

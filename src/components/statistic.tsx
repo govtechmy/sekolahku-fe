@@ -1,10 +1,12 @@
 import { Button } from "@govtechmy/myds-react/button";
 import CustomChart from "./Chart";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 
 export default function Statistic() {
   const [selectedCategory, setSelectedCategory] = useState("Murid");
   const [selectedYearRange, setSelectedYearRange] = useState({ start: 2020, end: 2021 });
+  const [isDragging, setIsDragging] = useState<'start' | 'end' | null>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
@@ -46,20 +48,80 @@ export default function Statistic() {
 
   const currentData = getDataForRange();
 
-  const handleSliderDrag = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    const slider = event.currentTarget;
-    const rect = slider.getBoundingClientRect();
-    const percentage = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+  // Convert position to year
+  const positionToYear = useCallback((clientX: number) => {
+    if (!sliderRef.current) return 2020;
     
-    // Convert percentage to year (2020 to 2023)
+    const rect = sliderRef.current.getBoundingClientRect();
+    const percentage = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
     const yearRange = 2023 - 2020;
-    const selectedYear = Math.round(2020 + (percentage / 100) * yearRange);
-    
-    setSelectedYearRange({ start: 2020, end: Math.max(2020, selectedYear) });
+    return Math.round(2020 + (percentage / 100) * yearRange);
   }, []);
 
-  // Calculate slider position based on selected year range
-  const sliderPosition = ((selectedYearRange.end - 2020) / (2023 - 2020)) * 100;
+  const handleSliderClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    if (isDragging) return; // Don't handle clicks while dragging
+    
+    const clickedYear = positionToYear(event.clientX);
+    const { start, end } = selectedYearRange;
+    
+    // Determine which handle to move based on proximity
+    const distanceToStart = Math.abs(clickedYear - start);
+    const distanceToEnd = Math.abs(clickedYear - end);
+    
+    if (distanceToStart <= distanceToEnd) {
+      // Move start handle, but don't let it go beyond end
+      setSelectedYearRange({ start: Math.min(clickedYear, end), end });
+    } else {
+      // Move end handle, but don't let it go before start
+      setSelectedYearRange({ start, end: Math.max(clickedYear, start) });
+    }
+  }, [isDragging, positionToYear, selectedYearRange]);
+
+  const handleMouseDown = useCallback((handle: 'start' | 'end') => (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsDragging(handle);
+  }, []);
+
+  const handleMouseMove = useCallback((event: MouseEvent) => {
+    if (!isDragging) return;
+    
+    const newYear = positionToYear(event.clientX);
+    
+    if (isDragging === 'start') {
+      // Don't let start year go beyond end year
+      setSelectedYearRange(prev => ({ 
+        start: Math.min(newYear, prev.end), 
+        end: prev.end 
+      }));
+    } else if (isDragging === 'end') {
+      // Don't let end year go before start year
+      setSelectedYearRange(prev => ({ 
+        start: prev.start, 
+        end: Math.max(newYear, prev.start) 
+      }));
+    }
+  }, [isDragging, positionToYear]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(null);
+  }, []);
+
+  // Add global mouse event listeners for dragging
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp]);
+
+  // Calculate slider positions based on selected year range
+  const startPosition = ((selectedYearRange.start - 2020) / (2023 - 2020)) * 100;
+  const endPosition = ((selectedYearRange.end - 2020) / (2023 - 2020)) * 100;
 
   return (
     <div className="flex flex-col py-16 max-lg:px-10 px-[109px]">
@@ -139,18 +201,50 @@ export default function Statistic() {
             <div className="flex items-center gap-3 w-full">
               <span className="text-txt-black-500 text-sm">2020</span>
               <div 
+                ref={sliderRef}
                 className="flex-1 h-1.5 bg-otl-gray-200 rounded-full relative cursor-pointer"
-                onClick={handleSliderDrag}
+                onClick={handleSliderClick}
               >
+                {/* Fill between start and end handles */}
                 <div 
                   className="absolute h-1.5 bg-bg-black-400 rounded-full transition-all duration-200"
-                  style={{ width: `${sliderPosition}%` }}
+                  style={{ 
+                    left: `${startPosition}%`, 
+                    width: `${endPosition - startPosition}%` 
+                  }}
                 ></div>
-                <div className="absolute w-4.5 h-4.5 bg-white border-2 border-bg-black-400 rounded-full shadow left-0 top-1/2 -translate-y-1/2 -translate-x-0 flex items-center justify-center"></div>
+                
+                {/* Start handle */}
                 <div 
-                  className="absolute w-4.5 h-4.5 bg-white border-2 border-bg-black-400 rounded-full shadow top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center transition-all duration-200 cursor-grab active:cursor-grabbing"
-                  style={{ left: `${sliderPosition}%` }}
-                ></div>
+                  className="absolute w-4.5 h-4.5 bg-white border-2 border-bg-black-400 rounded-full shadow top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center transition-all duration-200 cursor-grab active:cursor-grabbing hover:scale-110 z-10"
+                  style={{ left: `${startPosition}%` }}
+                  onMouseDown={handleMouseDown('start')}
+                >
+                  <div className="w-1.5 h-1.5 bg-bg-black-400 rounded-full"></div>
+                </div>
+                
+                {/* End handle */}
+                <div 
+                  className="absolute w-4.5 h-4.5 bg-white border-2 border-bg-black-400 rounded-full shadow top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center transition-all duration-200 cursor-grab active:cursor-grabbing hover:scale-110 z-10"
+                  style={{ left: `${endPosition}%` }}
+                  onMouseDown={handleMouseDown('end')}
+                >
+                  <div className="w-1.5 h-1.5 bg-bg-black-400 rounded-full"></div>
+                </div>
+
+                {/* Year markers */}
+                <div className="absolute top-6 left-0 transform -translate-x-1/2">
+                  <span className="text-xs text-txt-black-400">2020</span>
+                </div>
+                <div className="absolute top-6 left-1/3 transform -translate-x-1/2">
+                  <span className="text-xs text-txt-black-400">2021</span>
+                </div>
+                <div className="absolute top-6 left-2/3 transform -translate-x-1/2">
+                  <span className="text-xs text-txt-black-400">2022</span>
+                </div>
+                <div className="absolute top-6 right-0 transform translate-x-1/2">
+                  <span className="text-xs text-txt-black-400">2023</span>
+                </div>
               </div>
               <span className="text-txt-black-500 text-sm">2023</span>
             </div>
@@ -158,7 +252,6 @@ export default function Statistic() {
             {/* Year Range Display */}
             <div className="text-center text-txt-black-700 text-sm font-medium">
               Data dari tahun {selectedYearRange.start} hingga {selectedYearRange.end}
-              {selectedYearRange.start === selectedYearRange.end && ` (${selectedYearRange.end})`}
             </div>
           </div>
         </div>
