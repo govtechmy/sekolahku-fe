@@ -16,6 +16,7 @@ import SectionItemLinks from "../components/shared/SectionItemLinks";
 import Hero from "../components/shared/Hero";
 import SearchBarHome from "../components/shared/SearchBarHome";
 import { Button } from "@govtechmy/myds-react/button";
+import Statistic from "../components/statistic";
 
 export default function HomePage() {
   const dataItemNews = [
@@ -262,6 +263,9 @@ export default function HomePage() {
         title="Pautan Popular bagi guru, pelajar dan ibu bapa"
         children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
       />
+
+      <Statistic />
+
     </div>
   );
 }
