@@ -1,0 +1,22 @@
+export type SchoolMarker = {
+  lat: number;
+  lng: number;
+  namaSekolah: string;
+  kodSekolah?: string;
+  noTelefon?: string;
+  email?: string;
+  alamatSurat?: string;
+  poskodSurat?: string;
+  bandarSurat?: string;
+  negeri?: string;
+  jenisLabel?: string;
+  kluster?: string;
+  lokasi?: string;
+  skm_150?: boolean;
+  ppd?: string;
+  gred?: string;
+  sesi?: string;
+  bantuan?: string;
+  tarikhTubuh?: string;
+  distance?: number;
+};

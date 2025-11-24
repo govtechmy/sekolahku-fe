@@ -1,0 +1,76 @@
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@govtechmy/myds-react/select";
+
+type FilterDropdownsProps = {
+  selectedNegeri: string;
+  selectedJenis: string;
+  negeriList: (string | undefined)[];
+  jenisList: (string | undefined)[];
+  onNegeriChange: (value: string) => void;
+  onJenisChange: (value: string) => void;
+};
+
+export function FilterDropdowns({
+  selectedNegeri,
+  selectedJenis,
+  negeriList,
+  jenisList,
+  onNegeriChange,
+  onJenisChange,
+}: FilterDropdownsProps) {
+  return (
+    <div className="px-3 py-2 border-t border-gray-200 flex gap-2 text-sm">
+      <Select
+        size="small"
+        variant="outline"
+        onValueChange={onNegeriChange}
+        value={selectedNegeri}
+      >
+        <SelectTrigger aria-label="Pilih Negeri" className="w-[155px] justify-between">
+          <SelectValue placeholder="Jenis Negeri" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value="all">Semua Negeri</SelectItem>
+            {negeriList
+              .filter((n): n is string => typeof n === "string")
+              .map((n, idx) => (
+                <SelectItem key={idx} value={n}>
+                  {n}
+                </SelectItem>
+              ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+      <Select
+        size="small"
+        variant="outline"
+        onValueChange={onJenisChange}
+        value={selectedJenis}
+      >
+        <SelectTrigger aria-label="Pilih Jenis" className="w-[155px] justify-between">
+          <SelectValue placeholder="Jenis Sekolah" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value="all">Semua Jenis</SelectItem>
+            {jenisList
+              .filter((x): x is string => typeof x === "string")
+              .map((x, idx: number) => (
+                <SelectItem key={idx} value={x}>
+                  {x}
+                </SelectItem>
+              ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
