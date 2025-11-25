@@ -66,7 +66,7 @@ export const dataItemNews = [
   {
     imageSrc: "/utama/newsitem/2.png",
     imageAlt: "Pelajar Belajar",
-    header: "Penggumuman",
+    header: "Pengumuman",
     headerType: "Success",
     title: "Jadual Peperiksaan Akhir Tahun 2024",
     date: "10 FEB 2024",
@@ -82,7 +82,7 @@ export const dataItemNews = [
   {
     imageSrc: "/utama/newsitem/4.png",
     imageAlt: "Pelajar Belajar",
-    header: "Penggumuman",
+    header: "Pengumuman",
     headerType: "Success",
     title: "Jadual Peperiksaan SPM 2025",
     date: "5 FEB 2024",
@@ -98,7 +98,7 @@ export const dataItemNews = [
   {
     imageSrc: "/utama/newsitem/4.png",
     imageAlt: "Pelajar Belajar",
-    header: "Penggumuman",
+    header: "Pengumuman",
     headerType: "Success",
     title: "Jadual Peperiksaan SPM 2025",
     date: "5 FEB 2024",

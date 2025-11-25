@@ -3,6 +3,7 @@ import LangWrapper from "./components/layout/LangWrapper";
 import HomePage from "./pages/Home";
 import AboutPage from "./pages/About";
 import SchoolMapsPage from "./pages/SchoolMaps";
+import Siaran from "./pages/Siaran";
 import ErrorPage from "./pages/Error";
 import LayoutMain from "./components/layout/LayoutMain";
 
@@ -19,6 +20,7 @@ export default function AppRoutes() {
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="carian-sekolah" element={<SchoolMapsPage />} />
+          <Route path="siaran" element={<Siaran />} />
           <Route
             path="testingpage"
             element={<div> this is testing page</div>}

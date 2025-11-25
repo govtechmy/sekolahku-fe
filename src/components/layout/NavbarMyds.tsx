@@ -59,7 +59,7 @@ export default function NavbarMyds() {
         <NavbarMenuItem href="/menu1">Utama</NavbarMenuItem>
         <NavbarMenuItem href="/menu2">Analitik</NavbarMenuItem>
         <NavbarMenuItem href="carian-sekolah">Carian Sekolah</NavbarMenuItem>
-        <NavbarMenuItem href="/menu4">Siaran</NavbarMenuItem>
+        <NavbarMenuItem href="siaran">Siaran</NavbarMenuItem>
         <NavbarMenuItem href="/menu5">Acara</NavbarMenuItem>
       </NavbarMenu>
 
