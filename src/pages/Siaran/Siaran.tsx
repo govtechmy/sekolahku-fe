@@ -1,5 +1,5 @@
 import Hero from "../../components/shared/Hero"
-import SearchBarMain from "../../components/shared/SeachBar"
+import SearchBarMain from "../../components/shared/SearchBar";
 import Card from "../../components/shared/Cards";
 import { DateRangePicker } from "@govtechmy/myds-react/daterange-picker";
 import { dataItemNews } from "../../contentData";

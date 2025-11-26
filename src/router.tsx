@@ -9,7 +9,7 @@ import LayoutMain from "./components/layout/LayoutMain";
 import SiaranId from "./pages/Siaran/SiaranId";
 
 export default function AppRoutes() {
-  let lang = localStorage.getItem("lang");
+  const lang = localStorage.getItem("lang");
 
   return (
     <Routes>
@@ -38,7 +38,7 @@ export default function AppRoutes() {
 function Redirect404Page() {
   const { lang } = useParams<{ lang: string | any }>();
   const allowedLangs = ["en", "ms"];
-  let langStorage = localStorage.getItem("lang");
+  const langStorage = localStorage.getItem("lang");
   const targetLang = allowedLangs.includes(lang) ? lang : langStorage;
   return <Navigate to={`/${targetLang}/404`} replace />;
 }

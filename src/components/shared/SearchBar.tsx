@@ -5,12 +5,10 @@ import {
     SearchBarSearchButton,
     SearchBarResults,
     SearchBarResultsList,
-    SearchBarResultsItem,
     SearchBarClearButton,
     SearchBarHint,
   } from "@govtechmy/myds-react/search-bar";
   import { Pill } from "@govtechmy/myds-react/pill";
-  import { ChevronRightIcon, UserIcon } from "@govtechmy/myds-react/icon";
   import { useState } from "react";
   
   export default function SearchBarMain({

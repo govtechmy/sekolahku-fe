@@ -9,10 +9,12 @@ import {
     BreadcrumbPage,
   } from "@govtechmy/myds-react/breadcrumb";
   import { ClockIcon, LinkDiagonalIcon, EmailIcon, FacebookIcon, TwitterXIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
+import { clx } from "@govtechmy/myds-react/utils";
 
 export default function SiaranId() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const { lang } = useParams<{ lang: string }>();
     
     // Find the news item by ID
     const newsItem = dataItemNews.find(item => item.id === id);
@@ -24,7 +26,7 @@ export default function SiaranId() {
                 <div className="max-w-4xl mx-auto text-center">
                     <h1 className="text-3xl font-bold mb-4">Siaran Tidak Dijumpai</h1>
                     <p className="text-gray-600 mb-6">Maaf, siaran yang anda cari tak wujud.</p>
-                    <Button onClick={() => navigate('/ms/siaran')}>
+                    <Button onClick={() => navigate(`/${lang}/siaran`)}>
                         Kembali ke Siaran
                     </Button>
                 </div>
@@ -37,7 +39,7 @@ export default function SiaranId() {
           <div className="flex flex-col gap-6 max-w-[825px]">
             <Breadcrumb className="md:px-10">
                 <BreadcrumbItem>
-                    <BreadcrumbLink href="/siaran">Siaran</BreadcrumbLink>
+                    <BreadcrumbLink href={`${lang}/siaran`}>Siaran</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
@@ -46,15 +48,12 @@ export default function SiaranId() {
             </Breadcrumb>
            
             <div className="flex flex-col gap-3 md:px-10">
-                {newsItem.header === "Berita" ? (
-                    <span className="text-txt-primary text-sm font-semibold">
-                        {newsItem.header}
-                    </span>
-                ) : (
-                    <span className="text-success-700 text-sm font-semibold">
-                        {newsItem.header}
-                        </span>
-                )}
+                <span className={
+                    clx("text-sm font-semibold", 
+                    newsItem.header === "Berita" ? "text-txt-primary" : "text-success-700"
+                )}>
+                    {newsItem.header}
+                </span>
                 <p className=" text-2xl font-semibold">{newsItem.title}</p>
 
                 <div className=" flex flex-row gap-2 text-bg-black-500">

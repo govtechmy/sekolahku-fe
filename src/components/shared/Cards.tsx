@@ -1,7 +1,10 @@
 import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "@govtechmy/myds-react/icon";
+import { clx } from "@govtechmy/myds-react/utils";
+import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useRef, createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
+
 
 interface HorizontalCardContextType {
   scrollRef: React.RefObject<HTMLDivElement | null>;
@@ -13,6 +16,7 @@ interface HorizontalCardContextType {
 }
 
 const HorizontalCardContext = createContext<HorizontalCardContextType | null>(null);
+const scrollAmount = 248 + 18;
 
 const useHorizontalCard = () => {
   const context = useContext(HorizontalCardContext);
@@ -80,7 +84,6 @@ function HorizontalCardArrowButton({ direction }: HorizontalCardArrowButtonProps
   
   const handleClick = () => {
     let newIndex = activeIndex;
-    const scrollAmount = 248 + 18;
     
     if (direction === 'left' && activeIndex > 0) {
       newIndex = activeIndex - 1;
@@ -123,79 +126,23 @@ function HorizontalCardArrowButton({ direction }: HorizontalCardArrowButtonProps
 
 // Numbered pagination with navigation arrows
 function HorizontalCardDots() {
-  const { activeIndex, setActiveIndex, totalPages, scrollRef } = useHorizontalCard();
-  const scrollAmount = 248 + 18;
+  const { activeIndex, setActiveIndex, totalPages } = useHorizontalCard();
 
-  const scrollToIndex = (index: number) => {
-    if (scrollRef.current) {
-      const scrollPosition = scrollAmount * index;
-      scrollRef.current.scrollTo({ left: scrollPosition, behavior: "smooth" });
-    }
-    setActiveIndex(index);
+  const handlePageChange = (page: number) => {
+    setActiveIndex(page - 1);
   };
 
-  const handlePrevious = () => {
-    if (activeIndex > 0) {
-      scrollToIndex(activeIndex - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (activeIndex < totalPages - 1) {
-      scrollToIndex(activeIndex + 1);
-    }
-  };
-
-  const visiblePages = Array.from({ length: totalPages }, (_, i) => i).filter(
-    (pageIndex) => pageIndex >= activeIndex
-  );
-
-  const firstNumber = activeIndex === 0;
-  const lastNumber = activeIndex === totalPages - 1;
+  if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center gap-2">
-      <button
-        onClick={handlePrevious}
-        disabled={firstNumber}
-        className={`w-10 h-10 flex items-center justify-center border rounded-md transition-all ${
-          firstNumber
-            ? 'border-gray-200 bg-gray-200 cursor-not-allowed' 
-            : 'border-gray-200 hover:bg-primary-700 hover:border-primary-700 hover:text-white cursor-pointer'
-        }`}
-        aria-label="Previous page"
-      >
-        <ChevronLeftIcon className="size-5" />
-      </button>
-      <div className="flex items-center gap-2">
-        {visiblePages.map((pageIndex) => (
-          <button
-            key={pageIndex}
-            onClick={() => scrollToIndex(pageIndex)}
-            className={`w-10 h-10 px-2 rounded transition-all duration-300 text-sm font-medium ${
-              pageIndex === activeIndex
-                ? "bg-primary-100 text-txt-primary"
-                : ""
-            }`}
-          >
-            {pageIndex + 1}
-          </button>
-        ))}
-      </div>
-
-      <button
-        onClick={handleNext}
-        disabled={lastNumber}
-        className={`w-10 h-10 flex items-center justify-center border rounded-md transition-all ${
-          lastNumber
-            ? 'border-gray-200 bg-gray-200 cursor-not-allowed'
-            : 'border-gray-200 hover:bg-primary-700 hover:border-primary-700 hover:text-white cursor-pointer'
-        }`}
-        aria-label="Next page"
-      >
-        <ChevronRightIcon className="size-5" />
-      </button>
-    </div>
+    <AutoPagination
+      page={activeIndex + 1} // Convert to 1-based index for AutoPagination
+      limit={1} // Items per page (not relevant for our use case, but required)
+      count={totalPages} // Total number of pages
+      type="default"
+      maxDisplay={5} // Maximum number of page buttons to display
+      onPageChange={handlePageChange}
+    />
   );
 }
 
@@ -212,16 +159,6 @@ interface HorizontalCardItemProps {
   }
 
 function HorizontalCardItem({ item, className = "", onClick }: HorizontalCardItemProps) {
-    const getHeaderStyles = (header: string) => {
-        switch (header.toLowerCase()) {
-          case 'berita':
-            return 'text-txt-primary';
-          case 'pengumuman':
-            return 'text-success-700';
-          default:
-            return 'text-txt-black-900';
-        }
-      };
     return (
       <div
         className={`border border-otl-gray-200 rounded-lg p-2 md:p-3 h-[260px] sm:h-[300px] md:h-[354px] w-full flex flex-col cursor-pointer ${className}`}
@@ -234,7 +171,11 @@ function HorizontalCardItem({ item, className = "", onClick }: HorizontalCardIte
         />
 
         <div className="flex flex-col gap-1.5 md:gap-2 px-2 md:px-3 flex-1 min-h-0 overflow-hidden pt-2 md:pt-3">
-            <p className={`text-xs md:text-sm font-semibold flex-shrink-0 ${getHeaderStyles(item.header)}`}>
+            <p className={clx(
+                "text-xs md:text-sm font-semibold flex-shrink-0",
+                item.header === 'Berita' && 'text-txt-primary',
+                item.header === 'Pengumuman' && 'text-success-700',
+            )}>
                 {item.header}
             </p>
 
