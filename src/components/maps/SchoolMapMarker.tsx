@@ -1,5 +1,14 @@
-import { AdvancedMarker } from "@vis.gl/react-google-maps";
+import { Marker } from "react-leaflet";
+import L from "leaflet";
 import type { SchoolMarker } from "../../types/maps";
+
+// Custom school icon
+const schoolIcon = new L.Icon({
+  iconUrl: "/images/iconSchool.png",
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
 
 type SchoolMapMarkerProps = {
   school: SchoolMarker;
@@ -8,15 +17,12 @@ type SchoolMapMarkerProps = {
 
 export function SchoolMapMarker({ school, onClick }: SchoolMapMarkerProps) {
   return (
-    <AdvancedMarker
-      position={{ lat: school.lat, lng: school.lng }}
-      onClick={onClick}
-    >
-      <img
-        src={"/images/iconSchool.png"}
-        alt="School"
-        style={{ width: 32, height: 32 }}
-      />
-    </AdvancedMarker>
+    <Marker
+      position={[school.lat, school.lng]}
+      icon={schoolIcon}
+      eventHandlers={{
+        click: onClick,
+      }}
+    />
   );
 }

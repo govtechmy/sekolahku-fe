@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { useMap } from "@vis.gl/react-google-maps";
 import {
   SearchIcon,
   CrossIcon,
@@ -16,6 +15,8 @@ type MapSearchBarProps = {
   setFilteredMarkers: (markers: SchoolMarker[]) => void;
   markersToShow: SchoolMarker[];
   setSelected: (marker: SchoolMarker | null) => void;
+  panTo?: (lat: number, lng: number) => void;
+  setZoom?: (zoom: number) => void;
 };
 
 export function MapSearchBar({
@@ -24,8 +25,9 @@ export function MapSearchBar({
   setFilteredMarkers,
   markersToShow,
   setSelected,
+  panTo,
+  setZoom,
 }: MapSearchBarProps) {
-  const map = useMap();
   const [suggestions, setSuggestions] = useState<SchoolMarker[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("");
@@ -74,8 +76,8 @@ export function MapSearchBar({
     setQuery(school.namaSekolah);
     setFilteredMarkers([school]);
     setSelected(school);
-    map?.panTo({ lat: school.lat, lng: school.lng });
-    map?.setZoom(14);
+    panTo?.(school.lat, school.lng);
+    setZoom?.(14);
     setSuggestions([school]);
   };
 
@@ -90,8 +92,8 @@ export function MapSearchBar({
 
   return (
     <div
-      className={`absolute flex justify-start pointer-events-none w-[350px] transition-all 
-        ${isExpanded ? "top-0 left-0" : "top-2 left-2"}
+      className={`absolute flex justify-start pointer-events-none w-[350px] transition-all z-[500] 
+        ${isExpanded ? "top-0 left-0" : "top-5 left-16"}
       `}
     >
       <div
@@ -121,7 +123,7 @@ export function MapSearchBar({
               value={query}
               onChange={handleSearch}
               placeholder="Carian Sekolah"
-              className="flex-1 px-2 text-sm text-gray-700 focus:outline-none"
+              className="flex-1 px-2 text-sm text-gray-700 focus:outline-none z-100"
               readOnly={!isExpanded}
             />
 
