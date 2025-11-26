@@ -5,6 +5,7 @@ import AboutPage from "./pages/About";
 import SchoolMapsPage from "./pages/SchoolMaps";
 import ErrorPage from "./pages/Error";
 import LayoutMain from "./components/layout/LayoutMain";
+import SchoolProfile from "./pages/SchoolProfile";
 
 export default function AppRoutes() {
   let lang = localStorage.getItem("lang");
@@ -19,6 +20,7 @@ export default function AppRoutes() {
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="carian-sekolah" element={<SchoolMapsPage />} />
+          <Route path="halaman-sekolah" element={<SchoolProfile />} />
           <Route
             path="testingpage"
             element={<div> this is testing page</div>}

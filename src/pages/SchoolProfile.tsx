@@ -13,7 +13,7 @@ export default function SchoolProfile() {
               <div className="text-txt-primary font-semibold gap-6 pb-6">NAMA SEKOLAH</div>
               {/* Text/txt-black-900 Text/txt-primary */}
               <div className="text-txt-black-900 text-heading-md font-semibold gap-7 pb-7 max-w-[495px]">Maktab Sultan Abu Bakar (English College)</div>
-              <div className="text-txt-primary font-semibold">JENIS SEKOLAH <text className="text-txt-black-500 font-medium"> : SMK </text></div>
+              <div className="text-txt-primary font-semibold">JENIS SEKOLAH <div className="text-txt-black-500 font-medium"> : SMK </div></div>
             </div>
             <div className="py-[50px]">
               <img
