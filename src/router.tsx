@@ -3,9 +3,10 @@ import LangWrapper from "./components/layout/LangWrapper";
 import HomePage from "./pages/Home";
 import AboutPage from "./pages/About";
 import SchoolMapsPage from "./pages/SchoolMaps";
-import Siaran from "./pages/Siaran";
+import Siaran from "./pages/Siaran/Siaran";
 import ErrorPage from "./pages/Error";
 import LayoutMain from "./components/layout/LayoutMain";
+import SiaranId from "./pages/Siaran/SiaranId";
 
 export default function AppRoutes() {
   let lang = localStorage.getItem("lang");
@@ -21,6 +22,7 @@ export default function AppRoutes() {
           <Route path="about" element={<AboutPage />} />
           <Route path="carian-sekolah" element={<SchoolMapsPage />} />
           <Route path="siaran" element={<Siaran />} />
+          <Route path="siaran/:id" element={<SiaranId />} />
           <Route
             path="testingpage"
             element={<div> this is testing page</div>}

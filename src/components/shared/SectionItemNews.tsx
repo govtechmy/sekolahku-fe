@@ -4,7 +4,6 @@ type NewsItem = {
   imageSrc: string;
   imageAlt: string;
   header: string;
-  headerType: string;
   title: string;
   date: string;
 };

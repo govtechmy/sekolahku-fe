@@ -1,19 +1,20 @@
-import Hero from "../components/shared/Hero"
-import SearchBarMain from "../components/shared/SeachBar"
-import Card from "../components/shared/Cards";
+import Hero from "../../components/shared/Hero"
+import SearchBarMain from "../../components/shared/SeachBar"
+import Card from "../../components/shared/Cards";
 import { DateRangePicker } from "@govtechmy/myds-react/daterange-picker";
-import { dataItemNews } from "../contentData";
+import { dataItemNews } from "../../contentData";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-
-const CARDS_PER_PAGE = 12;
 
 export default function Siaran() {
     const [currentPage, setCurrentPage] = useState(0);
+    const navigate = useNavigate();
+    const { lang } = useParams<{ lang: string }>();
     
-    const totalPages = Math.ceil(dataItemNews.length / CARDS_PER_PAGE);
-    
-    const startIndex = currentPage * CARDS_PER_PAGE;
-    const endIndex = startIndex + CARDS_PER_PAGE;
+    const totalPages = Math.ceil(dataItemNews.length / 12);
+
+    const startIndex = currentPage * 12;
+    const endIndex = startIndex + 12;
     const currentCards = dataItemNews.slice(startIndex, endIndex);
 
     return (
@@ -40,8 +41,11 @@ export default function Siaran() {
                             imageAlt: item.imageAlt,
                             header: item.header,
                             date: item.date,
-                            title: item.title
-                        }} />
+                            title: item.title,
+                        }} 
+                        onClick={() => {
+                            navigate(`/${lang}/siaran/${item.id}`);
+                        }}/>
                     ))}  
                 </Card>
                 </div>

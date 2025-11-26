@@ -62,7 +62,7 @@ function Card({ children, totalPages: externalTotalPages, currentPage: externalC
   return (
     <HorizontalCardContext.Provider value={contextValue}>
       <div className=" flex flex-col justify-center  gap-8">
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">{children}</div>
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 min-h-[calc(3*260px+2*12px)] sm:min-h-[calc(3*300px+2*12px)] md:min-h-[calc(3*354px+2*24px)]">{children}</div>
         <div className="flex justify-center">
           <HorizontalCardDots />
         </div>
@@ -80,7 +80,7 @@ function HorizontalCardArrowButton({ direction }: HorizontalCardArrowButtonProps
   
   const handleClick = () => {
     let newIndex = activeIndex;
-    const scrollAmount = 248 + 18; // card width (248px) + gap (18px for gap-4.5)
+    const scrollAmount = 248 + 18;
     
     if (direction === 'left' && activeIndex > 0) {
       newIndex = activeIndex - 1;
@@ -121,19 +121,6 @@ function HorizontalCardArrowButton({ direction }: HorizontalCardArrowButtonProps
 }
 
 
-// Footer component for dots and controls
-interface HorizontalCardFooterProps {
-  children?: ReactNode;
-}
-
-function HorizontalCardFooter({ children }: HorizontalCardFooterProps) {
-  return (
-    <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-2 pt-8">
-      {children}
-    </div>
-  );
-}
-
 // Numbered pagination with navigation arrows
 function HorizontalCardDots() {
   const { activeIndex, setActiveIndex, totalPages, scrollRef } = useHorizontalCard();
@@ -163,15 +150,22 @@ function HorizontalCardDots() {
     (pageIndex) => pageIndex >= activeIndex
   );
 
+  const firstNumber = activeIndex === 0;
+  const lastNumber = activeIndex === totalPages - 1;
+
   return (
     <div className="flex items-center gap-2">
       <button
         onClick={handlePrevious}
-        disabled={activeIndex === 0}
-        className="p-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 rounded transition-colors"
+        disabled={firstNumber}
+        className={`w-10 h-10 flex items-center justify-center border rounded-md transition-all ${
+          firstNumber
+            ? 'border-gray-200 bg-gray-200 cursor-not-allowed' 
+            : 'border-gray-200 hover:bg-primary-700 hover:border-primary-700 hover:text-white cursor-pointer'
+        }`}
         aria-label="Previous page"
       >
-        <ChevronLeftIcon className="size-5 bg-gray-200 w-10 h-10 rounded-md" />
+        <ChevronLeftIcon className="size-5" />
       </button>
       <div className="flex items-center gap-2">
         {visiblePages.map((pageIndex) => (
@@ -181,7 +175,7 @@ function HorizontalCardDots() {
             className={`w-10 h-10 px-2 rounded transition-all duration-300 text-sm font-medium ${
               pageIndex === activeIndex
                 ? "bg-primary-100 text-txt-primary"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                : ""
             }`}
           >
             {pageIndex + 1}
@@ -191,11 +185,15 @@ function HorizontalCardDots() {
 
       <button
         onClick={handleNext}
-        disabled={activeIndex === totalPages - 1}
-        className="p-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 rounded transition-colors"
+        disabled={lastNumber}
+        className={`w-10 h-10 flex items-center justify-center border rounded-md transition-all ${
+          lastNumber
+            ? 'border-gray-200 bg-gray-200 cursor-not-allowed'
+            : 'border-gray-200 hover:bg-primary-700 hover:border-primary-700 hover:text-white cursor-pointer'
+        }`}
         aria-label="Next page"
       >
-        <ChevronRightIcon className="size-5 bg-gray-200 w-10 h-10 rounded-md" />
+        <ChevronRightIcon className="size-5" />
       </button>
     </div>
   );
@@ -209,11 +207,11 @@ interface HorizontalCardItemProps {
       date: string;
       title: string;
     };
-    children?: ReactNode;
     className?: string;
+    onClick: () => void;
   }
 
-function HorizontalCardItem({ item, className = "" }: HorizontalCardItemProps) {
+function HorizontalCardItem({ item, className = "", onClick }: HorizontalCardItemProps) {
     const getHeaderStyles = (header: string) => {
         switch (header.toLowerCase()) {
           case 'berita':
@@ -226,9 +224,10 @@ function HorizontalCardItem({ item, className = "" }: HorizontalCardItemProps) {
       };
     return (
       <div
-        className={`border border-otl-gray-200 rounded-lg p-2 md:p-3 h-[260px] sm:h-[300px] md:h-[354px] w-full flex flex-col ${className}`}
-      >   
-        <img
+        className={`border border-otl-gray-200 rounded-lg p-2 md:p-3 h-[260px] sm:h-[300px] md:h-[354px] w-full flex flex-col cursor-pointer ${className}`}
+        onClick={onClick}
+      >
+          <img
             src={item.imageSrc}
             alt={item.imageAlt}
             className="w-full h-[110px] sm:h-[130px] md:h-[150px] rounded-[6px] object-cover flex-shrink-0"
@@ -255,7 +254,6 @@ function HorizontalCardItem({ item, className = "" }: HorizontalCardItemProps) {
 
 // Compound component exports
 Card.ArrowButton = HorizontalCardArrowButton;
-Card.Footer = HorizontalCardFooter;
 Card.Dots = HorizontalCardDots;
 Card.Item = HorizontalCardItem;
 
