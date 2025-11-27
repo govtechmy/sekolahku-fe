@@ -3,7 +3,7 @@ import i18n from "../../i18n";
 import { useEffect } from "react";
 
 export default function LangWrapper() {
-  let { lang } = useParams<{ lang: string | any }>();
+  const { lang } = useParams<{ lang: string }>();
   const isValidLang = lang === "ms" || lang === "en";
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function LangWrapper() {
   }, [lang, isValidLang]);
 
   if (!isValidLang) {
-    let localStorageLang = localStorage.getItem("lang");
+    const localStorageLang = localStorage.getItem("lang");
     if (localStorageLang !== "en" && localStorageLang !== "ms") {
       return <Navigate to="/en" replace />;
     }
