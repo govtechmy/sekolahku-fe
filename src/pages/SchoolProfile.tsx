@@ -1,5 +1,6 @@
-import { CheckCircleFillIcon, CrossFillIcon, EmailIcon, GovtOfficeIcon, PhoneIcon, PinIcon, PrinterIcon, UserGroupIcon, UserIcon } from "@govtechmy/myds-react/icon";
+import { CheckCircleFillIcon, CrossFillIcon } from "@govtechmy/myds-react/icon";
 import Hero from "../components/shared/Hero";
+import { dataSekolahAbout, dataSekolahInfo, dataSekolahJumlah } from "../contentData";
 
 export default function SchoolProfile() {
   
@@ -41,10 +42,7 @@ export default function SchoolProfile() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-2 mt-0 md:px-12 max-md:px-0">
-        {[
-          { label: "PELAJAR", value: "1", amount:"4,065", icon: <UserGroupIcon/> },
-          { label: "GURU", value: "2", amount:"4,065", icon: <UserIcon/> }
-        ].map((item, idx) => (
+        {dataSekolahJumlah.map((item, idx) => (
           <div key={idx} className="border-t-0 border-[1px] outline-otl-gray-200 gap-0.5 mt-0">
             <div className="flex w-[640px] px-[109px] py-12 max-sm:px-4 max-sm:w-[85px] max-md:px-6 max-md:w-[173px] max-lg:px-[60px] max-lg:w-[320px] max-xl:w-[480px] items-start gap-[18px] shrink-0">
               <div className="flex w-[42px] h-[42px] justify-center items-center gap-x-[10px] gap-y-[10px] shrink-0 bg-primary-50 rounded-full bg-blue-50">
@@ -68,13 +66,7 @@ export default function SchoolProfile() {
         <div className="text-heading-sm text-txt-black-900 font-semibold pb-12">Mengenai Sekolah</div>
           <div className="shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
-              {[
-                { value:"1", label: "Maktab Sultan Abu Bakar (English College)", icon: <GovtOfficeIcon width={24} height={24}/>},
-                { value:"2", label: "07-222 2651", icon: <PhoneIcon width={24} height={24}/>},
-                { value:"3", label: "07-222 2651", icon: <PrinterIcon width={24} height={24}/>},
-                { value:"4", label: "english.college@moe.gov.my", icon: <EmailIcon width={24} height={24}/>},
-                { value:"5", label: "Jalan Sungai Chat, Sri Gelam, 80100 Johor Bahru, Johor Darul Ta'zim", icon: <PinIcon width={24} height={24}/>}
-              ].map((item, idx) => (
+              {dataSekolahAbout.map((item, idx) => (
                 <div key={idx}>
                   <div className="flex items-center gap-1.5 self-stretch pb-4">
                     <div className="text-txt-primary">{item.icon}</div>
@@ -94,16 +86,7 @@ export default function SchoolProfile() {
 
       {/* School Info Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 px-9">
-        {[
-          { label: "KOD SEKOLAH", value: "JEB1001" },
-          { label: "NEGERI", value: "Johor" },
-          { label: "PPD", value: "PPD Johor Bahru" },
-          { label: "PARLIMEN", value: "Pulai" },
-          { label: "BANTUAN", value: "SBK" },
-          { label: "BIL SESI", value: "2 Sesi | Pagi & Petang" },
-          { label: "PRASEKOLAH", value: "", icon:"cross"},
-          { label: "Integrasi", value: "", icon:"checked"}
-        ].map((item, idx) => (
+        {dataSekolahInfo.map((item, idx) => (
           <div key={idx} className="border-[1px] outline-otl-gray-200 gap-0.5">
             <div className="py-8 px-2.5 rounded-xl shadow text-center">
               <div className="text-txt-primary uppercase pb-2">{item.label}</div>
