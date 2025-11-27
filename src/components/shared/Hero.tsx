@@ -1,29 +1,29 @@
+import { clx } from "@govtechmy/myds-react/utils";
+
 export default function Hero({
   title,
   search,
   links,
   background,
   content,
-  small,
+  smallHero,
 }: {
   title?: string;
   search?: React.ReactNode;
   links?: React.ReactNode;
   background?: React.ReactNode;
   content?: React.ReactNode;
-  small?: boolean;
+  smallHero?: boolean;
 }) {
   return (
-    <section className={`relative border-b border-outline-200 ${small ? 'w-full h-[520px] md:h-[408px] max-md:h-[480px] overflow-hidden' : 'px-[109px]'}`}>
-      {small ? 
-        <></> 
-        : 
+    <section className={`relative border-b border-outline-200 ${clx(smallHero? 'w-full h-[520px] md:h-[408px] max-md:h-[480px] overflow-hidden' : 'px-[109px]')}`}>
+      {!smallHero &&
         <div className={`absolute -z-10 flex shrink-0 h-full justify-center overflow-x-hidden`}>
           {background}
         </div>
       }
       
-      {small ? 
+      {smallHero ? 
         (<div className="bg-bg-primary-100 border-b-[var(--Outline-otl-divider,#F4F4F5)] bg-[radial-gradient(101.65%_92.54%_at_50%_0%,#E0EDFF_0%,#FAFCFF_55%,var(--Whites-Background-0,#FFF)_100%)]">
           {/* Background image */}
           {background}

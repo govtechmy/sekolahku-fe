@@ -4,10 +4,9 @@ import Hero from "../components/shared/Hero";
 export default function SchoolProfile() {
   
   return (
-    // <div className="px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px]">
     <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
       <Hero
-        small={true}
+        smallHero={true}
         background={
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -41,7 +40,7 @@ export default function SchoolProfile() {
       />
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-2 mt-0 md:px-12 max-md:px-0"> {/* p-8 */}
+      <div className="grid grid-cols-2 md:grid-cols-2 mt-0 md:px-12 max-md:px-0">
         {[
           { label: "PELAJAR", value: "1", amount:"4,065", icon: <UserGroupIcon/> },
           { label: "GURU", value: "2", amount:"4,065", icon: <UserIcon/> }
@@ -88,14 +87,13 @@ export default function SchoolProfile() {
               <img
                 src="/utama/school-outline.png"
                 alt="schoole-image"
-                // className="w-2/8 h-2/8"
               />
             </div>
           </div>
       </div>
 
       {/* School Info Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 px-9"> {/* p-8 */}
+      <div className="grid grid-cols-2 md:grid-cols-4 px-9">
         {[
           { label: "KOD SEKOLAH", value: "JEB1001" },
           { label: "NEGERI", value: "Johor" },
@@ -119,7 +117,7 @@ export default function SchoolProfile() {
 
       {/* Nearby Schools */}
       <div className="py-[84px] px-[109px] max-md:px-[28px] max-md:py-[48px]">
-        <div className="text-heading-sm text-txt-black-900 font-semibold pb-12">Sekolah Berdekatan</div> {/* text-xl font-bold mb-4 gap-[48px] */}
+        <div className="text-heading-sm text-txt-black-900 font-semibold pb-12">Sekolah Berdekatan</div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {label: "Sekolah Menengah Kebangsaan Dato Jaafar", value: "001", adress: "Johor Bharu"},
@@ -128,7 +126,6 @@ export default function SchoolProfile() {
           ].map((i) => (
             <div key={i.value} className="bg-white rounded-2xl shadow overflow-hidden border-[1px] outline-otl-gray-200">
               <img
-                // src={`/school${i}.jpg`}
                 src="/utama/image-160.png"
                 alt="Nearby School"
                 className="w-full h-40 object-cover"
