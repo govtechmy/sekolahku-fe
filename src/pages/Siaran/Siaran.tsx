@@ -5,6 +5,7 @@ import { DateRangePicker } from "@govtechmy/myds-react/daterange-picker";
 import { dataItemNews } from "../../contentData";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
+import { clx } from "@govtechmy/myds-react/utils";
 
 export default function Siaran() {
     const [currentPage, setCurrentPage] = useState(0);
@@ -33,22 +34,34 @@ export default function Siaran() {
                     currentPage={currentPage}
                     onPageChange={setCurrentPage}
                 >
-                    {currentCards.map((item, index) => (
-                       <Card.Item
-                         key={startIndex + index}
-                         item={{
-                            imageSrc: item.imageSrc,
-                            imageAlt: item.imageAlt,
-                            header: item.header,
-                            date: item.date,
-                            title: item.title,
-                        }} 
-                        onClick={() => {
-                            navigate(`/${lang}/siaran/${item.id}`);
-                        }}/>
-                    ))}  
+                    <div className="flex flex-col justify-center gap-8">
+                        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 min-h-[calc(3*260px+2*12px)] sm:min-h-[calc(3*300px+2*12px)] md:min-h-[calc(3*354px+2*24px)]">
+                            {currentCards.map((item, index) => (
+                                <Card.Item
+                                    classNameHeader={clx(               
+                                        item.header === 'Berita' && 'text-txt-primary',
+                                        item.header === 'Pengumuman' && 'text-success-700',
+                                    )}
+                                    key={startIndex + index}
+                                    item={{
+                                        imageSrc: item.imageSrc,
+                                        imageAlt: item.imageAlt,
+                                        header: item.header,
+                                        date: item.date,
+                                        title: item.title,
+                                    }} 
+                                    onClick={() => {
+                                        navigate(`/${lang}/siaran/${item.id}`);
+                                    }}
+                                />
+                            ))}  
+                        </div>
+                        <div className="flex justify-center">
+                            <Card.Pagination pageNumber={currentPage + 1} pageSize={12} totalRecords={dataItemNews.length} type="default" handlePageChange={(page) => setCurrentPage(page - 1)} />
+                        </div>
+                    </div>
                 </Card>
-                </div>
+            </div>
         </div>
     )
 }

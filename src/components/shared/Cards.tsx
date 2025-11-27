@@ -1,8 +1,6 @@
-import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
-import { ChevronLeftIcon, ChevronRightIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
-import { useRef, createContext, useContext, useState } from "react";
+import { useRef, createContext, useState } from "react";
 import type { ReactNode } from "react";
 
 
@@ -16,15 +14,6 @@ interface HorizontalCardContextType {
 }
 
 const HorizontalCardContext = createContext<HorizontalCardContextType | null>(null);
-const scrollAmount = 248 + 18;
-
-const useHorizontalCard = () => {
-  const context = useContext(HorizontalCardContext);
-  if (!context) {
-    throw new Error('HorizontalCard components must be used within a HorizontalCard');
-  }
-  return context;
-};
 
 interface HorizontalCardProps {
   children: ReactNode;
@@ -65,82 +54,31 @@ function Card({ children, totalPages: externalTotalPages, currentPage: externalC
 
   return (
     <HorizontalCardContext.Provider value={contextValue}>
-      <div className=" flex flex-col justify-center  gap-8">
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6 min-h-[calc(3*260px+2*12px)] sm:min-h-[calc(3*300px+2*12px)] md:min-h-[calc(3*354px+2*24px)]">{children}</div>
-        <div className="flex justify-center">
-          <HorizontalCardDots />
-        </div>
-      </div>
+      {children}
     </HorizontalCardContext.Provider>
   );
 }
 
-interface HorizontalCardArrowButtonProps {
-  direction: 'left' | 'right';
+interface HorizontalCardPaginationItemProps {
+    pageNumber:number;
+    pageSize: number;
+    totalRecords: number;
+    type: "default" | "simple";
+    handlePageChange: (page: number) => void;
 }
 
-function HorizontalCardArrowButton({ direction }: HorizontalCardArrowButtonProps) {
-  const { activeIndex, setActiveIndex, totalPages, scrollRef } = useHorizontalCard();
-  
-  const handleClick = () => {
-    let newIndex = activeIndex;
-    
-    if (direction === 'left' && activeIndex > 0) {
-      newIndex = activeIndex - 1;
-    } else if (direction === 'right' && activeIndex < totalPages - 1) {
-      newIndex = activeIndex + 1;
-    }
-    
-    // Update the active index
-    setActiveIndex(newIndex);
-    
-    // Scroll to the new position
-    if (scrollRef.current) {
-      const scrollPosition = scrollAmount * newIndex;
-      scrollRef.current.scrollTo({ left: scrollPosition, behavior: "smooth" });
-    }
-  };
-
-  const isDisabled = 
-    (direction === 'left' && activeIndex === 0) || 
-    (direction === 'right' && activeIndex === totalPages - 1);
-
-  return (
-    <Button
-      variant="default-outline"
-      className="p-2 disabled:opacity-50 disabled:cursor-not-allowed"
-      onClick={handleClick}
-      disabled={isDisabled}
-    >
-      <ButtonIcon>
-        {direction === 'left' ? (
-          <ChevronLeftIcon className="size-5" />
-        ) : (
-          <ChevronRightIcon className="size-5" />
-        )}
-      </ButtonIcon>
-    </Button>
-  );
-}
-
-
-// Numbered pagination with navigation arrows
-function HorizontalCardDots() {
-  const { activeIndex, setActiveIndex, totalPages } = useHorizontalCard();
-
-  const handlePageChange = (page: number) => {
-    setActiveIndex(page - 1);
-  };
+function HorizontalCardPagination({ pageNumber, pageSize, totalRecords, type, handlePageChange }: HorizontalCardPaginationItemProps) {
+  const totalPages = Math.ceil(totalRecords / pageSize);
 
   if (totalPages <= 1) return null;
 
   return (
     <AutoPagination
-      page={activeIndex + 1} // Convert to 1-based index for AutoPagination
-      limit={1} // Items per page (not relevant for our use case, but required)
-      count={totalPages} // Total number of pages
-      type="default"
-      maxDisplay={5} // Maximum number of page buttons to display
+      page={pageNumber}
+      limit={pageSize}
+      count={totalRecords}
+      type={type}
+      maxDisplay={4}
       onPageChange={handlePageChange}
     />
   );
@@ -155,10 +93,11 @@ interface HorizontalCardItemProps {
       title: string;
     };
     className?: string;
+    classNameHeader?: string; 
     onClick: () => void;
   }
 
-function HorizontalCardItem({ item, className = "", onClick }: HorizontalCardItemProps) {
+function HorizontalCardItem({ item, className = "", classNameHeader="", onClick }: HorizontalCardItemProps) {
     return (
       <div
         className={`border border-otl-gray-200 rounded-lg p-2 md:p-3 h-[260px] sm:h-[300px] md:h-[354px] w-full flex flex-col cursor-pointer ${className}`}
@@ -173,8 +112,7 @@ function HorizontalCardItem({ item, className = "", onClick }: HorizontalCardIte
         <div className="flex flex-col gap-1.5 md:gap-2 px-2 md:px-3 flex-1 min-h-0 overflow-hidden pt-2 md:pt-3">
             <p className={clx(
                 "text-xs md:text-sm font-semibold flex-shrink-0",
-                item.header === 'Berita' && 'text-txt-primary',
-                item.header === 'Pengumuman' && 'text-success-700',
+                classNameHeader
             )}>
                 {item.header}
             </p>
@@ -191,11 +129,8 @@ function HorizontalCardItem({ item, className = "", onClick }: HorizontalCardIte
   );
 }
 
-
-
 // Compound component exports
-Card.ArrowButton = HorizontalCardArrowButton;
-Card.Dots = HorizontalCardDots;
+Card.Pagination = HorizontalCardPagination;
 Card.Item = HorizontalCardItem;
 
 
