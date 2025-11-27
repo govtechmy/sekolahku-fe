@@ -3,7 +3,7 @@ import i18n from "../../i18n";
 import { useEffect } from "react";
 
 export default function LangWrapper() {
-  const { lang } = useParams<{ lang: string | any }>();
+  const { lang } = useParams<{ lang: string }>();
   const isValidLang = lang === "ms" || lang === "en";
 
   useEffect(() => {
