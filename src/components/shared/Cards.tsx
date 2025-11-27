@@ -1,19 +1,6 @@
 import { clx } from "@govtechmy/myds-react/utils";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
-import { useRef, createContext, useState } from "react";
 import type { ReactNode } from "react";
-
-
-interface HorizontalCardContextType {
-  scrollRef: React.RefObject<HTMLDivElement | null>;
-  scroll: (offset: number) => void;
-  activeIndex: number;
-  setActiveIndex: (index: number) => void;
-  totalPages: number;
-  setTotalPages: (total: number) => void;
-}
-
-const HorizontalCardContext = createContext<HorizontalCardContextType | null>(null);
 
 interface HorizontalCardProps {
   children: ReactNode;
@@ -22,40 +9,9 @@ interface HorizontalCardProps {
   onPageChange?: (page: number) => void;
 }
 
-function Card({ children, totalPages: externalTotalPages, currentPage: externalCurrentPage, onPageChange }: HorizontalCardProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [internalActiveIndex, setInternalActiveIndex] = useState(0);
-  const [internalTotalPages, setInternalTotalPages] = useState(4);
-  const activeIndex = externalCurrentPage !== undefined ? externalCurrentPage : internalActiveIndex;
-  const totalPages = externalTotalPages !== undefined ? externalTotalPages : internalTotalPages;
-  
-  const setActiveIndex = (newIndex: number) => {
-    if (onPageChange) {
-      onPageChange(newIndex);
-    } else {
-      setInternalActiveIndex(newIndex);
-    }
-  };
-
-  const scroll = (offset: number) => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: offset, behavior: "smooth" });
-    }
-  };
-
-  const contextValue = {
-    scrollRef,
-    scroll,
-    activeIndex,
-    setActiveIndex,
-    totalPages,
-    setTotalPages: setInternalTotalPages,
-  };
-
+function Card({ children}: HorizontalCardProps) {
   return (
-    <HorizontalCardContext.Provider value={contextValue}>
-      {children}
-    </HorizontalCardContext.Provider>
+    <>{children}</>
   );
 }
 
@@ -128,8 +84,6 @@ function HorizontalCardItem({ item, className = "", classNameHeader="", onClick 
     </div>
   );
 }
-
-// Compound component exports
 Card.Pagination = HorizontalCardPagination;
 Card.Item = HorizontalCardItem;
 

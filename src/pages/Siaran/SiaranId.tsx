@@ -39,7 +39,7 @@ export default function SiaranId() {
           <div className="flex flex-col gap-6 max-w-[825px]">
             <Breadcrumb className="md:px-10">
                 <BreadcrumbItem>
-                    <BreadcrumbLink href={`${lang}/siaran`}>Siaran</BreadcrumbLink>
+                    <BreadcrumbLink href={`/${lang}/siaran`}>Siaran</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
