@@ -50,7 +50,7 @@ export default function NavbarMyds() {
     <Navbar>
       <div className="flex items-center gap-2.5">
         <img src="/JataNegara.svg" />
-        <div className="font-heading text-body-lg font-semibold">Sekolahku</div>
+        <div className="font-heading text-txt-black-900 text-body-lg font-semibold">Sekolahku</div>
       </div>
       <NavbarMenu
         classNameNavDesktop=""
