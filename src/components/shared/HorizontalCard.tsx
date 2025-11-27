@@ -3,7 +3,7 @@ import { ArrowBackIcon, ArrowForwardIcon } from "@govtechmy/myds-react/icon";
 import { useRef } from "react";
 
 interface HorizontalCardProps {
-  mainTitle: string;
+  mainTitle?: string;
   children?: React.ReactNode;
 }
 

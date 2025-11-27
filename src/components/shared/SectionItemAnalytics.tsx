@@ -35,7 +35,7 @@ export default function SectionItemAnalytics({
       `}
         >
           <div className="size-16 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
-            {React.cloneElement(item.icon as any, { className: "w-8 h-8" })}
+            {React.cloneElement(item.icon, { className: "w-8 h-8" } as React.HTMLAttributes<HTMLElement>)}
           </div>
           <div>
             <div className="text-txt-primary font-body text-body-xl font-semibold">

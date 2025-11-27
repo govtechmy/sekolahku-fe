@@ -3,11 +3,13 @@ import LangWrapper from "./components/layout/LangWrapper";
 import HomePage from "./pages/Home";
 import AboutPage from "./pages/About";
 import SchoolMapsPage from "./pages/SchoolMaps";
+import Siaran from "./pages/Siaran/Siaran";
 import ErrorPage from "./pages/Error";
 import LayoutMain from "./components/layout/LayoutMain";
+import SiaranId from "./pages/Siaran/SiaranId";
 
 export default function AppRoutes() {
-  let lang = localStorage.getItem("lang");
+  const lang = localStorage.getItem("lang") || "en";
 
   return (
     <Routes>
@@ -19,6 +21,8 @@ export default function AppRoutes() {
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="carian-sekolah" element={<SchoolMapsPage />} />
+          <Route path="siaran" element={<Siaran />} />
+          <Route path="siaran/:id" element={<SiaranId />} />
           <Route
             path="testingpage"
             element={<div> this is testing page</div>}
@@ -32,10 +36,10 @@ export default function AppRoutes() {
 }
 
 function Redirect404Page() {
-  const { lang } = useParams<{ lang: string | any }>();
+  const { lang } = useParams<{ lang: string }>();
   const allowedLangs = ["en", "ms"];
-  let langStorage = localStorage.getItem("lang");
-  const targetLang = allowedLangs.includes(lang) ? lang : langStorage;
+  const langStorage = localStorage.getItem("lang");
+  const targetLang = (lang && allowedLangs.includes(lang)) ? lang : (langStorage || "en");
   return <Navigate to={`/${targetLang}/404`} replace />;
 }
 
