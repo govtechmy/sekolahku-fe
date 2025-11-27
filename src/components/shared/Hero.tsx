@@ -3,26 +3,33 @@ export default function Hero({
   search,
   links,
   background,
-  smallBody,
+  content,
   small,
 }: {
   title?: string;
   search?: React.ReactNode;
   links?: React.ReactNode;
   background?: React.ReactNode;
-  smallBody?: React.ReactNode;
+  content?: React.ReactNode;
   small?: boolean;
 }) {
   return (
-    <section className={`relative border-b border-outline-200 px-[109px] ${small ?? 'justify-items-center align-middle'}`}>
-      <div className={`absolute -z-10 flex shrink-0 h-full justify-center overflow-x-hidden ${small? '' : ''}`}>
-        {background}
-      </div>
+    <section className={`relative border-b border-outline-200 ${small ? 'w-full h-[520px] md:h-[408px] max-md:h-[480px] overflow-hidden' : 'px-[109px]'}`}>
       {small ? 
-        (<div className="w-full h-[408px] justify-center">
-          {/* <div className=" flex flex-col gap-8 py-16 w-[400px]"></div> */}
-          <div className="shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            {smallBody}
+        <></> 
+        : 
+        <div className={`absolute -z-10 flex shrink-0 h-full justify-center overflow-x-hidden`}>
+          {background}
+        </div>
+      }
+      
+      {small ? 
+        (<div className="bg-bg-primary-100 border-b-[var(--Outline-otl-divider,#F4F4F5)] bg-[radial-gradient(101.65%_92.54%_at_50%_0%,#E0EDFF_0%,#FAFCFF_55%,var(--Whites-Background-0,#FFF)_100%)]">
+          {/* Background image */}
+          {background}
+          {/* Content */}
+          <div className="px-[109px] py-[50px] md:px-[109px] md:py-[50px] max-md:px-2 max-md:py-4">
+            {content}
           </div>
         </div>)
       :

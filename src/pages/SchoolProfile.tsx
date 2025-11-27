@@ -1,51 +1,61 @@
-import Hero from "../components/shared/Hero";
 import { CheckCircleFillIcon, CrossFillIcon, EmailIcon, GovtOfficeIcon, PhoneIcon, PinIcon, PrinterIcon, UserGroupIcon, UserIcon } from "@govtechmy/myds-react/icon";
+import Hero from "../components/shared/Hero";
 
 export default function SchoolProfile() {
+  
   return (
-    <div className="mx-auto flex-1 flex flex-col px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px]">
-      {/* Header */}
+    // <div className="px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px]">
+    <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
       <Hero
         small={true}
-        smallBody={
-          <>
-            <div className="">
+        background={
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: "url('/utama/sekolahku-2.png')", // Background image
+            }}
+          />
+        }
+        content={
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between h-full px-6 md:px-12">
+            {/* LEFT CONTENT */}
+            <div className="max-w-xl pt-10 md:pt-0 text-center md:text-left">
               <div className="text-txt-primary font-semibold gap-6 pb-6">NAMA SEKOLAH</div>
-              {/* Text/txt-black-900 Text/txt-primary */}
-              <div className="text-txt-black-900 text-heading-md font-semibold gap-7 pb-7 max-w-[495px]">Maktab Sultan Abu Bakar (English College)</div>
-              <div className="text-txt-primary font-semibold">JENIS SEKOLAH <div className="text-txt-black-500 font-medium"> : SMK </div></div>
+              <div className="text-txt-black-900 text-heading-md max-md:text-heading-sm font-semibold gap-7 pb-7 max-w-[495px]">Maktab Sultan Abu Bakar (English College)</div>
+              <div className="text-txt-primary font-semibold">JENIS SEKOLAH 
+                <span className="text-txt-black-500 font-medium"> : SMK </span>
+              </div>
             </div>
-            <div className="py-[50px]">
+            {/* RIGHT LOGO */}
+            <div className="mt-8 md:mt-0 flex justify-center text-center">
               <img
                 src="/utama/image-159.png"
                 alt="School Logo"
-                className="w-1/10 h-1/10"
+                width={260}
+                height={260}
+                className="object-contain drop-shadow-xl max-md:w-1/2"
               />
             </div>
-          </>
+          </div>
         }
-        background={
-          // {/* <img src="/utama/sekolahku.png" alt="imej hero sekolahku" /> */}
-          <div className="bg-bg-primary-100"></div>
-        }
-      ></Hero>
+      />
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-2"> {/* p-8 */}
+      <div className="grid grid-cols-2 md:grid-cols-2 mt-0 md:px-12 max-md:px-0"> {/* p-8 */}
         {[
           { label: "PELAJAR", value: "1", amount:"4,065", icon: <UserGroupIcon/> },
           { label: "GURU", value: "2", amount:"4,065", icon: <UserIcon/> }
         ].map((item, idx) => (
-          <div key={idx} className="border-t-0 border-[1px] outline-otl-gray-200 gap-0.5">
-            <div className="flex w-[640px] px-[109px] py-12 items-start gap-[18px] shrink-0">
+          <div key={idx} className="border-t-0 border-[1px] outline-otl-gray-200 gap-0.5 mt-0">
+            <div className="flex w-[640px] px-[109px] py-12 max-sm:px-4 max-sm:w-[85px] max-md:px-6 max-md:w-[173px] max-lg:px-[60px] max-lg:w-[320px] max-xl:w-[480px] items-start gap-[18px] shrink-0">
               <div className="flex w-[42px] h-[42px] justify-center items-center gap-x-[10px] gap-y-[10px] shrink-0 bg-primary-50 rounded-full bg-blue-50">
                 <div className="text-txt-primary font-semibold">{item.icon}</div>
               </div>
               <div className="flex flex-col items-start gap-1 flex-1">
-                <p className="text-txt-primary text-center text-sm font-semibold leading-tight tracking-widest uppercase">
+                <p className="text-txt-primary text-center text-sm max-md:text-xs font-semibold leading-tight tracking-widest uppercase">
                   {item.label}
                 </p>
-                <div className="self-stretch text-txt-black-900 text-heading-lg font-semibold">
+                <div className="self-stretch text-txt-black-900 text-heading-lg max-md:text-heading-sm font-semibold">
                   {item.amount}
                 </div>
               </div>
@@ -55,7 +65,7 @@ export default function SchoolProfile() {
       </div>
 
       {/* About Section */}
-      <div className="pt-[84px] pb-[32px] px-[109px]">
+      <div className="pt-[84px] pb-[32px] px-[109px] max-md:pt-[48px] max-md:px-[28px]">
         <div className="text-heading-sm text-txt-black-900 font-semibold pb-12">Mengenai Sekolah</div>
           <div className="shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
@@ -85,7 +95,7 @@ export default function SchoolProfile() {
       </div>
 
       {/* School Info Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4"> {/* p-8 */}
+      <div className="grid grid-cols-2 md:grid-cols-4 px-9"> {/* p-8 */}
         {[
           { label: "KOD SEKOLAH", value: "JEB1001" },
           { label: "NEGERI", value: "Johor" },
@@ -108,7 +118,7 @@ export default function SchoolProfile() {
       </div>
 
       {/* Nearby Schools */}
-      <div className="py-[84px] px-[109px]">
+      <div className="py-[84px] px-[109px] max-md:px-[28px] max-md:py-[48px]">
         <div className="text-heading-sm text-txt-black-900 font-semibold pb-12">Sekolah Berdekatan</div> {/* text-xl font-bold mb-4 gap-[48px] */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
