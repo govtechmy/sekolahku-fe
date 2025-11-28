@@ -4,12 +4,14 @@ import HeroMyds from "../components/shared/HeroMYDS";
 import HeroSekolahDetails from "../asset/heroSekolahDetails";
 
 export default function SchoolProfile() {
-  
+
   return (
     <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
-      <HeroMyds className="w-full h-[520px] md:h-[408px] max-md:h-[480px] overflow-hidden">
+      <HeroMyds className="relative w-full h-[408px] md:h-[408px] sm:h-[320px] max-sm:h-[300px] overflow-hidden border-b border-outline-200 bg-black">
         <HeroMyds.Background>
-          <HeroSekolahDetails className="absolute inset-0 bg-cover bg-center"/>
+          <div className="absolute inset-0 w-full h-full">
+            <HeroSekolahDetails className="absolute inset-0 w-full h-full bg-cover bg-center"/>
+          </div>
         </HeroMyds.Background>
         <HeroMyds.Content className="max-lg:px-0 max-lg:py-0">
           <div className="px-[109px] py-[50px] md:px-[109px] md:py-[50px] max-md:px-2 max-md:py-4">
