@@ -35,9 +35,9 @@ export function FilterDropdowns({
         <SelectTrigger aria-label="Pilih Negeri" className="w-[155px] justify-between">
           <SelectValue placeholder="Jenis Negeri" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[600]">
           <SelectGroup>
-            <SelectItem value="all">Semua Negeri</SelectItem>
+            <SelectItem value="ALL">Semua Negeri</SelectItem>
             {negeriList
               .filter((n): n is string => typeof n === "string")
               .map((n, idx) => (
@@ -58,9 +58,9 @@ export function FilterDropdowns({
         <SelectTrigger aria-label="Pilih Jenis" className="w-[155px] justify-between">
           <SelectValue placeholder="Jenis Sekolah" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[600]">
           <SelectGroup>
-            <SelectItem value="all">Semua Jenis</SelectItem>
+            <SelectItem value="ALL">Semua Jenis</SelectItem>
             {jenisList
               .filter((x): x is string => typeof x === "string")
               .map((x, idx: number) => (
