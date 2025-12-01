@@ -81,7 +81,7 @@ export default function SchoolMaps() {
         center={initialPosition}
         zoom={7}
         style={{ height: "100%", width: "100%" }}
-        zoomControl={true}
+        zoomControl={false}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
