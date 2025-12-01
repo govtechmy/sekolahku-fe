@@ -1,38 +1,21 @@
-import axios, { type InternalAxiosRequestConfig, type AxiosResponse, type AxiosError } from 'axios'
+import axios from 'axios'
+import { useAuthStore } from '../store/store';
 
-// Create axios instance with default configuration
-export const authAxios = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+// Authenticated axios instance (uses default headers set by AuthStore)
+export const authAxios = axios
+
+// Unauthenticated axios instance (no default headers)
+export const unauthAxios = axios.create({
+  // You can add default config here if needed, like timeout, baseURL, etc.
+  timeout: 30000,
 })
 
-// Request interceptor for adding auth token
-authAxios.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    // Add auth token if available
-    const token = localStorage.getItem('authToken')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error)
+// Attach API key before every request
+authAxios.interceptors.request.use((config) => {
+  const apiKey = useAuthStore.getState().apiKey
+  if (apiKey) {
+    config.headers["Api-Key"] = apiKey
   }
-)
+  return config
+})
 
-// Response interceptor for handling errors
-authAxios.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized access
-      localStorage.removeItem('authToken')
-      // Optionally redirect to login
-      // window.location.href = '/login'
-    }
-    return Promise.reject(error)
-  }
-)
