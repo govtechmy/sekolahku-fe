@@ -1,19 +1,19 @@
 import { CheckCircleFillIcon, CrossFillIcon } from "@govtechmy/myds-react/icon";
-import { dataSekolahAbout, dataSekolahInfo, dataSekolahJumlah } from "../contentData";
-import HeroMyds from "../components/shared/HeroMYDS";
-import HeroSekolahDetails from "../asset/heroSekolahDetails";
+import { dataSekolahAbout, dataSekolahInfo, dataSekolahJumlah, dataSekolahSuggestion } from "../contentData";
+import HeroMy from "../components/shared/HeroMy";
+import HeroSekolahDetails from "../asset/HeroSekolahDetail";
 
 export default function SchoolProfile() {
 
   return (
     <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
-      <HeroMyds className="relative w-full h-[408px] md:h-[408px] sm:h-[320px] max-sm:h-[300px] overflow-hidden border-b border-outline-200 bg-black">
-        <HeroMyds.Background>
+      <HeroMy className="relative w-full h-[408px] md:h-[408px] sm:h-[320px] max-sm:h-[300px] overflow-hidden border-b border-outline-200 bg-black">
+        <HeroMy.Background>
           <div className="absolute inset-0 w-full h-full">
             <HeroSekolahDetails className="absolute inset-0 w-full h-full bg-cover bg-center"/>
           </div>
-        </HeroMyds.Background>
-        <HeroMyds.Content className="max-lg:px-0 max-lg:py-0">
+        </HeroMy.Background>
+        <HeroMy.Content className="max-lg:px-0 max-lg:py-0">
           <div className="px-[109px] py-[50px] md:px-[109px] md:py-[50px] max-md:px-2 max-md:py-4">
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between h-full px-6 md:px-12">
               {/* LEFT CONTENT */}
@@ -36,15 +36,15 @@ export default function SchoolProfile() {
               </div>
             </div>
           </div>
-        </HeroMyds.Content>
-      </HeroMyds>
+        </HeroMy.Content>
+      </HeroMy>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-2 mt-0 md:px-12 max-md:px-0">
         {dataSekolahJumlah.map((item, idx) => (
           <div key={idx} className="border-t-0 border-[1px] outline-otl-gray-200 gap-0.5 mt-0">
-            <div className="flex w-[640px] px-[109px] py-12 max-sm:px-4 max-sm:w-[85px] max-md:px-6 max-md:w-[173px] max-lg:px-[60px] max-lg:w-[320px] max-xl:w-[480px] items-start gap-[18px] shrink-0">
-              <div className="flex w-[42px] h-[42px] justify-center items-center gap-x-[10px] gap-y-[10px] shrink-0 bg-primary-50 rounded-full bg-blue-50">
+            <div className="flex w-full max-w-xl px-8 md:px-12 lg:px-16 py-8 items-start gap-4 shrink-0">
+              <div className="flex w-[42px] h-[42px] justify-center items-center gap-x-[10px] gap-y-[10px] shrink-0 bg-primary-50 rounded-full">
                 <div className="text-txt-primary font-semibold">{item.icon}</div>
               </div>
               <div className="flex flex-col items-start gap-1 flex-1">
@@ -77,7 +77,7 @@ export default function SchoolProfile() {
             <div>
               <img
                 src="/utama/school-outline.png"
-                alt="schoole-image"
+                alt="School building outline"
               />
             </div>
           </div>
@@ -90,8 +90,8 @@ export default function SchoolProfile() {
             <div className="py-8 px-2.5 rounded-xl shadow text-center">
               <div className="text-txt-primary uppercase pb-2">{item.label}</div>
               {item.value && <div className="text-txt-black-500">{item.value}</div>}
-              {item.icon=="cross" && <div className="text-txt-danger flex items-center justify-center"><CrossFillIcon/></div>}
-              {item.icon=="checked" && <div className="text-txt-success flex items-center justify-center"><CheckCircleFillIcon/></div>}
+              {item.icon==="cross" && <div className="text-txt-danger flex items-center justify-center"><CrossFillIcon/></div>}
+              {item.icon==="checked" && <div className="text-txt-success flex items-center justify-center"><CheckCircleFillIcon/></div>}
             </div>
           </div>
         ))}
@@ -101,11 +101,7 @@ export default function SchoolProfile() {
       <div className="py-[84px] px-[109px] max-md:px-[28px] max-md:py-[48px]">
         <div className="text-heading-sm text-txt-black-900 font-semibold pb-12">Sekolah Berdekatan</div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {label: "Sekolah Menengah Kebangsaan Dato Jaafar", value: "001", adress: "Johor Bharu"},
-            {label: "Sekolah Menengah Kebangsaan Aminuddin Baki", value: "002", adress: "Pulai, Johor Bharu"},
-            {label: "Sekolah Menengah Kebangsaan Saint Joseph", value: "003", adress: "Johor Bharu"},
-          ].map((i) => (
+          {dataSekolahSuggestion.map((i) => (
             <div key={i.value} className="bg-white rounded-2xl shadow overflow-hidden border-[1px] outline-otl-gray-200">
               <img
                 src="/utama/image-160.png"
@@ -114,7 +110,7 @@ export default function SchoolProfile() {
               />
               <div className="p-4.5">
                 <h3 className="text-txt-black-900 font-medium">{i.label}</h3>
-                <p className="text-gray-600 text-sm">{i.adress}</p>
+                <p className="text-gray-600 text-sm">{i.address}</p>
               </div>
             </div>
           ))}

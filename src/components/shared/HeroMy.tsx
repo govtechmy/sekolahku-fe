@@ -50,8 +50,8 @@ interface HeroLinkItemProps {
   children?: React.ReactNode;
 }
 
-// Main HeroMyds component
-function HeroMyds({ children, className = "" }: HeroProps) {
+// Main HeroMy component
+function HeroMy({ children, className = "" }: HeroProps) {
   return (
     <section className={`relative border-b border-otl-gray-200 min-h-[500px] flex flex-col ${className}`}>
       {children}
@@ -153,64 +153,14 @@ function HeroLinkItem({ item, className = "", children }: HeroLinkItemProps) {
   );
 }
 
-// Attach sub-components to the main HeroMyds component
-HeroMyds.Background = HeroBackground;
-HeroMyds.Content = HeroContent;
-HeroMyds.Title = HeroTitle;
-HeroMyds.Search = HeroSearch;
-HeroMyds.Links = HeroLinks;
-HeroMyds.LinksHeader = HeroLinksHeader;
-HeroMyds.LinksContainer = HeroLinksContainer;
-HeroMyds.LinkItem = HeroLinkItem;
+// Attach sub-components to the main HeroMy component
+HeroMy.Background = HeroBackground;
+HeroMy.Content = HeroContent;
+HeroMy.Title = HeroTitle;
+HeroMy.Search = HeroSearch;
+HeroMy.Links = HeroLinks;
+HeroMy.LinksHeader = HeroLinksHeader;
+HeroMy.LinksContainer = HeroLinksContainer;
+HeroMy.LinkItem = HeroLinkItem;
 
-export default HeroMyds;
-
-// This component will be reworked and integrated into the MYDS component library soon.
-/* 
-USAGE EXAMPLES:
-
-// Basic HeroMyds with Background and Title
-<HeroMyds>
-  <HeroMyds.Background>
-    <img src="/hero-bg.jpg" alt="Background" className="w-full h-full object-cover" />
-  </HeroMyds.Background>
-  <HeroMyds.Content>
-    <HeroMyds.Title>Welcome to PortalMY</HeroMyds.Title>
-  </HeroMyds.Content>
-</HeroMyds>
-
-// Complete HeroMyds Section (like in App.tsx)
-<HeroMyds>
-  <HeroMyds.Background>
-    {isDarkMode ? <HeroDark /> : <HeroLight />}
-  </HeroMyds.Background>
-  <HeroMyds.Content>
-    <HeroMyds.Title>Selamat Datang Ke PortalMY</HeroMyds.Title>
-    <HeroMyds.Search>
-      <SearchBarMyds />
-    </HeroMyds.Search>
-    <HeroMyds.Links>
-      <HeroMyds.LinksHeader>Pautan Popular:</HeroMyds.LinksHeader>
-      <HeroMyds.LinksContainer>
-        {pautanPopular.map((item, index) => (
-          <HeroMyds.LinkItem key={index} item={item} />
-        ))}
-      </HeroMyds.LinksContainer>
-    </HeroMyds.Links>
-  </HeroMyds.Content>
-</HeroMyds>
-
-// Data structure for HeroMyds.LinkItem:
-const linkData = {
-  name: "Service Name",
-  link: "https://example.com",
-  icon: <IconComponent />
-};
-
-// Custom styling examples:
-<HeroMyds className="custom-hero-class">
-  <HeroMyds.Title className="text-blue-600">Custom Title</HeroMyds.Title>
-  <HeroMyds.LinkItem item={linkData} className="hover:bg-primary-100" />
-</HeroMyds>
-*/
-
+export default HeroMy;

@@ -407,7 +407,7 @@ export const dataItemLinks = [
     link: "https://egtukar.moe.gov.my/",
   },
 ];
-// SekolahDetails-Datato Fetch
+// SekolahDetails-Data to Fetch
 export const dataSekolahJumlah = [
   { label: "PELAJAR", value: "1", amount:"4,065", icon: <UserGroupIcon/> },
   { label: "GURU", value: "2", amount:"4,065", icon: <UserIcon/> }
@@ -427,5 +427,10 @@ export const dataSekolahInfo = [
   { label: "BANTUAN", value: "SBK" },
   { label: "BIL SESI", value: "2 Sesi | Pagi & Petang" },
   { label: "PRASEKOLAH", value: "", icon:"cross"},
-  { label: "Integrasi", value: "", icon:"checked"}
+  { label: "INTEGRASI", value: "", icon:"checked"}
 ];
+export const dataSekolahSuggestion = [
+  {label: "Sekolah Menengah Kebangsaan Dato Jaafar", value: "001", address: "Johor Bharu"},
+  {label: "Sekolah Menengah Kebangsaan Aminuddin Baki", value: "002", address: "Pulai, Johor Bharu"},
+  {label: "Sekolah Menengah Kebangsaan Saint Joseph", value: "003", address: "Johor Bharu"},
+]

@@ -1,8 +1,8 @@
-interface HeroLightProps {
+interface HeroSekolahDetailsProps {
   className?: string;
 }
 
-export default function HeroSekolahDetails({ className }: HeroLightProps) {
+export default function HeroSekolahDetails({ className }: HeroSekolahDetailsProps) {
   return (
     <svg
       width="1440"
