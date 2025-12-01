@@ -3,9 +3,10 @@ import LangWrapper from "./components/layout/LangWrapper";
 import HomePage from "./pages/Home";
 import AboutPage from "./pages/About";
 import SchoolMapsPage from "./pages/SchoolMaps";
-import Siaran from "./pages/Siaran/Siaran";
 import ErrorPage from "./pages/Error";
 import LayoutMain from "./components/layout/LayoutMain";
+import SchoolProfile from "./pages/SchoolProfile";
+import Siaran from "./pages/Siaran/Siaran";
 import SiaranId from "./pages/Siaran/SiaranId";
 
 export default function AppRoutes() {
@@ -21,6 +22,7 @@ export default function AppRoutes() {
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="carian-sekolah" element={<SchoolMapsPage />} />
+          <Route path="halaman-sekolah" element={<SchoolProfile />} />
           <Route path="siaran" element={<Siaran />} />
           <Route path="siaran/:id" element={<SiaranId />} />
           <Route

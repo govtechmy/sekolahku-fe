@@ -6,6 +6,11 @@ import {
   DesktopIcon,
   StarIcon,
   JataNegaraIcon,
+  UserIcon,
+  PhoneIcon,
+  PrinterIcon,
+  EmailIcon,
+  PinIcon,
 } from "@govtechmy/myds-react/icon";
 
 // Statistics data for different years
@@ -402,3 +407,30 @@ export const dataItemLinks = [
     link: "https://egtukar.moe.gov.my/",
   },
 ];
+// SekolahDetails-Data to Fetch
+export const dataSekolahJumlah = [
+  { label: "PELAJAR", value: "1", amount:"4,065", icon: <UserGroupIcon/> },
+  { label: "GURU", value: "2", amount:"4,065", icon: <UserIcon/> }
+];
+export const dataSekolahAbout = [
+  { value:"1", label: "Maktab Sultan Abu Bakar (English College)", icon: <GovtOfficeIcon width={24} height={24}/>},
+  { value:"2", label: "07-222 2651", icon: <PhoneIcon width={24} height={24}/>},
+  { value:"3", label: "07-222 2651", icon: <PrinterIcon width={24} height={24}/>},
+  { value:"4", label: "english.college@moe.gov.my", icon: <EmailIcon width={24} height={24}/>},
+  { value:"5", label: "Jalan Sungai Chat, Sri Gelam, 80100 Johor Bahru, Johor Darul Ta'zim", icon: <PinIcon width={24} height={24}/>}
+];
+export const dataSekolahInfo = [
+  { label: "KOD SEKOLAH", value: "JEB1001" },
+  { label: "NEGERI", value: "Johor" },
+  { label: "PPD", value: "PPD Johor Bahru" },
+  { label: "PARLIMEN", value: "Pulai" },
+  { label: "BANTUAN", value: "SBK" },
+  { label: "BIL SESI", value: "2 Sesi | Pagi & Petang" },
+  { label: "PRASEKOLAH", value: "", icon:"cross"},
+  { label: "INTEGRASI", value: "", icon:"checked"}
+];
+export const dataSekolahSuggestion = [
+  {label: "Sekolah Menengah Kebangsaan Dato Jaafar", value: "001", address: "Johor Bharu"},
+  {label: "Sekolah Menengah Kebangsaan Aminuddin Baki", value: "002", address: "Pulai, Johor Bharu"},
+  {label: "Sekolah Menengah Kebangsaan Saint Joseph", value: "003", address: "Johor Bharu"},
+]
