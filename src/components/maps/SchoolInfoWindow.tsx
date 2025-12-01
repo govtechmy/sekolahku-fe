@@ -17,19 +17,19 @@ export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
         <div className="w-[225px] h-[220px] flex-shrink-0">
           <img
             src="/images/sekDefault.png"
-            alt={school?.namaSekolah || "Sekolah"}
+            alt={school?.namaSekolah || school?.kodSekolah || "Sekolah"}
             className="w-full h-full object-cover rounded-md"
           />
         </div>
 
         <div className="flex-1 flex flex-col px-3 py-1">
           <div className="mb-2 bg-bg-success-50 text-txt-success text-xs font-normal px-2 py-1 rounded-full border border-bg-success-700 text-center">
-            {school?.kluster || "Sekolah Kluster Kecemerlangan"}
+            {school?.kluster || "Sekolah"}
           </div>
 
           <h3 className="text-[16px] md:text-[18px] font-medium text-[#202124] leading-snug mb-1">
-            {school?.namaSekolah || "Maktab Sultan Abu Bakar"}{" "}
-            {school?.jenisLabel ? `(${school.jenisLabel})` : "(English College)"}
+            {school?.namaSekolah || school?.kodSekolah || "Sekolah"}{" "}
+            {school?.jenisLabel ? `(${school.jenisLabel})` : ""}
           </h3>
 
           <p className="my-2 flex items-center gap-2">
@@ -46,8 +46,8 @@ export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
           </p>
           <p className="my-1 flex items-start gap-2">
             <MapIcon className="text-txt-primary" />
-            {school
-              ? `${school.alamatSurat}, ${school.poskodSurat} ${school.bandarSurat}, ${school.negeri}`
+            {school && school.lat && school.lng
+              ? `Koordinat: ${school.lat.toFixed(6)}, ${school.lng.toFixed(6)}`
               : "Tiada Maklumat"}
           </p>
         </div>

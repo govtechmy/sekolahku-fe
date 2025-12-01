@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import {
   SearchIcon,
   CrossIcon,
@@ -44,14 +44,9 @@ export function MapSearchBar({
     new Set(markersToShow.map((m: SchoolMarker) => m.jenisLabel))
   ).sort();
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setQuery(value);
-    setSelected(null);
-    filterMarkers(value, selectedNegeri, selectedJenis);
-  };
+  const debounceRef = useRef<number | null>(null);
 
-  const filterMarkers = (value: string, negeri: string, jenis: string) => {
+  const filterMarkers = useCallback((value: string, negeri: string, jenis: string) => {
     let filtered = markersToShow;
 
     if (value) {
@@ -70,7 +65,32 @@ export function MapSearchBar({
 
     setFilteredMarkers(filtered);
     setSuggestions(filtered);
-  };
+  }, [markersToShow, setFilteredMarkers, setSuggestions]);
+
+  // Cleanup debounce timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
+
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
+    setSelected(null);
+
+    // Clear previous debounce
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    // Debounce the filtering to avoid excessive operations
+    debounceRef.current = setTimeout(() => {
+      filterMarkers(value, selectedNegeri, selectedJenis);
+    }, 300);
+  }, [setQuery, setSelected, filterMarkers, selectedNegeri, selectedJenis]);
 
   const handleSelect = (school: SchoolMarker) => {
     setQuery(school.namaSekolah);

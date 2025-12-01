@@ -1,5 +1,5 @@
 {
-  "name": "fe-template-a",
+  "name": "sekolahku-fe",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,13 +12,15 @@
   "dependencies": {
     "@govtechmy/myds-react": "^1.0.0",
     "@govtechmy/myds-style": "^1.0.0",
+    "axios": "^1.13.2",
     "i18next": "^25.4.2",
     "leaflet": "^1.9.4",
+    "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-i18next": "^15.7.3",
     "react-leaflet": "^5.0.0",
+    "react-leaflet-markercluster": "^5.0.0-rc.0",
     "react-router-dom": "^7.8.2",
-    "react": "^19.1.1",
     "recharts": "^3.4.1"
   },
   "devDependencies": {
