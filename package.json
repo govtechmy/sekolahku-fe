@@ -13,15 +13,21 @@
     "@govtechmy/myds-react": "^1.0.0",
     "@govtechmy/myds-style": "^1.0.0",
     "@vis.gl/react-google-maps": "^1.5.5",
+    "axios": "^1.13.2",
     "i18next": "^25.4.2",
-    "react": "^19.1.1",
+    "leaflet": "^1.9.4",
     "react-dom": "^19.1.1",
     "react-i18next": "^15.7.3",
+    "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.8.2",
+    "recharts": "^3.4.1",
+    "zustand": "^5.0.8"
+    "react": "^19.1.1",
     "recharts": "^3.4.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@types/leaflet": "^1.9.21",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",
