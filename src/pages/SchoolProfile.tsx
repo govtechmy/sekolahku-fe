@@ -1,7 +1,7 @@
 import { CheckCircleFillIcon, CrossFillIcon } from "@govtechmy/myds-react/icon";
 import { dataSekolahAbout, dataSekolahInfo, dataSekolahJumlah, dataSekolahSuggestion } from "../contentData";
-import HeroMy from "../components/shared/HeroMy";
-import HeroSekolahDetails from "../asset/HeroSekolahDetail";
+import HeroMy from "../components/shared/HeroComponent";
+import BgSchoolProfile from "../asset/BgSchoolProfile";
 
 export default function SchoolProfile() {
 
@@ -10,7 +10,7 @@ export default function SchoolProfile() {
       <HeroMy className="relative w-full h-[408px] md:h-[408px] sm:h-[320px] max-sm:h-[300px] overflow-hidden border-b border-outline-200 bg-black">
         <HeroMy.Background>
           <div className="absolute inset-0 w-full h-full">
-            <HeroSekolahDetails className="absolute inset-0 w-full h-full bg-cover bg-center"/>
+            <BgSchoolProfile className="absolute inset-0 w-full h-full bg-cover bg-center"/>
           </div>
         </HeroMy.Background>
         <HeroMy.Content className="max-lg:px-0 max-lg:py-0">

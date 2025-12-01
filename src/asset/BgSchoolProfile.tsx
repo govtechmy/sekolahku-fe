@@ -1,8 +1,8 @@
-interface HeroSekolahDetailsProps {
+interface BgSchoolProfileProps {
   className?: string;
 }
 
-export default function HeroSekolahDetails({ className }: HeroSekolahDetailsProps) {
+export default function BgSchoolProfile({ className }: BgSchoolProfileProps) {
   return (
     <svg
       width="1440"
