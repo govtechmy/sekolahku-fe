@@ -19,4 +19,6 @@ export type SchoolMarker = {
   bantuan?: string;
   tarikhTubuh?: string;
   distance?: number;
+  jumlahPelajar?: number;
+  jumlahGuru?: number;
 };
