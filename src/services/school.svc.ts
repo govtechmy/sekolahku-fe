@@ -11,8 +11,8 @@ export const getSchoolSuggestion = async (params?: schoolSearchModel): Promise<S
       paramsSerializer: { indexes: null },
     })
     const filteredData = response.data.data.filter(school => 
-      school?.data?.infoLokasi?.koordinatYY !== undefined && 
-      school?.data?.infoLokasi?.koordinatXX !== undefined
+      school.data.infoLokasi.koordinatYY !== undefined && 
+      school.data.infoLokasi.koordinatXX !== undefined
     )
     return filteredData
   } catch (error) {
