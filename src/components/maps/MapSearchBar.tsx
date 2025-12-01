@@ -88,16 +88,16 @@ export function MapSearchBar({
       const results = await getSchoolSuggestion(params);
       
       const transformed: SchoolMarker[] = results.map((school) => ({
-        namaSekolah: school.namaSekolah,
-        kodSekolah: school.kodSekolah,
-        lat: school.data.infoLokasi.koordinatYY,
-        lng: school.data.infoLokasi.koordinatXX,
-        negeri: school.data.infoPentadbiran.negeri,
-        bandarSurat: school.data.infoKomunikasi.bandarSurat || "",
-        jenisLabel: school.data.infoSekolah.jenisLabel,
-        jumlahPelajar: school.data.infoSekolah.jumlahPelajar,
-        jumlahGuru: school.data.infoSekolah.jumlahGuru,
-      }));
+          namaSekolah: school.namaSekolah || "Sekolah Tidak Diketahui",
+          kodSekolah: school.kodSekolah || "",
+          lat: school.data.infoLokasi.koordinatYY,
+          lng: school.data.infoLokasi.koordinatXX,
+          negeri: school.data?.infoPentadbiran?.negeri || "",
+          bandarSurat: school.data?.infoKomunikasi?.bandarSurat || "",
+          jenisLabel: school.data?.infoSekolah?.jenisLabel || "",
+          jumlahPelajar: school.data?.infoSekolah?.jumlahPelajar || 0,
+          jumlahGuru: school.data?.infoSekolah?.jumlahGuru || 0,
+        }));
 
       setFilteredMarkers(transformed);
       setSuggestions(transformed);
