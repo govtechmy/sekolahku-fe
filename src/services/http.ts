@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useAuthStore } from '../store/store';
+import { useAuthStore } from '../store/store'
 
 // Authenticated axios instance (uses default headers set by AuthStore)
 export const authAxios = axios
@@ -11,11 +11,10 @@ export const unauthAxios = axios.create({
 })
 
 // Attach API key before every request
-authAxios.interceptors.request.use((config) => {
+authAxios.interceptors.request.use(config => {
   const apiKey = useAuthStore.getState().apiKey
   if (apiKey) {
-    config.headers["Api-Key"] = apiKey
+    config.headers['Sekolahku-X-Api-Key'] = apiKey
   }
   return config
 })
-
