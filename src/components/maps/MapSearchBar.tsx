@@ -66,7 +66,15 @@ export function MapSearchBar({
     const value = e.target.value;
     setQuery(value);
     setSelected(null);
-    filterMarkers(value, selectedNegeri, selectedJenis);
+    
+    // Only call API if user has typed at least 3 characters
+    const trimmedValue = value.trim();
+    
+    if (trimmedValue.length >= 3) {
+      filterMarkers(value, selectedNegeri, selectedJenis);
+    } else {
+      setSuggestions([]);
+    }
   };
 
   const filterMarkers = async (value: string, negeri: string, jenis: string) => {
