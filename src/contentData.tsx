@@ -402,3 +402,159 @@ export const dataItemLinks = [
     link: "https://egtukar.moe.gov.my/",
   },
 ];
+
+// Malaysian States and Districts data
+export const dataPilihLokasi = [
+  { 
+    name: "Johor", 
+    flagFile: "Flag_of_Johor.svg",
+    districts: [
+      "Segamat", "Sekijang", "Labis", "Pagoh", "Ledang", "Bakri", "Muar", 
+      "Parit Sulong", "Ayer Hitam", "Sri Gading", "Batu Pahat", "Simpang Renggam", 
+      "Kluang", "Sembrong", "Mersing", "Tenggara", "Kota Tinggi", "Pengerang", 
+      "Tebrau", "Pasir Gudang", "Johor Bahru", "Pulai", "Iskandar Puteri", 
+      "Kulai", "Pontian", "Tanjung Piai"
+    ]
+  },
+  
+  { 
+    name: "Kedah", 
+    flagFile: "Flag_of_Kedah.svg",
+    districts: [
+      "Langkawi", "Jerlun", "Kubang Pasu", "Padang Terap", "Pokok Sena", 
+      "Alor Setar", "Kuala Kedah", "Pendang", "Jerai", "Sik", "Merbok", 
+      "Sungai Petani", "Baling", "Padang Serai", "Kulim-Bandar Baharu"
+    ]
+  },
+  
+  { 
+    name: "Kelantan", 
+    flagFile: "Flag_of_Kelantan.svg",
+    districts: [
+      "Tumpat", "Pengkalan Chepa", "Kota Bharu", "Pasir Mas", "Rantau Panjang", 
+      "Kubang Kerian", "Bachok", "Ketereh", "Tanah Merah", "Pasir Puteh", 
+      "Machang", "Jeli", "Kuala Krai", "Gua Musang"
+    ]
+  },
+  { 
+    name: "Melaka", 
+    flagFile: "Flag_of_Malacca.svg",
+    districts: [
+      "Masjid Tanah", "Alor Gajah", "Tangga Batu", 
+      "Bukit Katil", "Kota Melaka", "Jasin"
+    ]
+  },
+  
+  { 
+    name: "Negeri Sembilan", 
+    flagFile: "Flag_of_Negeri_Sembilan.svg",
+    districts: [
+      "Jelebu", "Jempol", "Seremban", "Kuala Pilah", 
+      "Rasah", "Rembau", "Telok Kemang", "Tampin"
+    ]
+  },
+  
+  { 
+    name: "Pahang", 
+    flagFile: "Flag_of_Pahang.svg",
+    districts: [
+      "Cameron Highlands", "Lipis", "Raub", "Jerantut", "Indera Mahkota", 
+      "Kuantan", "Paya Besar", "Pekan", "Maran", "Kuala Krau", 
+      "Temerloh", "Bentong", "Bera", "Rompin"
+    ]
+  },
+  
+  { 
+    name: "Perak", 
+    flagFile: "Flag_of_Perak.svg",
+    districts: [
+      "Gerik", "Lenggong", "Larut", "Parit Buntar", "Bagan Serai", "Bukit Gantang", 
+      "Taiping", "Padang Rengas", "Sungai Siput", "Tambun", "Ipoh Timur", "Ipoh Barat", 
+      "Batu Gajah", "Kuala Kangsar", "Beruas", "Parit", "Kampar", "Gopeng", 
+      "Tapah", "Pasir Salak", "Lumut", "Bagan Datuk", "Teluk Intan", "Tanjong Malim"
+    ]
+  },
+  { 
+    name: "Perlis", 
+    flagFile: "Flag_of_Perlis.svg",
+    districts: ["Padang Besar", "Kangar", "Arau"]
+  },
+  
+  { 
+    name: "Pulau Pinang", 
+    flagFile: "Flag_of_Penang_(Malaysia).svg",
+    districts: [
+      "Kepala Batas", "Tasek Gelugor", "Bagan", "Permatang Pauh", "Bukit Mertajam", 
+      "Batu Kawan", "Nibong Tebal", "Bukit Bendera", "Tanjong", "Jelutong", 
+      "Bukit Gelugor", "Bayan Baru", "Balik Pulau"
+    ]
+  },
+  
+  { 
+    name: "Sabah", 
+    flagFile: "Flag_of_Sabah.svg",
+    districts: [
+      "Kudat", "Kota Marudu", "Kota Belud", "Tuaran", "Sepanggar", "Kota Kinabalu", 
+      "Putatan", "Penampang", "Papar", "Kimanis", "Beaufort", "Sipitang", "Ranau", 
+      "Keningau", "Tenom", "Pensiangan", "Beluran", "Libaran", "Batu Sapi", 
+      "Sandakan", "Kinabatangan", "Lahad Datu", "Semporna", "Tawau", "Kalabakan"
+    ]
+  },
+  
+  { 
+    name: "Sarawak", 
+    flagFile: "Flag_of_Sarawak.svg",
+    districts: [
+      "Mas Gading", "Santubong", "Petra Jaya", "Bandar Kuching", "Stampin", 
+      "Kota Samarahan", "Puncak Borneo", "Serian", "Batang Sadong", "Batang Lupar", 
+      "Sri Aman", "Lubok Antu", "Betong", "Saratok", "Tanjong Manis", "Igan", 
+      "Sarikei", "Julau", "Kanowit", "Lanang", "Sibu", "Mukah", "Selangau", 
+      "Kapit", "Hulu Rajang", "Bintulu", "Sibuti", "Miri", "Baram", "Limbang", "Lawas"
+    ]
+  },
+  
+  { 
+    name: "Selangor", 
+    flagFile: "Flag_of_Selangor.svg",
+    districts: [
+      "Sabak Bernam", "Sungai Besar", "Hulu Selangor", "Tanjong Karang", "Kuala Selangor", 
+      "Selayang", "Gombak", "Ampang", "Pandan", "Hulu Langat", "Bangi", "Puchong", 
+      "Subang", "Petaling Jaya", "Damansara", "Sungai Buloh", "Shah Alam", 
+      "Kapar", "Klang", "Kota Raja", "Kuala Langat", "Sepang"
+    ]
+  },
+  { 
+    name: "Terengganu", 
+    flagFile: "Flag_of_Terengganu.svg",
+    districts: [
+      "Besut", "Setiu", "Kuala Nerus", "Kuala Terengganu", 
+      "Marang", "Hulu Terengganu", "Dungun", "Kemaman"
+    ]
+  },
+  
+  { 
+    name: "Wilayah Persekutuan Kuala Lumpur", 
+    flagFile: "Flag_of_the_Federal_Territories_of_Malaysia.svg",
+    districts: [
+      "Kepong", "Batu", "Wangsa Maju", "Segambut", "Setiawangsa", 
+      "Titiwangsa", "Bukit Bintang", "Lembah Pantai", "Seputeh", 
+      "Cheras", "Bandar Tun Razak"
+    ]
+  },
+  
+  { 
+    name: "Wilayah Persekutuan Labuan", 
+    flagFile: "Flag_of_Labuan.svg",
+    districts: ["Labuan"]
+  },
+  
+  { 
+    name: "Wilayah Persekutuan Putrajaya", 
+    flagFile: "Flag_of_Putrajaya.svg",
+    districts: ["Putrajaya"]
+  }
+] as const;
+
+export type StateData = typeof dataPilihLokasi[number];
+export type StateName = StateData['name'];
+export type DistrictName = string;
