@@ -136,6 +136,8 @@ export function MapSearchBar({
   const handleSelect = (school: SchoolMarker) => { 
     setZoom?.(18);
     panTo?.(school.lat, school.lng);
+    // Select the school to trigger its info popup after panning
+    setSelected(school);
   };
 
   const handleClear = () => {

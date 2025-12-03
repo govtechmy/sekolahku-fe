@@ -143,7 +143,7 @@ export default function SchoolMaps() {
           />
         ))}
 
-        {selected && selectionSource === "marker" && !isPopupClosing && (
+        {selected && !isPopupClosing && (
           <Popup
             position={[selected.lat, selected.lng]}
             eventHandlers={{
