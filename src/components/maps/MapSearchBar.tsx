@@ -57,7 +57,7 @@ export function MapSearchBar({
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimerRef = useRef<number | null>(null);
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
