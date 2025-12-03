@@ -62,6 +62,7 @@ export default function SchoolMaps() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [isPopupClosing, setIsPopupClosing] = useState(false);
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
+  const [selectionSource, setSelectionSource] = useState<"marker" | "search" | null>(null);
 
   console.log("User Location:", userLocation);// for future use
   console.log("Map Zoom Level:", zoom);// for future use
@@ -84,7 +85,10 @@ export default function SchoolMaps() {
           setQuery={setQuery}
           setFilteredMarkers={setFilteredMarkers}
           markersToShow={filteredMarkers}
-          setSelected={setSelected}
+          setSelected={(s) => {
+            setSelected(s);
+            setSelectionSource("search");
+          }}
           panTo={(lat: number, lng: number) => mapRef?.panTo([lat, lng])}
           setZoom={(z: number) => mapRef?.setZoom(z)}
         />
@@ -109,6 +113,7 @@ export default function SchoolMaps() {
           onDragStart={() => {
             if (selected) {
               setSelected(null);
+              setSelectionSource(null);
             }
           }}
         />
@@ -125,19 +130,20 @@ export default function SchoolMaps() {
                 if (selected) {
                   setIsPopupClosing(true);
                   setSelected(null);
-                  setTimeout(() => {
+                  setSelectionSource(null);
                     setSelected(pos);
+                    setSelectionSource("marker");
                     setIsPopupClosing(false);
-                  }, 100);
                 } else {
                   setSelected(pos);
+                  setSelectionSource("marker");
                 }
               },
             }}
           />
         ))}
 
-        {selected && !isPopupClosing && (
+        {selected && selectionSource === "marker" && !isPopupClosing && (
           <Popup
             position={[selected.lat, selected.lng]}
             eventHandlers={{
@@ -145,6 +151,7 @@ export default function SchoolMaps() {
                 // Only clear selected if we're not in the process of switching markers
                 if (!isPopupClosing) {
                   setSelected(null);
+                  setSelectionSource(null);
                   console.log("Popup explicitly closed, marker cleared.");
                 }
               },
