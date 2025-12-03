@@ -15,12 +15,13 @@ export default function SchoolProfile() {
   const { id } = useParams(); // ABA0001,YRA4101 etc
   const school = schools.find((s:SchoolProps) => s.KODSEKOLAH === id)
   const domain = import.meta.env.VITE_DOMAIN_NAME
+  const schoolProfile = "/halaman-sekolah"
 
   return (<>
     <HelmetMeta
       title={`${school?.NAMASEKOLAH} School Profile`}
       description={`School profile page for ${school?.NAMASEKOLAH}.`}
-      canonical={`${domain}/${id}`}
+      canonical={`${domain}${schoolProfile}/${id}`}
     />
     <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
       <HeroMy className="relative w-full h-[408px] md:h-[408px] sm:h-[320px] max-sm:h-[300px] overflow-hidden border-b border-outline-200 bg-black">
