@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   SearchIcon,
   CrossIcon,
@@ -57,6 +57,7 @@ export function MapSearchBar({
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
@@ -66,8 +67,33 @@ export function MapSearchBar({
     const value = e.target.value;
     setQuery(value);
     setSelected(null);
-    filterMarkers(value, selectedNegeri, selectedJenis);
+    
+    // Clear previous timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    
+    // Only call API if user has typed at least 3 characters
+    const trimmedValue = value.trim();
+    
+    if (trimmedValue.length >= 3) {
+      // Add 500ms delay before calling API
+      debounceTimerRef.current = setTimeout(() => {
+        filterMarkers(value, selectedNegeri, selectedJenis);
+      }, 500);
+    } else {
+      setSuggestions([]);
+    }
   };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   const filterMarkers = async (value: string, negeri: string, jenis: string) => {
     try {
