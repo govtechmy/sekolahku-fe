@@ -1,3 +1,24 @@
+interface BaseListModel {
+  totalRecords: number
+  pageNumber: number
+  pageSize: number
+}
+
+export interface ItemSekolahModel {
+  _id: string
+  checksum: string
+  createdAt: string
+  data: SchoolData
+  kodSekolah: string
+  namaSekolah: string
+  updatedAt: string
+  status: string
+}
+
+export interface ListSekolahModel extends BaseListModel {
+  items: ItemSekolahModel[]
+}
+
 export interface schoolSearchModel {
   negeri?: string
   jenis?: string
@@ -47,21 +68,8 @@ export interface SchoolData {
   infoLokasi: SchoolInfoLokasi
 }
 
-export interface School {
-  _id: string
-  checksum: string
-  createdAt: string
-  data: SchoolData
-  kodSekolah: string
-  namaSekolah: string
-  updatedAt: string
-  status: string
-}
-
-export interface SchoolDetailResponse {
+export interface APIResponse<T> {
   status: string
   statusCode: number
-  data: School[]
+  data: T
 }
-
-
