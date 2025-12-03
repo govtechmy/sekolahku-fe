@@ -2,10 +2,26 @@ import { CheckCircleFillIcon, CrossFillIcon } from "@govtechmy/myds-react/icon";
 import { dataSekolahAbout, dataSekolahInfo, dataSekolahJumlah, dataSekolahSuggestion } from "../contentData";
 import HeroMy from "../components/shared/HeroComponent";
 import BgSchoolProfile from "../asset/BgSchoolProfile";
+import HelmetMeta from "../seo/HelmetMeta";
+import { useParams } from "react-router-dom";
+import schools from "../../school-list.json";
+
+type SchoolProps = {
+  KODSEKOLAH: string;
+  NAMASEKOLAH: string;
+}
 
 export default function SchoolProfile() {
+  const { id } = useParams(); // ABA0001,YRA4101 etc
+  const school = schools.find((s:SchoolProps) => s.KODSEKOLAH === id)
+  const domain = import.meta.env.VITE_DOMAIN_NAME
 
-  return (
+  return (<>
+    <HelmetMeta
+      title={`${school?.NAMASEKOLAH} School Profile`}
+      description={`School profile page for ${school?.NAMASEKOLAH}.`}
+      canonical={`${domain}/${id}`}
+    />
     <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
       <HeroMy className="relative w-full h-[408px] md:h-[408px] sm:h-[320px] max-sm:h-[300px] overflow-hidden border-b border-outline-200 bg-black">
         <HeroMy.Background>
@@ -19,7 +35,9 @@ export default function SchoolProfile() {
               {/* LEFT CONTENT */}
               <div className="max-w-xl pt-10 md:pt-0 text-center md:text-left">
                 <div className="text-txt-primary font-semibold gap-6 pb-6">NAMA SEKOLAH</div>
-                <div className="text-txt-black-900 text-heading-md max-md:text-heading-sm font-semibold gap-7 pb-7 max-w-[495px]">Maktab Sultan Abu Bakar (English College)</div>
+                <div className="text-txt-black-900 text-heading-md max-md:text-heading-sm font-semibold gap-7 pb-7 max-w-[495px]">
+                  {school?.NAMASEKOLAH ? school.NAMASEKOLAH : "Maktab Sultan Abu Bakar (English College)"}
+                </div>
                 <div className="text-txt-primary font-semibold">JENIS SEKOLAH 
                   <span className="text-txt-black-500 font-medium"> : SMK </span>
                 </div>
@@ -117,5 +135,5 @@ export default function SchoolProfile() {
         </div>
       </div>
     </div>
-  );
+  </>);
 }
