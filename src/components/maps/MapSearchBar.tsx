@@ -133,13 +133,9 @@ export function MapSearchBar({
     }
   };
 
-  const handleSelect = (school: SchoolMarker) => {
-    setQuery(school.namaSekolah);
-    setFilteredMarkers([school]);
-    setSelected(school);
+  const handleSelect = (school: SchoolMarker) => { 
+    setZoom?.(18);
     panTo?.(school.lat, school.lng);
-    setZoom?.(14);
-    setSuggestions([school]);
   };
 
   const handleClear = () => {
