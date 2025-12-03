@@ -2,8 +2,9 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from "re
 import { useMemo, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { Button } from "@govtechmy/myds-react/button";
 import { schoolMarkers } from "../components/schoolMarkers"; //temp data
-import { MapSearchBar, SchoolInfoWindow } from "../components/maps";
+import { MapSearchBar, SchoolInfoWindow, LocationPickerWindow } from "../components/maps";
 import type { SchoolMarker } from "../types/maps";
 
 // Fix for default markers in Leaflet
@@ -71,12 +72,22 @@ export default function SchoolMaps() {
   const [filteredMarkers, setFilteredMarkers] = useState<SchoolMarker[]>(markersToShow);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>({ lat: initialPosition[0], lng: initialPosition[1] });
   const [zoom, setZoom] = useState(7);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
 
   console.log("User Location:", userLocation);// for future use
   console.log("Map Zoom Level:", zoom);// for future use
 
   return (
     <div className="relative" style={{ height: "750px", width: "100%" }}>
+      <div className="absolute top-4 right-4 z-[1000]">
+        {/* Temporary button */}
+        <Button
+          variant="default-outline"
+          onClick={() => setShowLocationPicker(true)}
+        >
+          Pilih Lokasi
+        </Button>
+      </div>
       <MapContainer
         center={initialPosition}
         zoom={7}
@@ -123,6 +134,12 @@ export default function SchoolMaps() {
           </Popup>
         )}
       </MapContainer>
+
+      {showLocationPicker && (
+        <LocationPickerWindow 
+          onClose={() => setShowLocationPicker(false)}
+        />
+      )}
     </div>
   );
 }
