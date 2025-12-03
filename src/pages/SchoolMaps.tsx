@@ -23,12 +23,19 @@ const schoolIcon = new L.Icon({
   popupAnchor: [0, -32],
 });
 
-function MapEvents({ onZoomChange, onCenterChange }: { onZoomChange: (zoom: number) => void; onCenterChange: (center: { lat: number; lng: number }) => void }) {
+function MapEvents({ onZoomChange, onCenterChange, onDragStart }: { 
+  onZoomChange: (zoom: number) => void; 
+  onCenterChange: (center: { lat: number; lng: number }) => void;
+  onDragStart?: () => void;
+}) {
   useMapEvents({
     zoomend: (e) => onZoomChange(e.target.getZoom()),
     moveend: (e) => {
       const center = e.target.getCenter();
       onCenterChange({ lat: center.lat, lng: center.lng });
+    },
+    dragstart: () => {
+      onDragStart?.();
     },
   });
   return null;
@@ -73,6 +80,7 @@ export default function SchoolMaps() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>({ lat: initialPosition[0], lng: initialPosition[1] });
   const [zoom, setZoom] = useState(7);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [isPopupClosing, setIsPopupClosing] = useState(false);
 
   console.log("User Location:", userLocation);// for future use
   console.log("Map Zoom Level:", zoom);// for future use
@@ -101,6 +109,11 @@ export default function SchoolMaps() {
         <MapEvents
           onZoomChange={setZoom}
           onCenterChange={setUserLocation}
+          onDragStart={() => {
+            if (selected) {
+              setSelected(null);
+            }
+          }}
         />
         <MapControls
           query={query}
@@ -115,18 +128,35 @@ export default function SchoolMaps() {
             position={[pos.lat, pos.lng]}
             icon={schoolIcon}
             eventHandlers={{
-              click: () => setSelected(pos),
+              click: () => {
+                if (selected?.kodSekolah === pos.kodSekolah) {
+                  return;
+                }
+                if (selected) {
+                  setIsPopupClosing(true);
+                  setSelected(null);
+                  setTimeout(() => {
+                    setSelected(pos);
+                    setIsPopupClosing(false);
+                  }, 100);
+                } else {
+                  setSelected(pos);
+                }
+              },
             }}
           />
         ))}
 
-        {selected && (
+        {selected && !isPopupClosing && (
           <Popup
             position={[selected.lat, selected.lng]}
             eventHandlers={{
-              remove: () => {
-                setSelected(null);
-                setFilteredMarkers(markersToShow);
+              popupclose: () => {
+                // Only clear selected if we're not in the process of switching markers
+                if (!isPopupClosing) {
+                  setSelected(null);
+                  console.log("Popup explicitly closed, marker cleared.");
+                }
               },
             }}
           >
