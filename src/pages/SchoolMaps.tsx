@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from "react-leaflet";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Button } from "@govtechmy/myds-react/button";
@@ -41,34 +41,14 @@ function MapEvents({ onZoomChange, onCenterChange, onDragStart }: {
   return null;
 }
 
-function MapControls({ query, setQuery, setFilteredMarkers, markersToShow, setSelected }: {
-  query: string;
-  setQuery: (val: string) => void;
-  setFilteredMarkers: (markers: SchoolMarker[]) => void;
-  markersToShow: SchoolMarker[];
-  setSelected: (marker: SchoolMarker | null) => void;
-}) {
+// Note: MapSearchBar will be rendered in a top-level sidebar div
+
+function MapInstanceBridge({ onMapReady }: { onMapReady: (map: L.Map) => void }) {
   const map = useMap();
-
-  const panTo = (lat: number, lng: number) => {
-    map.panTo([lat, lng]);
-  };
-
-  const setZoomLevel = (zoom: number) => {
-    map.setZoom(zoom);
-  };
-
-  return (
-    <MapSearchBar
-      query={query}
-      setQuery={setQuery}
-      setFilteredMarkers={setFilteredMarkers}
-      markersToShow={markersToShow}
-      setSelected={setSelected}
-      panTo={panTo}
-      setZoom={setZoomLevel}
-    />
-  );
+  useEffect(() => {
+    onMapReady(map);
+  }, [map, onMapReady]);
+  return null;
 }
 
 export default function SchoolMaps() {
@@ -81,12 +61,13 @@ export default function SchoolMaps() {
   const [zoom, setZoom] = useState(7);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [isPopupClosing, setIsPopupClosing] = useState(false);
+  const [mapRef, setMapRef] = useState<L.Map | null>(null);
 
   console.log("User Location:", userLocation);// for future use
   console.log("Map Zoom Level:", zoom);// for future use
 
   return (
-    <div className="relative" style={{ height: "750px", width: "100%" }}>
+    <div className="h-screen w-full flex relative">
       <div className="absolute top-4 right-4 z-[1000]">
         {/* Temporary button */}
         <Button
@@ -96,12 +77,28 @@ export default function SchoolMaps() {
           Pilih Lokasi
         </Button>
       </div>
+      {/* Leaflet sidebar placeholder: MapSearchBar rendered here */}
+      <div id="leaflet-sidebar" className="absolute top-4 left-4 z-[1000] w-[360px] max-w-[90vw] h-full">
+        <MapSearchBar
+          query={query}
+          setQuery={setQuery}
+          setFilteredMarkers={setFilteredMarkers}
+          markersToShow={filteredMarkers}
+          setSelected={setSelected}
+          panTo={(lat: number, lng: number) => mapRef?.panTo([lat, lng])}
+          setZoom={(z: number) => mapRef?.setZoom(z)}
+        />
+      </div>
       <MapContainer
         center={initialPosition}
         zoom={7}
-        style={{ height: "100%", width: "100%" }}
+        className="h-full w-full "
         zoomControl={false}
       >
+        {/* Bridge component to capture the Leaflet map instance */}
+        {mapRef === null && (
+          <MapInstanceBridge onMapReady={setMapRef} />
+        )}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -114,13 +111,6 @@ export default function SchoolMaps() {
               setSelected(null);
             }
           }}
-        />
-        <MapControls
-          query={query}
-          setQuery={setQuery}
-          setFilteredMarkers={setFilteredMarkers}
-          markersToShow={markersToShow}
-          setSelected={setSelected}
         />
         {filteredMarkers.map((pos, index) => (
           <Marker
@@ -164,7 +154,6 @@ export default function SchoolMaps() {
           </Popup>
         )}
       </MapContainer>
-
       {showLocationPicker && (
         <LocationPickerWindow 
           onClose={() => setShowLocationPicker(false)}

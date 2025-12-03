@@ -155,14 +155,12 @@ export function MapSearchBar({
     <>
       {isExpanded && (
         <div
-          className="fixed inset-0 bg-black/20 z-[400]"
-          onClick={() => setIsExpanded(false)}
         />
       )}
 
       <div
-        className={`absolute flex justify-start pointer-events-none w-[350px] transition-all z-[500] 
-          ${isExpanded ? "top-0 left-0" : "top-3 left-3"}
+        className={`absolute flex justify-start w-[350px] transition-all z-[9999] 
+          ${isExpanded ? "top-0 left-0 bottom-0" : "top-3 left-3"}
         `}
       >
         <div
@@ -173,7 +171,7 @@ export function MapSearchBar({
             if (!isExpanded) setIsExpanded(true);
           }}
         >
-        <div className="relative">
+        <div className="relative h-full flex flex-col">
           <div className="flex items-center px-3 py-2 gap-2">
             {isExpanded && (
               <button
@@ -204,12 +202,10 @@ export function MapSearchBar({
                 <CrossIcon className="w-4 h-4" />
               </button>
             )}
-
             <div className="flex bg-bg-primary-600 items-center justify-center rounded-full p-1.5">
               <SearchIcon className="w-4 h-4 text-txt-white" />
             </div>
           </div>
-
           {isExpanded && (
             <FilterDropdowns
               selectedNegeri={selectedNegeri}
@@ -228,7 +224,7 @@ export function MapSearchBar({
           )}
 
           {isExpanded && (
-            <ul className="w-full bg-white rounded-b-md shadow-lg h-[660px] overflow-y-auto border-t border-gray-200">
+            <div className="w-full h-full rounded-b-md shadow-lg overflow-y-auto overflow-x-auto border-t border-gray-200 flex-1">
               {suggestions.length > 0 ? (
                 suggestions.map((school, idx) => (
                   <li
@@ -265,7 +261,7 @@ export function MapSearchBar({
               ) : (
                 <li className="px-4 py-4 text-sm text-gray-500">Tiada hasil carian</li>
               )}
-            </ul>
+            </div>
           )}
         </div>
         </div>
