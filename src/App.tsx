@@ -10,7 +10,7 @@ function App() {
 
   useEffect(() => {
     const isAllowed = sessionStorage.getItem("dev_access_allowed") === "true";
-    if (isAllowed) setIsAllowed(false);
+    if (isAllowed) setIsAllowed(true);
   }, []);
   
   return (
