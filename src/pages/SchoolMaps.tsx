@@ -128,7 +128,7 @@ export default function SchoolMaps() {
   console.log("Map Zoom Level:", zoom);// for future use
 
   return (
-    <div className="h-screen w-full flex relative">
+    <div className="h-full w-full flex relative">
       <div className="absolute top-4 right-4 z-[1000]">
         {/* Temporary button */}
         <Button
@@ -139,7 +139,7 @@ export default function SchoolMaps() {
         </Button>
       </div>
       {/* Leaflet sidebar placeholder: MapSearchBar rendered here */}
-      <div id="leaflet-sidebar" className="absolute top-4 left-4 z-[1000] w-[360px] max-w-[90vw] h-full">
+      <div id="leaflet-sidebar" className="absolute top-0 left-0 z-[1000] w-[360px] max-w-[90vw] h-full">
         <MapSearchBar
           query={query}
           setQuery={setQuery}
