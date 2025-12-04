@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Button } from "@govtechmy/myds-react/button";
-import { schoolMarkers } from "../components/schoolMarkers"; //temp data
 import { MapSearchBar, SchoolInfoWindow, LocationPickerWindow } from "../components/maps";
 import type { SchoolMarker } from "../types/maps";
 
@@ -116,6 +115,7 @@ function MapOverlayPopup({
 
 export default function SchoolMaps() {
   const initialPosition: [number, number] = [4.1969, 101.2561];
+  const schoolMarkers: SchoolMarker[] = [];
   const markersToShow = useMemo(() => schoolMarkers, []);
   const [selected, setSelected] = useState<SchoolMarker | null>(null);
   const [query, setQuery] = useState("");
@@ -123,7 +123,6 @@ export default function SchoolMaps() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>({ lat: initialPosition[0], lng: initialPosition[1] });
   const [zoom, setZoom] = useState(7);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
-  const [isPopupClosing, setIsPopupClosing] = useState(false);
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
 
   console.log("User Location:", userLocation);// for future use
@@ -187,24 +186,22 @@ export default function SchoolMaps() {
                 if (selected?.kodSekolah === pos.kodSekolah) {
                   return;
                 }
-                if (selected) {
-                  setIsPopupClosing(true);
-                  setSelected(null);
-                  setSelected(pos);
-                  setIsPopupClosing(false);
-                  mapRef?.setZoom(18);
-                  mapRef?.panTo([pos.lat, pos.lng]);
-                } else {
-                  setSelected(pos);
-                  mapRef?.setZoom(18);
-                  mapRef?.panTo([pos.lat, pos.lng]);
+                setSelected(pos);
+                if (mapRef) {
+                  const pixelOffset = 240; 
+                  const metersPerPixel = 156543.03392 * Math.cos(pos.lat * Math.PI / 180) / Math.pow(2, 17);
+                  const latOffset = (pixelOffset * metersPerPixel) / 111320; // 111320 meters per degree latitude
+                  mapRef.setView([pos.lat + latOffset, pos.lng], 17, {
+                    animate: true,
+                    duration: 0.5
+                  });
                 }
               },
             }}
           />
         ))}
 
-        {selected && !isPopupClosing && mapRef && (
+        {selected && mapRef && (
           <MapOverlayPopup
             map={mapRef}
             school={selected}
