@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Button } from "@govtechmy/myds-react/button";
@@ -116,10 +116,9 @@ function MapOverlayPopup({
 export default function SchoolMaps() {
   const initialPosition: [number, number] = [4.1969, 101.2561];
   const schoolMarkers: SchoolMarker[] = [];
-  const markersToShow = useMemo(() => schoolMarkers, []);
   const [selected, setSelected] = useState<SchoolMarker | null>(null);
   const [query, setQuery] = useState("");
-  const [filteredMarkers, setFilteredMarkers] = useState<SchoolMarker[]>(markersToShow);
+  const [filteredMarkers, setFilteredMarkers] = useState<SchoolMarker[]>(schoolMarkers);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>({ lat: initialPosition[0], lng: initialPosition[1] });
   const [zoom, setZoom] = useState(7);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
