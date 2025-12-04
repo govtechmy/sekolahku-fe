@@ -83,15 +83,15 @@ function MapOverlayPopup({
     <div
       style={{
         position: "absolute",
-        left: 0,
-        top: 0,
+        left: -260,
+        top: -480,
         transform: `translate(${position.x}px, ${position.y - 32}px)`,
-        zIndex: 1000,
+        zIndex: 600,
         pointerEvents: "auto",
       }}
       className="leaflet-custom-popup"
     >
-      <div className="rounded-lg shadow-lg bg-white border border-gray-200 min-w-[260px] max-w-[320px]">
+      <div className="rounded-lg shadow-lg bg-white border border-gray-200 min-w-[394px] max-w-[520px]">
         <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200">
           <span className="font-medium">Maklumat Sekolah</span>
           <button
@@ -190,10 +190,14 @@ export default function SchoolMaps() {
                 if (selected) {
                   setIsPopupClosing(true);
                   setSelected(null);
-                    setSelected(pos);
-                    setIsPopupClosing(false);
+                  setSelected(pos);
+                  setIsPopupClosing(false);
+                  mapRef?.setZoom(18);
+                  mapRef?.panTo([pos.lat, pos.lng]);
                 } else {
                   setSelected(pos);
+                  mapRef?.setZoom(18);
+                  mapRef?.panTo([pos.lat, pos.lng]);
                 }
               },
             }}
