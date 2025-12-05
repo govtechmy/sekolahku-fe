@@ -1,50 +1,49 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
-import { GlobeIcon } from "@govtechmy/myds-react/icon";
+ import { useState } from "react";
+// import { useNavigate, useParams } from "react-router-dom";
+// import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
+// import { GlobeIcon } from "@govtechmy/myds-react/icon";
 import {
   Navbar,
   NavbarMenu,
   NavbarMenuItem,
   NavbarAction,
 } from "@govtechmy/myds-react/navbar";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@govtechmy/myds-react/select";
-import { ThemeSwitch } from "@govtechmy/myds-react/theme-switch";
-import i18n from "../../i18n";
-import CartIcon from "../../icons/CartIcon";
+// import {
+//   Select,
+//   SelectTrigger,
+//   SelectValue,
+//   SelectContent,
+//   SelectItem,
+// } from "@govtechmy/myds-react/select";
+// import { ThemeSwitch } from "@govtechmy/myds-react/theme-switch";
+// import i18n from "../../i18n";
+// import CartIcon from "../../icons/CartIcon";
 
 export default function NavbarMyds() {
-  const navigate = useNavigate();
-  const { lang } = useParams<{ lang: string }>();
-
-  const [selectedLang, setSelectedLang] = useState(
-    localStorage.getItem("lang") || "en"
-  );
+  // const navigate = useNavigate();
+  // const { lang } = useParams<{ lang: string }>();
   const [isHidden, setIsHidden] = useState(false);
+  // const [selectedLang, setSelectedLang] = useState(
+  //   localStorage.getItem("lang") || "ms"
+  // );
 
   // Sync state when URL param changes (for manual URL changes or navigation)
-  useEffect(() => {
-    if (lang && (lang === "en" || lang === "ms")) {
-      setSelectedLang(lang);
-      localStorage.setItem("lang", lang);
-      i18n.changeLanguage(lang);
-    }
-  }, [lang]);
+  // useEffect(() => {
+  //   if (lang && (lang === "en" || lang === "ms")) {
+  //     setSelectedLang(lang);
+  //     localStorage.setItem("lang", lang);
+  //     i18n.changeLanguage(lang);
+  //   }
+  // }, [lang]);
 
-  const updateLanguage = (newLang: string) => {
-    setSelectedLang(newLang);
-    localStorage.setItem("lang", newLang);
-    i18n.changeLanguage(newLang);
-    const currentPath = window.location.pathname;
-    const newPath = currentPath.replace(/^\/(en|ms)/, `/${newLang}`);
-    navigate(newPath);
-  };
+  // const updateLanguage = (newLang: string) => {
+  //   setSelectedLang(newLang);
+  //   localStorage.setItem("lang", newLang);
+  //   i18n.changeLanguage(newLang);
+  //   const currentPath = window.location.pathname;
+  //   const newPath = currentPath.replace(/^\/(en|ms)/, `/${newLang}`);
+  //   navigate(newPath);
+  // };
 
   return (
     <Navbar>
@@ -65,7 +64,7 @@ export default function NavbarMyds() {
 
       <NavbarAction onClick={() => setIsHidden((prev) => !prev)}>
         {/* Search Button */}
-        <Button
+        {/* <Button
           variant="default-ghost"
           iconOnly
           aria-label="search-button"
@@ -74,13 +73,13 @@ export default function NavbarMyds() {
           <ButtonIcon>
             <CartIcon />
           </ButtonIcon>
-        </Button>
+        </Button> */}
 
         {/* Theme Switch */}
-        <ThemeSwitch as="toggle" />
+        {/* <ThemeSwitch as="toggle" /> */}
 
         {/* Language Selector */}
-        <div className="hidden sm:block">
+        {/* <div className="hidden sm:block">
           <Select
             value={selectedLang}
             onValueChange={(value) => updateLanguage(value)}
@@ -96,8 +95,7 @@ export default function NavbarMyds() {
               <SelectItem value="ms">BM</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <Button>Log Masuk</Button>
+        </div> */}
       </NavbarAction>
     </Navbar>
   );

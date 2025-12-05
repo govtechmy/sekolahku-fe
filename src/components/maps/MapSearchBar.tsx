@@ -84,7 +84,7 @@ export function MapSearchBar({
 
     const trimmedValue = value.trim();
     if (trimmedValue.length >= 3) {
-      debounceTimerRef.current = setTimeout(() => {
+      debounceTimerRef.current = window.setTimeout(() => {
         filterMarkers(value, selectedNegeri, selectedJenis);
       }, 500);
     } else {
