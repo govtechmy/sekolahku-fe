@@ -4,7 +4,15 @@ import AppRoutes from "./router";
 import { BrowserRouter } from "react-router-dom";
 
 function App() {
-  //Temporarily setup
+  sessionStorage.setItem("dev_access_allowed", "true");
+  if (import.meta.env.VITE_APP_ENV === "production") {
+    sessionStorage.setItem("dev_access_allowed", "false");
+  }
+
+  if (!import.meta.env.VITE_APP_CODE) {
+    sessionStorage.setItem("dev_access_allowed", "true");
+  }
+
   const [isAllowed, setIsAllowed] = useState(false);
   const devCode = "dev1234"
 

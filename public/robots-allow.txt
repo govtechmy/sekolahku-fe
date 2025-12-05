@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sekolahku.govtechmy.xyz/sitemap.xml
