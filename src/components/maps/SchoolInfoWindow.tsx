@@ -4,14 +4,14 @@ import {
   PhoneIcon,
   PinIcon,
 } from "@govtechmy/myds-react/icon";
-import type { SchoolMarker } from "../../types/maps";
 import { Tag } from "@govtechmy/myds-react/tag";
 import { toTitleCase } from "../../utils/titleCaseConverter";
 import { Button } from "@govtechmy/myds-react/button";
 import { InfoIconRow, InfoRow } from "../shared/CardInfo";
+import type { ItemSekolahModel } from "../../models/response";
 
 type SchoolInfoWindowProps = {
-  school: SchoolMarker;
+  school: ItemSekolahModel;
 };
 
 export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
@@ -26,7 +26,7 @@ export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
       <div className="p-3 flex flex-col gap-3 justify-start">
         <div>
           <Tag mode="pill" variant="success" className="font-normal">
-            {school?.kluster || "Sekolah Kluster Kecemerlangan"}
+            {school?.data?.infoSekolah?.jenisLabel || "Sekolah"}
           </Tag>
         </div>
         <div className="text-body-md font-semibold font-body">
@@ -39,21 +39,21 @@ export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
           />
           <InfoIconRow
             icon={<PhoneIcon/>}
-            value={school?.noTelefon || "Tiada Maklumat"}
+            value={school?.data?.infoKomunikasi?.noTelefon || "Tiada Maklumat"}
           />
           <InfoIconRow
             icon={<EmailIcon/>}
-            value={school?.email || "Tiada Maklumat"}
+            value={school?.data?.infoKomunikasi?.email || "Tiada Maklumat"}
           />
           <InfoIconRow
             icon={<PinIcon/>}
             value={
-              school
+              school?.data?.infoKomunikasi
                 ? toTitleCase(
-                    `${school.alamatSurat || ""}${
-                      school.alamatSurat ? ", " : ""
-                    }${school.poskodSurat || ""} ${school.bandarSurat || ""}${
-                      school.negeri ? ", " + school.negeri : ""
+                    `${school.data.infoKomunikasi.alamatSurat || ""}${
+                      school.data.infoKomunikasi.alamatSurat ? ", " : ""
+                    }${school.data.infoKomunikasi.poskodSurat || ""} ${school.data.infoKomunikasi.bandarSurat || ""}${
+                      school.data.infoPentadbiran?.negeri ? ", " + school.data.infoPentadbiran.negeri : ""
                     }`
                   )
                 : "Tiada Maklumat"
@@ -64,19 +64,19 @@ export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
       <div className="border-y border-otl-divider p-3 flex flex-col gap-2 ">
         <div className="font-body text-body-xs font-semibold">JPN</div>
         <div className="flex gap-1 flex-col">
-          <InfoRow label="Lokasi" value={school?.lokasi || "Tiada Maklumat"} />
-          <InfoRow label="Status SKM" value={school?.skm_150 ? "Ya" : "Tidak"} />
+          <InfoRow label="Lokasi" value={school?.data?.infoPentadbiran?.negeri || "Tiada Maklumat"} />
+          <InfoRow label="Status SKM" value={"Tiada Maklumat"} />
           <InfoRow label="Kategori Pedalaman" value={"Tiada Maklumat"} />
         </div>
       </div>
       <div className="p-3 flex flex-col gap-2 ">
         <div className="font-body text-body-xs font-semibold">PPD</div>
         <div className="flex gap-1 flex-col">
-          <InfoRow label="Daerah" value={school?.ppd || "Tiada Maklumat"} />
-          <InfoRow label="Gred" value={school?.gred || "Tiada Maklumat"} />
-          <InfoRow label="Sesi" value={school?.sesi || "Tiada Maklumat"} />
-          <InfoRow label="Jenis Bantuan" value={school?.bantuan || "Tiada Maklumat"} />
-          <InfoRow label="Tarikh Tubuh" value={school?.tarikhTubuh || "Tiada Maklumat"} />
+          <InfoRow label="Daerah" value={school?.data?.infoPentadbiran?.ppd || "Tiada Maklumat"} />
+          <InfoRow label="Gred" value={"Tiada Maklumat"} />
+          <InfoRow label="Sesi" value={school?.data?.infoPentadbiran?.sesi || "Tiada Maklumat"} />
+          <InfoRow label="Jenis Bantuan" value={school?.data?.infoPentadbiran?.bantuan || "Tiada Maklumat"} />
+          <InfoRow label="Tarikh Tubuh" value={"Tiada Maklumat"} />
         </div>
       </div>
       <div className="p-2 w-full">

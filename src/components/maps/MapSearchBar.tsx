@@ -6,7 +6,7 @@ import {
 } from "@govtechmy/myds-react/icon";
 import { FilterDropdowns } from "./FilterDropdowns";
 import type { SchoolMarker } from "../../types/maps";
-import { getSchoolSuggestion } from "../../services/school.svc";
+import { getSchoolSuggestion, getSchoolId } from "../../services/school.svc";
 import {
   SearchBar,
   SearchBarHint,
@@ -18,6 +18,7 @@ import { clx } from "@govtechmy/myds-react/utils";
 import { Button } from "@govtechmy/myds-react/button";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
+import type { ItemSekolahModel } from "../../models/response";
 
 const NEGERI_LIST = [
   "JOHOR",
@@ -64,6 +65,7 @@ export function MapSearchBar({
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
+  const [selectedSchoolDetail, setSelectedSchoolDetail] = useState<ItemSekolahModel | null>(null);
   const debounceTimerRef = useRef<number | null>(null);
 
   // Use predefined lists instead of extracting from markers
@@ -133,6 +135,10 @@ export function MapSearchBar({
         jumlahGuru: school.data?.infoSekolah?.jumlahGuru || 0,
       }));
 
+      setZoom?.(13);
+      if (transformed.length > 0) {
+        panTo?.(transformed[0].lat, transformed[0].lng);
+      }
       setFilteredMarkers(transformed);
       setSuggestions(transformed);
     } catch (error) {
@@ -141,10 +147,25 @@ export function MapSearchBar({
     }
   };
 
-  const handleSelect = (school: SchoolMarker) => {
+  const handleSelect = async (school: SchoolMarker) => {
     setZoom?.(18);
     panTo?.(school.lat, school.lng);
     setSelected(school);
+    
+    try {
+      if (!school.kodSekolah) {
+        console.error("School code is null");
+        return;
+      }
+      const detail = await getSchoolId(school.kodSekolah);
+      if (detail) {
+        setSelectedSchoolDetail(detail);
+      }
+    } catch (error) {
+      console.error("Error fetching school details:", error);
+    } finally {
+      setIsExpanded(false);
+    }
   };
 
   return (
@@ -277,7 +298,7 @@ export function MapSearchBar({
           isExpanded ? "my-10" : ""
         )}
       >
-        <SchoolInfoWindow school={selected as SchoolMarker} />
+        {selectedSchoolDetail && <SchoolInfoWindow school={selectedSchoolDetail} />}
       </div>
       }
     </div>
