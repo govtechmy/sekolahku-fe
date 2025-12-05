@@ -35,7 +35,7 @@ export function FilterDropdowns({
         <SelectTrigger aria-label="Pilih Negeri" className="w-[155px] justify-between">
           <SelectValue placeholder="Jenis Negeri" />
         </SelectTrigger>
-        <SelectContent className="z-[600]">
+        <SelectContent className="z-[1000]">
           <SelectGroup>
             <SelectItem value="ALL">Semua Negeri</SelectItem>
             {negeriList
@@ -58,7 +58,7 @@ export function FilterDropdowns({
         <SelectTrigger aria-label="Pilih Jenis" className="w-[155px] justify-between">
           <SelectValue placeholder="Jenis Sekolah" />
         </SelectTrigger>
-        <SelectContent className="z-[600]">
+        <SelectContent className="z-[1000]">
           <SelectGroup>
             <SelectItem value="ALL">Semua Jenis</SelectItem>
             {jenisList
