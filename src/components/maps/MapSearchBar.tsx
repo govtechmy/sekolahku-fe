@@ -78,7 +78,7 @@ export function MapSearchBar({
     
     if (trimmedValue.length >= 3) {
       // Add 500ms delay before calling API
-      debounceTimerRef.current = setTimeout(() => {
+      debounceTimerRef.current = window.setTimeout(() => {
         filterMarkers(value, selectedNegeri, selectedJenis);
       }, 500);
     } else {
