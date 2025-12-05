@@ -14,6 +14,7 @@ import {
   LocationPickerWindow,
 } from "../components/maps";
 import type { SchoolMarker } from "../types/maps";
+import offset from "../utils/coordinateOffSet";
 
 // Fix for default markers in Leaflet
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
@@ -145,12 +146,7 @@ export default function SchoolMaps() {
                 }
                 setSelected(pos);
                 if (mapRef) {
-                  const pixelOffset = 240;
-                  const metersPerPixel =
-                    (156543.03392 * Math.cos((pos.lat * Math.PI) / 180)) /
-                    Math.pow(2, 17);
-                  const latOffset = (pixelOffset * metersPerPixel) / 111320; // 111320 meters per degree latitude
-                  mapRef.setView([pos.lat + latOffset, pos.lng], 17, {
+                  mapRef.setView([pos.lat, pos.lng - offset], 17, {
                     animate: true,
                     duration: 0.5,
                   });

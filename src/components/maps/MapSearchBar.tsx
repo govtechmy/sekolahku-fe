@@ -19,6 +19,7 @@ import { Button } from "@govtechmy/myds-react/button";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import type { ItemSekolahModel } from "../../models/response";
+import offset from "../../utils/coordinateOffSet";
 
 const NEGERI_LIST = [
   "JOHOR",
@@ -137,7 +138,7 @@ export function MapSearchBar({
 
       setZoom?.(13);
       if (transformed.length > 0) {
-        panTo?.(transformed[0].lat, transformed[0].lng);
+        panTo?.(transformed[0].lat, transformed[0].lng-offset);
       }
       setFilteredMarkers(transformed);
       setSuggestions(transformed);
@@ -149,7 +150,7 @@ export function MapSearchBar({
 
   const handleSelect = async (school: SchoolMarker) => {
     setZoom?.(18);
-    panTo?.(school.lat, school.lng);
+    panTo?.(school.lat, school.lng-offset);
     setSelected(school);
     
     try {
