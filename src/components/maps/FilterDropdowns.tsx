@@ -25,7 +25,7 @@ export function FilterDropdowns({
   onJenisChange,
 }: FilterDropdownsProps) {
   return (
-    <div className="px-3 py-2 border-t border-gray-200 flex gap-2 text-sm">
+    <div className="px-3 py-4 border-t border-gray-200 flex gap-2 text-sm">
       <Select
         size="small"
         variant="outline"

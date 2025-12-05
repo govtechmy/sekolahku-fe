@@ -9,12 +9,14 @@ import type { SchoolMarker } from "../../types/maps";
 import { getSchoolSuggestion } from "../../services/school.svc";
 import {
   SearchBar,
+  SearchBarHint,
   SearchBarInput,
   SearchBarInputContainer,
   SearchBarSearchButton,
 } from "@govtechmy/myds-react/search-bar";
 import { clx } from "@govtechmy/myds-react/utils";
 import { Button } from "@govtechmy/myds-react/button";
+import { Pill } from "@govtechmy/myds-react/pill";
 
 const NEGERI_LIST = [
   "JOHOR",
@@ -144,119 +146,122 @@ export function MapSearchBar({
   };
 
   return (
-    
-      <div
-        className={`absolute flex justify-start md:w-[32.78vw] transition-all z-[1000] 
-          ${isExpanded ? "top-0 left-0 bottom-0" : "top-[16px] left-6"}
+    <div
+      className={`absolute flex justify-start w-[350px] z-[1000] 
+          ${isExpanded ? "top-0 left-0 bottom-0" : "top-[16px] left-3"}
         `}
-      >
-        <div
-          className={`w-full pointer-events-auto shadow-md border border-gray-200 bg-white
-            ${isExpanded ? "" : "rounded-full cursor-pointer"}
+    >
+      <div
+        className={`w-full shadow-md border border-otl-divider bg-white
+            ${isExpanded ? "" : "rounded-full cursor-pointer w-[328px]"}
           `}
-          onClick={() => {
-            if (!isExpanded) setIsExpanded(true);
-          }}
-        >
+        onClick={() => {
+          if (!isExpanded) setIsExpanded(true);
+        }}
+      >
+        <div className={clx("h-full w-full flex flex-col")}>
           <div
             className={clx(
-              "relative h-full w-full flex flex-col"
+              "flex items-center gap-2 ",
+              isExpanded ? "py-[16px] px-4" : ""
             )}
           >
-            <div
-              className={clx(
-                "flex items-center gap-2",
-                isExpanded ? "py-[9px] pl-2" : ""
-              )}
-            >
-              {isExpanded && (
-                <Button
-                  variant="unset"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsExpanded(false);
-                  }}
-                >
-                  <ArrowBackIcon />
-                </Button>
-              )}
-
-              <SearchBar size="large" className="w-full">
-                <SearchBarInputContainer className={clx(isExpanded?"border-none shadow-[none] pl-0":"")}>
-                  <SearchBarInput
-                    placeholder="Carian Sekolah"
-                    value={query}
-                    onValueChange={handleValueChange}
-                    readOnly={!isExpanded}
-                  />
-                  <SearchBarSearchButton />
-                </SearchBarInputContainer>
-              </SearchBar>
-            </div>
             {isExpanded && (
-              <FilterDropdowns
-                selectedNegeri={selectedNegeri}
-                selectedJenis={selectedJenis}
-                negeriList={negeriList}
-                jenisList={jenisList}
-                onNegeriChange={(val: string) => {
-                  setSelectedNegeri(val);
-                  filterMarkers(query, val, selectedJenis);
+              <Button
+                variant="unset"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsExpanded(false);
                 }}
-                onJenisChange={(val: string) => {
-                  setSelectedJenis(val);
-                  filterMarkers(query, selectedNegeri, val);
-                }}
-              />
+                className="p-1.5 pl-0"
+              >
+                <ArrowBackIcon className="size-4" />
+              </Button>
             )}
 
-            {isExpanded && (
-              <div className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1">
-                {suggestions.length > 0 ? (
-                  suggestions.map((school, idx) => (
-                    <li
-                      key={idx}
-                      onClick={() => handleSelect(school)}
-                      className="px-4 py-4 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
-                    >
-                      <div className="flex justify-between items-center">
-                        <div className="flex flex-col">
-                          <span className="text-xs font-medium text-txt-primary bg-bg-primary-100 px-2 py-0.5 rounded-full w-fit mb-1 border border-bg-primary-700">
-                            {school.jenisLabel || "Sekolah"}
-                          </span>
-
-                          <span className="text-base font-medium text-gray-900">
-                            {school.namaSekolah}
-                          </span>
-
-                          <span className="text-sm text-gray-500">
-                            {school.bandarSurat}, {school.negeri}
-                          </span>
-
-                          <span className="mt-1 flex items-center text-sm text-blue-600 gap-1">
-                            <MapIcon className="w-4 h-4" />
-                            {school.distance
-                              ? `${school.distance.toFixed(
-                                  2
-                                )} km dari lokasi anda`
-                              : "Jarak tidak tersedia"}
-                          </span>
-                        </div>
-
-                        <ChevronRightIcon className="w-5 h-5 text-gray-400" />
-                      </div>
-                    </li>
-                  ))
-                ) : (
-                  <li className="px-4 py-4 text-sm text-gray-500">
-                    Tiada hasil carian
-                  </li>
+            <SearchBar size="large" className="w-full ">
+              <SearchBarInputContainer
+                className={clx(
+                  isExpanded ? "border-none shadow-[none] !px-0" : "w-[326px]"
                 )}
-              </div>
-            )}
+              >
+                <SearchBarInput
+                  placeholder="Carian Sekolah"
+                  value={query}
+                  onValueChange={handleValueChange}
+                  readOnly={!isExpanded}
+                  className={clx(isExpanded ? "pl-0" : "")}
+                />
+                <SearchBarHint className="">
+                  Tekan <Pill size="small">/</Pill> untuk cari
+                </SearchBarHint>
+                <SearchBarSearchButton />
+              </SearchBarInputContainer>
+            </SearchBar>
           </div>
+          {isExpanded && (
+            <FilterDropdowns
+              selectedNegeri={selectedNegeri}
+              selectedJenis={selectedJenis}
+              negeriList={negeriList}
+              jenisList={jenisList}
+              onNegeriChange={(val: string) => {
+                setSelectedNegeri(val);
+                filterMarkers(query, val, selectedJenis);
+              }}
+              onJenisChange={(val: string) => {
+                setSelectedJenis(val);
+                filterMarkers(query, selectedNegeri, val);
+              }}
+            />
+          )}
+
+          {isExpanded && (
+            <div className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1">
+              {suggestions.length > 0 ? (
+                suggestions.map((school, idx) => (
+                  <li
+                    key={idx}
+                    onClick={() => handleSelect(school)}
+                    className="px-4 py-4 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="flex flex-col">
+                        <span className="text-xs font-medium text-txt-primary bg-bg-primary-100 px-2 py-0.5 rounded-full w-fit mb-1 border border-bg-primary-700">
+                          {school.jenisLabel || "Sekolah"}
+                        </span>
+
+                        <span className="text-base font-medium text-gray-900">
+                          {school.namaSekolah}
+                        </span>
+
+                        <span className="text-sm text-gray-500">
+                          {school.bandarSurat}, {school.negeri}
+                        </span>
+
+                        <span className="mt-1 flex items-center text-sm text-blue-600 gap-1">
+                          <MapIcon className="w-4 h-4" />
+                          {school.distance
+                            ? `${school.distance.toFixed(
+                                2
+                              )} km dari lokasi anda`
+                            : "Jarak tidak tersedia"}
+                        </span>
+                      </div>
+
+                      <ChevronRightIcon className="w-5 h-5 text-txt-primary" />
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <li className="px-4 py-4 text-sm text-gray-500">
+                  Tiada hasil carian
+                </li>
+              )}
+            </div>
+          )}
         </div>
       </div>
-  
+    </div>
   );
 }

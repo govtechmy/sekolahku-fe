@@ -11,3 +11,8 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+/* Target the CommandK search input specifically */
+input[aria-controls="search-input"][cmdk-input][role="combobox"] {
+  width: 100px;
+}

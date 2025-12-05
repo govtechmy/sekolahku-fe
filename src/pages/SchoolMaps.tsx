@@ -1,17 +1,31 @@
-import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+  useMap,
+} from "react-leaflet";
 import { useEffect, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Button } from "@govtechmy/myds-react/button";
-import { MapSearchBar, SchoolInfoWindow, LocationPickerWindow } from "../components/maps";
+import {
+  MapSearchBar,
+  SchoolInfoWindow,
+  LocationPickerWindow,
+} from "../components/maps";
 import type { SchoolMarker } from "../types/maps";
 
 // Fix for default markers in Leaflet
-delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
+delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
+  ._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+  iconRetinaUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
 // Custom school icon
@@ -22,8 +36,12 @@ const schoolIcon = new L.Icon({
   popupAnchor: [0, -32],
 });
 
-function MapEvents({ onZoomChange, onCenterChange, onDragStart }: { 
-  onZoomChange: (zoom: number) => void; 
+function MapEvents({
+  onZoomChange,
+  onCenterChange,
+  onDragStart,
+}: {
+  onZoomChange: (zoom: number) => void;
   onCenterChange: (center: { lat: number; lng: number }) => void;
   onDragStart?: () => void;
 }) {
@@ -42,7 +60,11 @@ function MapEvents({ onZoomChange, onCenterChange, onDragStart }: {
 
 // Note: MapSearchBar will be rendered in a top-level sidebar div
 
-function MapInstanceBridge({ onMapReady }: { onMapReady: (map: L.Map) => void }) {
+function MapInstanceBridge({
+  onMapReady,
+}: {
+  onMapReady: (map: L.Map) => void;
+}) {
   const map = useMap();
   useEffect(() => {
     onMapReady(map);
@@ -59,11 +81,15 @@ function MapOverlayPopup({
   school: SchoolMarker;
   onClose: () => void;
 }) {
-  const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
+  const [position, setPosition] = useState<{ x: number; y: number } | null>(
+    null
+  );
 
   useEffect(() => {
     const updatePosition = () => {
-      const point = map.latLngToContainerPoint(L.latLng(school.lat, school.lng));
+      const point = map.latLngToContainerPoint(
+        L.latLng(school.lat, school.lng)
+      );
       setPosition({ x: point.x, y: point.y });
     };
 
@@ -118,14 +144,18 @@ export default function SchoolMaps() {
   const schoolMarkers: SchoolMarker[] = [];
   const [selected, setSelected] = useState<SchoolMarker | null>(null);
   const [query, setQuery] = useState("");
-  const [filteredMarkers, setFilteredMarkers] = useState<SchoolMarker[]>(schoolMarkers);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>({ lat: initialPosition[0], lng: initialPosition[1] });
+  const [filteredMarkers, setFilteredMarkers] =
+    useState<SchoolMarker[]>(schoolMarkers);
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>({ lat: initialPosition[0], lng: initialPosition[1] });
   const [zoom, setZoom] = useState(7);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
 
-  console.log("User Location:", userLocation);// for future use
-  console.log("Map Zoom Level:", zoom);// for future use
+  console.log("User Location:", userLocation); // for future use
+  console.log("Map Zoom Level:", zoom); // for future use
 
   return (
     <div className="h-full w-full flex relative">
@@ -138,20 +168,17 @@ export default function SchoolMaps() {
           Pilih Lokasi
         </Button>
       </div>
-      {/* Leaflet sidebar placeholder: MapSearchBar rendered here */}
-      <div id="leaflet-sidebar" className="absolute top-0 left-0 z-[1000] w-[360px] max-w-[90vw] h-full">
-        <MapSearchBar
-          query={query}
-          setQuery={setQuery}
-          setFilteredMarkers={setFilteredMarkers}
-          markersToShow={filteredMarkers}
-          setSelected={(s) => {
-            setSelected(s);
-          }}
-          panTo={(lat: number, lng: number) => mapRef?.panTo([lat, lng])}
-          setZoom={(z: number) => mapRef?.setZoom(z)}
-        />
-      </div>
+      <MapSearchBar
+        query={query}
+        setQuery={setQuery}
+        setFilteredMarkers={setFilteredMarkers}
+        markersToShow={filteredMarkers}
+        setSelected={(s) => {
+          setSelected(s);
+        }}
+        panTo={(lat: number, lng: number) => mapRef?.panTo([lat, lng])}
+        setZoom={(z: number) => mapRef?.setZoom(z)}
+      />
       <MapContainer
         center={initialPosition}
         zoom={7}
@@ -159,9 +186,7 @@ export default function SchoolMaps() {
         zoomControl={false}
       >
         {/* Bridge component to capture the Leaflet map instance */}
-        {mapRef === null && (
-          <MapInstanceBridge onMapReady={setMapRef} />
-        )}
+        {mapRef === null && <MapInstanceBridge onMapReady={setMapRef} />}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -187,12 +212,14 @@ export default function SchoolMaps() {
                 }
                 setSelected(pos);
                 if (mapRef) {
-                  const pixelOffset = 240; 
-                  const metersPerPixel = 156543.03392 * Math.cos(pos.lat * Math.PI / 180) / Math.pow(2, 17);
+                  const pixelOffset = 240;
+                  const metersPerPixel =
+                    (156543.03392 * Math.cos((pos.lat * Math.PI) / 180)) /
+                    Math.pow(2, 17);
                   const latOffset = (pixelOffset * metersPerPixel) / 111320; // 111320 meters per degree latitude
                   mapRef.setView([pos.lat + latOffset, pos.lng], 17, {
                     animate: true,
-                    duration: 0.5
+                    duration: 0.5,
                   });
                 }
               },
@@ -211,9 +238,7 @@ export default function SchoolMaps() {
         )}
       </MapContainer>
       {showLocationPicker && (
-        <LocationPickerWindow 
-          onClose={() => setShowLocationPicker(false)}
-        />
+        <LocationPickerWindow onClose={() => setShowLocationPicker(false)} />
       )}
     </div>
   );
