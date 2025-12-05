@@ -144,7 +144,6 @@ export function MapSearchBar({
   const handleSelect = (school: SchoolMarker) => {
     setZoom?.(18);
     panTo?.(school.lat, school.lng);
-    // Select the school to trigger its info popup after panning
     setSelected(school);
   };
 
@@ -246,8 +245,8 @@ export function MapSearchBar({
                           <MapIcon className="w-4 h-4" />
                           {school.distance
                             ? `${school.distance.toFixed(
-                                2
-                              )} km dari lokasi anda`
+                              2
+                            )} km dari lokasi anda`
                             : "Jarak tidak tersedia"}
                         </span>
                       </div>
@@ -265,10 +264,13 @@ export function MapSearchBar({
           )}
         </div>
       </div>
-          <div 
-        className={clx("bg-white p-4 pt-10",isExpanded?"my-10":"")}>
+      {selected && (
+        <div
+          className={clx("bg-white p-4 pt-10", isExpanded ? "my-10" : "")}
+        >
           <SchoolInfoWindow school={selected as SchoolMarker} />
         </div>
+      )}
     </div>
   );
 }
