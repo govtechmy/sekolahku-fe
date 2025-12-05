@@ -1,32 +1,25 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 // Fix __dirname for ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-const INPUT = path.join(__dirname, "..", "school-list.json");
-const OUTPUT = path.join(__dirname, "..", "snap-routes.json");
+const INPUT = path.join(__dirname, '..', 'school-list.json')
+const OUTPUT = path.join(__dirname, '..', 'snap-routes.json')
 
 function buildRoutes() {
-  const data = JSON.parse(fs.readFileSync(INPUT));
+  const data = JSON.parse(fs.readFileSync(INPUT))
 
-  const staticRoutes = [
-    "/",
-    "/home",
-    "/about",
-    "/carian-sekolah",
-    "/siaran",
-  ]
-  const schoolProfile = "/halaman-sekolah"
+  const staticRoutes = ['/', '/home', '/about', '/carian-sekolah', '/siaran']
+  const schoolProfile = '/halaman-sekolah'
+  const dynamicRoutes = data.map(school => `${schoolProfile}/${school.KODSEKOLAH}`)
 
-  const dynamicRoutes = data.map((school) => `${schoolProfile}/${school.KODSEKOLAH}`);
+  const allRoutes = [...staticRoutes, ...dynamicRoutes]
 
-  const allRoutes = [...staticRoutes, ...dynamicRoutes];
-
-  fs.writeFileSync(OUTPUT, JSON.stringify(allRoutes, null, 2));
-  console.log(`✔ Generated`, allRoutes.length, `routes in snap-routes.json`);
+  fs.writeFileSync(OUTPUT, JSON.stringify(allRoutes, null, 2))
+  console.log(`✔ Generated`, allRoutes.length, `routes in snap-routes.json`)
 }
 
 buildRoutes()
