@@ -150,7 +150,7 @@ export function MapSearchBar({
 
   const handleSelect = async (school: SchoolMarker) => {
     setZoom?.(18);
-    panTo?.(school.lat, school.lng-offset);
+    panTo?.(school.lat, school.lng - offset);
     setSelected(school);
     
     try {
