@@ -17,6 +17,7 @@ import {
 import { clx } from "@govtechmy/myds-react/utils";
 import { Button } from "@govtechmy/myds-react/button";
 import { Pill } from "@govtechmy/myds-react/pill";
+import { SchoolInfoWindow } from "./SchoolInfoWindow";
 
 const NEGERI_LIST = [
   "JOHOR",
@@ -44,6 +45,7 @@ type MapSearchBarProps = {
   setQuery: (val: string) => void;
   setFilteredMarkers: (markers: SchoolMarker[]) => void;
   markersToShow: SchoolMarker[];
+  selected: SchoolMarker | null;
   setSelected: (marker: SchoolMarker | null) => void;
   panTo?: (lat: number, lng: number) => void;
   setZoom?: (zoom: number) => void;
@@ -53,6 +55,7 @@ export function MapSearchBar({
   query,
   setQuery,
   setFilteredMarkers,
+  selected,
   setSelected,
   panTo,
   setZoom,
@@ -148,7 +151,7 @@ export function MapSearchBar({
   return (
     <div
       className={`absolute flex justify-start w-[350px] z-[1000] 
-          ${isExpanded ? "top-0 left-0 bottom-0" : "top-[16px] left-3"}
+          ${isExpanded ? "top-0 left-0 bottom-0 gap-4" : "top-[16px] left-3 flex-col gap-2"}
         `}
     >
       <div
@@ -262,6 +265,10 @@ export function MapSearchBar({
           )}
         </div>
       </div>
+          <div 
+        className={clx("bg-white p-4 pt-10",isExpanded?"my-10":"")}>
+          <SchoolInfoWindow school={selected as SchoolMarker} />
+        </div>
     </div>
   );
 }
