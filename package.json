@@ -5,10 +5,22 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "generate:routes": "node scripts/generate-routes.js",
+    "generate:sitemap": "NODE_ENV=production node scripts/generate-sitemap.js",
+    "prebuild": "pnpm generate:routes && pnpm generate:sitemap",
     "build": "tsc -b && vite build",
+    "postbuild": "react-snap",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview"
+  },
+  "reactSnap": {
+    "include": "snap-routes.json",
+    "inlineCss": true,
+    "puppeteerArgs": [
+      "--no-sandbox"
+    ],
+    "source": "build"
   },
   "dependencies": {
     "@govtechmy/myds-react": "^1.0.0",
@@ -19,6 +31,7 @@
     "leaflet-sidebar": "^0.2.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-helmet-async": "^2.0.5",
     "react-i18next": "^15.7.3",
     "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.8.2",
@@ -32,11 +45,13 @@
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.21",
+    "dotenv": "^17.2.3",
     "eslint": "^9.33.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
     "postcss": "^8.5.6",
+    "react-snap": "^1.23.0",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
