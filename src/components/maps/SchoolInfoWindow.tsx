@@ -1,10 +1,13 @@
 import {
-  PhoneIcon,
-  MapIcon,
-  OrgChartIcon,
   EmailIcon,
+  OrgChartIcon,
+  PhoneIcon,
+  PinIcon,
 } from "@govtechmy/myds-react/icon";
 import type { SchoolMarker } from "../../types/maps";
+import { Tag } from "@govtechmy/myds-react/tag";
+import { toTitleCase } from "../../utils/titleCaseConverter";
+import { Button } from "@govtechmy/myds-react/button";
 
 type SchoolInfoWindowProps = {
   school: SchoolMarker;
@@ -12,85 +15,135 @@ type SchoolInfoWindowProps = {
 
 export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
   return (
-    <div className="pl-3 w-full max-w-[500px] md:max-w-[500px] sm:max-w-[95vw] font-roboto shadow-lg bg-white flex flex-col rounded-md">
-      <div className="flex flex-col md:flex-row">
-        <div className="w-[225px] h-[220px] flex-shrink-0">
-          <img
-            src="/images/sekDefault.png"
-            alt={school?.namaSekolah || "Sekolah"}
-            className="w-full h-full object-cover rounded-md"
-          />
+    <div>
+      <img
+        src="/images/sekDefault.png"
+        alt={school?.namaSekolah || "Sekolah"}
+        className="w-full h-full object-cover rounded-t-xl"
+      />
+
+      <div className="p-3 flex flex-col gap-3 justify-start">
+        <div>
+          <Tag mode="pill" variant="success" className="font-normal">
+            {school?.kluster || "Sekolah Kluster Kecemerlangan"}
+          </Tag>
         </div>
-
-        <div className="flex-1 flex flex-col px-3 py-1">
-          <div className="mb-2 bg-bg-success-50 text-txt-success text-xs font-normal px-2 py-1 rounded-full border border-bg-success-700 text-center">
-            {school?.kluster || "Tiada Maklumat"}
-          </div>
-
-          <h3 className="text-[16px] md:text-[18px] font-medium text-[#202124] leading-snug mb-1">
-            {school?.namaSekolah || "Maktab Sultan Abu Bakar"}{" "}
-            {school?.jenisLabel ? `(${school.jenisLabel})` : "(Tiada Maklumat)"}
-          </h3>
-
-          <p className="my-2 flex items-center gap-2">
+        <div className="text-body-md font-semibold font-body">
+          {school?.namaSekolah || "Maktab Sultan Abu Bakar (English College)"}
+        </div>
+        <div className="flex flex-col gap-2 text-txt-black-700">
+          <div className="flex items-center gap-1.5">
             <OrgChartIcon className="text-txt-primary" />
-            {school?.kodSekolah || "Tiada Maklumat"}
-          </p>
-          <p className="my-1 flex items-center gap-2">
+            <span className="text-txt-black-500 text-body-xs font-medium">
+              {school?.kodSekolah || "Tiada Maklumat"}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
             <PhoneIcon className="text-txt-primary" />
-            {school?.noTelefon || "Tiada Maklumat"}
-          </p>
-          <p className="my-1 flex items-center gap-2">
+            <span className="text-txt-black-500 text-body-xs font-medium">
+              {school?.noTelefon || "Tiada Maklumat"}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
             <EmailIcon className="text-txt-primary" />
-            {school?.email || "Tiada Maklumat"}
-          </p>
-          <p className="my-1 flex items-start gap-2">
-            <MapIcon className="text-txt-primary" />
-            {school
-              ? `${school.alamatSurat}, ${school.poskodSurat} ${school.bandarSurat}, ${school.negeri}`
-              : "Tiada Maklumat"}
-          </p>
+            <span className="text-txt-black-500 text-body-xs font-medium">
+              {school?.email || "Tiada Maklumat"}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <PinIcon className="text-txt-primary" />
+            <span className="text-txt-black-500 text-body-xs font-medium">
+              {school
+                ? toTitleCase(
+                    `${school.alamatSurat || ""}${
+                      school.alamatSurat ? ", " : ""
+                    }${school.poskodSurat || ""} ${school.bandarSurat || ""}${
+                      school.negeri ? ", " + school.negeri : ""
+                    }`
+                  )
+                : "Tiada Maklumat"}
+            </span>
+          </div>
         </div>
       </div>
-
-      <hr className="border-t border-[#dadce0] my-2" />
-
-      <div className="flex flex-col sm:flex-row px-1 pb-4 text-[13px] gap-1 text-txt-black-500">
-        <div className="flex-1">
-          <div className="font-bold mb-2 text-[#202124]">JPN</div>
-          <p className="my-1">
-            <span className="pr-2">Lokasi:</span>
-            <span className="font-bold">{school?.lokasi || "Tiada Maklumat"}</span>
-          </p>
-          <p className="my-1">
-            <span className="pr-2">Status SKM:</span>
-            <span className="font-bold">{school?.skm_150 ? "Ya" : "Tidak"}</span>
-          </p>
+      <div className="border-y border-otl-divider p-3 flex flex-col gap-2 ">
+        <div className="font-body text-body-xs font-semibold">JPN</div>
+        <div className="flex gap-1 flex-col">
+          <div className="flex items-center gap-2">
+            <div className="text-txt-black-500 text-body-xs font-normal">
+              Lokasi
+            </div>
+            <div className="text-body-sm text-txt-black-900">
+              {school?.lokasi || "Tiada Maklumat"}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="text-txt-black-500 text-body-xs font-normal">
+              Status SKM
+            </div>
+            <div className="text-body-sm text-txt-black-900">
+              {school?.skm_150 ? "Ya" : "Tidak"}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="text-txt-black-500 text-body-xs font-normal">
+              Kategori Pedalaman
+            </div>
+            <div className="text-body-sm text-txt-black-900">
+              Tiada Maklumat
+            </div>
+          </div>
         </div>
-
-        <div className="flex-1">
-          <div className="font-bold mb-2 text-[#202124]">PPD</div>
-          <p className="my-1">
-            <span className="pr-2">Daerah:</span>
-            <span className="font-bold">{school?.ppd || "Tiada Maklumat"}</span>
-          </p>
-          <p className="my-1">
-            <span className="pr-2">Gred:</span>
-            <span className="font-bold">{school?.gred || "Tiada Maklumat"}</span>
-          </p>
-          <p className="my-1">
-            <span className="pr-2">Sesi:</span>
-            <span className="font-bold">{school?.sesi || "Tiada Maklumat"}</span>
-          </p>
-          <p className="my-1">
-            <span className="pr-2">Jenis Bantuan:</span>
-            <span className="font-bold">{school?.bantuan || "Tiada Maklumat"}</span>
-          </p>
-          <p className="my-1">
-            <span className="pr-2">Tarikh Tubuh:</span>
-            <span className="font-bold">{school?.tarikhTubuh || "Tiada Maklumat"}</span>
-          </p>
+      </div>
+      <div className="p-3 flex flex-col gap-2 ">
+        <div className="font-body text-body-xs font-semibold">PPD</div>
+        <div className="flex gap-1 flex-col">
+          <div className="flex items-center gap-2">
+            <div className="text-txt-black-500 text-body-xs font-normal">
+              Daerah
+            </div>
+            <div className="text-body-sm text-txt-black-900">
+              {school?.ppd || "Tiada Maklumat"}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="text-txt-black-500 text-body-xs font-normal">
+              Gred
+            </div>
+            <div className="text-body-sm text-txt-black-900">
+              {school?.gred || "Tiada Maklumat"}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="text-txt-black-500 text-body-xs font-normal">
+              Sesi
+            </div>
+            <div className="text-body-sm text-txt-black-900">
+              {school?.sesi || "Tiada Maklumat"}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="text-txt-black-500 text-body-xs font-normal">
+              Jenis Bantuan
+            </div>
+            <div className="text-body-sm text-txt-black-900">
+              {school?.bantuan || "Tiada Maklumat"}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="text-txt-black-500 text-body-xs font-normal">
+              Tarikh Tubuh
+            </div>
+            <div className="text-body-sm text-txt-black-900">
+              {school?.tarikhTubuh || "Tiada Maklumat"}
+            </div>
+          </div>
         </div>
+      </div>
+      <div className="p-2 w-full">
+        <Button variant="primary-outline" className="w-full justify-center">
+          Lihat Laman Web
+        </Button>
       </div>
     </div>
   );
