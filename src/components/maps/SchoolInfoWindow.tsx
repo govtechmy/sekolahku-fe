@@ -8,6 +8,7 @@ import type { SchoolMarker } from "../../types/maps";
 import { Tag } from "@govtechmy/myds-react/tag";
 import { toTitleCase } from "../../utils/titleCaseConverter";
 import { Button } from "@govtechmy/myds-react/button";
+import { InfoIconRow, InfoRow } from "../shared/CardInfo";
 
 type SchoolInfoWindowProps = {
   school: SchoolMarker;
@@ -32,28 +33,22 @@ export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
           {school?.namaSekolah || "Maktab Sultan Abu Bakar (English College)"}
         </div>
         <div className="flex flex-col gap-2 text-txt-black-700">
-          <div className="flex items-center gap-1.5">
-            <OrgChartIcon className="text-txt-primary" />
-            <span className="text-txt-black-500 text-body-xs font-medium">
-              {school?.kodSekolah || "Tiada Maklumat"}
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <PhoneIcon className="text-txt-primary" />
-            <span className="text-txt-black-500 text-body-xs font-medium">
-              {school?.noTelefon || "Tiada Maklumat"}
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <EmailIcon className="text-txt-primary" />
-            <span className="text-txt-black-500 text-body-xs font-medium">
-              {school?.email || "Tiada Maklumat"}
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <PinIcon className="text-txt-primary" />
-            <span className="text-txt-black-500 text-body-xs font-medium">
-              {school
+          <InfoIconRow
+            icon={<OrgChartIcon/>}
+            value={school?.kodSekolah || "Tiada Maklumat"}
+          />
+          <InfoIconRow
+            icon={<PhoneIcon/>}
+            value={school?.noTelefon || "Tiada Maklumat"}
+          />
+          <InfoIconRow
+            icon={<EmailIcon/>}
+            value={school?.email || "Tiada Maklumat"}
+          />
+          <InfoIconRow
+            icon={<PinIcon/>}
+            value={
+              school
                 ? toTitleCase(
                     `${school.alamatSurat || ""}${
                       school.alamatSurat ? ", " : ""
@@ -61,83 +56,27 @@ export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
                       school.negeri ? ", " + school.negeri : ""
                     }`
                   )
-                : "Tiada Maklumat"}
-            </span>
-          </div>
+                : "Tiada Maklumat"
+            }
+          />
         </div>
       </div>
       <div className="border-y border-otl-divider p-3 flex flex-col gap-2 ">
         <div className="font-body text-body-xs font-semibold">JPN</div>
         <div className="flex gap-1 flex-col">
-          <div className="flex items-center gap-2">
-            <div className="text-txt-black-500 text-body-xs font-normal">
-              Lokasi
-            </div>
-            <div className="text-body-sm text-txt-black-900">
-              {school?.lokasi || "Tiada Maklumat"}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="text-txt-black-500 text-body-xs font-normal">
-              Status SKM
-            </div>
-            <div className="text-body-sm text-txt-black-900">
-              {school?.skm_150 ? "Ya" : "Tidak"}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="text-txt-black-500 text-body-xs font-normal">
-              Kategori Pedalaman
-            </div>
-            <div className="text-body-sm text-txt-black-900">
-              Tiada Maklumat
-            </div>
-          </div>
+          <InfoRow label="Lokasi" value={school?.lokasi || "Tiada Maklumat"} />
+          <InfoRow label="Status SKM" value={school?.skm_150 ? "Ya" : "Tidak"} />
+          <InfoRow label="Kategori Pedalaman" value={"Tiada Maklumat"} />
         </div>
       </div>
       <div className="p-3 flex flex-col gap-2 ">
         <div className="font-body text-body-xs font-semibold">PPD</div>
         <div className="flex gap-1 flex-col">
-          <div className="flex items-center gap-2">
-            <div className="text-txt-black-500 text-body-xs font-normal">
-              Daerah
-            </div>
-            <div className="text-body-sm text-txt-black-900">
-              {school?.ppd || "Tiada Maklumat"}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="text-txt-black-500 text-body-xs font-normal">
-              Gred
-            </div>
-            <div className="text-body-sm text-txt-black-900">
-              {school?.gred || "Tiada Maklumat"}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="text-txt-black-500 text-body-xs font-normal">
-              Sesi
-            </div>
-            <div className="text-body-sm text-txt-black-900">
-              {school?.sesi || "Tiada Maklumat"}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="text-txt-black-500 text-body-xs font-normal">
-              Jenis Bantuan
-            </div>
-            <div className="text-body-sm text-txt-black-900">
-              {school?.bantuan || "Tiada Maklumat"}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="text-txt-black-500 text-body-xs font-normal">
-              Tarikh Tubuh
-            </div>
-            <div className="text-body-sm text-txt-black-900">
-              {school?.tarikhTubuh || "Tiada Maklumat"}
-            </div>
-          </div>
+          <InfoRow label="Daerah" value={school?.ppd || "Tiada Maklumat"} />
+          <InfoRow label="Gred" value={school?.gred || "Tiada Maklumat"} />
+          <InfoRow label="Sesi" value={school?.sesi || "Tiada Maklumat"} />
+          <InfoRow label="Jenis Bantuan" value={school?.bantuan || "Tiada Maklumat"} />
+          <InfoRow label="Tarikh Tubuh" value={school?.tarikhTubuh || "Tiada Maklumat"} />
         </div>
       </div>
       <div className="p-2 w-full">
