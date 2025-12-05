@@ -292,7 +292,7 @@ export function MapSearchBar({
       {selected && 
       <div
         className={clx(
-          "bg-white flex-1 w-[328px] rounded-xl overflow-y-auto",
+          "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
           isExpanded ? "my-10" : ""
         )}
       >

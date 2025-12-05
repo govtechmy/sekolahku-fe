@@ -19,7 +19,7 @@ type SchoolInfoWindowProps = {
 
 export function SchoolInfoWindow({ school , setSelected}: SchoolInfoWindowProps) {
   return (
-    <div className="relative">
+    <div className="relative bg-white rounded-b-xl">
       <div className="sticky top-0 -mt-12 flex justify-end p-2 bg-transparent">
         <Button onClick={()=>setSelected(null)} variant={"default-outline"} className="p-1.5"><CrossIcon className="size-4"/></Button>
       </div>
