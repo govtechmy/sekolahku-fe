@@ -150,12 +150,18 @@ export function MapSearchBar({
   return (
     <div
       className={`absolute flex justify-start z-[1000] 
-          ${isExpanded ? "top-0 left-0 bottom-0 gap-4" : "top-[16px] left-3 flex-col gap-2 w-[350px]"}
+          ${
+            isExpanded
+              ? "top-0 left-0 bottom-0 gap-4"
+              : "top-[16px] left-3 flex-col gap-2 w-[350px]"
+          }
         `}
     >
       <div
         className={`shadow-md border border-otl-divider bg-white 
-            ${isExpanded ? "w-[350px]" : "rounded-full cursor-pointer w-[328px]"}
+            ${
+              isExpanded ? "w-[350px]" : "rounded-full cursor-pointer w-[328px]"
+            }
           `}
         onClick={() => {
           if (!isExpanded) setIsExpanded(true);
@@ -264,13 +270,16 @@ export function MapSearchBar({
           )}
         </div>
       </div>
-      {selected && (
-        <div
-          className={clx("bg-white p-4 pt-10", isExpanded ? "my-10" : "")}
-        >
-          <SchoolInfoWindow school={selected as SchoolMarker} />
-        </div>
-      )}
+      {selected && 
+      <div
+        className={clx(
+          "bg-white p-4 pt-10 flex-1 w-[328px] rounded-xl",
+          isExpanded ? "my-10" : ""
+        )}
+      >
+        <SchoolInfoWindow school={selected as SchoolMarker} />
+      </div>
+      }
     </div>
   );
 }
