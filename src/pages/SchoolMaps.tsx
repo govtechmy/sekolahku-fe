@@ -175,10 +175,9 @@ export default function SchoolMaps() {
         markersToShow={filteredMarkers}
         setSelected={(s) => {
           setSelected(s);
-        }}
+        } }
         panTo={(lat: number, lng: number) => mapRef?.panTo([lat, lng])}
-        setZoom={(z: number) => mapRef?.setZoom(z)}
-      />
+        setZoom={(z: number) => mapRef?.setZoom(z)} selected={null}      />
       <MapContainer
         center={initialPosition}
         zoom={7}

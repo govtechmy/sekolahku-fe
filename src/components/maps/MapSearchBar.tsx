@@ -150,13 +150,13 @@ export function MapSearchBar({
 
   return (
     <div
-      className={`absolute flex justify-start w-[350px] z-[1000] 
-          ${isExpanded ? "top-0 left-0 bottom-0 gap-4" : "top-[16px] left-3 flex-col gap-2"}
+      className={`absolute flex justify-start z-[1000] 
+          ${isExpanded ? "top-0 left-0 bottom-0 gap-4" : "top-[16px] left-3 flex-col gap-2 w-[350px]"}
         `}
     >
       <div
-        className={`w-full shadow-md border border-otl-divider bg-white
-            ${isExpanded ? "" : "rounded-full cursor-pointer w-[328px]"}
+        className={`shadow-md border border-otl-divider bg-white 
+            ${isExpanded ? "w-[350px]" : "rounded-full cursor-pointer w-[328px]"}
           `}
         onClick={() => {
           if (!isExpanded) setIsExpanded(true);
