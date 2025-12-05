@@ -163,8 +163,6 @@ export function MapSearchBar({
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
-    } finally {
-      setIsExpanded(false);
     }
   };
 
