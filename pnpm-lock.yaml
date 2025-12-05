@@ -23,9 +23,6 @@ importers:
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
-      leaflet-sidebar:
-        specifier: ^0.2.4
-        version: 0.2.4
       react:
         specifier: ^19.1.1
         version: 19.2.0
@@ -1777,9 +1774,6 @@ packages:
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
-
-  leaflet-sidebar@0.2.4:
-    resolution: {integrity: sha512-vMGJLDKOF+Qm2hKULslRfQLMVbuqRxPyZXLAuMLp95aM9/qpXgtj8kYvPna77qMAfjZTInFOojprUGTeBHL5Fg==}
 
   leaflet@1.9.4:
     resolution: {integrity: sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==}
@@ -4029,8 +4023,6 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
-
-  leaflet-sidebar@0.2.4: {}
 
   leaflet@1.9.4: {}
 

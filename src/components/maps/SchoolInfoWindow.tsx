@@ -1,96 +1,95 @@
 import {
-  PhoneIcon,
-  MapIcon,
-  OrgChartIcon,
+  CrossIcon,
   EmailIcon,
+  OrgChartIcon,
+  PhoneIcon,
+  PinIcon,
 } from "@govtechmy/myds-react/icon";
+import { Tag } from "@govtechmy/myds-react/tag";
+import { toTitleCase } from "../../utils/titleCaseConverter";
+import { Button } from "@govtechmy/myds-react/button";
+import { InfoIconRow, InfoRow } from "../shared/CardInfo";
+import type { ItemSekolahModel } from "../../models/response";
 import type { SchoolMarker } from "../../types/maps";
 
 type SchoolInfoWindowProps = {
-  school: SchoolMarker;
+  school: ItemSekolahModel;
+    setSelected: (marker: SchoolMarker | null) => void;
 };
 
-export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
+export function SchoolInfoWindow({ school, setSelected}: SchoolInfoWindowProps) {
   return (
-    <div className="pl-3 w-full max-w-[500px] md:max-w-[500px] sm:max-w-[95vw] font-roboto shadow-lg bg-white flex flex-col rounded-md">
-      <div className="flex flex-col md:flex-row">
-        <div className="w-[225px] h-[220px] flex-shrink-0">
-          <img
-            src="/images/sekDefault.png"
-            alt={school?.namaSekolah || "Sekolah"}
-            className="w-full h-full object-cover rounded-md"
+    <div className="relative bg-white rounded-b-xl">
+      <div className="sticky top-0 -mt-12 flex justify-end p-2 bg-transparent">
+        <Button onClick={ () => setSelected(null) } variant={"default-outline"} className="p-1.5"><CrossIcon className="size-4" /></Button>
+      </div>
+      <img
+        src="/images/sekDefault.png"
+        alt={school?.namaSekolah || "Sekolah"}
+        className="w-full h-full object-cover rounded-t-xl"
+      />
+    
+
+      <div className="p-3 flex flex-col gap-3 justify-start">
+        <div>
+          <Tag mode="pill" variant="success" className="font-normal">
+            {school?.data?.infoSekolah?.jenisLabel || "Sekolah"}
+          </Tag>
+        </div>
+        <div className="text-body-md font-semibold font-body">
+          {school?.namaSekolah || "Maktab Sultan Abu Bakar (English College)"}
+        </div>
+        <div className="flex flex-col gap-2 text-txt-black-700">
+          <InfoIconRow
+            icon={<OrgChartIcon />}
+            value={school?.kodSekolah || "Tiada Maklumat"}
+          />
+          <InfoIconRow
+            icon={<PhoneIcon/>}
+            value={school?.data?.infoKomunikasi?.noTelefon || "Tiada Maklumat"}
+          />
+          <InfoIconRow
+            icon={<EmailIcon/>}
+            value={school?.data?.infoKomunikasi?.email || "Tiada Maklumat"}
+          />
+          <InfoIconRow
+            icon={<PinIcon />}
+            value={
+              school?.data?.infoKomunikasi
+                ? toTitleCase(
+                    `${school.data.infoKomunikasi.alamatSurat || ""}${
+                      school.data.infoKomunikasi.alamatSurat ? ", " : ""
+                    }${school.data.infoKomunikasi.poskodSurat || ""} ${school.data.infoKomunikasi.bandarSurat || ""}${
+                      school.data.infoPentadbiran?.negeri ? ", " + school.data.infoPentadbiran.negeri : ""
+                    }`
+                  )
+                : "Tiada Maklumat"
+            }
           />
         </div>
-
-        <div className="flex-1 flex flex-col px-3 py-1">
-          <div className="mb-2 bg-bg-success-50 text-txt-success text-xs font-normal px-2 py-1 rounded-full border border-bg-success-700 text-center">
-            {school?.kluster || "Sekolah Kluster Kecemerlangan"}
-          </div>
-
-          <h3 className="text-[16px] md:text-[18px] font-medium text-[#202124] leading-snug mb-1">
-            {school?.namaSekolah || "Maktab Sultan Abu Bakar"}{" "}
-            {school?.jenisLabel ? `(${school.jenisLabel})` : "(English College)"}
-          </h3>
-
-          <p className="my-2 flex items-center gap-2">
-            <OrgChartIcon className="text-txt-primary" />
-            {school?.kodSekolah || "Tiada Maklumat"}
-          </p>
-          <p className="my-1 flex items-center gap-2">
-            <PhoneIcon className="text-txt-primary" />
-            {school?.noTelefon || "Tiada Maklumat"}
-          </p>
-          <p className="my-1 flex items-center gap-2">
-            <EmailIcon className="text-txt-primary" />
-            {school?.email || "Tiada Maklumat"}
-          </p>
-          <p className="my-1 flex items-start gap-2">
-            <MapIcon className="text-txt-primary" />
-            {school
-              ? `${school.alamatSurat}, ${school.poskodSurat} ${school.bandarSurat}, ${school.negeri}`
-              : "Tiada Maklumat"}
-          </p>
+      </div>
+      <div className="border-y border-otl-divider p-3 flex flex-col gap-2 ">
+        <div className="font-body text-body-xs font-semibold">JPN</div>
+        <div className="flex gap-1 flex-col">
+          <InfoRow label="Lokasi" value={school?.data?.infoPentadbiran?.negeri || "Tiada Maklumat"} />
+          <InfoRow label="Status SKM" value={"Tiada Maklumat"} />
+          <InfoRow label="Kategori Pedalaman" value={"Tiada Maklumat"} />
         </div>
       </div>
-
-      <hr className="border-t border-[#dadce0] my-2" />
-
-      <div className="flex flex-col sm:flex-row px-1 pb-4 text-[13px] gap-1 text-txt-black-500">
-        <div className="flex-1">
-          <div className="font-bold mb-2 text-[#202124]">JPN</div>
-          <p className="my-1">
-            <span className="pr-2">Lokasi:</span>
-            <span className="font-bold">{school?.lokasi || "Tiada Maklumat"}</span>
-          </p>
-          <p className="my-1">
-            <span className="pr-2">Status SKM:</span>
-            <span className="font-bold">{school?.skm_150 ? "Ya" : "Tidak"}</span>
-          </p>
+      <div className="p-3 flex flex-col gap-2 ">
+        <div className="font-body text-body-xs font-semibold">PPD</div>
+        <div className="flex gap-1 flex-col">
+          <InfoRow label="Daerah" value={school?.data?.infoPentadbiran?.ppd || "Tiada Maklumat"} />
+          <InfoRow label="Gred" value={"Tiada Maklumat"} />
+          <InfoRow label="Sesi" value={school?.data?.infoPentadbiran?.sesi || "Tiada Maklumat"} />
+          <InfoRow label="Jenis Bantuan" value={school?.data?.infoPentadbiran?.bantuan || "Tiada Maklumat"} />
+          <InfoRow label="Tarikh Tubuh" value={"Tiada Maklumat"} />
         </div>
-
-        <div className="flex-1">
-          <div className="font-bold mb-2 text-[#202124]">PPD</div>
-          <p className="my-1">
-            <span className="pr-2">Daerah:</span>
-            <span className="font-bold">{school?.ppd || "Tiada Maklumat"}</span>
-          </p>
-          <p className="my-1">
-            <span className="pr-2">Gred:</span>
-            <span className="font-bold">{school?.gred || "Tiada Maklumat"}</span>
-          </p>
-          <p className="my-1">
-            <span className="pr-2">Sesi:</span>
-            <span className="font-bold">{school?.sesi || "Tiada Maklumat"}</span>
-          </p>
-          <p className="my-1">
-            <span className="pr-2">Jenis Bantuan:</span>
-            <span className="font-bold">{school?.bantuan || "Tiada Maklumat"}</span>
-          </p>
-          <p className="my-1">
-            <span className="pr-2">Tarikh Tubuh:</span>
-            <span className="font-bold">{school?.tarikhTubuh || "Tiada Maklumat"}</span>
-          </p>
-        </div>
+      </div>
+      <div className="p-2 w-full">
+        <Button variant="primary-outline" className="w-full justify-center">
+          Lihat Laman Web
+        </Button>
       </div>
     </div>
   );
