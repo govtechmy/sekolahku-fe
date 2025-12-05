@@ -17,7 +17,7 @@ type SchoolInfoWindowProps = {
     setSelected: (marker: SchoolMarker | null) => void;
 };
 
-export function SchoolInfoWindow({ school , setSelected}: SchoolInfoWindowProps) {
+export function SchoolInfoWindow({ school, setSelected}: SchoolInfoWindowProps) {
   return (
     <div className="relative bg-white rounded-b-xl">
       <div className="sticky top-0 -mt-12 flex justify-end p-2 bg-transparent">
