@@ -16,5 +16,6 @@ routes.forEach((route: string) => {
   fs.mkdirSync(path.dirname(outputPath), { recursive: true })
   fs.writeFileSync(outputPath, indexHtml)
 
-  console.log(`✔ Prerendered ${route}`)
+  // console.log(`✔ Prerendered ${route}`)
 })
+console.log(`✔ Prerendered`, routes.length, `routes`)
