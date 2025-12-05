@@ -1,4 +1,5 @@
 import {
+  CrossIcon,
   EmailIcon,
   OrgChartIcon,
   PhoneIcon,
@@ -9,19 +10,26 @@ import { toTitleCase } from "../../utils/titleCaseConverter";
 import { Button } from "@govtechmy/myds-react/button";
 import { InfoIconRow, InfoRow } from "../shared/CardInfo";
 import type { ItemSekolahModel } from "../../models/response";
+import type { SchoolMarker } from "../../types/maps";
 
 type SchoolInfoWindowProps = {
   school: ItemSekolahModel;
+    setSelected: (marker: SchoolMarker | null) => void;
 };
 
-export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
+export function SchoolInfoWindow({ school , setSelected}: SchoolInfoWindowProps) {
   return (
     <div>
+      <div className="relative">
       <img
         src="/images/sekDefault.png"
         alt={school?.namaSekolah || "Sekolah"}
         className="w-full h-full object-cover rounded-t-xl"
       />
+      <div className="absolute top-2.5 right-2.5">
+        <Button onClick={()=>setSelected(null)} variant={"default-outline"} className="p-1.5"><CrossIcon className="size-4"/></Button>
+      </div>
+      </div>
 
       <div className="p-3 flex flex-col gap-3 justify-start">
         <div>
@@ -34,7 +42,7 @@ export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
         </div>
         <div className="flex flex-col gap-2 text-txt-black-700">
           <InfoIconRow
-            icon={<OrgChartIcon/>}
+            icon={<OrgChartIcon />}
             value={school?.kodSekolah || "Tiada Maklumat"}
           />
           <InfoIconRow
@@ -46,7 +54,7 @@ export function SchoolInfoWindow({ school }: SchoolInfoWindowProps) {
             value={school?.data?.infoKomunikasi?.email || "Tiada Maklumat"}
           />
           <InfoIconRow
-            icon={<PinIcon/>}
+            icon={<PinIcon />}
             value={
               school?.data?.infoKomunikasi
                 ? toTitleCase(

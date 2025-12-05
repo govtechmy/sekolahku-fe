@@ -170,10 +170,10 @@ export function MapSearchBar({
 
   return (
     <div
-      className={`absolute flex justify-start z-[1000] 
+      className={`absolute flex justify-start z-[1000] bottom-0 
           ${
             isExpanded
-              ? "top-0 left-0 bottom-0 gap-4"
+              ? "top-0 left-0 gap-4"
               : "top-[16px] left-3 flex-col gap-2 w-[350px]"
           }
         `}
@@ -294,11 +294,11 @@ export function MapSearchBar({
       {selected && 
       <div
         className={clx(
-          "bg-white flex-1 w-[328px] rounded-xl",
+          "bg-white flex-1 w-[328px] rounded-xl overflow-y-auto",
           isExpanded ? "my-10" : ""
         )}
       >
-        {selectedSchoolDetail && <SchoolInfoWindow school={selectedSchoolDetail} />}
+        {selectedSchoolDetail && <SchoolInfoWindow school={selectedSchoolDetail} setSelected={setSelected} />}
       </div>
       }
     </div>
