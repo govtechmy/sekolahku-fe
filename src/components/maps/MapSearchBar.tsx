@@ -173,7 +173,7 @@ export function MapSearchBar({
           ${
             isExpanded
               ? "top-0 left-0 gap-4"
-              : "top-[16px] left-3 flex-col gap-2 w-[350px]"
+              : "top-[16px] left-3 flex-col gap-2 w-[350px] h-[45px]"
           }
         `}
     >
@@ -207,7 +207,7 @@ export function MapSearchBar({
               </Button>
             )}
 
-            <SearchBar size="large" className="w-full ">
+            <SearchBar size="large" className="w-full">
               <SearchBarInputContainer
                 className={clx(
                   isExpanded ? "border-none shadow-[none] !px-0" : "w-[326px]"
