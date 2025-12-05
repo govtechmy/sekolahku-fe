@@ -19,17 +19,16 @@ type SchoolInfoWindowProps = {
 
 export function SchoolInfoWindow({ school , setSelected}: SchoolInfoWindowProps) {
   return (
-    <div>
-      <div className="relative">
+    <div className="relative">
+      <div className="sticky top-0 -mt-12 flex justify-end p-2 bg-transparent">
+        <Button onClick={()=>setSelected(null)} variant={"default-outline"} className="p-1.5"><CrossIcon className="size-4"/></Button>
+      </div>
       <img
         src="/images/sekDefault.png"
         alt={school?.namaSekolah || "Sekolah"}
         className="w-full h-full object-cover rounded-t-xl"
       />
-      <div className="absolute top-2.5 right-2.5">
-        <Button onClick={()=>setSelected(null)} variant={"default-outline"} className="p-1.5"><CrossIcon className="size-4"/></Button>
-      </div>
-      </div>
+    
 
       <div className="p-3 flex flex-col gap-3 justify-start">
         <div>
