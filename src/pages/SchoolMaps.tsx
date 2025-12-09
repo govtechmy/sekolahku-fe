@@ -29,13 +29,6 @@ function MapEvents({
   return null;
 }
 
-// Custom school icon for Map
-const schoolIcon = new L.Icon({
-  iconUrl: "/images/iconSchool.png",
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
 
 //keep leaftlet view in sync
 function MapInstanceBridge({

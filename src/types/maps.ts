@@ -22,3 +22,15 @@ export type SearchBarMapProps = {
   jumlahPelajar?: number;
   jumlahGuru?: number;
 };
+
+
+export type MarkerType = "INDIVIDUAL" | "GROUP";
+
+export type SchoolMarkerInfo= {
+  markerType: MarkerType;
+  radiusInMeter: number;
+  koordinatXX: number;
+  koordinatYY: number;
+  id?: string;
+  name?: string;
+};
