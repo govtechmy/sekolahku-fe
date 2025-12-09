@@ -12,7 +12,7 @@ const OUTPUT = path.join(__dirname, '..', 'snap-routes.json')
 function buildRoutes() {
   const data = JSON.parse(fs.readFileSync(INPUT))
 
-  const staticRoutes = ['/home', '/about', '/carian-sekolah', '/siaran']
+  const staticRoutes = ['/', '/home', '/about', '/carian-sekolah', '/siaran']
   const schoolProfile = '/halaman-sekolah'
   const dynamicRoutes = data.map(school => `${schoolProfile}/${school.KODSEKOLAH}`)
 

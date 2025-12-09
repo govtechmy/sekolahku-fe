@@ -20,11 +20,18 @@ jobs:
         with:
           version: latest
 
+      # Setup Node.js (UPDATED TO NODE 24)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "24"       # <— UPDATED
+          cache: "pnpm"
+
+      # Recreate pnpm-lock.yaml (Fresh lockfile)
+      - name: Recreate pnpm-lock.yaml
+        run: |
+          rm -f pnpm-lock.yaml
+          pnpm install --lockfile-only
 
       - name: Install dependencies
         run: pnpm install
