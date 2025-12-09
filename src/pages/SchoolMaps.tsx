@@ -4,6 +4,7 @@ import type { SearchBarMapProps } from "../types/maps";
 import { getSchoolSuggestion } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
+import { LocationPickerWindow } from "../components/maps";
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
@@ -47,10 +48,10 @@ export default function SchoolMaps() {
         suggestions={filteredSearchResult}
         onSearch={handleSearch}
       />
-      <MapContainerComponent
-        showLocationPicker={showLocationPicker}
-        setShowLocationPicker={setShowLocationPicker}
-      />
+      <MapContainerComponent/>
+      {showLocationPicker && (
+        <LocationPickerWindow onClose={() => setShowLocationPicker(false)} />
+      )}
     </div>
   );
 }

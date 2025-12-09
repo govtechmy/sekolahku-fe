@@ -1,7 +1,6 @@
 import { MapContainer as LeafletMapContainer, TileLayer, useMapEvents, useMap } from "react-leaflet";
 import { useEffect, useState } from "react";
 import L from "leaflet";
-import { LocationPickerWindow } from "./LocationPickerWindow";
 
 function MapEvents({
   onZoomChange,
@@ -39,14 +38,10 @@ function MapInstanceBridge({
 
 interface MapContainerProps {
   initialPosition?: [number, number];
-  showLocationPicker : boolean
-  setShowLocationPicker : (params: boolean)=>void;
 }
 
 export function MapContainerComponent({
   initialPosition = [3.760115447396889, 108.46252441406251],
-  showLocationPicker,
-  setShowLocationPicker
 }: MapContainerProps) {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>({
     lat: initialPosition[0],
@@ -82,9 +77,6 @@ export function MapContainerComponent({
         />
         {/* Map markers intentionally removed; search-only UI */}
       </LeafletMapContainer>
-      {showLocationPicker && (
-        <LocationPickerWindow onClose={() => setShowLocationPicker(false)} />
-      )}
     </>
   );
 }
