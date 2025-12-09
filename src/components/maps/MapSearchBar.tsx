@@ -84,7 +84,6 @@ export function MapSearchBar({
 
     const trimmedValue = value.trim();
     if (trimmedValue.length >= 3) {
-      // Add 500ms delay before calling API
       debounceTimerRef.current = window.setTimeout(() => {
         filterMarkers(value, selectedNegeri, selectedJenis);
       }, 500);
@@ -174,7 +173,7 @@ export function MapSearchBar({
           ${
             isExpanded
               ? "top-0 left-0 gap-4"
-              : "top-[16px] left-3 flex-col gap-2 w-[350px]"
+              : "top-[16px] left-3 flex-col gap-2 w-[350px] h-[45px]"
           }
         `}
     >
@@ -208,7 +207,7 @@ export function MapSearchBar({
               </Button>
             )}
 
-            <SearchBar size="large" className="w-full ">
+            <SearchBar size="large" className="w-full">
               <SearchBarInputContainer
                 className={clx(
                   isExpanded ? "border-none shadow-[none] !px-0" : "w-[326px]"
@@ -295,7 +294,7 @@ export function MapSearchBar({
       <div
         className={clx(
           "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
-          isExpanded ? "my-10" : ""
+          isExpanded ? "my-10" : "absolute top-[50px]"
         )}
       >
         {selectedSchoolDetail && <SchoolInfoWindow school={selectedSchoolDetail} setSelected={setSelected} />}

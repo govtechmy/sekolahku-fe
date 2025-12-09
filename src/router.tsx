@@ -11,7 +11,7 @@ import SiaranId from "./pages/Siaran/SiaranId";
 import LayoutMap from "./components/layout/LayoutMap";
 
 export default function AppRoutes() {
-  const lang = localStorage.getItem("lang") || "en";
+  const lang = localStorage.getItem("lang") || "ms";
 
   return (
     <Routes>
