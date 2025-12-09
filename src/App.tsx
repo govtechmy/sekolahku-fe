@@ -4,20 +4,28 @@ import AppRoutes from "./router";
 import { BrowserRouter } from "react-router-dom";
 
 function App() {
-  sessionStorage.setItem("dev_access_allowed", "true");
-  if (import.meta.env.VITE_APP_ENV === "production") {
-    sessionStorage.setItem("dev_access_allowed", "false");
-  }
+  const [isAllowed, setIsAllowedState] = useState(false);
 
-  if (!import.meta.env.VITE_APP_CODE) {
-    sessionStorage.setItem("dev_access_allowed", "true");
-  }
+  const setIsAllowed = (value: boolean) => {
+    setIsAllowedState(value);
+    sessionStorage.setItem("dev_access_allowed", value.toString());
+  };
 
-  const [isAllowed, setIsAllowed] = useState(false);
   const devCode = "dev1234"
 
   useEffect(() => {
-    const isAllowed = sessionStorage.getItem("dev_access_allowed") === "true";
+    const devStorage = sessionStorage.getItem("dev_access_allowed")
+    if (!devStorage) { 
+      if (import.meta.env.VITE_APP_ENV === "production") {
+        sessionStorage.setItem("dev_access_allowed", "false");
+      }
+
+      if (!import.meta.env.VITE_APP_CODE) {
+        sessionStorage.setItem("dev_access_allowed", "true");
+      } 
+    }
+
+    const isAllowed = devStorage === "true";
     if (isAllowed) setIsAllowed(true);
   }, []);
   

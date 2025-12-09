@@ -294,7 +294,7 @@ export function MapSearchBar({
       <div
         className={clx(
           "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
-          isExpanded ? "my-10" : ""
+          isExpanded ? "my-10" : "absolute top-[50px]"
         )}
       >
         {selectedSchoolDetail && <SchoolInfoWindow school={selectedSchoolDetail} setSelected={setSelected} />}
