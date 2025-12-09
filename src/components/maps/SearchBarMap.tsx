@@ -5,7 +5,7 @@ import {
   MapIcon,
 } from "@govtechmy/myds-react/icon";
 import { FilterDropdowns } from "./FilterDropdowns";
-import type { SchoolMarker } from "../../types/maps";
+import type { SearchBarMapProps } from "../../types/maps";
 import { getSchoolSuggestion, getSchoolId } from "../../services/school.svc";
 import {
   SearchBar,
@@ -45,24 +45,24 @@ const JENIS_LIST = ["SK", "K9"];
 type MapSearchBarProps = {
   query: string;
   setQuery: (val: string) => void;
-  setFilteredMarkers: (markers: SchoolMarker[]) => void;
-  markersToShow: SchoolMarker[];
-  selected: SchoolMarker | null;
-  setSelected: (marker: SchoolMarker | null) => void;
+  setFilteredSearchResult: (markers: SearchBarMapProps[]) => void;
+  markersToShow: SearchBarMapProps[];
+  selected: SearchBarMapProps | null;
+  setSelected: (marker: SearchBarMapProps | null) => void;
   panTo?: (lat: number, lng: number) => void;
   setZoom?: (zoom: number) => void;
 };
 
-export function MapSearchBar({
+export function SearchBarMap({
   query,
   setQuery,
-  setFilteredMarkers,
+  setFilteredSearchResult,
   selected,
   setSelected,
   panTo,
   setZoom,
 }: MapSearchBarProps) {
-  const [suggestions, setSuggestions] = useState<SchoolMarker[]>([]);
+  const [suggestions, setSuggestions] = useState<SearchBarMapProps[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
@@ -124,7 +124,7 @@ export function MapSearchBar({
 
       const results = await getSchoolSuggestion(params);
 
-      const transformed: SchoolMarker[] = results.map((school) => ({
+      const transformed: SearchBarMapProps[] = results.map((school) => ({
         namaSekolah: school.namaSekolah || "Sekolah Tidak Diketahui",
         kodSekolah: school.kodSekolah || "",
         lat: school.data.infoLokasi.koordinatYY,
@@ -140,7 +140,7 @@ export function MapSearchBar({
       if (transformed.length > 0) {
         panTo?.(transformed[0].lat, transformed[0].lng-offset);
       }
-      setFilteredMarkers(transformed);
+      setFilteredSearchResult(transformed);
       setSuggestions(transformed);
     } catch (error) {
       console.error("Error fetching school suggestions:", error);
@@ -148,7 +148,7 @@ export function MapSearchBar({
     }
   };
 
-  const handleSelect = async (school: SchoolMarker) => {
+  const handleSelect = async (school: SearchBarMapProps) => {
     setZoom?.(18);
     panTo?.(school.lat, school.lng - offset);
     setSelected(school);

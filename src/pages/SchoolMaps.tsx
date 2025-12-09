@@ -10,10 +10,10 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Button } from "@govtechmy/myds-react/button";
 import {
-  MapSearchBar,
+  SearchBarMap,
   LocationPickerWindow,
 } from "../components/maps";
-import type { SchoolMarker } from "../types/maps";
+import type { SearchBarMapProps } from "../types/maps";
 import offset from "../utils/coordinateOffSet";
 
 // Fix for default markers in Leaflet
@@ -58,7 +58,7 @@ function MapEvents({
   return null;
 }
 
-// Note: MapSearchBar will be rendered in a top-level sidebar div
+// Note: SearchBarMap will be rendered in a top-level sidebar div
 
 function MapInstanceBridge({
   onMapReady,
@@ -73,16 +73,12 @@ function MapInstanceBridge({
 }
 
 export default function SchoolMaps() {
-  const initialPosition: [number, number] = [4.1969, 101.2561];
-  const schoolMarkers: SchoolMarker[] = [];
-  const [selected, setSelected] = useState<SchoolMarker | null>(null);
+  const initialPosition: [number, number] = [3.760115447396889, 108.46252441406251];
+  const [selected, setSelected] = useState<SearchBarMapProps | null>(null);
   const [query, setQuery] = useState("");
-  const [filteredMarkers, setFilteredMarkers] =
-    useState<SchoolMarker[]>(schoolMarkers);
-  const [userLocation, setUserLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>({ lat: initialPosition[0], lng: initialPosition[1] });
+  // const [filteredMarker, setFilteredMarker] = useState<SearchBarMapProps[]>([]);
+  const [filteredSearchResult, setFilteredSearchResult] = useState<SearchBarMapProps[]>([]);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number; } | null>({ lat: initialPosition[0], lng: initialPosition[1] });
   const [zoom, setZoom] = useState(7);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
@@ -101,11 +97,11 @@ export default function SchoolMaps() {
           Pilih Lokasi
         </Button>
       </div>
-      <MapSearchBar
+      <SearchBarMap
         query={query}
         setQuery={setQuery}
-        setFilteredMarkers={setFilteredMarkers}
-        markersToShow={filteredMarkers}
+        setFilteredSearchResult={setFilteredSearchResult}
+        markersToShow={filteredSearchResult}
         setSelected={(s) => {
           setSelected(s);
         } }
@@ -115,7 +111,7 @@ export default function SchoolMaps() {
         />
       <MapContainer
         center={initialPosition}
-        zoom={7}
+        zoom={6}
         className="h-full w-full "
         zoomControl={false}
       >
@@ -134,7 +130,7 @@ export default function SchoolMaps() {
             }
           }}
         />
-        {filteredMarkers.map((pos, index) => (
+        {filteredSearchResult.map((pos, index) => (
           <Marker
             key={index}
             position={[pos.lat, pos.lng]}

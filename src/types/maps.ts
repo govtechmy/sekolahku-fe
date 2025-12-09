@@ -1,4 +1,4 @@
-export type SchoolMarker = {
+export type SearchBarMapProps = {
   lat: number;
   lng: number;
   namaSekolah: string;
