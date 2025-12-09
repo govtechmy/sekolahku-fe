@@ -13,6 +13,28 @@ import {
   PinIcon,
 } from "@govtechmy/myds-react/icon";
 
+
+export const NEGERI_LIST = [
+  "JOHOR",
+  "KEDAH",
+  "KELANTAN",
+  "MELAKA",
+  "NEGERI SEMBILAN",
+  "PAHANG",
+  "PERAK",
+  "PERLIS",
+  "PULAU PINANG",
+  "SABAH",
+  "SARAWAK",
+  "SELANGOR",
+  "TERENGGANU",
+  "WILAYAH PERSEKUTUAN KUALA LUMPUR",
+  "WILAYAH PERSEKUTUAN LABUAN",
+  "WILAYAH PERSEKUTUAN PUTRAJAYA",
+];
+
+export const JENIS_LIST = ["SK", "K9"];
+
 // Statistics data for different years
 export const statisticYearlyData = {
   2020: {

@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowBackIcon,
@@ -6,7 +7,7 @@ import {
 } from "@govtechmy/myds-react/icon";
 import { FilterDropdowns } from "./FilterDropdowns";
 import type { SearchBarMapProps } from "../../types/maps";
-import { getSchoolSuggestion, getSchoolId } from "../../services/school.svc";
+import { getSchoolId } from "../../services/school.svc";
 import {
   SearchBar,
   SearchBarHint,
@@ -19,50 +20,23 @@ import { Button } from "@govtechmy/myds-react/button";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import type { ItemSekolahModel } from "../../models/response";
-import offset from "../../utils/coordinateOffSet";
+import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
+// Map offset not needed in search-only component
 
-const NEGERI_LIST = [
-  "JOHOR",
-  "KEDAH",
-  "KELANTAN",
-  "MELAKA",
-  "NEGERI SEMBILAN",
-  "PAHANG",
-  "PERAK",
-  "PERLIS",
-  "PULAU PINANG",
-  "SABAH",
-  "SARAWAK",
-  "SELANGOR",
-  "TERENGGANU",
-  "WILAYAH PERSEKUTUAN KUALA LUMPUR",
-  "WILAYAH PERSEKUTUAN LABUAN",
-  "WILAYAH PERSEKUTUAN PUTRAJAYA",
-];
-
-const JENIS_LIST = ["SK", "K9"];
-
-type MapSearchBarProps = {
+interface MapSearchBarProps{
   query: string;
   setQuery: (val: string) => void;
-  setFilteredSearchResult: (markers: SearchBarMapProps[]) => void;
-  markersToShow: SearchBarMapProps[];
-  selected: SearchBarMapProps | null;
-  setSelected: (marker: SearchBarMapProps | null) => void;
-  panTo?: (lat: number, lng: number) => void;
-  setZoom?: (zoom: number) => void;
-};
+  suggestions: SearchBarMapProps[];
+  onSearch: (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => void;
+}
 
 export function SearchBarMap({
   query,
   setQuery,
-  setFilteredSearchResult,
-  selected,
-  setSelected,
-  panTo,
-  setZoom,
+  suggestions,
+  onSearch,
 }: MapSearchBarProps) {
-  const [suggestions, setSuggestions] = useState<SearchBarMapProps[]>([]);
+  const [localSuggestions, setLocalSuggestions] = useState<SearchBarMapProps[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
@@ -76,7 +50,7 @@ export function SearchBarMap({
   // Handler for MyDS SearchBar onValueChange
   const handleValueChange = (value: string) => {
     setQuery(value);
-    setSelected(null);
+    setSelectedSchoolDetail(null);
 
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
@@ -85,10 +59,14 @@ export function SearchBarMap({
     const trimmedValue = value.trim();
     if (trimmedValue.length >= 3) {
       debounceTimerRef.current = window.setTimeout(() => {
-        filterMarkers(value, selectedNegeri, selectedJenis);
+        onSearch({
+          namaSekolah: value,
+          negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
+          jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
+        });
       }, 500);
     } else {
-      setSuggestions([]);
+      setLocalSuggestions([]);
     }
   };
 
@@ -101,58 +79,11 @@ export function SearchBarMap({
     };
   }, []);
 
-  const filterMarkers = async (
-    value: string,
-    negeri: string,
-    jenis: string
-  ) => {
-    try {
-      const params: { namaSekolah?: string; negeri?: string; jenis?: string } =
-        {};
-
-      if (value) {
-        params.namaSekolah = value;
-      }
-
-      if (negeri && negeri !== "ALL") {
-        params.negeri = negeri;
-      }
-
-      if (jenis && jenis !== "ALL") {
-        params.jenis = jenis;
-      }
-
-      const results = await getSchoolSuggestion(params);
-
-      const transformed: SearchBarMapProps[] = results.map((school) => ({
-        namaSekolah: school.namaSekolah || "Sekolah Tidak Diketahui",
-        kodSekolah: school.kodSekolah || "",
-        lat: school.data.infoLokasi.koordinatYY,
-        lng: school.data.infoLokasi.koordinatXX,
-        negeri: school.data?.infoPentadbiran?.negeri || "",
-        bandarSurat: school.data?.infoKomunikasi?.bandarSurat || "",
-        jenisLabel: school.data?.infoSekolah?.jenisLabel || "",
-        jumlahPelajar: school.data?.infoSekolah?.jumlahPelajar || 0,
-        jumlahGuru: school.data?.infoSekolah?.jumlahGuru || 0,
-      }));
-
-      setZoom?.(13);
-      if (transformed.length > 0) {
-        panTo?.(transformed[0].lat, transformed[0].lng-offset);
-      }
-      setFilteredSearchResult(transformed);
-      setSuggestions(transformed);
-    } catch (error) {
-      console.error("Error fetching school suggestions:", error);
-      setSuggestions([]);
-    }
-  };
+  useEffect(() => {
+    setLocalSuggestions(suggestions);
+  }, [suggestions]);
 
   const handleSelect = async (school: SearchBarMapProps) => {
-    setZoom?.(18);
-    panTo?.(school.lat, school.lng - offset);
-    setSelected(school);
-    
     try {
       if (!school.kodSekolah) {
         console.error("School code is null");
@@ -235,19 +166,27 @@ export function SearchBarMap({
               jenisList={jenisList}
               onNegeriChange={(val: string) => {
                 setSelectedNegeri(val);
-                filterMarkers(query, val, selectedJenis);
+                onSearch({
+                  namaSekolah: query.trim().length >= 3 ? query : undefined,
+                  negeri: val !== "ALL" ? val : undefined,
+                  jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
+                });
               }}
               onJenisChange={(val: string) => {
                 setSelectedJenis(val);
-                filterMarkers(query, selectedNegeri, val);
+                onSearch({
+                  namaSekolah: query.trim().length >= 3 ? query : undefined,
+                  negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
+                  jenis: val !== "ALL" ? val : undefined,
+                });
               }}
             />
           )}
 
           {isExpanded && (
             <div className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1">
-              {suggestions.length > 0 ? (
-                suggestions.map((school, idx) => (
+              {localSuggestions.length > 0 ? (
+                localSuggestions.map((school, idx) => (
                   <li
                     key={idx}
                     onClick={() => handleSelect(school)}
@@ -290,16 +229,16 @@ export function SearchBarMap({
           )}
         </div>
       </div>
-      {selected && 
-      <div
-        className={clx(
-          "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
-          isExpanded ? "my-10" : "absolute top-[50px]"
-        )}
-      >
-        {selectedSchoolDetail && <SchoolInfoWindow school={selectedSchoolDetail} setSelected={setSelected} />}
-      </div>
-      }
+      {selectedSchoolDetail && (
+        <div
+          className={clx(
+            "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
+            isExpanded ? "my-10" : "absolute top-[50px]"
+          )}
+        >
+          <SchoolInfoWindow school={selectedSchoolDetail} setSelected={() => setSelectedSchoolDetail(null)} />
+        </div>
+      )}
     </div>
   );
 }

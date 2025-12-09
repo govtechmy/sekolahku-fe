@@ -1,40 +1,11 @@
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMapEvents,
-  useMap,
-} from "react-leaflet";
+import { MapContainer, TileLayer, useMapEvents, useMap } from "react-leaflet";
 import { useEffect, useState } from "react";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Button } from "@govtechmy/myds-react/button";
-import {
-  SearchBarMap,
-  LocationPickerWindow,
-} from "../components/maps";
+import { LocationPickerWindow } from "../components/maps";
 import type { SearchBarMapProps } from "../types/maps";
-import offset from "../utils/coordinateOffSet";
-
-// Fix for default markers in Leaflet
-delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
-  ._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
-
-// Custom school icon
-const schoolIcon = new L.Icon({
-  iconUrl: "/images/iconSchool.png",
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
+import { getSchoolSuggestion } from "../services/school.svc";
+import { SearchBarMap } from "../components/maps/SearchBarMap";
 
 function MapEvents({
   onZoomChange,
@@ -72,11 +43,11 @@ function MapInstanceBridge({
   return null;
 }
 
+//query here
+
 export default function SchoolMaps() {
   const initialPosition: [number, number] = [3.760115447396889, 108.46252441406251];
-  const [selected, setSelected] = useState<SearchBarMapProps | null>(null);
   const [query, setQuery] = useState("");
-  // const [filteredMarker, setFilteredMarker] = useState<SearchBarMapProps[]>([]);
   const [filteredSearchResult, setFilteredSearchResult] = useState<SearchBarMapProps[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number; } | null>({ lat: initialPosition[0], lng: initialPosition[1] });
   const [zoom, setZoom] = useState(7);
@@ -85,6 +56,27 @@ export default function SchoolMaps() {
 
   console.log("User Location:", userLocation); // for future use
   console.log("Map Zoom Level:", zoom); // for future use
+
+  const handleSearch = async (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => {
+    try {
+      const results = await getSchoolSuggestion(params);
+      const transformed: SearchBarMapProps[] = results.map((school) => ({
+        namaSekolah: school.namaSekolah || "Sekolah Tidak Diketahui",
+        kodSekolah: school.kodSekolah || "",
+        lat: school.data.infoLokasi.koordinatYY,
+        lng: school.data.infoLokasi.koordinatXX,
+        negeri: school.data?.infoPentadbiran?.negeri || "",
+        bandarSurat: school.data?.infoKomunikasi?.bandarSurat || "",
+        jenisLabel: school.data?.infoSekolah?.jenisLabel || "",
+        jumlahPelajar: school.data?.infoSekolah?.jumlahPelajar || 0,
+        jumlahGuru: school.data?.infoSekolah?.jumlahGuru || 0,
+      }));
+      setFilteredSearchResult(transformed);
+    } catch (error) {
+      console.error("Error fetching school suggestions:", error);
+      setFilteredSearchResult([]);
+    }
+  };
 
   return (
     <div className="h-full w-full flex relative">
@@ -100,15 +92,9 @@ export default function SchoolMaps() {
       <SearchBarMap
         query={query}
         setQuery={setQuery}
-        setFilteredSearchResult={setFilteredSearchResult}
-        markersToShow={filteredSearchResult}
-        setSelected={(s) => {
-          setSelected(s);
-        } }
-        panTo={(lat: number, lng: number) => mapRef?.panTo([lat, lng])}
-        setZoom={(z: number) => mapRef?.setZoom(z)} 
-        selected={selected}      
-        />
+        suggestions={filteredSearchResult}
+        onSearch={handleSearch}
+      />
       <MapContainer
         center={initialPosition}
         zoom={6}
@@ -125,32 +111,10 @@ export default function SchoolMaps() {
           onZoomChange={setZoom}
           onCenterChange={setUserLocation}
           onDragStart={() => {
-            if (selected) {
-              setSelected(null);
-            }
+            // no-op when dragging; selection handled in search component
           }}
         />
-        {filteredSearchResult.map((pos, index) => (
-          <Marker
-            key={index}
-            position={[pos.lat, pos.lng]}
-            icon={schoolIcon}
-            eventHandlers={{
-              click: () => {
-                if (selected?.kodSekolah === pos.kodSekolah) {
-                  return;
-                }
-                setSelected(pos);
-                if (mapRef) {
-                  mapRef.setView([pos.lat, pos.lng - offset], 17, {
-                    animate: true,
-                    duration: 0.5,
-                  });
-                }
-              },
-            }}
-          />
-        ))}
+        {/* Map markers intentionally removed; search-only UI */}
 
       </MapContainer>
       {showLocationPicker && (
