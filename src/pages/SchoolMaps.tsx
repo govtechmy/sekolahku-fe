@@ -1,11 +1,11 @@
 import { MapContainer, TileLayer, useMapEvents, useMap } from "react-leaflet";
 import { useEffect, useState } from "react";
-import "leaflet/dist/leaflet.css";
 import { Button } from "@govtechmy/myds-react/button";
 import { LocationPickerWindow } from "../components/maps";
 import type { SearchBarMapProps } from "../types/maps";
 import { getSchoolSuggestion } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
+import L from "leaflet";
 
 function MapEvents({
   onZoomChange,
@@ -29,8 +29,15 @@ function MapEvents({
   return null;
 }
 
-// Note: SearchBarMap will be rendered in a top-level sidebar div
+// Custom school icon for Map
+const schoolIcon = new L.Icon({
+  iconUrl: "/images/iconSchool.png",
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
 
+//keep leaftlet view in sync
 function MapInstanceBridge({
   onMapReady,
 }: {
@@ -42,8 +49,6 @@ function MapInstanceBridge({
   }, [map, onMapReady]);
   return null;
 }
-
-//query here
 
 export default function SchoolMaps() {
   const initialPosition: [number, number] = [3.760115447396889, 108.46252441406251];
