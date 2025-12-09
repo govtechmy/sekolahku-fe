@@ -12,7 +12,44 @@ import {
   EmailIcon,
   PinIcon,
 } from "@govtechmy/myds-react/icon";
+import type { FindNearbyUpdatedEndpoint } from "./types/maps";
 
+export const findNearbyUpdatedEndpoint: FindNearbyUpdatedEndpoint = {
+  viewInfoLokasi: {
+    koordinatXX: 37.7749,
+    koordinatYY: -122.4194,
+    zoom: 6,
+  },
+  markerGroups: [
+    {
+      markerType: "INDIVIDUAL",
+      radiusInMeter: 0,
+      infoLokasi: {
+        koordinatXX: 37.7749,
+        koordinatYY: -122.4194,
+      },
+      kodSekolah: "SCH001",
+    },
+    {
+      markerType: "INDIVIDUAL",
+      radiusInMeter: 0,
+      infoLokasi: {
+        koordinatXX: 37.7749,
+        koordinatYY: -122.4194,
+      },
+      kodSekolah: "SCH001",
+    },
+    {
+      markerType: "INDIVIDUAL",
+      radiusInMeter: 0,
+      infoLokasi: {
+        koordinatXX: 37.7749,
+        koordinatYY: -122.4194,
+      },
+      kodSekolah: "SCH001",
+    },
+  ],
+};
 
 export const NEGERI_LIST = [
   "JOHOR",
@@ -88,11 +125,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar Menggunakan Tablet",
     header: "Berita",
     title: "Bantuan Tablet Malaysia",
-    description: "Program bantuan tablet untuk pelajar Malaysia kini dibuka. Dapatkan peralatan digital untuk membantu pembelajaran anda.",
+    description:
+      "Program bantuan tablet untuk pelajar Malaysia kini dibuka. Dapatkan peralatan digital untuk membantu pembelajaran anda.",
     date: "11 FEB 2025",
     readTime: "3 min",
     link: "https://loremipsum.io/ultimate-list-of-lorem-ipsum-generators/",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    content:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   },
   {
     id: "2",
@@ -100,11 +139,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar",
     header: "Pengumuman",
     title: "Jadual Peperiksaan Akhir Tahun 2024",
-    description: "Jadual peperiksaan akhir tahun 2024 telah dikeluarkan. Semak tarikh dan masa peperiksaan anda dengan teliti.",
+    description:
+      "Jadual peperiksaan akhir tahun 2024 telah dikeluarkan. Semak tarikh dan masa peperiksaan anda dengan teliti.",
     date: "10 FEB 2024",
     readTime: "2 min",
     link: "https://www.lipsum.com/feed/html",
-    content: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.",
+    content:
+      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.",
   },
   {
     id: "3",
@@ -112,11 +153,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar Menggunakan Tablet",
     header: "Berita",
     title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description: "Notis penting mengenai perubahan tarikh cuti sekolah akhir tahun. Semua pelajar dan ibu bapa diminta untuk mengambil maklum.",
+    description:
+      "Notis penting mengenai perubahan tarikh cuti sekolah akhir tahun. Semua pelajar dan ibu bapa diminta untuk mengambil maklum.",
     date: "8 FEB 2024",
     readTime: "4 min",
     link: "https://generator.lorem-ipsum.info/",
-    content: "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.",
+    content:
+      "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.",
   },
   {
     id: "4",
@@ -124,11 +167,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar",
     header: "Pengumuman",
     title: "Jadual Peperiksaan SPM 2025",
-    description: "Jadual lengkap peperiksaan SPM 2025 kini tersedia. Muat turun dan buat persediaan awal untuk kejayaan anda.",
+    description:
+      "Jadual lengkap peperiksaan SPM 2025 kini tersedia. Muat turun dan buat persediaan awal untuk kejayaan anda.",
     date: "5 FEB 2024",
     readTime: "2 min",
     link: "https://www.blindtextgenerator.com/lorem-ipsum",
-    content: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
+    content:
+      "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
   },
   {
     id: "5",
@@ -136,11 +181,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar Menggunakan Tablet",
     header: "Berita",
     title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description: "Kemas kini terkini berkenaan penangguhan cuti sekolah. Pastikan anda sentiasa mengikuti perkembangan terbaru dari pihak sekolah.",
+    description:
+      "Kemas kini terkini berkenaan penangguhan cuti sekolah. Pastikan anda sentiasa mengikuti perkembangan terbaru dari pihak sekolah.",
     date: "8 FEB 2024",
     readTime: "4 min",
     link: "https://loremipsum.io/21-of-the-best-placeholder-image-generators/",
-    content: "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.",
+    content:
+      "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.",
   },
   {
     id: "6",
@@ -148,11 +195,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar",
     header: "Pengumuman",
     title: "Jadual Peperiksaan SPM 2025",
-    description: "Persiapan menghadapi SPM 2025 bermula sekarang. Ketahui tarikh penting dan tips berjaya dalam peperiksaan.",
+    description:
+      "Persiapan menghadapi SPM 2025 bermula sekarang. Ketahui tarikh penting dan tips berjaya dalam peperiksaan.",
     date: "5 FEB 2024",
     readTime: "2 min",
     link: "https://www.lipsum.com/",
-    content: "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.",
+    content:
+      "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.",
   },
   {
     id: "7",
@@ -160,11 +209,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar Menggunakan Tablet",
     header: "Berita",
     title: "Bantuan Tablet Malaysia",
-    description: "Inisiatif kerajaan untuk menyediakan tablet kepada pelajar berprestasi. Permohonan kini dibuka untuk semua yang layak.",
+    description:
+      "Inisiatif kerajaan untuk menyediakan tablet kepada pelajar berprestasi. Permohonan kini dibuka untuk semua yang layak.",
     date: "11 FEB 2025",
     readTime: "3 min",
     link: "https://loremipsum.de/downloads.html",
-    content: "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. Ut enim ad minima veniam.",
+    content:
+      "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. Ut enim ad minima veniam.",
   },
   {
     id: "8",
@@ -172,11 +223,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar",
     header: "Pengumuman",
     title: "Jadual Peperiksaan Akhir Tahun 2024",
-    description: "Semakan semula jadual peperiksaan akhir tahun. Ada beberapa perubahan penting yang perlu anda ketahui.",
+    description:
+      "Semakan semula jadual peperiksaan akhir tahun. Ada beberapa perubahan penting yang perlu anda ketahui.",
     date: "10 FEB 2024",
     readTime: "2 min",
     link: "https://www.webfx.com/tools/lorem-ipsum-generator/",
-    content: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+    content:
+      "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
   },
   {
     id: "9",
@@ -184,11 +237,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar Menggunakan Tablet",
     header: "Berita",
     title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description: "Maklumat terkini tentang tarikh cuti sekolah yang ditangguhkan. Sila rujuk kepada pihak sekolah untuk butiran lanjut.",
+    description:
+      "Maklumat terkini tentang tarikh cuti sekolah yang ditangguhkan. Sila rujuk kepada pihak sekolah untuk butiran lanjut.",
     date: "8 FEB 2024",
     readTime: "4 min",
     link: "https://loripsum.net/",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
+    content:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
   },
   {
     id: "10",
@@ -196,11 +251,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar",
     header: "Pengumuman",
     title: "Jadual Peperiksaan SPM 2025",
-    description: "Panduan lengkap untuk calon SPM 2025. Ketahui semua yang perlu anda tahu untuk bersedia menghadapi peperiksaan.",
+    description:
+      "Panduan lengkap untuk calon SPM 2025. Ketahui semua yang perlu anda tahu untuk bersedia menghadapi peperiksaan.",
     date: "5 FEB 2024",
     readTime: "2 min",
     link: "https://meettheipsums.com/",
-    content: "Donec sollicitudin molestie malesuada. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Pellentesque in ipsum id orci porta dapibus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.",
+    content:
+      "Donec sollicitudin molestie malesuada. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Pellentesque in ipsum id orci porta dapibus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.",
   },
   {
     id: "11",
@@ -208,11 +265,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar Menggunakan Tablet",
     header: "Berita",
     title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description: "Pengumuman rasmi dari Kementerian Pendidikan mengenai penangguhan cuti sekolah. Bacaan wajib untuk semua.",
+    description:
+      "Pengumuman rasmi dari Kementerian Pendidikan mengenai penangguhan cuti sekolah. Bacaan wajib untuk semua.",
     date: "8 FEB 2024",
     readTime: "4 min",
     link: "https://hipsum.co/",
-    content: "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.",
+    content:
+      "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.",
   },
   {
     id: "12",
@@ -220,11 +279,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar",
     header: "Pengumuman",
     title: "Jadual Peperiksaan SPM 2025",
-    description: "Tarikh akhir pendaftaran peperiksaan SPM 2025 semakin hampir. Pastikan anda tidak terlepas peluang ini.",
+    description:
+      "Tarikh akhir pendaftaran peperiksaan SPM 2025 semakin hampir. Pastikan anda tidak terlepas peluang ini.",
     date: "5 FEB 2024",
     readTime: "2 min",
     link: "https://baconipsum.com/",
-    content: "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Curabitur aliquet quam id dui posuere blandit. Nulla quis lorem ut libero malesuada feugiat. Quisque velit nisi, pretium ut lacinia in, elementum id enim.",
+    content:
+      "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Curabitur aliquet quam id dui posuere blandit. Nulla quis lorem ut libero malesuada feugiat. Quisque velit nisi, pretium ut lacinia in, elementum id enim.",
   },
   {
     id: "13",
@@ -232,11 +293,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar Menggunakan Tablet",
     header: "Berita",
     title: "Bantuan Tablet Malaysia",
-    description: "Senarai syarat kelayakan untuk menerima bantuan tablet percuma. Semak sama ada anda layak untuk memohon.",
+    description:
+      "Senarai syarat kelayakan untuk menerima bantuan tablet percuma. Semak sama ada anda layak untuk memohon.",
     date: "11 FEB 2025",
     readTime: "3 min",
     link: "https://www.cupcakeipsum.com/",
-    content: "Cras ultricies ligula sed magna dictum porta. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Donec rutrum congue leo eget malesuada. Proin eget tortor risus.",
+    content:
+      "Cras ultricies ligula sed magna dictum porta. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Donec rutrum congue leo eget malesuada. Proin eget tortor risus.",
   },
   {
     id: "14",
@@ -244,11 +307,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar",
     header: "Pengumuman",
     title: "Jadual Peperiksaan Akhir Tahun 2024",
-    description: "Format baharu peperiksaan akhir tahun 2024. Pelajari perubahan yang telah dibuat untuk tahun ini.",
+    description:
+      "Format baharu peperiksaan akhir tahun 2024. Pelajari perubahan yang telah dibuat untuk tahun ini.",
     date: "10 FEB 2024",
     readTime: "2 min",
     link: "https://pirateipsum.me/",
-    content: "Pellentesque in ipsum id orci porta dapibus. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Sed porttitor lectus nibh.",
+    content:
+      "Pellentesque in ipsum id orci porta dapibus. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Sed porttitor lectus nibh.",
   },
   {
     id: "15",
@@ -256,11 +321,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar Menggunakan Tablet",
     header: "Berita",
     title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description: "Implikasi penangguhan cuti sekolah terhadap aktiviti ko-kurikulum. Ketahui perubahan jadual yang akan berlaku.",
+    description:
+      "Implikasi penangguhan cuti sekolah terhadap aktiviti ko-kurikulum. Ketahui perubahan jadual yang akan berlaku.",
     date: "8 FEB 2024",
     readTime: "4 min",
     link: "https://www.catipsum.com/index.php",
-    content: "Nulla porttitor accumsan tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.",
+    content:
+      "Nulla porttitor accumsan tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.",
   },
   {
     id: "16",
@@ -268,11 +335,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar",
     header: "Pengumuman",
     title: "Jadual Peperiksaan SPM 2025",
-    description: "Tips dan strategi menghadapi SPM 2025 daripada pelajar cemerlang terdahulu. Baca pengalaman mereka di sini.",
+    description:
+      "Tips dan strategi menghadapi SPM 2025 daripada pelajar cemerlang terdahulu. Baca pengalaman mereka di sini.",
     date: "5 FEB 2024",
     readTime: "2 min",
     link: "https://slipsum.com/",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sollicitudin molestie malesuada. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vivamus magna justo, lacinia eget consectetur sed.",
+    content:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sollicitudin molestie malesuada. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vivamus magna justo, lacinia eget consectetur sed.",
   },
   {
     id: "17",
@@ -280,11 +349,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar Menggunakan Tablet",
     header: "Berita",
     title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description: "Soalan lazim berkaitan penangguhan cuti sekolah. Dapatkan jawapan kepada semua persoalan anda di sini.",
+    description:
+      "Soalan lazim berkaitan penangguhan cuti sekolah. Dapatkan jawapan kepada semua persoalan anda di sini.",
     date: "8 FEB 2024",
     readTime: "4 min",
     link: "https://www.office-ipsum.com/",
-    content: "Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla quis lorem ut libero malesuada feugiat.",
+    content:
+      "Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla quis lorem ut libero malesuada feugiat.",
   },
   {
     id: "18",
@@ -292,11 +363,13 @@ export const dataItemNews = [
     imageAlt: "Pelajar Belajar",
     header: "Pengumuman",
     title: "Jadual Peperiksaan SPM 2025",
-    description: "Kursus persediaan SPM percuma untuk semua calon. Daftar sekarang dan tingkatkan peluang kejayaan anda.",
+    description:
+      "Kursus persediaan SPM percuma untuk semua calon. Daftar sekarang dan tingkatkan peluang kejayaan anda.",
     date: "5 FEB 2024",
     readTime: "2 min",
     link: "https://litipsum.com/",
-    content: "Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus. Donec rutrum congue leo eget malesuada. Cras ultricies ligula sed magna dictum porta. Vivamus suscipit tortor eget felis porttitor volutpat.",
+    content:
+      "Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus. Donec rutrum congue leo eget malesuada. Cras ultricies ligula sed magna dictum porta. Vivamus suscipit tortor eget felis porttitor volutpat.",
   },
 ];
 export const dataItemCalendar = [
@@ -432,15 +505,36 @@ export const dataItemLinks = [
 
 // SekolahDetails-Data to Fetch
 export const dataSekolahJumlah = [
-  { label: "PELAJAR", value: "1", amount:"4,065", icon: <UserGroupIcon/> },
-  { label: "GURU", value: "2", amount:"4,065", icon: <UserIcon/> }
+  { label: "PELAJAR", value: "1", amount: "4,065", icon: <UserGroupIcon /> },
+  { label: "GURU", value: "2", amount: "4,065", icon: <UserIcon /> },
 ];
 export const dataSekolahAbout = [
-  { value:"1", label: "Maktab Sultan Abu Bakar (English College)", icon: <GovtOfficeIcon width={24} height={24}/>},
-  { value:"2", label: "07-222 2651", icon: <PhoneIcon width={24} height={24}/>},
-  { value:"3", label: "07-222 2651", icon: <PrinterIcon width={24} height={24}/>},
-  { value:"4", label: "english.college@moe.gov.my", icon: <EmailIcon width={24} height={24}/>},
-  { value:"5", label: "Jalan Sungai Chat, Sri Gelam, 80100 Johor Bahru, Johor Darul Ta'zim", icon: <PinIcon width={24} height={24}/>}
+  {
+    value: "1",
+    label: "Maktab Sultan Abu Bakar (English College)",
+    icon: <GovtOfficeIcon width={24} height={24} />,
+  },
+  {
+    value: "2",
+    label: "07-222 2651",
+    icon: <PhoneIcon width={24} height={24} />,
+  },
+  {
+    value: "3",
+    label: "07-222 2651",
+    icon: <PrinterIcon width={24} height={24} />,
+  },
+  {
+    value: "4",
+    label: "english.college@moe.gov.my",
+    icon: <EmailIcon width={24} height={24} />,
+  },
+  {
+    value: "5",
+    label:
+      "Jalan Sungai Chat, Sri Gelam, 80100 Johor Bahru, Johor Darul Ta'zim",
+    icon: <PinIcon width={24} height={24} />,
+  },
 ];
 export const dataSekolahInfo = [
   { label: "KOD SEKOLAH", value: "JEB1001" },
@@ -449,373 +543,561 @@ export const dataSekolahInfo = [
   { label: "PARLIMEN", value: "Pulai" },
   { label: "BANTUAN", value: "SBK" },
   { label: "BIL SESI", value: "2 Sesi | Pagi & Petang" },
-  { label: "PRASEKOLAH", value: "", icon:"cross"},
-  { label: "INTEGRASI", value: "", icon:"checked"}
+  { label: "PRASEKOLAH", value: "", icon: "cross" },
+  { label: "INTEGRASI", value: "", icon: "checked" },
 ];
 export const dataSekolahSuggestion = [
-  {label: "Sekolah Menengah Kebangsaan Dato Jaafar", value: "001", address: "Johor Bharu"},
-  {label: "Sekolah Menengah Kebangsaan Aminuddin Baki", value: "002", address: "Pulai, Johor Bharu"},
-  {label: "Sekolah Menengah Kebangsaan Saint Joseph", value: "003", address: "Johor Bharu"},
-]
+  {
+    label: "Sekolah Menengah Kebangsaan Dato Jaafar",
+    value: "001",
+    address: "Johor Bharu",
+  },
+  {
+    label: "Sekolah Menengah Kebangsaan Aminuddin Baki",
+    value: "002",
+    address: "Pulai, Johor Bharu",
+  },
+  {
+    label: "Sekolah Menengah Kebangsaan Saint Joseph",
+    value: "003",
+    address: "Johor Bharu",
+  },
+];
 
 // Malaysian States and Districts data
 export const dataPilihLokasi = [
-  { 
-    name: "Johor", 
+  {
+    name: "Johor",
     flagFile: "Flag_of_Johor.svg",
     districts: [
-      "Segamat", "Sekijang", "Labis", "Pagoh", "Ledang", "Bakri", "Muar", 
-      "Parit Sulong", "Ayer Hitam", "Sri Gading", "Batu Pahat", "Simpang Renggam", 
-      "Kluang", "Sembrong", "Mersing", "Tenggara", "Kota Tinggi", "Pengerang", 
-      "Tebrau", "Pasir Gudang", "Johor Bahru", "Pulai", "Iskandar Puteri", 
-      "Kulai", "Pontian", "Tanjung Piai"
-    ]
+      "Segamat",
+      "Sekijang",
+      "Labis",
+      "Pagoh",
+      "Ledang",
+      "Bakri",
+      "Muar",
+      "Parit Sulong",
+      "Ayer Hitam",
+      "Sri Gading",
+      "Batu Pahat",
+      "Simpang Renggam",
+      "Kluang",
+      "Sembrong",
+      "Mersing",
+      "Tenggara",
+      "Kota Tinggi",
+      "Pengerang",
+      "Tebrau",
+      "Pasir Gudang",
+      "Johor Bahru",
+      "Pulai",
+      "Iskandar Puteri",
+      "Kulai",
+      "Pontian",
+      "Tanjung Piai",
+    ],
   },
-  
-  { 
-    name: "Kedah", 
+
+  {
+    name: "Kedah",
     flagFile: "Flag_of_Kedah.svg",
     districts: [
-      "Langkawi", "Jerlun", "Kubang Pasu", "Padang Terap", "Pokok Sena", 
-      "Alor Setar", "Kuala Kedah", "Pendang", "Jerai", "Sik", "Merbok", 
-      "Sungai Petani", "Baling", "Padang Serai", "Kulim-Bandar Baharu"
-    ]
+      "Langkawi",
+      "Jerlun",
+      "Kubang Pasu",
+      "Padang Terap",
+      "Pokok Sena",
+      "Alor Setar",
+      "Kuala Kedah",
+      "Pendang",
+      "Jerai",
+      "Sik",
+      "Merbok",
+      "Sungai Petani",
+      "Baling",
+      "Padang Serai",
+      "Kulim-Bandar Baharu",
+    ],
   },
-  
-  { 
-    name: "Kelantan", 
+
+  {
+    name: "Kelantan",
     flagFile: "Flag_of_Kelantan.svg",
     districts: [
-      "Tumpat", "Pengkalan Chepa", "Kota Bharu", "Pasir Mas", "Rantau Panjang", 
-      "Kubang Kerian", "Bachok", "Ketereh", "Tanah Merah", "Pasir Puteh", 
-      "Machang", "Jeli", "Kuala Krai", "Gua Musang"
-    ]
+      "Tumpat",
+      "Pengkalan Chepa",
+      "Kota Bharu",
+      "Pasir Mas",
+      "Rantau Panjang",
+      "Kubang Kerian",
+      "Bachok",
+      "Ketereh",
+      "Tanah Merah",
+      "Pasir Puteh",
+      "Machang",
+      "Jeli",
+      "Kuala Krai",
+      "Gua Musang",
+    ],
   },
-  { 
-    name: "Melaka", 
+  {
+    name: "Melaka",
     flagFile: "Flag_of_Malacca.svg",
     districts: [
-      "Masjid Tanah", "Alor Gajah", "Tangga Batu", 
-      "Bukit Katil", "Kota Melaka", "Jasin"
-    ]
+      "Masjid Tanah",
+      "Alor Gajah",
+      "Tangga Batu",
+      "Bukit Katil",
+      "Kota Melaka",
+      "Jasin",
+    ],
   },
-  
-  { 
-    name: "Negeri Sembilan", 
+
+  {
+    name: "Negeri Sembilan",
     flagFile: "Flag_of_Negeri_Sembilan.svg",
     districts: [
-      "Jelebu", "Jempol", "Seremban", "Kuala Pilah", 
-      "Rasah", "Rembau", "Telok Kemang", "Tampin"
-    ]
+      "Jelebu",
+      "Jempol",
+      "Seremban",
+      "Kuala Pilah",
+      "Rasah",
+      "Rembau",
+      "Telok Kemang",
+      "Tampin",
+    ],
   },
-  
-  { 
-    name: "Pahang", 
+
+  {
+    name: "Pahang",
     flagFile: "Flag_of_Pahang.svg",
     districts: [
-      "Cameron Highlands", "Lipis", "Raub", "Jerantut", "Indera Mahkota", 
-      "Kuantan", "Paya Besar", "Pekan", "Maran", "Kuala Krau", 
-      "Temerloh", "Bentong", "Bera", "Rompin"
-    ]
+      "Cameron Highlands",
+      "Lipis",
+      "Raub",
+      "Jerantut",
+      "Indera Mahkota",
+      "Kuantan",
+      "Paya Besar",
+      "Pekan",
+      "Maran",
+      "Kuala Krau",
+      "Temerloh",
+      "Bentong",
+      "Bera",
+      "Rompin",
+    ],
   },
-  
-  { 
-    name: "Perak", 
+
+  {
+    name: "Perak",
     flagFile: "Flag_of_Perak.svg",
     districts: [
-      "Gerik", "Lenggong", "Larut", "Parit Buntar", "Bagan Serai", "Bukit Gantang", 
-      "Taiping", "Padang Rengas", "Sungai Siput", "Tambun", "Ipoh Timur", "Ipoh Barat", 
-      "Batu Gajah", "Kuala Kangsar", "Beruas", "Parit", "Kampar", "Gopeng", 
-      "Tapah", "Pasir Salak", "Lumut", "Bagan Datuk", "Teluk Intan", "Tanjong Malim"
-    ]
+      "Gerik",
+      "Lenggong",
+      "Larut",
+      "Parit Buntar",
+      "Bagan Serai",
+      "Bukit Gantang",
+      "Taiping",
+      "Padang Rengas",
+      "Sungai Siput",
+      "Tambun",
+      "Ipoh Timur",
+      "Ipoh Barat",
+      "Batu Gajah",
+      "Kuala Kangsar",
+      "Beruas",
+      "Parit",
+      "Kampar",
+      "Gopeng",
+      "Tapah",
+      "Pasir Salak",
+      "Lumut",
+      "Bagan Datuk",
+      "Teluk Intan",
+      "Tanjong Malim",
+    ],
   },
-  { 
-    name: "Perlis", 
+  {
+    name: "Perlis",
     flagFile: "Flag_of_Perlis.svg",
-    districts: ["Padang Besar", "Kangar", "Arau"]
+    districts: ["Padang Besar", "Kangar", "Arau"],
   },
-  
-  { 
-    name: "Pulau Pinang", 
+
+  {
+    name: "Pulau Pinang",
     flagFile: "Flag_of_Penang_(Malaysia).svg",
     districts: [
-      "Kepala Batas", "Tasek Gelugor", "Bagan", "Permatang Pauh", "Bukit Mertajam", 
-      "Batu Kawan", "Nibong Tebal", "Bukit Bendera", "Tanjong", "Jelutong", 
-      "Bukit Gelugor", "Bayan Baru", "Balik Pulau"
-    ]
+      "Kepala Batas",
+      "Tasek Gelugor",
+      "Bagan",
+      "Permatang Pauh",
+      "Bukit Mertajam",
+      "Batu Kawan",
+      "Nibong Tebal",
+      "Bukit Bendera",
+      "Tanjong",
+      "Jelutong",
+      "Bukit Gelugor",
+      "Bayan Baru",
+      "Balik Pulau",
+    ],
   },
-  
-  { 
-    name: "Sabah", 
+
+  {
+    name: "Sabah",
     flagFile: "Flag_of_Sabah.svg",
     districts: [
-      "Kudat", "Kota Marudu", "Kota Belud", "Tuaran", "Sepanggar", "Kota Kinabalu", 
-      "Putatan", "Penampang", "Papar", "Kimanis", "Beaufort", "Sipitang", "Ranau", 
-      "Keningau", "Tenom", "Pensiangan", "Beluran", "Libaran", "Batu Sapi", 
-      "Sandakan", "Kinabatangan", "Lahad Datu", "Semporna", "Tawau", "Kalabakan"
-    ]
+      "Kudat",
+      "Kota Marudu",
+      "Kota Belud",
+      "Tuaran",
+      "Sepanggar",
+      "Kota Kinabalu",
+      "Putatan",
+      "Penampang",
+      "Papar",
+      "Kimanis",
+      "Beaufort",
+      "Sipitang",
+      "Ranau",
+      "Keningau",
+      "Tenom",
+      "Pensiangan",
+      "Beluran",
+      "Libaran",
+      "Batu Sapi",
+      "Sandakan",
+      "Kinabatangan",
+      "Lahad Datu",
+      "Semporna",
+      "Tawau",
+      "Kalabakan",
+    ],
   },
-  
-  { 
-    name: "Sarawak", 
+
+  {
+    name: "Sarawak",
     flagFile: "Flag_of_Sarawak.svg",
     districts: [
-      "Mas Gading", "Santubong", "Petra Jaya", "Bandar Kuching", "Stampin", 
-      "Kota Samarahan", "Puncak Borneo", "Serian", "Batang Sadong", "Batang Lupar", 
-      "Sri Aman", "Lubok Antu", "Betong", "Saratok", "Tanjong Manis", "Igan", 
-      "Sarikei", "Julau", "Kanowit", "Lanang", "Sibu", "Mukah", "Selangau", 
-      "Kapit", "Hulu Rajang", "Bintulu", "Sibuti", "Miri", "Baram", "Limbang", "Lawas"
-    ]
+      "Mas Gading",
+      "Santubong",
+      "Petra Jaya",
+      "Bandar Kuching",
+      "Stampin",
+      "Kota Samarahan",
+      "Puncak Borneo",
+      "Serian",
+      "Batang Sadong",
+      "Batang Lupar",
+      "Sri Aman",
+      "Lubok Antu",
+      "Betong",
+      "Saratok",
+      "Tanjong Manis",
+      "Igan",
+      "Sarikei",
+      "Julau",
+      "Kanowit",
+      "Lanang",
+      "Sibu",
+      "Mukah",
+      "Selangau",
+      "Kapit",
+      "Hulu Rajang",
+      "Bintulu",
+      "Sibuti",
+      "Miri",
+      "Baram",
+      "Limbang",
+      "Lawas",
+    ],
   },
-  
-  { 
-    name: "Selangor", 
+
+  {
+    name: "Selangor",
     flagFile: "Flag_of_Selangor.svg",
     districts: [
-      "Sabak Bernam", "Sungai Besar", "Hulu Selangor", "Tanjong Karang", "Kuala Selangor", 
-      "Selayang", "Gombak", "Ampang", "Pandan", "Hulu Langat", "Bangi", "Puchong", 
-      "Subang", "Petaling Jaya", "Damansara", "Sungai Buloh", "Shah Alam", 
-      "Kapar", "Klang", "Kota Raja", "Kuala Langat", "Sepang"
-    ]
+      "Sabak Bernam",
+      "Sungai Besar",
+      "Hulu Selangor",
+      "Tanjong Karang",
+      "Kuala Selangor",
+      "Selayang",
+      "Gombak",
+      "Ampang",
+      "Pandan",
+      "Hulu Langat",
+      "Bangi",
+      "Puchong",
+      "Subang",
+      "Petaling Jaya",
+      "Damansara",
+      "Sungai Buloh",
+      "Shah Alam",
+      "Kapar",
+      "Klang",
+      "Kota Raja",
+      "Kuala Langat",
+      "Sepang",
+    ],
   },
-  { 
-    name: "Terengganu", 
+  {
+    name: "Terengganu",
     flagFile: "Flag_of_Terengganu.svg",
     districts: [
-      "Besut", "Setiu", "Kuala Nerus", "Kuala Terengganu", 
-      "Marang", "Hulu Terengganu", "Dungun", "Kemaman"
-    ]
+      "Besut",
+      "Setiu",
+      "Kuala Nerus",
+      "Kuala Terengganu",
+      "Marang",
+      "Hulu Terengganu",
+      "Dungun",
+      "Kemaman",
+    ],
   },
-  
-  { 
-    name: "Wilayah Persekutuan Kuala Lumpur", 
+
+  {
+    name: "Wilayah Persekutuan Kuala Lumpur",
     flagFile: "Flag_of_the_Federal_Territories_of_Malaysia.svg",
     districts: [
-      "Kepong", "Batu", "Wangsa Maju", "Segambut", "Setiawangsa", 
-      "Titiwangsa", "Bukit Bintang", "Lembah Pantai", "Seputeh", 
-      "Cheras", "Bandar Tun Razak"
-    ]
+      "Kepong",
+      "Batu",
+      "Wangsa Maju",
+      "Segambut",
+      "Setiawangsa",
+      "Titiwangsa",
+      "Bukit Bintang",
+      "Lembah Pantai",
+      "Seputeh",
+      "Cheras",
+      "Bandar Tun Razak",
+    ],
   },
-  
-  { 
-    name: "Wilayah Persekutuan Labuan", 
+
+  {
+    name: "Wilayah Persekutuan Labuan",
     flagFile: "Flag_of_Labuan.svg",
-    districts: ["Labuan"]
+    districts: ["Labuan"],
   },
-  
-  { 
-    name: "Wilayah Persekutuan Putrajaya", 
+
+  {
+    name: "Wilayah Persekutuan Putrajaya",
     flagFile: "Flag_of_Putrajaya.svg",
-    districts: ["Putrajaya"]
-  }
+    districts: ["Putrajaya"],
+  },
 ] as const;
 
-export type StateData = typeof dataPilihLokasi[number];
-export type StateName = StateData['name'];
+export type StateData = (typeof dataPilihLokasi)[number];
+export type StateName = StateData["name"];
 export type DistrictName = string;
-
 
 //markerType = GROUP | INDIVIDUAL | NEGERI | PARLIMENT | WEST_EAST | MALAYSIA
 
-
 // GET http://localhost:3000/schools/find-nearby?name=la%20salle
 
-export const findNearbyGroup =
-{
-  "viewInfoLokasi": {
-    "koordinatXX": 37.7749,
-    "koordinatYY": -122.4194,
-    "zoom": 7
+export const findNearbyGroup = {
+  viewInfoLokasi: {
+    koordinatXX: 37.7749,
+    koordinatYY: -122.4194,
+    zoom: 7,
   },
-  "markerGroups": [
+  markerGroups: [
     {
-      "markerType": "INDIVIDUAL",
-      "radiusInMeter": 0,
-      "infoLokasi": {
-        "koordinatXX": 37.7749,
-        "koordinatYY": -122.4194
+      markerType: "INDIVIDUAL",
+      radiusInMeter: 0,
+      infoLokasi: {
+        koordinatXX: 37.7749,
+        koordinatYY: -122.4194,
       },
-      "kodSekolah": "SCH001"
+      kodSekolah: "SCH001",
     },
     {
-      "markerType": "GROUP",
-      "radiusInMeter": 10.000,
-      "infoLokasi": {
-        "koordinatXX": 37.7749,
-        "koordinatYY": -122.4194
+      markerType: "GROUP",
+      radiusInMeter: 10.0,
+      infoLokasi: {
+        koordinatXX: 37.7749,
+        koordinatYY: -122.4194,
       },
-      "total": 5,
-      "items": [{
-        "kodSekolah": "SCH002",
-        "infoLokasi": {
-          "koordinatXX": 37.7750,
-          "koordinatYY": -122.4180
-        }
-      }, {
-        "kodSekolah": "SCH003",
-        "infoLokasi": {
-          "koordinatXX": 37.7760,
-          "koordinatYY": -122.4170
-        }
-      }, {
-        "kodSekolah": "SCH004",
-        "infoLokasi": {
-          "koordinatXX": 37.7770,
-          "koordinatYY": -122.4160
-        }
-      }, {
-        "kodSekolah": "SCH005",
-        "infoLokasi": {
-          "koordinatXX": 37.7780,
-          "koordinatYY": -122.4150
-        }
-      }, {
-        "kodSekolah": "SCH006",
-        "infoLokasi": {
-          "koordinatXX": 37.7790,
-          "koordinatYY": -122.4140
-        }
-      }]
-    }
-  ]
-}
-
+      total: 5,
+      items: [
+        {
+          kodSekolah: "SCH002",
+          infoLokasi: {
+            koordinatXX: 37.775,
+            koordinatYY: -122.418,
+          },
+        },
+        {
+          kodSekolah: "SCH003",
+          infoLokasi: {
+            koordinatXX: 37.776,
+            koordinatYY: -122.417,
+          },
+        },
+        {
+          kodSekolah: "SCH004",
+          infoLokasi: {
+            koordinatXX: 37.777,
+            koordinatYY: -122.416,
+          },
+        },
+        {
+          kodSekolah: "SCH005",
+          infoLokasi: {
+            koordinatXX: 37.778,
+            koordinatYY: -122.415,
+          },
+        },
+        {
+          kodSekolah: "SCH006",
+          infoLokasi: {
+            koordinatXX: 37.779,
+            koordinatYY: -122.414,
+          },
+        },
+      ],
+    },
+  ],
+};
 
 // GET http://localhost:3000/schools/find-nearby?latitude=4.9&longitude=100.4&zoom=5
 
-export const findNearbyGroup2 =
-{
-  "viewInfoLokasi": {
-    "koordinatXX": 37.7749,
-    "koordinatYY": -122.4194,
-    "zoom": 6
+export const findNearbyGroup2 = {
+  viewInfoLokasi: {
+    koordinatXX: 37.7749,
+    koordinatYY: -122.4194,
+    zoom: 6,
   },
-  "markerGroups": [
+  markerGroups: [
     {
-      "markerType": "NEGERI",
-      "radiusInMeter": 0,
-      "infoLokasi": {
-        "koordinatXX": 37.7749,
-        "koordinatYY": -122.4194
+      markerType: "NEGERI",
+      radiusInMeter: 0,
+      infoLokasi: {
+        koordinatXX: 37.7749,
+        koordinatYY: -122.4194,
       },
-      "total": 1000
-    }
-  ]
-}
-
-
+      total: 1000,
+    },
+  ],
+};
 
 // GET http://localhost:3000/schools/find-nearby?latitude=4.9&longitude=100.4&zoom=9
 
-export const findNearbyGroup3 = 
-{
-  "viewInfoLokasi": {
-    "koordinatXX": 37.7749,
-    "koordinatYY": -122.4194,
-    "zoom": 6
+export const findNearbyGroup3 = {
+  viewInfoLokasi: {
+    koordinatXX: 37.7749,
+    koordinatYY: -122.4194,
+    zoom: 6,
   },
-  "markerGroups": [
+  markerGroups: [
     {
-      "markerType": "PARLIMEN",
-      "radiusInMeter": 0,
-      "infoLokasi": {
-        "koordinatXX": 37.7749,
-        "koordinatYY": -122.4194
+      markerType: "PARLIMEN",
+      radiusInMeter: 0,
+      infoLokasi: {
+        koordinatXX: 37.7749,
+        koordinatYY: -122.4194,
       },
-      "total": 230
-    }
-  ]
-}
+      total: 230,
+    },
+  ],
+};
 
 // GET http://localhost:3000/schools/find-nearby?latitude=4.9&longitude=100.4&zoom=12
 
-export const findNearbyGroup4 =
-{
-  "viewInfoLokasi": {
-    "koordinatXX": 37.7749,
-    "koordinatYY": -122.4194,
-    "zoom": 6
+export const findNearbyGroup4 = {
+  viewInfoLokasi: {
+    koordinatXX: 37.7749,
+    koordinatYY: -122.4194,
+    zoom: 6,
   },
-  "markerGroups": [
+  markerGroups: [
     {
-      "markerType": "group",
-      "radiusInMeter": 0,
-      "infoLokasi": {
-        "koordinatXX": 37.7749,
-        "koordinatYY": -122.4194
+      markerType: "group",
+      radiusInMeter: 0,
+      infoLokasi: {
+        koordinatXX: 37.7749,
+        koordinatYY: -122.4194,
       },
-      "total": 10,
-      "items": [{
-        "kodSekolah": "SCH002",
-        "infoLokasi": {
-          "koordinatXX": 37.7750,
-          "koordinatYY": -122.4180
-        }
-      }, {
-        "kodSekolah": "SCH003",
-        "infoLokasi": {
-          "koordinatXX": 37.7760,
-          "koordinatYY": -122.4170
-        }
-      }, {
-        "kodSekolah": "SCH004",
-        "infoLokasi": {
-          "koordinatXX": 37.7770,
-          "koordinatYY": -122.4160
-        }
-      }, {
-        "kodSekolah": "SCH005",
-        "infoLokasi": {
-          "koordinatXX": 37.7780,
-          "koordinatYY": -122.4150
-        }
-      }, {
-        "kodSekolah": "SCH006",
-        "infoLokasi": {
-          "koordinatXX": 37.7790,
-          "koordinatYY": -122.4140
-        }
-      }]
-    }
-  ]
-}
+      total: 10,
+      items: [
+        {
+          kodSekolah: "SCH002",
+          infoLokasi: {
+            koordinatXX: 37.775,
+            koordinatYY: -122.418,
+          },
+        },
+        {
+          kodSekolah: "SCH003",
+          infoLokasi: {
+            koordinatXX: 37.776,
+            koordinatYY: -122.417,
+          },
+        },
+        {
+          kodSekolah: "SCH004",
+          infoLokasi: {
+            koordinatXX: 37.777,
+            koordinatYY: -122.416,
+          },
+        },
+        {
+          kodSekolah: "SCH005",
+          infoLokasi: {
+            koordinatXX: 37.778,
+            koordinatYY: -122.415,
+          },
+        },
+        {
+          kodSekolah: "SCH006",
+          infoLokasi: {
+            koordinatXX: 37.779,
+            koordinatYY: -122.414,
+          },
+        },
+      ],
+    },
+  ],
+};
 
 // GET http://localhost:3000/schools/find-nearby?latitude=4.9&longitude=100.4&zoom=14
 
-export const findNearbyGroup5 =
-{
-  "viewInfoLokasi": {
-    "koordinatXX": 37.7749,
-    "koordinatYY": -122.4194,
-    "zoom": 6
+export const findNearbyGroup5 = {
+  viewInfoLokasi: {
+    koordinatXX: 37.7749,
+    koordinatYY: -122.4194,
+    zoom: 6,
   },
-  "markerGroups": [
+  markerGroups: [
     {
-      "markerType": "INDIVIDUAL",
-      "radiusInMeter": 0,
-      "infoLokasi": {
-        "koordinatXX": 37.7749,
-        "koordinatYY": -122.4194
+      markerType: "INDIVIDUAL",
+      radiusInMeter: 0,
+      infoLokasi: {
+        koordinatXX: 37.7749,
+        koordinatYY: -122.4194,
       },
-      "kodSekolah": "SCH001"
+      kodSekolah: "SCH001",
     },
     {
-      "markerType": "INDIVIDUAL",
-      "radiusInMeter": 0,
-      "infoLokasi": {
-        "koordinatXX": 37.7749,
-        "koordinatYY": -122.4194
+      markerType: "INDIVIDUAL",
+      radiusInMeter: 0,
+      infoLokasi: {
+        koordinatXX: 37.7749,
+        koordinatYY: -122.4194,
       },
-      "kodSekolah": "SCH001"
+      kodSekolah: "SCH001",
     },
     {
-      "markerType": "INDIVIDUAL",
-      "radiusInMeter": 0,
-      "infoLokasi": {
-        "koordinatXX": 37.7749,
-        "koordinatYY": -122.4194
+      markerType: "INDIVIDUAL",
+      radiusInMeter: 0,
+      infoLokasi: {
+        koordinatXX: 37.7749,
+        koordinatYY: -122.4194,
       },
-      "kodSekolah": "SCH001"
-    }
-  ]
-}
+      kodSekolah: "SCH001",
+    },
+  ],
+};

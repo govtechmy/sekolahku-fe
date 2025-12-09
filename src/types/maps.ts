@@ -34,3 +34,27 @@ export type SchoolMarkerInfo= {
   id?: string;
   name?: string;
 };
+
+export interface Coordinates {
+  koordinatXX: number;
+  koordinatYY: number;
+}
+
+export interface ViewInfoLokasi extends Coordinates {
+  zoom: number;
+}
+
+export interface BaseMarkerGroup {
+  markerType: "INDIVIDUAL";
+  radiusInMeter: number;
+  infoLokasi: Coordinates;
+}
+
+export interface IndividualMarkerGroup extends BaseMarkerGroup {
+  kodSekolah: string;
+}
+
+export interface FindNearbyUpdatedEndpoint {
+  viewInfoLokasi: ViewInfoLokasi;
+  markerGroups: IndividualMarkerGroup[];
+}
