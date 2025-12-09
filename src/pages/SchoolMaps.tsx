@@ -29,7 +29,6 @@ function MapEvents({
   return null;
 }
 
-
 //keep leaftlet view in sync
 function MapInstanceBridge({
   onMapReady,
