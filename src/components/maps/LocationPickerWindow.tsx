@@ -1,56 +1,45 @@
-import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@govtechmy/myds-react/breadcrumb";
-import { CheckIcon, ChevronRightIcon } from "@govtechmy/myds-react/icon";
-import { useState, useEffect } from "react";
+import { Button } from "@govtechmy/myds-react/button";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "@govtechmy/myds-react/breadcrumb";
+import {
+  CheckIcon,
+  ChevronRightIcon,
+} from "@govtechmy/myds-react/icon";
+import { useState } from "react";
 import { dataPilihLokasi } from "../../contentData";
+import StateFlagImage from "../../icons/StateFlagIcon";
+import { clx } from "@govtechmy/myds-react/utils";
 
 interface LocationPickerWindowProps {
-  onClose?: () => void;
+  onClose: () => void;
   onLocationSelect?: (state: string, district: string) => void;
+  setInitialPosition: React.Dispatch<React.SetStateAction<[number, number]>>;
+  setInitialZoom: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const getDistrictItemClasses = (isSelected: boolean) => 
-  `bg-white border rounded-lg px-4 py-3 shadow-sm cursor-pointer focus:outline-none ${
-    isSelected 
-      ? "border-primary-600" 
-      : "border-outline-200 hover:shadow-md"
-  }`;
+type DistrictEntry = Record<string, [number, number]>;
 
-const StateFlagImage = ({ flagFile, name }: { flagFile: string; name: string }) => (
-  <div className="rounded-sm overflow-hidden w-6 h-6 border-[1.5px] border-outline-200">
-    <img 
-      src={`/images/negeri/${flagFile}`} 
-      alt={`Flag of ${name}`}
-      className="h-full w-full object-cover"
-    />
-  </div>
-);
-
-export function LocationPickerWindow({ onClose, onLocationSelect }: LocationPickerWindowProps) {
-  const [currentView, setCurrentView] = useState<'states' | 'districts'>('states');
+export function LocationPickerWindow({
+  onClose,
+  setInitialPosition,
+  setInitialZoom,
+}: LocationPickerWindowProps) {
+  
+  const [currentView, setCurrentView] = useState<"states" | "districts">(
+    "states"
+  );
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
 
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (currentView === 'districts') {
-          setCurrentView('states');
-          setSelectedState(null);
-          setSelectedDistrict(null);
-        } else if (onClose) {
-          onClose();
-        }
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [currentView, onClose]);
 
   const handleStateClick = (stateName: string) => {
     setSelectedState(stateName);
-    setCurrentView('districts');
+    setCurrentView("districts");
   };
 
   const handleDistrictClick = (districtName: string) => {
@@ -58,59 +47,55 @@ export function LocationPickerWindow({ onClose, onLocationSelect }: LocationPick
   };
 
   const handleBackToStates = () => {
-    setCurrentView('states');
+    setCurrentView("states");
     setSelectedState(null);
     setSelectedDistrict(null);
   };
 
   const handleConfirmSelection = () => {
-    if (selectedState && selectedDistrict && onLocationSelect) {
-      onLocationSelect(selectedState, selectedDistrict);
-    }
-    if (onClose) {
+    if (!selectedState || !selectedDistrict) return;
+
+    // Find the selected district entry and extract coordinates
+    const stateData = dataPilihLokasi.find((s) => s.name === selectedState);
+    const entry = stateData?.districts.find((d) => Object.keys(d)[0] === selectedDistrict) as DistrictEntry | undefined;
+    const coords = entry ? (Object.values(entry)[0] as [number, number]) : null;
+
+    if (coords) {
+      setInitialPosition(coords);
       onClose();
+      setInitialZoom(15);
     }
+
   };
 
-  const selectedStateData = selectedState ? dataPilihLokasi.find(state => state.name === selectedState) : null;
-  const currentDistricts = selectedStateData ? selectedStateData.districts : [];
+  const selectedStateData = selectedState
+    ? dataPilihLokasi.find((state) => state.name === selectedState)
+    : null;
+  const currentDistricts: DistrictEntry[] = selectedStateData ? (selectedStateData.districts as unknown as DistrictEntry[]) : [];
 
   return (
-    <div 
-      className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4"
+    <div
+      className="fixed inset-0 bg-bg-black-900/50 z-[9999] flex items-center justify-center p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="location-picker-title"
     >
       <div className="bg-white rounded-lg shadow-xl w-full sm:w-auto sm:min-w-96 sm:max-w-md lg:max-w-lg max-h-[80vh] overflow-hidden flex flex-col">
-        <div className="flex items-center justify-between p-4 border-b border-outline-200">
-          <h2 
+        <div className="flex items-center p-6 pb-4.5 border-b border-outline-200">
+          <h2
             id="location-picker-title"
             className="font-heading text-body-lg font-semibold text-txt-black-900"
           >
             Pilih Lokasi Anda
           </h2>
-          {onClose && (
-            <Button
-              variant="default-ghost"
-              iconOnly
-              size="small"
-              onClick={onClose}
-              aria-label="Close dialog"
-            >
-              <ButtonIcon>
-                <span className="text-lg font-normal">×</span>
-              </ButtonIcon>
-            </Button>
-          )}
         </div>
-        
-        {currentView === 'districts' && selectedState && (
+
+        {currentView === "districts" && selectedState && (
           <div className="px-4 pt-3 pb-2">
             <Breadcrumb className="text-xs text-dim">
               <BreadcrumbItem>
-                <BreadcrumbLink 
-                  onClick={handleBackToStates} 
+                <BreadcrumbLink
+                  onClick={handleBackToStates}
                   className="cursor-pointer hover:text-primary-600"
                 >
                   Pilih Lokasi
@@ -118,81 +103,93 @@ export function LocationPickerWindow({ onClose, onLocationSelect }: LocationPick
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>
-                  {selectedState}
-                </BreadcrumbPage>
+                <BreadcrumbPage>{selectedState}</BreadcrumbPage>
               </BreadcrumbItem>
             </Breadcrumb>
           </div>
         )}
-        
+
         <div className="flex-1 overflow-hidden">
-          <div className="p-4 pb-2 pr-2">
-            <div className="w-full font-body pr-2">
-              <div className="max-h-[calc(80vh-200px)] overflow-y-auto space-y-3 pb-4 pr-2 scrollbar-thin scrollbar-track-washed-100 scrollbar-thumb-outline-300">
-                {currentView === 'states' ? (
-                  dataPilihLokasi.map((state) => (
-                    <div 
-                      key={state.name} 
-                      className="bg-white border border-outline-200 rounded-lg px-4 py-3 shadow-sm hover:shadow-md cursor-pointer focus:outline-none"
-                      onClick={() => handleStateClick(state.name)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleStateClick(state.name);
-                        }
-                      }}
-                      tabIndex={0}
-                      role="button"
-                      aria-label={`Select ${state.name}`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <StateFlagImage flagFile={state.flagFile} name={state.name} />
-                          <span className="font-medium text-body-sm text-txt-black-700">{state.name}</span>
-                        </div>
-                        <ChevronRightIcon className="h-5 w-5 text-txt-black-500" />
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  currentDistricts.map((district) => (
-                    <div 
-                      key={district} 
-                      className={getDistrictItemClasses(selectedDistrict === district)}
-                      onClick={() => handleDistrictClick(district)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleDistrictClick(district);
-                        }
-                      }}
-                      tabIndex={0}
-                      role="button"
-                      aria-label={`Select ${district}`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-body-sm">{district}</span>
-                        {selectedDistrict === district && (
-                          <div className="text-primary-600">
-                            <CheckIcon className="h-4 w-4" />
+          <div>
+            <div className="w-full font-body px-4 py-2">
+              <div className="overflow-y-auto max-h-[calc(80vh-200px)]  space-y-3">
+                {currentView === "states"
+                  ? dataPilihLokasi.map((state) => (
+                      <div
+                        key={state.name}
+                        className="bg-white border border-otl-gray-200 rounded-lg px-3 py-2 shadow-sm hover:shadow-md cursor-pointer focus:outline-none scroll"
+                        onClick={() => handleStateClick(state.name)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleStateClick(state.name);
+                          }
+                        }}
+                        tabIndex={0}
+                        role="button"
+                        aria-label={`Select ${state.name}`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <StateFlagImage
+                              flagFile={state.flagFile}
+                              name={state.name}
+                            />
+                            <span className="font-medium text-body-sm text-txt-black-700">
+                              {state.name}
+                            </span>
                           </div>
-                        )}
+                          <ChevronRightIcon className="h-5 w-5 text-txt-black-500" />
+                        </div>
                       </div>
-                    </div>
-                  ))
-                )}
+                    ))
+                    : currentDistricts.map((districtObj) => {
+                      const district = Object.keys(districtObj)[0];
+                      return (
+                      <div
+                        key={district}
+                        className={clx(
+                          "bg-white border rounded-lg px-4 py-3 shadow-sm cursor-pointer focus:outline-none",
+                          selectedDistrict === district
+                            ? "border-primary-600"
+                            : "border-otl-gray-200 hover:shadow-md"
+                        )}
+                        onClick={() => handleDistrictClick(district)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleDistrictClick(district);
+                          }
+                        }}
+                        tabIndex={0}
+                        role="button"
+                        aria-label={`Select ${district}`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium text-body-sm">
+                            {district}
+                          </span>
+                          {selectedDistrict === district && (
+                            <div className="text-primary-600">
+                              <CheckIcon className="h-4 w-4" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      );
+                    })}
               </div>
             </div>
           </div>
         </div>
-        
+
         <div className="flex-shrink-0 p-4 border-t border-outline-200 bg-washed-100">
           <Button
             variant="primary-fill"
             size="small"
             onClick={handleConfirmSelection}
             className="font-medium w-full flex items-center justify-center text-body-md"
+            disabled={!selectedState || !selectedDistrict}
           >
             Pilih Lokasi
           </Button>
