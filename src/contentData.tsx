@@ -977,7 +977,7 @@ export const findNearbyGroupAppend = {
         koordinatXX: 3.1578,
         koordinatYY: 101.7118,
       },
-      kodSekolah: "SCH006",
+      kodSekolah: "SCH007",
     },
     {
       markerType: "GROUP",
