@@ -588,6 +588,46 @@ export const dataPilihLokasi = [
   }
 ] as const;
 
+export const STATE_STYLES: Record<string, L.PathOptions> = {
+  Johor: {
+    color: "#0066ff",
+    weight: 2,
+    fillColor: "#3388ff",
+    fillOpacity: 0.12,
+  },
+  Selangor: {
+    color: "#ff4444",
+    weight: 2,
+    fillColor: "#ff8888",
+    fillOpacity: 0.12,
+  },
+  Pahang: {
+    color: "#ffffff",
+    weight: 2,
+    fillColor: "#ffff66",
+    fillOpacity: 0.12,
+  },
+  Sarawak: {
+    color: "#FFDB58",
+    weight: 2,
+    fillColor: "#FFFF8F",
+    fillOpacity: 0.12,
+  },
+  Sabah: {
+    color: "#00FFFF",
+    weight: 2,
+    fillColor: "#0096FF",
+    fillOpacity: 0.12,
+  },
+  Kelantan: {
+    color: "#AFE1AF",
+    weight: 2,
+    fillColor: "#097969",
+    fillOpacity: 0.12,
+  }
+};
+
+
 export type StateData = typeof dataPilihLokasi[number];
 export type StateName = StateData['name'];
 export type DistrictName = string;
