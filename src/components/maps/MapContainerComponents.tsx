@@ -3,12 +3,15 @@ import {
   TileLayer,
   useMapEvents,
   useMap,
+  Circle,
 } from "react-leaflet";
 import { useEffect, useCallback, useMemo } from "react";
 import L from "leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
-import { findNearbyGroup, findNearbyGroupAppend } from "../../contentData";
+import { getSchoolNearby } from "../../services/school.svc";
+import { calculateDistance } from "../../utils/calculateDistance";
 import type { MarkerType } from "../../types/maps";
+import type { MarkerGroup } from "../../models/response";
 
 function MapEvents({
   onZoomChange,
@@ -77,42 +80,33 @@ export function MapContainerComponent({
   dragStartPos,
   setDragStartPos,
 }: MapContainerProps) {
-  // Helper function to calculate distance between two coordinates in meters (Haversine formula)
-  const calculateDistance = useCallback(
-    (lat1: number, lng1: number, lat2: number, lng2: number): number => {
-      const R = 6371e3; // Earth's radius in meters
-      const φ1 = (lat1 * Math.PI) / 180;
-      const φ2 = (lat2 * Math.PI) / 180;
-      const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-      const Δλ = ((lng2 - lng1) * Math.PI) / 180;
 
-      const a =
-        Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-        Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-      return R * c; // Distance in meters
-    },
-    []
-  );
+  // Memoize localStorage data - only parse once
+  const cachedSchoolData = useMemo(() => {
+    const storedData = localStorage.getItem("schoolMarkerData");
+    if (storedData) {
+      try {
+        const parsed = JSON.parse(storedData);
+        return new Map<string, { lat: number; lng: number }>(parsed);
+      } catch (error) {
+        console.error("Failed to parse localStorage data:", error);
+        return null;
+      }
+    }
+    return null;
+  }, []); 
 
   const extractSchoolData = useCallback(
-    (markers: typeof findNearbyGroup.markerGroups) => {
+    (markers: MarkerGroup[]) => {
       const schoolMap = new Map<string, { lat: number; lng: number }>();
       markers.forEach((marker) => {
-        if (marker.markerType === "GROUP" && marker.items) {
+        if (marker.items) {
           marker.items.forEach((item) => {
             const key = `${item.kodSekolah}`;
             schoolMap.set(key, {
-              lat: item.infoLokasi.koordinatXX,
-              lng: item.infoLokasi.koordinatYY,
+              lat: item.infoLokasi.koordinatYY,
+              lng: item.infoLokasi.koordinatXX,
             });
-          });
-        } else if (marker.kodSekolah) {
-          const key = `${marker.kodSekolah}`;
-          schoolMap.set(key, {
-            lat: marker.infoLokasi.koordinatXX,
-            lng: marker.infoLokasi.koordinatYY,
           });
         }
       });
@@ -121,74 +115,98 @@ export function MapContainerComponent({
     []
   );
 
-  const initialSchoolData = useMemo(() => {
-    return extractSchoolData(findNearbyGroup.markerGroups);
-  }, [extractSchoolData]);
-
-  useEffect(() => {
-    const storedData = localStorage.getItem("schoolMarkerData");
-    if (storedData) {
-      try {
-        const parsedData = new Map<string, { lat: number; lng: number }>(
-          JSON.parse(storedData)
-        );
-        setSchoolMarkers(parsedData);
-      } catch (error) {
-        console.error("Failed to parse localStorage data:", error);
-        initializeLocalStorage();
-      }
-    } else {
-      initializeLocalStorage();
+  const saveToLocalStorage = useCallback((markersMap: Map<string, { lat: number; lng: number }>) => {
+    try {
+      const dataToStore = JSON.stringify([...markersMap]);
+      localStorage.setItem("schoolMarkerData", dataToStore);
+      console.log("Saved", markersMap.size, "schools to localStorage");
+    } catch (error) {
+      console.error("Failed to save to localStorage:", error);
     }
-
-    function initializeLocalStorage() {
-      localStorage.setItem(
-        "schoolMarkerData",
-        JSON.stringify([...initialSchoolData])
-      );
-      setSchoolMarkers(initialSchoolData);
-    }
-  }, [initialSchoolData, setSchoolMarkers]);
-
-  const appendNewMarkers = useCallback(() => {
-    setSchoolMarkers((prevMap) => {
-      const newMap = new Map(prevMap);
-      let addedCount = 0;
-
-      findNearbyGroupAppend.markerGroups.forEach((marker) => {
-        if (marker.markerType === "GROUP" && marker.items) {
-          marker.items.forEach((item) => {
-            const key = `${item.kodSekolah}`;
-            if (!newMap.has(key)) {
-              newMap.set(key, {
-                lat: item.infoLokasi.koordinatXX,
-                lng: item.infoLokasi.koordinatYY,
-              });
-              addedCount++;
-            }
-          });
-        } else if (marker.kodSekolah) {
-          const key = `${marker.kodSekolah}`;
-          if (!newMap.has(key)) {
-            newMap.set(key, {
-              lat: marker.infoLokasi.koordinatXX,
-              lng: marker.infoLokasi.koordinatYY,
-            });
-            addedCount++;
-          }
-        }
-      });
-
-      if (addedCount > 0) {
-        localStorage.setItem("schoolMarkerData", JSON.stringify([...newMap]));
-        return newMap;
-      }
-
-      return prevMap;
-    });
   }, []);
 
+  useEffect(() => {
+    // Use memoized cached data
+    if (cachedSchoolData && cachedSchoolData.size > 0) {
+      console.log("Loading", cachedSchoolData.size, "schools from memoized cache");
+      setSchoolMarkers(cachedSchoolData);
+    } else {
+      console.log("No cache found, loading initial schools");
+      loadInitialSchools();
+    }
 
+    async function loadInitialSchools() {
+      try {
+        const nearbySchools = await getSchoolNearby({
+          latitude: initialPosition[0],
+          longitude: initialPosition[1],
+          radiusInMeter: 10000, 
+        });
+
+        const markersArray = nearbySchools?.markerGroups || [];
+        
+        const schoolData = extractSchoolData(markersArray);
+        
+        // Save to localStorage using memoized function
+        saveToLocalStorage(schoolData);
+        setSchoolMarkers(schoolData);
+      } catch (error) {
+        console.error("Failed to load initial schools:", error);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cachedSchoolData]);
+
+  const appendNewMarkers = useCallback(
+    async (center: { lat: number; lng: number }) => {
+      try {
+        console.log("Fetching schools near:", center);
+        const nearbySchools = await getSchoolNearby({
+          latitude: center.lat,
+          longitude: center.lng,
+          radiusInMeter: 10000, // 10000m radius for nearby search
+        });
+
+        console.log("Received schools:", nearbySchools);
+        const markersArray = nearbySchools?.markerGroups || [];
+
+        setSchoolMarkers((prevMap) => {
+          const newMap = new Map(prevMap);
+          let addedCount = 0;
+
+          markersArray.forEach((marker) => {
+            if (marker.items) {
+              marker.items.forEach((item) => {
+                const key = `${item.kodSekolah}`;
+                if (!newMap.has(key)) {
+                  newMap.set(key, {
+                    lat: item.infoLokasi.koordinatYY,
+                    lng: item.infoLokasi.koordinatXX,
+                  });
+                  addedCount++;
+                }
+              });
+            }
+          });
+
+          if (addedCount > 0) {
+            console.log(`Added ${addedCount} new schools. Total: ${newMap.size}`);
+            // Use memoized save function
+            saveToLocalStorage(newMap);
+            return newMap;
+          }
+
+          console.log("No new schools to add");
+          return prevMap;
+        });
+      } catch (error) {
+        console.error("Failed to fetch nearby schools:", error);
+      }
+    },
+    [setSchoolMarkers, saveToLocalStorage]
+  );
+
+  console.log("Rendering map with", schoolMarkers.size, "school markers");
 
   return (
     <LeafletMapContainer
@@ -204,29 +222,42 @@ export function MapContainerComponent({
       />
       <MapEvents
         onZoomChange={() => {}}
-        onCenterChange={() => {}}
+        onCenterChange={(center) => {
+          // Update the current center for circle visualization
+          setInitialPosition([center.lat, center.lng]);
+        }}
         onDragStart={() => {
           if (mapRef) {
             const center = mapRef.getCenter();
             setDragStartPos({ lat: center.lat, lng: center.lng });
           }
-          appendNewMarkers();
         }}
         onDragEnd={(newCenter) => {
           if (dragStartPos) {
             const distance = calculateDistance(
-              initialPosition[0],
-              initialPosition[1],
+              dragStartPos.lat,
+              dragStartPos.lng,
               newCenter.lat,
               newCenter.lng
             );
 
-            if (distance > 500) {
-              console.log("hit more than 500m");
+            if (distance > 1000) {
+              console.log("hit more than 1000m, fetching new markers");
+              appendNewMarkers({ lat: newCenter.lat, lng: newCenter.lng });
               setInitialPosition([newCenter.lat, newCenter.lng]);
             }
           }
           setDragStartPos(null);
+        }}
+      />
+      <Circle
+        center={initialPosition}
+        radius={10000}
+        pathOptions={{
+          color: '#3b82f6',
+          fillColor: '#3b82f6',
+          fillOpacity: 0.1,
+          weight: 2,
         }}
       />
       {Array.from(schoolMarkers.entries()).map(([kodSekolah, coords]) => (

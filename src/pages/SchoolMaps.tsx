@@ -42,12 +42,12 @@ export default function SchoolMaps() {
   }, []);
 
   // fix  later if can find
-    useEffect(() => {
-      if (mapRef) {
-        mapRef.setView([initialPosition[0], initialPosition[1]], initialZoom);
-        console.log("hehehe")
-      }
-    }, [mapRef, initialPosition, initialZoom]);
+    // useEffect(() => {
+    //   if (mapRef) {
+    //     mapRef.setView([initialPosition[0], initialPosition[1]], initialZoom);
+    //     console.log("hehehe")
+    //   }
+    // }, [mapRef, initialPosition, initialZoom]);
 
   const handleSearch = async (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => {
     try {

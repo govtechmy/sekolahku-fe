@@ -1,4 +1,4 @@
-import type { schoolSearchModel, ListSekolahModel, APIResponse, ItemSekolahModel } from '../models/response'
+import type { schoolSearchModel, ListSekolahModel, APIResponse, ItemSekolahModel, NearbySchoolsModel, NearbySchoolsParams } from '../models/response'
 import { authAxios } from './http'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
@@ -30,3 +30,17 @@ export const getSchoolSuggestion = async (params?: schoolSearchModel): Promise<I
     throw error
   }
 }
+
+export const getSchoolNearby = async (params?: NearbySchoolsParams): Promise<NearbySchoolsModel> => {
+  try {
+    const response = await authAxios.get<APIResponse<NearbySchoolsModel>>(`${BASE_URL}${SCHOOL_ENDPOINT}/find-nearby`, {
+      params,
+      paramsSerializer: { indexes: null },
+    })
+    return response.data.data
+  } catch (error) {
+    console.error('Error fetching nearby schools:', error)
+    throw error
+  }
+}
+
