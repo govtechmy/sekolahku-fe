@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Button } from "@govtechmy/myds-react/button";
+import { useEffect, useState } from "react";
 import type { SearchBarMapProps } from "../types/maps";
 import { getSchoolSuggestion } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
@@ -10,6 +9,33 @@ export default function SchoolMaps() {
   const [query, setQuery] = useState("");
   const [filteredSearchResult, setFilteredSearchResult] = useState<SearchBarMapProps[]>([]);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [initialPosition, setInitialPosition] = useState<[number, number]>([3.760115447396889, 108.46252441406251]);
+  const [initialZoom, setInitialZoom] = useState<number>(6);
+  
+  useEffect(() => {
+    if (!("geolocation" in navigator)) {
+      console.warn("Geolocation is not supported in this browser.");
+      return;
+    }
+    const options: PositionOptions = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+    };
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        console.log("Geolocation success:", { latitude, longitude });
+        setInitialPosition([latitude, longitude]);
+        setInitialZoom(17);
+      },
+      (error) => {
+        if (error)
+        setShowLocationPicker(true)
+      },
+      options
+    );
+  }, []);
 
   const handleSearch = async (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => {
     try {
@@ -34,21 +60,13 @@ export default function SchoolMaps() {
 
   return (
     <div className="h-full w-full flex relative">
-      <div className="absolute top-4 right-4 z-[1000]">
-        <Button
-          variant="default-outline"
-          onClick={() => setShowLocationPicker(true)}
-        >
-          Pilih Lokasi
-        </Button>
-      </div>
       <SearchBarMap
         query={query}
         setQuery={setQuery}
         suggestions={filteredSearchResult}
         onSearch={handleSearch}
       />
-      <MapContainerComponent/>
+      <MapContainerComponent initialPosition={initialPosition} initialZoom={initialZoom} />
       {showLocationPicker && (
         <LocationPickerWindow onClose={() => setShowLocationPicker(false)} />
       )}

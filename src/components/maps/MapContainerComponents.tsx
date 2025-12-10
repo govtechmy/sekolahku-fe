@@ -38,27 +38,36 @@ function MapInstanceBridge({
 
 interface MapContainerProps {
   initialPosition?: [number, number];
+  initialZoom?: number;
 }
 
 export function MapContainerComponent({
   initialPosition = [3.760115447396889, 108.46252441406251],
+  initialZoom = 6,
 }: MapContainerProps) {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>({
     lat: initialPosition[0],
     lng: initialPosition[1],
   });
-  const [zoom, setZoom] = useState(6);
+  const [zoom, setZoom] = useState(initialZoom);
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
 
   // Log for debugging purposes
   console.log("User Location:", userLocation);
   console.log("Map Zoom Level:", zoom);
 
+  // When initialPosition or initialZoom changes from parent, update map view
+  useEffect(() => {
+    if (mapRef) {
+      mapRef.setView(L.latLng(initialPosition[0], initialPosition[1]), initialZoom);
+    }
+  }, [mapRef, initialPosition, initialZoom]);
+
   return (
     <>
       <LeafletMapContainer
         center={initialPosition}
-        zoom={6}
+        zoom={initialZoom}
         className="h-full w-full"
         zoomControl={false}
       >
