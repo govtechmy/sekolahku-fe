@@ -66,7 +66,7 @@ export default function SchoolMaps() {
         suggestions={filteredSearchResult}
         onSearch={handleSearch}
       />
-      <MapContainerComponent initialPosition={initialPosition} initialZoom={initialZoom} />
+      <MapContainerComponent initialPosition={initialPosition} initialZoom={initialZoom} setInitialPosition={setInitialPosition} />
       {showLocationPicker && (
         <LocationPickerWindow  setInitialPosition={setInitialPosition} onClose={() => setShowLocationPicker(false)}  setInitialZoom={setInitialZoom} />
       )}

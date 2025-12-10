@@ -9,10 +9,12 @@ function MapEvents({
   onZoomChange,
   onCenterChange,
   onDragStart,
+  onDragEnd,
 }: {
   onZoomChange: (zoom: number) => void;
   onCenterChange: (center: { lat: number; lng: number }) => void;
   onDragStart?: () => void;
+  onDragEnd?: (center: { lat: number; lng: number }) => void;
 }) {
   useMapEvents({
     zoomend: (e) => onZoomChange(e.target.getZoom()),
@@ -22,6 +24,10 @@ function MapEvents({
     },
     dragstart: () => {
       onDragStart?.();
+    },
+    dragend: (e) => {
+      const center = e.target.getCenter();
+      onDragEnd?.({ lat: center.lat, lng: center.lng });
     },
   });
   return null;
@@ -42,14 +48,32 @@ function MapInstanceBridge({
 interface MapContainerProps {
   initialPosition?: [number, number];
   initialZoom?: number;
-}
+  setInitialPosition: React.Dispatch<React.SetStateAction<[number, number]>>;}
 
 export function MapContainerComponent({
   initialPosition = [3.760115447396889, 108.46252441406251],
   initialZoom = 6,
+  setInitialPosition
 }: MapContainerProps) {
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
   const [schoolMarkers, setSchoolMarkers] = useState<Map<string, { lat: number; lng: number }>>(new Map());
+  const [dragStartPos, setDragStartPos] = useState<{ lat: number; lng: number } | null>(null);
+  
+  // Helper function to calculate distance between two coordinates in meters (Haversine formula)
+  const calculateDistance = useCallback((lat1: number, lng1: number, lat2: number, lng2: number): number => {
+    const R = 6371e3; // Earth's radius in meters
+    const φ1 = (lat1 * Math.PI) / 180;
+    const φ2 = (lat2 * Math.PI) / 180;
+    const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+    const Δλ = ((lng2 - lng1) * Math.PI) / 180;
+
+    const a =
+      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // Distance in meters
+  }, []);
   
   const extractSchoolData = useCallback((markers: typeof findNearbyGroup.markerGroups) => {
     const schoolMap = new Map<string, { lat: number; lng: number }>();
@@ -153,7 +177,27 @@ export function MapContainerComponent({
           onZoomChange={() => {}}
           onCenterChange={() => {}}
           onDragStart={() => {
+            if (mapRef) {
+              const center = mapRef.getCenter();
+              setDragStartPos({ lat: center.lat, lng: center.lng });
+            }
             appendNewMarkers();
+          }}
+          onDragEnd={(newCenter) => {
+            if (dragStartPos) {
+              const distance = calculateDistance(
+                initialPosition[0],
+                initialPosition[1],
+                newCenter.lat,
+                newCenter.lng
+              );
+              
+              if (distance > 500) {
+                console.log("hit more than 500m")
+                setInitialPosition([newCenter.lat, newCenter.lng]);
+              }
+            }
+            setDragStartPos(null);
           }}
         />
         {Array.from(schoolMarkers.entries()).map(([kodSekolah, coords]) => (
@@ -170,6 +214,7 @@ export function MapContainerComponent({
               console.log("Clicked on school:", kodSekolah);
               if (mapRef) {
                 mapRef.setView([coords.lat, coords.lng], 18);
+                setInitialPosition([coords.lat,coords.lng]);
               }
             }}
           />
