@@ -1,6 +1,9 @@
 import { MapContainer as LeafletMapContainer, TileLayer, useMapEvents, useMap } from "react-leaflet";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import L from "leaflet";
+import { SchoolMapMarker } from "./SchoolMapMarker";
+import { findNearbyGroup, findNearbyGroupAppend } from "../../contentData";
+import type { MarkerType } from "../../types/maps";
 
 function MapEvents({
   onZoomChange,
@@ -45,23 +48,100 @@ export function MapContainerComponent({
   initialPosition = [3.760115447396889, 108.46252441406251],
   initialZoom = 6,
 }: MapContainerProps) {
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>({
-    lat: initialPosition[0],
-    lng: initialPosition[1],
-  });
-  const [zoom, setZoom] = useState(initialZoom);
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
+  const [schoolMarkers, setSchoolMarkers] = useState<Map<string, { lat: number; lng: number }>>(new Map());
+  
+  const lastAppendTime = useRef<number>(0);
+  const APPEND_THROTTLE_MS = 1000;
 
-  // Log for debugging purposes
-  console.log("User Location:", userLocation);
-  console.log("Map Zoom Level:", zoom);
+  const extractSchoolData = (markers: typeof findNearbyGroup.markerGroups) => {
+    const schoolMap = new Map<string, { lat: number; lng: number }>();
+    markers.forEach(marker => {
+      if (marker.markerType === "GROUP" && marker.items) {
+        marker.items.forEach(item => {
+          const key = `${item.kodSekolah}`;
+          schoolMap.set(key, {
+            lat: item.infoLokasi.koordinatXX,
+            lng: item.infoLokasi.koordinatYY
+          });
+        });
+      } else if (marker.kodSekolah) {
+        const key = `${marker.kodSekolah}`;
+        schoolMap.set(key, {
+          lat: marker.infoLokasi.koordinatXX,
+          lng: marker.infoLokasi.koordinatYY
+        });
+      }
+    });
+    return schoolMap;
+  };
 
-  // When initialPosition or initialZoom changes from parent, update map view
   useEffect(() => {
-    if (mapRef) {
-      mapRef.setView(L.latLng(initialPosition[0], initialPosition[1]), initialZoom);
+    const storedData = localStorage.getItem('schoolMarkerData');
+    if (storedData) {
+      try {
+        const parsedData = new Map<string, { lat: number; lng: number }>(JSON.parse(storedData));
+        setSchoolMarkers(parsedData);
+        console.log('Loaded existing school data from localStorage:', parsedData.size);
+      } catch (error) {
+        console.error('Failed to parse localStorage data:', error);
+        initializeLocalStorage();
+      }
+    } else {
+      initializeLocalStorage();
     }
-  }, [mapRef, initialPosition, initialZoom]);
+    
+    function initializeLocalStorage() {
+      const initialData = extractSchoolData(findNearbyGroup.markerGroups);
+      localStorage.setItem('schoolMarkerData', JSON.stringify([...initialData]));
+      setSchoolMarkers(initialData);
+    }
+  }, []);
+
+  const appendNewMarkers = useCallback(() => {
+    const now = Date.now();
+    if (now - lastAppendTime.current < APPEND_THROTTLE_MS) {
+      console.log('Throttled - skipping append');
+      return;
+    }
+    lastAppendTime.current = now;
+
+    setSchoolMarkers(prevMap => {
+      const newMap = new Map(prevMap);
+      let addedCount = 0;
+
+      findNearbyGroupAppend.markerGroups.forEach(marker => {
+        if (marker.markerType === "GROUP" && marker.items) {
+          marker.items.forEach(item => {
+            const key = `${item.kodSekolah}`;
+            if (!newMap.has(key)) {
+              newMap.set(key, {
+                lat: item.infoLokasi.koordinatXX,
+                lng: item.infoLokasi.koordinatYY
+              });
+              addedCount++;
+            }
+          });
+        } else if (marker.kodSekolah) {
+          const key = `${marker.kodSekolah}`;
+          if (!newMap.has(key)) {
+            newMap.set(key, {
+              lat: marker.infoLokasi.koordinatXX,
+              lng: marker.infoLokasi.koordinatYY
+            });
+            addedCount++;
+          }
+        }
+      });
+
+      if (addedCount > 0) {
+        localStorage.setItem('schoolMarkerData', JSON.stringify([...newMap]));
+        return newMap;
+      } 
+      
+      return prevMap;
+    });
+  }, []); 
 
   return (
     <>
@@ -71,20 +151,36 @@ export function MapContainerComponent({
         className="h-full w-full"
         zoomControl={false}
       >
-        {/* Bridge component to capture the Leaflet map instance */}
         {mapRef === null && <MapInstanceBridge onMapReady={setMapRef} />}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         <MapEvents
-          onZoomChange={setZoom}
-          onCenterChange={setUserLocation}
+          onZoomChange={() => {}}
+          onCenterChange={() => {}}
           onDragStart={() => {
-            // no-op when dragging; selection handled in search component
+            appendNewMarkers();
           }}
         />
-        {/* Map markers intentionally removed; search-only UI */}
+        {Array.from(schoolMarkers.entries()).map(([kodSekolah, coords]) => (
+          <SchoolMapMarker
+            key={kodSekolah}
+            school={{
+              markerType: "INDIVIDUAL" as MarkerType,
+              radiusInMeter: 0,
+              koordinatXX: coords.lat,
+              koordinatYY: coords.lng,
+              id: kodSekolah,
+            }}
+            onClick={() => {
+              console.log("Clicked on school:", kodSekolah);
+              if (mapRef) {
+                mapRef.setView([coords.lat, coords.lng], 18);
+              }
+            }}
+          />
+        ))}
       </LeafletMapContainer>
     </>
   );

@@ -900,8 +900,8 @@ export type DistrictName = string;
 
 export const findNearbyGroup = {
   viewInfoLokasi: {
-    koordinatXX: 37.7749,
-    koordinatYY: -122.4194,
+    koordinatXX: 3.1578,
+    koordinatYY: 101.7118,
     zoom: 7,
   },
   markerGroups: [
@@ -909,8 +909,8 @@ export const findNearbyGroup = {
       markerType: "INDIVIDUAL",
       radiusInMeter: 0,
       infoLokasi: {
-        koordinatXX: 37.7749,
-        koordinatYY: -122.4194,
+        koordinatXX: 3.1580,
+        koordinatYY: 101.7120,
       },
       kodSekolah: "SCH001",
     },
@@ -918,44 +918,109 @@ export const findNearbyGroup = {
       markerType: "GROUP",
       radiusInMeter: 10.0,
       infoLokasi: {
-        koordinatXX: 37.7749,
-        koordinatYY: -122.4194,
+        koordinatXX: 3.1590,
+        koordinatYY: 101.7130,
       },
       total: 5,
       items: [
         {
           kodSekolah: "SCH002",
           infoLokasi: {
-            koordinatXX: 37.775,
-            koordinatYY: -122.418,
+            koordinatXX: 3.1585,
+            koordinatYY: 101.7125,
           },
         },
         {
           kodSekolah: "SCH003",
           infoLokasi: {
-            koordinatXX: 37.776,
-            koordinatYY: -122.417,
+            koordinatXX: 3.1590,
+            koordinatYY: 101.7130,
           },
         },
         {
           kodSekolah: "SCH004",
           infoLokasi: {
-            koordinatXX: 37.777,
-            koordinatYY: -122.416,
+            koordinatXX: 3.1595,
+            koordinatYY: 101.7135,
           },
         },
         {
           kodSekolah: "SCH005",
           infoLokasi: {
-            koordinatXX: 37.778,
-            koordinatYY: -122.415,
+            koordinatXX: 3.1588,
+            koordinatYY: 101.7128,
           },
         },
         {
           kodSekolah: "SCH006",
           infoLokasi: {
-            koordinatXX: 37.779,
-            koordinatYY: -122.414,
+            koordinatXX: 3.1592,
+            koordinatYY: 101.7132,
+          },
+        },
+      ],
+    },
+  ],
+};
+
+export const findNearbyGroupAppend = {
+  viewInfoLokasi: {
+    koordinatXX: 3.1578,
+    koordinatYY: 101.7118,
+    zoom: 7,
+  },
+  markerGroups: [
+    {
+      markerType: "INDIVIDUAL",
+      radiusInMeter: 0,
+      infoLokasi: {
+        koordinatXX: 3.1578,
+        koordinatYY: 101.7118,
+      },
+      kodSekolah: "SCH006",
+    },
+    {
+      markerType: "GROUP",
+      radiusInMeter: 10.0,
+      infoLokasi: {
+        koordinatXX: 3.1578,
+        koordinatYY: 101.7118,
+      },
+      total: 5,
+      items: [
+        {
+          kodSekolah: "SCH008",
+          infoLokasi: {
+            koordinatXX: 3.1573,
+            koordinatYY: 101.7113,
+          },
+        },
+        {
+          kodSekolah: "SCH009",
+          infoLokasi: {
+            koordinatXX: 3.1578,
+            koordinatYY: 101.7118,
+          },
+        },
+        {
+          kodSekolah: "SCH0010",
+          infoLokasi: {
+            koordinatXX: 3.1583,
+            koordinatYY: 101.7123,
+          },
+        },
+        {
+          kodSekolah: "SCH0011",
+          infoLokasi: {
+            koordinatXX: 3.1576,
+            koordinatYY: 101.7115,
+          },
+        },
+        {
+          kodSekolah: "SCH0012",
+          infoLokasi: {
+            koordinatXX: 3.1580,
+            koordinatYY: 101.7121,
           },
         },
       ],
