@@ -4,6 +4,7 @@ import { getSchoolSuggestion } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
+import L from "leaflet";
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
@@ -11,6 +12,9 @@ export default function SchoolMaps() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [initialPosition, setInitialPosition] = useState<[number, number]>([3.760115447396889, 108.46252441406251]);
   const [initialZoom, setInitialZoom] = useState<number>(6);
+  const [mapRef, setMapRef] = useState<L.Map | null>(null);
+  const [schoolMarkers, setSchoolMarkers] = useState<Map<string, { lat: number; lng: number }>>(new Map());
+  const [dragStartPos, setDragStartPos] = useState<{ lat: number; lng: number } | null>(null);
   
   useEffect(() => {
     if (!("geolocation" in navigator)) {
@@ -36,6 +40,14 @@ export default function SchoolMaps() {
       options
     );
   }, []);
+
+  // fix  later if can find
+    useEffect(() => {
+      if (mapRef) {
+        mapRef.setView([initialPosition[0], initialPosition[1]], initialZoom);
+        console.log("hehehe")
+      }
+    }, [mapRef, initialPosition, initialZoom]);
 
   const handleSearch = async (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => {
     try {
@@ -66,7 +78,17 @@ export default function SchoolMaps() {
         suggestions={filteredSearchResult}
         onSearch={handleSearch}
       />
-      <MapContainerComponent initialPosition={initialPosition} initialZoom={initialZoom} setInitialPosition={setInitialPosition} />
+      <MapContainerComponent
+        initialPosition={initialPosition}
+        initialZoom={initialZoom}
+        setInitialPosition={setInitialPosition}
+        mapRef={mapRef}
+        setMapRef={setMapRef}
+        schoolMarkers={schoolMarkers}
+        setSchoolMarkers={setSchoolMarkers}
+        dragStartPos={dragStartPos}
+        setDragStartPos={setDragStartPos}
+      />
       {showLocationPicker && (
         <LocationPickerWindow  setInitialPosition={setInitialPosition} onClose={() => setShowLocationPicker(false)}  setInitialZoom={setInitialZoom} />
       )}
