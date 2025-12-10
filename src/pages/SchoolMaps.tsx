@@ -42,6 +42,7 @@ export default function SchoolMaps() {
   }, []);
 
   // fix  later if can find
+  //commenting for now cause trigger zoom on every initialPosition change
     // useEffect(() => {
     //   if (mapRef) {
     //     mapRef.setView([initialPosition[0], initialPosition[1]], initialZoom);
