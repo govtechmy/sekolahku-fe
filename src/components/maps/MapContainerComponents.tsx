@@ -1,5 +1,5 @@
 import { MapContainer as LeafletMapContainer, TileLayer, useMapEvents, useMap } from "react-leaflet";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import L from "leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
 import { findNearbyGroup, findNearbyGroupAppend } from "../../contentData";
@@ -51,10 +51,7 @@ export function MapContainerComponent({
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
   const [schoolMarkers, setSchoolMarkers] = useState<Map<string, { lat: number; lng: number }>>(new Map());
   
-  const lastAppendTime = useRef<number>(0);
-  const APPEND_THROTTLE_MS = 1000;
-
-  const extractSchoolData = (markers: typeof findNearbyGroup.markerGroups) => {
+  const extractSchoolData = useCallback((markers: typeof findNearbyGroup.markerGroups) => {
     const schoolMap = new Map<string, { lat: number; lng: number }>();
     markers.forEach(marker => {
       if (marker.markerType === "GROUP" && marker.items) {
@@ -74,7 +71,11 @@ export function MapContainerComponent({
       }
     });
     return schoolMap;
-  };
+  }, []);
+
+  const initialSchoolData = useMemo(() => {
+    return extractSchoolData(findNearbyGroup.markerGroups);
+  }, [extractSchoolData]);
 
   useEffect(() => {
     const storedData = localStorage.getItem('schoolMarkerData');
@@ -82,7 +83,6 @@ export function MapContainerComponent({
       try {
         const parsedData = new Map<string, { lat: number; lng: number }>(JSON.parse(storedData));
         setSchoolMarkers(parsedData);
-        console.log('Loaded existing school data from localStorage:', parsedData.size);
       } catch (error) {
         console.error('Failed to parse localStorage data:', error);
         initializeLocalStorage();
@@ -92,19 +92,12 @@ export function MapContainerComponent({
     }
     
     function initializeLocalStorage() {
-      const initialData = extractSchoolData(findNearbyGroup.markerGroups);
-      localStorage.setItem('schoolMarkerData', JSON.stringify([...initialData]));
-      setSchoolMarkers(initialData);
+      localStorage.setItem('schoolMarkerData', JSON.stringify([...initialSchoolData]));
+      setSchoolMarkers(initialSchoolData);
     }
-  }, []);
+  }, [initialSchoolData]);
 
   const appendNewMarkers = useCallback(() => {
-    const now = Date.now();
-    if (now - lastAppendTime.current < APPEND_THROTTLE_MS) {
-      console.log('Throttled - skipping append');
-      return;
-    }
-    lastAppendTime.current = now;
 
     setSchoolMarkers(prevMap => {
       const newMap = new Map(prevMap);
