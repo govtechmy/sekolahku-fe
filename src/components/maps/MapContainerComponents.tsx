@@ -6,7 +6,6 @@ import {
   Circle,
 } from "react-leaflet";
 import { useEffect, useCallback, useMemo } from "react";
-import L from "leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { MarkerType } from "../../types/maps";
@@ -40,24 +39,31 @@ function MapEvents({
   return null;
 }
 
-function MapInstanceBridge({
-  onMapReady,
+// Component to handle map view changes declaratively
+function MapViewController({
+  center,
+  zoom,
 }: {
-  onMapReady: (map: L.Map) => void;
+  center: [number, number];
+  zoom: number;
 }) {
   const map = useMap();
+  
   useEffect(() => {
-    onMapReady(map);
-  }, [map, onMapReady]);
+    map.setView(center, zoom);
+  }, [map, center, zoom]);
+  
   return null;
 }
 
 interface MapContainerProps {
   initialPosition?: [number, number];
   initialZoom?: number;
+  mapCenter: [number, number];
+  mapZoom: number;
+  setMapCenter: React.Dispatch<React.SetStateAction<[number, number]>>;
+  setMapZoom: React.Dispatch<React.SetStateAction<number>>;
   setInitialPosition: React.Dispatch<React.SetStateAction<[number, number]>>;
-  mapRef: L.Map | null;
-  setMapRef: React.Dispatch<React.SetStateAction<L.Map | null>>;
   schoolMarkers: Map<string, { lat: number; lng: number; dataUrl: string }>;
   setSchoolMarkers: React.Dispatch<
     React.SetStateAction<Map<string, { lat: number; lng: number; dataUrl: string }>>
@@ -73,9 +79,11 @@ interface MapContainerProps {
 export function MapContainerComponent({
   initialPosition = [3.760115447396889, 108.46252441406251],
   initialZoom = 6,
+  mapCenter,
+  mapZoom,
+  setMapCenter,
+  setMapZoom,
   setInitialPosition,
-  mapRef,
-  setMapRef,
   schoolMarkers,
   setSchoolMarkers,
   dragStartPos,
@@ -212,22 +220,22 @@ export function MapContainerComponent({
       className="h-full w-full"
       zoomControl={false}
     >
-      {mapRef === null && <MapInstanceBridge onMapReady={setMapRef} />}
+      <MapViewController center={mapCenter} zoom={mapZoom} />
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       <MapEvents
-        onZoomChange={() => {}}
+        onZoomChange={(zoom) => {
+          setMapZoom(zoom);
+        }}
         onCenterChange={(center) => {
           // Update the current center for circle visualization
           setInitialPosition([center.lat, center.lng]);
+          setMapCenter([center.lat, center.lng]);
         }}
         onDragStart={() => {
-          if (mapRef) {
-            const center = mapRef.getCenter();
-            setDragStartPos({ lat: center.lat, lng: center.lng });
-          }
+          setDragStartPos({ lat: mapCenter[0], lng: mapCenter[1] });
         }}
         onDragEnd={(newCenter) => {
           if (dragStartPos) {
@@ -277,10 +285,9 @@ export function MapContainerComponent({
               .catch((error) => {
                 console.error("Failed to fetch school data:", error);
               });
-            if (mapRef) {
-              mapRef.setView([coords.lat, coords.lng], 18);
-              setInitialPosition([coords.lat, coords.lng]);
-            }
+            setMapCenter([coords.lat, coords.lng]);
+            setMapZoom(18);
+            setInitialPosition([coords.lat, coords.lng]);
           }}
         />
       ))}

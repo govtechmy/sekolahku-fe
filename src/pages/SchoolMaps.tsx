@@ -4,7 +4,6 @@ import { getSchoolSuggestion, getSchoolNearby } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
-import L from "leaflet";
 import type { ItemSekolahModel, MarkerGroup } from "../models/response";
 
 export default function SchoolMaps() {
@@ -13,7 +12,8 @@ export default function SchoolMaps() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [initialPosition, setInitialPosition] = useState<[number, number]>([3.760115447396889, 108.46252441406251]);
   const [initialZoom, setInitialZoom] = useState<number>(6);
-  const [mapRef, setMapRef] = useState<L.Map | null>(null);
+  const [mapCenter, setMapCenter] = useState<[number, number]>([3.760115447396889, 108.46252441406251]);
+  const [mapZoom, setMapZoom] = useState<number>(6);
   const [schoolMarkers, setSchoolMarkers] = useState<Map<string, { lat: number; lng: number; dataUrl: string }>>(new Map());
   const [dragStartPos, setDragStartPos] = useState<{ lat: number; lng: number } | null>(null);
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
@@ -34,6 +34,8 @@ export default function SchoolMaps() {
         console.log("Geolocation success:", { latitude, longitude });
         setInitialPosition([latitude, longitude]);
         setInitialZoom(17);
+        setMapCenter([latitude, longitude]);
+        setMapZoom(17);
       },
       (error) => {
         if (error)
@@ -42,15 +44,6 @@ export default function SchoolMaps() {
       options
     );
   }, []);
-
-  // fix  later if can find
-  //commenting for now cause trigger zoom on every initialPosition change
-    // useEffect(() => {
-    //   if (mapRef) {
-    //     mapRef.setView([initialPosition[0], initialPosition[1]], initialZoom);
-    //     console.log("hehehe")
-    //   }
-    // }, [mapRef, initialPosition, initialZoom]);
 
   const handleSearch = async (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => {
     try {
@@ -68,11 +61,10 @@ export default function SchoolMaps() {
       }));
       setFilteredSearchResult(transformed);
 
-      if (transformed.length > 0 && mapRef) {
+      if (transformed.length > 0) {
         const firstResult = transformed[0];
-        mapRef.setView([firstResult.lat, firstResult.lng], 18);
-        setInitialPosition([firstResult.lat, firstResult.lng]);
-        setInitialZoom(18);
+        setMapCenter([firstResult.lat, firstResult.lng]);
+        setMapZoom(18);
       }
     } catch (error) {
       console.error("Error fetching school suggestions:", error);
@@ -110,9 +102,11 @@ export default function SchoolMaps() {
       <MapContainerComponent
         initialPosition={initialPosition}
         initialZoom={initialZoom}
+        mapCenter={mapCenter}
+        mapZoom={mapZoom}
+        setMapCenter={setMapCenter}
+        setMapZoom={setMapZoom}
         setInitialPosition={setInitialPosition}
-        mapRef={mapRef}
-        setMapRef={setMapRef}
         schoolMarkers={schoolMarkers}
         setSchoolMarkers={setSchoolMarkers}
         dragStartPos={dragStartPos}
