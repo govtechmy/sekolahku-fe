@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import type { SearchBarMapProps } from "../types/maps";
 import { getSchoolSuggestion, getSchoolNearby, getSchoolS3Json } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
@@ -31,12 +31,17 @@ export default function SchoolMaps() {
   const [schoolMarkers, setSchoolMarkers] = useState< Map<string, { lat: number; lng: number; dataUrl: string }> >(new Map());
   const [dragStartPos, setDragStartPos] = useState<{ lat: number; lng: number; } | null>(null);
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
+  const geolocationRequestedRef = useRef(false);
 
   useEffect(() => {
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
       return;
     }
+    if (geolocationRequestedRef.current) {
+      return;
+    }
+    geolocationRequestedRef.current = true;
     const options: PositionOptions = {
       enableHighAccuracy: true,
       timeout: 10000,

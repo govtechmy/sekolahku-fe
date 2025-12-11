@@ -4,7 +4,7 @@ import {
   useMapEvents,
   Circle,
 } from "react-leaflet";
-import { useEffect, useCallback, useMemo } from "react";
+import { useEffect, useCallback, useMemo, useRef } from "react";
 import { MapViewController } from "../../pages/SchoolMaps";
 import { SchoolMapMarker } from "./SchoolMapMarker";
 import { calculateDistance } from "../../utils/calculateDistance";
@@ -112,11 +112,14 @@ export function MapContainerComponent({
     }
   }, []);
 
+  const initialLoadRequestedRef = useRef(false);
   useEffect(() => {
     // Use memoized cached data
     if (cachedSchoolData && cachedSchoolData.size > 0) {
       setSchoolMarkers(cachedSchoolData);
     } else {
+      if (initialLoadRequestedRef.current) return;
+      initialLoadRequestedRef.current = true;
       console.log("No cache found, loading initial schools");
       loadInitialSchools();
     }
