@@ -5,7 +5,7 @@ import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
 import L from "leaflet";
-import type { MarkerGroup } from "../models/response";
+import type { ItemSekolahModel, MarkerGroup } from "../models/response";
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
@@ -16,6 +16,7 @@ export default function SchoolMaps() {
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
   const [schoolMarkers, setSchoolMarkers] = useState<Map<string, { lat: number; lng: number; dataUrl: string }>>(new Map());
   const [dragStartPos, setDragStartPos] = useState<{ lat: number; lng: number } | null>(null);
+  const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
   
   useEffect(() => {
     if (!("geolocation" in navigator)) {
@@ -95,6 +96,9 @@ export default function SchoolMaps() {
         setQuery={setQuery}
         suggestions={filteredSearchResult}
         onSearch={handleSearch}
+        viewSchool={viewSchool}
+        setViewSchool={setViewSchool}
+        
       />
       <MapContainerComponent
         initialPosition={initialPosition}
@@ -107,6 +111,7 @@ export default function SchoolMaps() {
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
+        setViewSchool={setViewSchool}
       />
       {showLocationPicker && (
         <LocationPickerWindow  setInitialPosition={setInitialPosition} onClose={() => setShowLocationPicker(false)}  setInitialZoom={setInitialZoom} />

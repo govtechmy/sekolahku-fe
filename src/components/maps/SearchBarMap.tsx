@@ -28,6 +28,8 @@ interface MapSearchBarProps{
   setQuery: (val: string) => void;
   suggestions: SearchBarMapProps[];
   onSearch: (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => void;
+  viewSchool: ItemSekolahModel | null;
+  setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
 }
 
 export function SearchBarMap({
@@ -35,12 +37,13 @@ export function SearchBarMap({
   setQuery,
   suggestions,
   onSearch,
+  viewSchool,
+  setViewSchool,
 }: MapSearchBarProps) {
   const [localSuggestions, setLocalSuggestions] = useState<SearchBarMapProps[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
-  const [selectedSchoolDetail, setSelectedSchoolDetail] = useState<ItemSekolahModel | null>(null);
   const debounceTimerRef = useRef<number | null>(null);
 
   // Use predefined lists instead of extracting from markers
@@ -50,7 +53,7 @@ export function SearchBarMap({
   // Handler for MyDS SearchBar onValueChange
   const handleValueChange = (value: string) => {
     setQuery(value);
-    setSelectedSchoolDetail(null);
+    setViewSchool(null);
 
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
@@ -91,7 +94,7 @@ export function SearchBarMap({
       }
       const detail = await getSchoolId(school.kodSekolah);
       if (detail) {
-        setSelectedSchoolDetail(detail);
+        setViewSchool(detail);
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
@@ -229,14 +232,14 @@ export function SearchBarMap({
           )}
         </div>
       </div>
-      {selectedSchoolDetail && (
+      {viewSchool && (
         <div
           className={clx(
             "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
             isExpanded ? "my-10" : "absolute top-[50px]"
           )}
         >
-          <SchoolInfoWindow school={selectedSchoolDetail} setSelected={() => setSelectedSchoolDetail(null)} />
+          <SchoolInfoWindow school={viewSchool} setSelected={() => setViewSchool(null)} />
         </div>
       )}
     </div>

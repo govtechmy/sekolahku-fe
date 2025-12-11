@@ -5,13 +5,12 @@ import {
   useMap,
   Circle,
 } from "react-leaflet";
-import { useEffect, useCallback, useMemo, useState } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import L from "leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { MarkerType } from "../../types/maps";
 import type { ItemSekolahModel, MarkerGroup } from "../../models/response";
-import { SchoolInfoWindow } from "./SchoolInfoWindow";
 
 function MapEvents({
   onZoomChange,
@@ -68,6 +67,7 @@ interface MapContainerProps {
     React.SetStateAction<{ lat: number; lng: number } | null>
   >;
   fetchNearbySchools: (latitude: number, longitude: number, radiusInMeter?: number) => Promise<MarkerGroup[]>;
+  setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
 }
 
 export function MapContainerComponent({
@@ -81,9 +81,8 @@ export function MapContainerComponent({
   dragStartPos,
   setDragStartPos,
   fetchNearbySchools,
+  setViewSchool,
 }: MapContainerProps) {
-  const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
-
   useEffect(() => {
     localStorage.removeItem("schoolMarkerData");
   }, []);
@@ -285,12 +284,6 @@ export function MapContainerComponent({
           }}
         />
       ))}
-      {viewSchool && (
-        <SchoolInfoWindow 
-          school={viewSchool} 
-          setSelected={() => setViewSchool(null)} 
-        />
-      )}
     </LeafletMapContainer>
   );
 }
