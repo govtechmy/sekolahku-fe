@@ -14,7 +14,7 @@ export default function SchoolMaps() {
   const [initialPosition, setInitialPosition] = useState<[number, number]>([3.760115447396889, 108.46252441406251]);
   const [initialZoom, setInitialZoom] = useState<number>(6);
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
-  const [schoolMarkers, setSchoolMarkers] = useState<Map<string, { lat: number; lng: number }>>(new Map());
+  const [schoolMarkers, setSchoolMarkers] = useState<Map<string, { lat: number; lng: number; dataUrl: string }>>(new Map());
   const [dragStartPos, setDragStartPos] = useState<{ lat: number; lng: number } | null>(null);
   
   useEffect(() => {

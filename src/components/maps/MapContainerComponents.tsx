@@ -5,12 +5,13 @@ import {
   useMap,
   Circle,
 } from "react-leaflet";
-import { useEffect, useCallback, useMemo } from "react";
+import { useEffect, useCallback, useMemo, useState } from "react";
 import L from "leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { MarkerType } from "../../types/maps";
-import type { MarkerGroup } from "../../models/response";
+import type { ItemSekolahModel, MarkerGroup } from "../../models/response";
+import { SchoolInfoWindow } from "./SchoolInfoWindow";
 
 function MapEvents({
   onZoomChange,
@@ -58,9 +59,9 @@ interface MapContainerProps {
   setInitialPosition: React.Dispatch<React.SetStateAction<[number, number]>>;
   mapRef: L.Map | null;
   setMapRef: React.Dispatch<React.SetStateAction<L.Map | null>>;
-  schoolMarkers: Map<string, { lat: number; lng: number }>;
+  schoolMarkers: Map<string, { lat: number; lng: number; dataUrl: string }>;
   setSchoolMarkers: React.Dispatch<
-    React.SetStateAction<Map<string, { lat: number; lng: number }>>
+    React.SetStateAction<Map<string, { lat: number; lng: number; dataUrl: string }>>
   >;
   dragStartPos: { lat: number; lng: number } | null;
   setDragStartPos: React.Dispatch<
@@ -81,12 +82,10 @@ export function MapContainerComponent({
   setDragStartPos,
   fetchNearbySchools,
 }: MapContainerProps) {
+  const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
 
-  // Clear cache on component mount (page refresh)
   useEffect(() => {
-    // Clear localStorage cache on every page refresh
     localStorage.removeItem("schoolMarkerData");
-    console.log("Cache cleared on page refresh");
   }, []);
 
   // Memoize localStorage data - will return null after cache is cleared
@@ -95,7 +94,7 @@ export function MapContainerComponent({
     if (storedData) {
       try {
         const parsed = JSON.parse(storedData);
-        return new Map<string, { lat: number; lng: number }>(parsed);
+        return new Map<string, { lat: number; lng: number; dataUrl: string }>(parsed);
       } catch (error) {
         console.error("Failed to parse localStorage data:", error);
         return null;
@@ -106,7 +105,7 @@ export function MapContainerComponent({
 
   const extractSchoolData = useCallback(
     (markers: MarkerGroup[]) => {
-      const schoolMap = new Map<string, { lat: number; lng: number }>();
+      const schoolMap = new Map<string, { lat: number; lng: number; dataUrl: string }>();
       markers.forEach((marker) => {
         if (marker.items) {
           marker.items.forEach((item) => {
@@ -114,6 +113,7 @@ export function MapContainerComponent({
             schoolMap.set(key, {
               lat: item.infoLokasi.koordinatYY,
               lng: item.infoLokasi.koordinatXX,
+              dataUrl: item.dataUrl,
             });
           });
         }
@@ -123,11 +123,10 @@ export function MapContainerComponent({
     []
   );
 
-  const saveToLocalStorage = useCallback((markersMap: Map<string, { lat: number; lng: number }>) => {
+  const saveToLocalStorage = useCallback((markersMap: Map<string, { lat: number; lng: number; dataUrl: string }>) => {
     try {
       const dataToStore = JSON.stringify([...markersMap]);
       localStorage.setItem("schoolMarkerData", dataToStore);
-      console.log("Saved", markersMap.size, "schools to localStorage");
     } catch (error) {
       console.error("Failed to save to localStorage:", error);
     }
@@ -136,7 +135,6 @@ export function MapContainerComponent({
   useEffect(() => {
     // Use memoized cached data
     if (cachedSchoolData && cachedSchoolData.size > 0) {
-      console.log("Loading", cachedSchoolData.size, "schools from memoized cache");
       setSchoolMarkers(cachedSchoolData);
     } else {
       console.log("No cache found, loading initial schools");
@@ -172,7 +170,6 @@ export function MapContainerComponent({
           10000
         );
 
-        console.log("Received schools:", markersArray);
 
         setSchoolMarkers((prevMap) => {
           const newMap = new Map(prevMap);
@@ -186,6 +183,7 @@ export function MapContainerComponent({
                   newMap.set(key, {
                     lat: item.infoLokasi.koordinatYY,
                     lng: item.infoLokasi.koordinatXX,
+                    dataUrl: item.dataUrl,
                   });
                   addedCount++;
                 }
@@ -194,13 +192,10 @@ export function MapContainerComponent({
           });
 
           if (addedCount > 0) {
-            console.log(`Added ${addedCount} new schools. Total: ${newMap.size}`);
-            // Use memoized save function
             saveToLocalStorage(newMap);
             return newMap;
           }
 
-          console.log("No new schools to add");
           return prevMap;
         });
       } catch (error) {
@@ -210,7 +205,6 @@ export function MapContainerComponent({
     [setSchoolMarkers, saveToLocalStorage, fetchNearbySchools]
   );
 
-  console.log("Rendering map with", schoolMarkers.size, "school markers");
 
   return (
     <LeafletMapContainer
@@ -246,7 +240,6 @@ export function MapContainerComponent({
             );
 
             if (distance > 1000) {
-              console.log("hit more than 1000m, fetching new markers");
               appendNewMarkers({ lat: newCenter.lat, lng: newCenter.lng });
               setInitialPosition([newCenter.lat, newCenter.lng]);
             }
@@ -276,6 +269,15 @@ export function MapContainerComponent({
           }}
           onClick={() => {
             console.log("Clicked on school:", kodSekolah);
+            setViewSchool(null); // Reset before setting new school
+            fetch(coords.dataUrl)
+              .then((res) => res.json())
+              .then((data: ItemSekolahModel) => {
+                setViewSchool(data);
+              })
+              .catch((error) => {
+                console.error("Failed to fetch school data:", error);
+              });
             if (mapRef) {
               mapRef.setView([coords.lat, coords.lng], 18);
               setInitialPosition([coords.lat, coords.lng]);
@@ -283,6 +285,12 @@ export function MapContainerComponent({
           }}
         />
       ))}
+      {viewSchool && (
+        <SchoolInfoWindow 
+          school={viewSchool} 
+          setSelected={() => setViewSchool(null)} 
+        />
+      )}
     </LeafletMapContainer>
   );
 }
