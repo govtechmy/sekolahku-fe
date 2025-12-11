@@ -29,6 +29,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      # FETCH JSON FILES FROM S3
+      - name: Fetch school-list.json
+        run: |
+          echo "Downloading school-list.json"
+          curl -fSL "https://my.gov.digital.sekolahku-public-dev/common/school-list.json" \
+            -o school-list.json
+
+      - name: Fetch snap-routes.json
+        run: |
+          echo "Downloading snap-routes.json"
+          curl -fSL "https://my.gov.digital.sekolahku-public-dev/common/snap-routes.json" \
+            -o snap-routes.json
+
       - name: Build project
         run: pnpm run build --mode development
 
