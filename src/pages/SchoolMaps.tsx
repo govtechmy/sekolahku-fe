@@ -10,8 +10,7 @@ import { useMapViewStore } from "../store/mapView";
 
 export function MapViewController() {
   const map = useMap();
-  const center = useMapViewStore((s) => s.center);
-  const zoom = useMapViewStore((s) => s.zoom);
+  const { center, zoom } = useMapViewStore();
   useEffect(() => {
     map.setView(center, zoom);
   }, [map, center, zoom]);
@@ -20,14 +19,18 @@ export function MapViewController() {
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
-  const [filteredSearchResult, setFilteredSearchResult] = useState<SearchBarMapProps[]>([]);
+  const [filteredSearchResult, setFilteredSearchResult] = useState< SearchBarMapProps[]>([]);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
-  const setMapCenter = useMapViewStore((s) => s.setCenter);
-  const setMapZoom = useMapViewStore((s) => s.setZoom);
-  const [schoolMarkers, setSchoolMarkers] = useState<Map<string, { lat: number; lng: number; dataUrl: string }>>(new Map());
-  const [dragStartPos, setDragStartPos] = useState<{ lat: number; lng: number } | null>(null);
+  const {
+    setCenter: setMapCenter,
+    setZoom: setMapZoom,
+    initialLocationSet,
+    setInitialLocationSet,
+  } = useMapViewStore();
+  const [schoolMarkers, setSchoolMarkers] = useState< Map<string, { lat: number; lng: number; dataUrl: string }> >(new Map());
+  const [dragStartPos, setDragStartPos] = useState<{ lat: number; lng: number; } | null>(null);
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
-  
+
   useEffect(() => {
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
@@ -44,16 +47,21 @@ export default function SchoolMaps() {
         console.log("Geolocation success:", { latitude, longitude });
         setMapCenter([latitude, longitude]);
         setMapZoom(17);
+        setInitialLocationSet(true);
       },
       (error) => {
-        if (error)
-        setShowLocationPicker(true)
+        if (error) setShowLocationPicker(true);
       },
       options
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSearch = async (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => {
+  const handleSearch = async (params: {
+    namaSekolah?: string;
+    negeri?: string;
+    jenis?: string;
+  }) => {
     try {
       const results = await getSchoolSuggestion(params);
       const transformed: SearchBarMapProps[] = results.map((school) => ({
@@ -80,21 +88,35 @@ export default function SchoolMaps() {
     }
   };
 
-  // Fetch nearby schools - lifted from child component
-  const fetchNearbySchools = useCallback(async (latitude: number, longitude: number, radiusInMeter: number = 10000): Promise<MarkerGroup[]> => {
-    try {
-      console.log("Fetching schools near:", { latitude, longitude, radiusInMeter });
-      const nearbySchools = await getSchoolNearby({
-        latitude,
-        longitude,
-        radiusInMeter,
-      });
-      return nearbySchools?.markerGroups || [];
-    } catch (error) {
-      console.error("Failed to fetch nearby schools:", error);
-      return [];
-    }
-  }, []);
+  const fetchNearbySchools = useCallback(
+    async (
+      latitude: number,
+      longitude: number,
+      radiusInMeter: number = 10000
+    ): Promise<MarkerGroup[]> => {
+      if (!initialLocationSet) {
+        console.log("not set yet");
+        return [];
+      }
+      try {
+        console.log("Fetching schools near:", {
+          latitude,
+          longitude,
+          radiusInMeter,
+        });
+        const nearbySchools = await getSchoolNearby({
+          latitude,
+          longitude,
+          radiusInMeter,
+        });
+        return nearbySchools?.markerGroups || [];
+      } catch (error) {
+        console.error("Failed to fetch nearby schools:", error);
+        return [];
+      }
+    },
+    [initialLocationSet]
+  );
 
   return (
     <div className="h-full w-full flex relative">
@@ -105,10 +127,8 @@ export default function SchoolMaps() {
         onSearch={handleSearch}
         viewSchool={viewSchool}
         setViewSchool={setViewSchool}
-        
       />
       <MapContainerComponent
-        
         schoolMarkers={schoolMarkers}
         setSchoolMarkers={setSchoolMarkers}
         dragStartPos={dragStartPos}
@@ -117,7 +137,10 @@ export default function SchoolMaps() {
         setViewSchool={setViewSchool}
       />
       {showLocationPicker && (
-        <LocationPickerWindow onClose={() => setShowLocationPicker(false)} />
+        <LocationPickerWindow
+          onClose={() => setShowLocationPicker(false)}
+          setInitialLocationSet={setInitialLocationSet}
+        />
       )}
     </div>
   );

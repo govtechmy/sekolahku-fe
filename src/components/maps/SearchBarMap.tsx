@@ -20,8 +20,8 @@ import { Button } from "@govtechmy/myds-react/button";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import type { ItemSekolahModel } from "../../models/response";
+import { useMapViewStore } from "../../store/mapView";
 import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
-// Map offset not needed in search-only component
 
 interface MapSearchBarProps{
   query: string;
@@ -40,6 +40,7 @@ export function SearchBarMap({
   viewSchool,
   setViewSchool,
 }: MapSearchBarProps) {
+  const { initialLocationSet } = useMapViewStore();
   const [localSuggestions, setLocalSuggestions] = useState<SearchBarMapProps[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
@@ -58,7 +59,7 @@ export function SearchBarMap({
     }
 
     const trimmedValue = value.trim();
-    if (trimmedValue.length >= 3) {
+    if (trimmedValue.length >= 3 && initialLocationSet) {
       debounceTimerRef.current = window.setTimeout(() => {
         onSearch({
           namaSekolah: value,
@@ -81,6 +82,7 @@ export function SearchBarMap({
   }, []);
 
   useEffect(() => {
+    if (!initialLocationSet) return;
     onSearch({
       namaSekolah: query.trim().length >= 3 ? query : "",
       negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",

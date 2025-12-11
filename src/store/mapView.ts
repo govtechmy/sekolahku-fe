@@ -5,13 +5,26 @@ type Center = [number, number];
 interface MapViewState {
   center: Center;
   zoom: number;
+  initialLocationSet: boolean;
   setCenter: (c: Center) => void;
   setZoom: (z: number) => void;
+  setInitialLocationSet: (v: boolean) => void;
 }
 
 export const useMapViewStore = create<MapViewState>((set) => ({
   center: [3.760115447396889, 108.46252441406251],
   zoom: 6,
-  setCenter: (c) => set({ center: c }),
-  setZoom: (z) => set({ zoom: z }),
+  initialLocationSet: false,
+  setCenter: (c) => {
+    console.log("[mapView] setCenter:", c);
+    set({ center: c });
+  },
+  setZoom: (z) => {
+    console.log("[mapView] setZoom:", z);
+    set({ zoom: z });
+  },
+  setInitialLocationSet: (v) => {
+    console.log("[mapView] setInitialLocationSet:", v);
+    set({ initialLocationSet: v });
+  },
 }));

@@ -61,9 +61,7 @@ export function MapContainerComponent({
   fetchNearbySchools,
   setViewSchool,
 }: MapContainerProps) {
-  const mapCenter = useMapViewStore((s) => s.center);
-  const setMapCenter = useMapViewStore((s) => s.setCenter);
-  const setMapZoom = useMapViewStore((s) => s.setZoom);
+  const { center: mapCenter, setCenter: setMapCenter, setZoom: setMapZoom } = useMapViewStore();
   useEffect(() => {
     localStorage.removeItem("schoolMarkerData");
   }, []);

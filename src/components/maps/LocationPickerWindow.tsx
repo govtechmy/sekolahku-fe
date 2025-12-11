@@ -19,15 +19,16 @@ import { clx } from "@govtechmy/myds-react/utils";
 interface LocationPickerWindowProps {
   onClose: () => void;
   onLocationSelect?: (state: string, district: string) => void;
+  setInitialLocationSet: (value: boolean) => void;
 }
 
 type DistrictEntry = Record<string, [number, number]>;
 
 export function LocationPickerWindow({
   onClose,
+  setInitialLocationSet,
 }: LocationPickerWindowProps) {
-  const setMapCenter = useMapViewStore((s) => s.setCenter);
-  const setMapZoom = useMapViewStore((s) => s.setZoom);
+  const { setCenter: setMapCenter, setZoom: setMapZoom } = useMapViewStore();
   
   const [currentView, setCurrentView] = useState<"states" | "districts">(
     "states"
@@ -63,6 +64,7 @@ export function LocationPickerWindow({
       setMapCenter(coords);
       onClose();
       setMapZoom(15);
+      setInitialLocationSet(true);
     }
 
   };
