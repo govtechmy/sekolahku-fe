@@ -5,15 +5,25 @@ import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
 import type { ItemSekolahModel, MarkerGroup } from "../models/response";
+import { useMap } from "react-leaflet";
+import { useMapViewStore } from "../store/mapView";
+
+export function MapViewController() {
+  const map = useMap();
+  const center = useMapViewStore((s) => s.center);
+  const zoom = useMapViewStore((s) => s.zoom);
+  useEffect(() => {
+    map.setView(center, zoom);
+  }, [map, center, zoom]);
+  return null;
+}
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
   const [filteredSearchResult, setFilteredSearchResult] = useState<SearchBarMapProps[]>([]);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
-  const [initialPosition, setInitialPosition] = useState<[number, number]>([3.760115447396889, 108.46252441406251]);
-  const [initialZoom, setInitialZoom] = useState<number>(6);
-  const [mapCenter, setMapCenter] = useState<[number, number]>([3.760115447396889, 108.46252441406251]);
-  const [mapZoom, setMapZoom] = useState<number>(6);
+  const setMapCenter = useMapViewStore((s) => s.setCenter);
+  const setMapZoom = useMapViewStore((s) => s.setZoom);
   const [schoolMarkers, setSchoolMarkers] = useState<Map<string, { lat: number; lng: number; dataUrl: string }>>(new Map());
   const [dragStartPos, setDragStartPos] = useState<{ lat: number; lng: number } | null>(null);
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
@@ -32,8 +42,6 @@ export default function SchoolMaps() {
       (position) => {
         const { latitude, longitude } = position.coords;
         console.log("Geolocation success:", { latitude, longitude });
-        setInitialPosition([latitude, longitude]);
-        setInitialZoom(17);
         setMapCenter([latitude, longitude]);
         setMapZoom(17);
       },
@@ -100,13 +108,7 @@ export default function SchoolMaps() {
         
       />
       <MapContainerComponent
-        initialPosition={initialPosition}
-        initialZoom={initialZoom}
-        mapCenter={mapCenter}
-        mapZoom={mapZoom}
-        setMapCenter={setMapCenter}
-        setMapZoom={setMapZoom}
-        setInitialPosition={setInitialPosition}
+        
         schoolMarkers={schoolMarkers}
         setSchoolMarkers={setSchoolMarkers}
         dragStartPos={dragStartPos}
@@ -115,7 +117,7 @@ export default function SchoolMaps() {
         setViewSchool={setViewSchool}
       />
       {showLocationPicker && (
-        <LocationPickerWindow  setInitialPosition={setInitialPosition} onClose={() => setShowLocationPicker(false)}  setInitialZoom={setInitialZoom} />
+        <LocationPickerWindow onClose={() => setShowLocationPicker(false)} />
       )}
     </div>
   );

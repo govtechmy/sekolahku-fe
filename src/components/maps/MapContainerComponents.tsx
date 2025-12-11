@@ -2,13 +2,14 @@ import {
   MapContainer as LeafletMapContainer,
   TileLayer,
   useMapEvents,
-  useMap,
   Circle,
 } from "react-leaflet";
 import { useEffect, useCallback, useMemo } from "react";
+import { MapViewController } from "../../pages/SchoolMaps";
 import { SchoolMapMarker } from "./SchoolMapMarker";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { MarkerType } from "../../types/maps";
+import { useMapViewStore } from "../../store/mapView";
 import type { ItemSekolahModel, MarkerGroup } from "../../models/response";
 
 function MapEvents({
@@ -39,31 +40,7 @@ function MapEvents({
   return null;
 }
 
-// Component to handle map view changes declaratively
-function MapViewController({
-  center,
-  zoom,
-}: {
-  center: [number, number];
-  zoom: number;
-}) {
-  const map = useMap();
-  
-  useEffect(() => {
-    map.setView(center, zoom);
-  }, [map, center, zoom]);
-  
-  return null;
-}
-
 interface MapContainerProps {
-  initialPosition?: [number, number];
-  initialZoom?: number;
-  mapCenter: [number, number];
-  mapZoom: number;
-  setMapCenter: React.Dispatch<React.SetStateAction<[number, number]>>;
-  setMapZoom: React.Dispatch<React.SetStateAction<number>>;
-  setInitialPosition: React.Dispatch<React.SetStateAction<[number, number]>>;
   schoolMarkers: Map<string, { lat: number; lng: number; dataUrl: string }>;
   setSchoolMarkers: React.Dispatch<
     React.SetStateAction<Map<string, { lat: number; lng: number; dataUrl: string }>>
@@ -77,13 +54,6 @@ interface MapContainerProps {
 }
 
 export function MapContainerComponent({
-  initialPosition = [3.760115447396889, 108.46252441406251],
-  initialZoom = 6,
-  mapCenter,
-  mapZoom,
-  setMapCenter,
-  setMapZoom,
-  setInitialPosition,
   schoolMarkers,
   setSchoolMarkers,
   dragStartPos,
@@ -91,6 +61,9 @@ export function MapContainerComponent({
   fetchNearbySchools,
   setViewSchool,
 }: MapContainerProps) {
+  const mapCenter = useMapViewStore((s) => s.center);
+  const setMapCenter = useMapViewStore((s) => s.setCenter);
+  const setMapZoom = useMapViewStore((s) => s.setZoom);
   useEffect(() => {
     localStorage.removeItem("schoolMarkerData");
   }, []);
@@ -151,8 +124,8 @@ export function MapContainerComponent({
     async function loadInitialSchools() {
       try {
         const markersArray = await fetchNearbySchools(
-          initialPosition[0],
-          initialPosition[1],
+          mapCenter[0],
+          mapCenter[1],
           10000
         );
         
@@ -215,12 +188,12 @@ export function MapContainerComponent({
 
   return (
     <LeafletMapContainer
-      center={initialPosition}
-      zoom={initialZoom}
+      center={[3.760115447396889, 108.46252441406251]}
+      zoom={6}
       className="h-full w-full"
       zoomControl={false}
     >
-      <MapViewController center={mapCenter} zoom={mapZoom} />
+      <MapViewController />
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -230,8 +203,6 @@ export function MapContainerComponent({
           setMapZoom(zoom);
         }}
         onCenterChange={(center) => {
-          // Update the current center for circle visualization
-          setInitialPosition([center.lat, center.lng]);
           setMapCenter([center.lat, center.lng]);
         }}
         onDragStart={() => {
@@ -248,14 +219,13 @@ export function MapContainerComponent({
 
             if (distance > 1000) {
               appendNewMarkers({ lat: newCenter.lat, lng: newCenter.lng });
-              setInitialPosition([newCenter.lat, newCenter.lng]);
             }
           }
           setDragStartPos(null);
         }}
       />
       <Circle
-        center={initialPosition}
+        center={mapCenter}
         radius={10000}
         pathOptions={{
           color: '#3b82f6',
@@ -287,7 +257,6 @@ export function MapContainerComponent({
               });
             setMapCenter([coords.lat, coords.lng]);
             setMapZoom(18);
-            setInitialPosition([coords.lat, coords.lng]);
           }}
         />
       ))}

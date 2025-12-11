@@ -11,6 +11,7 @@ import {
   ChevronRightIcon,
 } from "@govtechmy/myds-react/icon";
 import { useState } from "react";
+import { useMapViewStore } from "../../store/mapView";
 import { dataPilihLokasi } from "../../contentData";
 import StateFlagImage from "../../icons/StateFlagIcon";
 import { clx } from "@govtechmy/myds-react/utils";
@@ -18,17 +19,15 @@ import { clx } from "@govtechmy/myds-react/utils";
 interface LocationPickerWindowProps {
   onClose: () => void;
   onLocationSelect?: (state: string, district: string) => void;
-  setInitialPosition: React.Dispatch<React.SetStateAction<[number, number]>>;
-  setInitialZoom: React.Dispatch<React.SetStateAction<number>>;
 }
 
 type DistrictEntry = Record<string, [number, number]>;
 
 export function LocationPickerWindow({
   onClose,
-  setInitialPosition,
-  setInitialZoom,
 }: LocationPickerWindowProps) {
+  const setMapCenter = useMapViewStore((s) => s.setCenter);
+  const setMapZoom = useMapViewStore((s) => s.setZoom);
   
   const [currentView, setCurrentView] = useState<"states" | "districts">(
     "states"
@@ -61,9 +60,9 @@ export function LocationPickerWindow({
     const coords = entry ? (Object.values(entry)[0] as [number, number]) : null;
 
     if (coords) {
-      setInitialPosition(coords);
+      setMapCenter(coords);
       onClose();
-      setInitialZoom(15);
+      setMapZoom(15);
     }
 
   };
