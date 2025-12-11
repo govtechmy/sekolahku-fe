@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import type { SearchBarMapProps } from "../types/maps";
-import { getSchoolSuggestion, getSchoolNearby } from "../services/school.svc";
+import { getSchoolSuggestion, getSchoolNearby, getSchoolS3Json } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
@@ -16,6 +16,7 @@ export function MapViewController() {
   }, [map, center, zoom]);
   return null;
 }
+
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
@@ -88,6 +89,16 @@ export default function SchoolMaps() {
     }
   };
 
+  const fetchS3SchoolData = async (dataUrl: string) => {
+    try {
+      const schoolData = await getSchoolS3Json(dataUrl);
+      return schoolData;
+    } catch (error) {
+      console.error("Error fetching S3 school data:", error);
+      return null;
+    }
+  }
+
   const fetchNearbySchools = useCallback(
     async (
       latitude: number,
@@ -134,6 +145,7 @@ export default function SchoolMaps() {
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
+        fetchS3SchoolData={fetchS3SchoolData}
         setViewSchool={setViewSchool}
       />
       {showLocationPicker && (

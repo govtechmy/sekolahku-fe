@@ -44,3 +44,12 @@ export const getSchoolNearby = async (params?: NearbySchoolsParams): Promise<Nea
   }
 }
 
+export const getSchoolS3Json = async (dataUrl: string): Promise<ItemSekolahModel> => {
+  try {
+    const response = await authAxios.get<ItemSekolahModel>(dataUrl)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching school JSON:', error)
+    throw error
+  }
+}

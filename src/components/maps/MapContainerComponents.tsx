@@ -50,6 +50,7 @@ interface MapContainerProps {
     React.SetStateAction<{ lat: number; lng: number } | null>
   >;
   fetchNearbySchools: (latitude: number, longitude: number, radiusInMeter?: number) => Promise<MarkerGroup[]>;
+  fetchS3SchoolData: (dataUrl: string) => Promise<ItemSekolahModel | null>;
   setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
 }
 
@@ -60,6 +61,7 @@ export function MapContainerComponent({
   setDragStartPos,
   fetchNearbySchools,
   setViewSchool,
+  fetchS3SchoolData,
 }: MapContainerProps) {
   const { center: mapCenter, setCenter: setMapCenter, setZoom: setMapZoom } = useMapViewStore();
   useEffect(() => {
@@ -183,7 +185,6 @@ export function MapContainerComponent({
     [setSchoolMarkers, saveToLocalStorage, fetchNearbySchools]
   );
 
-
   return (
     <LeafletMapContainer
       center={[3.760115447396889, 108.46252441406251]}
@@ -242,17 +243,10 @@ export function MapContainerComponent({
             koordinatYY: coords.lng,
             id: kodSekolah,
           }}
-          onClick={() => {
+          onClick={async () => {
             console.log("Clicked on school:", kodSekolah);
             setViewSchool(null); // Reset before setting new school
-            fetch(coords.dataUrl)
-              .then((res) => res.json())
-              .then((data: ItemSekolahModel) => {
-                setViewSchool(data);
-              })
-              .catch((error) => {
-                console.error("Failed to fetch school data:", error);
-              });
+            setViewSchool(await fetchS3SchoolData(coords.dataUrl));
             setMapCenter([coords.lat, coords.lng]);
             setMapZoom(18);
           }}
