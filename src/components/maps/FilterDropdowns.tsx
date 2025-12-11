@@ -1,19 +1,14 @@
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@govtechmy/myds-react/select";
+
+import { useState } from "react";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../shared/SelectMydsFix";
 
 type FilterDropdownsProps = {
   selectedNegeri: string;
   selectedJenis: string;
   negeriList: (string | undefined)[];
   jenisList: (string | undefined)[];
-  onNegeriChange: (value: string) => void;
-  onJenisChange: (value: string) => void;
+  setSelectedNegeri: (value: string) => void;
+  setSelectedJenis: (value: string) => void;
 };
 
 export function FilterDropdowns({
@@ -21,16 +16,20 @@ export function FilterDropdowns({
   selectedJenis,
   negeriList,
   jenisList,
-  onNegeriChange,
-  onJenisChange,
+  setSelectedNegeri,
+  setSelectedJenis,
 }: FilterDropdownsProps) {
+  const [negeriOpen, setNegeriOpen] = useState<boolean>(false);
+  const [jenisOpen, setJenisOpen] = useState<boolean>(false);
   return (
     <div className="px-3 py-4 border-t border-gray-200 flex gap-2 text-sm">
       <Select
         size="small"
         variant="outline"
-        onValueChange={onNegeriChange}
-        value={selectedNegeri}
+        onValueChange={setSelectedNegeri}
+        value={selectedNegeri ?? "ALL"}
+        open={negeriOpen}
+        onOpenChange={setNegeriOpen}
       >
         <SelectTrigger aria-label="Pilih Negeri" className="w-[155px] justify-between">
           <SelectValue placeholder="Jenis Negeri" />
@@ -52,8 +51,10 @@ export function FilterDropdowns({
       <Select
         size="small"
         variant="outline"
-        onValueChange={onJenisChange}
-        value={selectedJenis}
+        onValueChange={setSelectedJenis}
+        value={selectedJenis ?? "ALL"}
+        open={jenisOpen}
+        onOpenChange={setJenisOpen}
       >
         <SelectTrigger aria-label="Pilih Jenis" className="w-[155px] justify-between">
           <SelectValue placeholder="Jenis Sekolah" />

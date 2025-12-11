@@ -174,13 +174,8 @@ export function SearchBarMap({
               selectedJenis={selectedJenis}
               negeriList={negeriList}
               jenisList={jenisList}
-              onNegeriChange={(val: string) => {
-                setSelectedNegeri(val);
-          
-              }}
-              onJenisChange={(val: string) => {
-                setSelectedJenis(val);
-              }}
+              setSelectedNegeri={setSelectedNegeri}
+              setSelectedJenis={setSelectedJenis}
             />
           )}
 
