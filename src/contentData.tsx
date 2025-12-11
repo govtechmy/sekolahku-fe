@@ -892,81 +892,49 @@ export const dataPilihLokasi = [
   {
     name: "Wilayah Persekutuan Putrajaya",
     flagFile: "Flag_of_Putrajaya.svg",
-    districts: [
-      { "Putrajaya": [2.9260, 101.6860] },
-    ],
+    districts: ["Putrajaya"]
+  }
+] as const;
+
+export const STATE_STYLES: Record<string, L.PathOptions> = {
+  Johor: {
+    color: "#0066ff",
+    weight: 2,
+    fillColor: "#3388ff",
+    fillOpacity: 0.12,
   },
-];
-
-
-//markerType = GROUP | INDIVIDUAL | NEGERI | PARLIMENT | WEST_EAST | MALAYSIA
-
-// GET http://localhost:3000/schools/find-nearby?name=la%20salle
-
-export const findNearbyGroup = {
-  viewInfoLokasi: {
-    koordinatXX: 3.1578,
-    koordinatYY: 101.7118,
-    zoom: 7,
+  Selangor: {
+    color: "#ff4444",
+    weight: 2,
+    fillColor: "#ff8888",
+    fillOpacity: 0.12,
   },
-  markerGroups: [
-    {
-      markerType: "INDIVIDUAL",
-      radiusInMeter: 0,
-      infoLokasi: {
-        koordinatXX: 3.1580,
-        koordinatYY: 101.7120,
-      },
-      kodSekolah: "SCH001",
-    },
-    {
-      markerType: "GROUP",
-      radiusInMeter: 10.0,
-      infoLokasi: {
-        koordinatXX: 3.1590,
-        koordinatYY: 101.7130,
-      },
-      total: 5,
-      items: [
-        {
-          kodSekolah: "SCH002",
-          infoLokasi: {
-            koordinatXX: 3.1585,
-            koordinatYY: 101.7125,
-          },
-        },
-        {
-          kodSekolah: "SCH003",
-          infoLokasi: {
-            koordinatXX: 3.1590,
-            koordinatYY: 101.7130,
-          },
-        },
-        {
-          kodSekolah: "SCH004",
-          infoLokasi: {
-            koordinatXX: 3.1595,
-            koordinatYY: 101.7135,
-          },
-        },
-        {
-          kodSekolah: "SCH005",
-          infoLokasi: {
-            koordinatXX: 3.1588,
-            koordinatYY: 101.7128,
-          },
-        },
-        {
-          kodSekolah: "SCH006",
-          infoLokasi: {
-            koordinatXX: 3.1592,
-            koordinatYY: 101.7132,
-          },
-        },
-      ],
-    },
-  ],
+  Pahang: {
+    color: "#ffffff",
+    weight: 2,
+    fillColor: "#ffff66",
+    fillOpacity: 0.12,
+  },
+  Sarawak: {
+    color: "#FFDB58",
+    weight: 2,
+    fillColor: "#FFFF8F",
+    fillOpacity: 0.12,
+  },
+  Sabah: {
+    color: "#00FFFF",
+    weight: 2,
+    fillColor: "#0096FF",
+    fillOpacity: 0.12,
+  },
+  Kelantan: {
+    color: "#AFE1AF",
+    weight: 2,
+    fillColor: "#097969",
+    fillOpacity: 0.12,
+  }
 };
+
 
 export const findNearbyGroupAppend = {
   viewInfoLokasi: {
