@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowBackIcon,
@@ -5,8 +6,8 @@ import {
   MapIcon,
 } from "@govtechmy/myds-react/icon";
 import { FilterDropdowns } from "./FilterDropdowns";
-import type { SchoolMarker } from "../../types/maps";
-import { getSchoolSuggestion, getSchoolId } from "../../services/school.svc";
+import type { SearchBarMapProps } from "../../types/maps";
+import { getSchoolId } from "../../services/school.svc";
 import {
   SearchBar,
   SearchBarHint,
@@ -19,54 +20,31 @@ import { Button } from "@govtechmy/myds-react/button";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import type { ItemSekolahModel } from "../../models/response";
-import offset from "../../utils/coordinateOffSet";
+import { useMapViewStore } from "../../store/mapView";
+import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
 
-const NEGERI_LIST = [
-  "JOHOR",
-  "KEDAH",
-  "KELANTAN",
-  "MELAKA",
-  "NEGERI SEMBILAN",
-  "PAHANG",
-  "PERAK",
-  "PERLIS",
-  "PULAU PINANG",
-  "SABAH",
-  "SARAWAK",
-  "SELANGOR",
-  "TERENGGANU",
-  "WILAYAH PERSEKUTUAN KUALA LUMPUR",
-  "WILAYAH PERSEKUTUAN LABUAN",
-  "WILAYAH PERSEKUTUAN PUTRAJAYA",
-];
-
-const JENIS_LIST = ["SK", "K9"];
-
-type MapSearchBarProps = {
+interface MapSearchBarProps{
   query: string;
   setQuery: (val: string) => void;
-  setFilteredMarkers: (markers: SchoolMarker[]) => void;
-  markersToShow: SchoolMarker[];
-  selected: SchoolMarker | null;
-  setSelected: (marker: SchoolMarker | null) => void;
-  panTo?: (lat: number, lng: number) => void;
-  setZoom?: (zoom: number) => void;
-};
+  suggestions: SearchBarMapProps[];
+  onSearch: (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => void;
+  viewSchool: ItemSekolahModel | null;
+  setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
+}
 
-export function MapSearchBar({
+export function SearchBarMap({
   query,
   setQuery,
-  setFilteredMarkers,
-  selected,
-  setSelected,
-  panTo,
-  setZoom,
+  suggestions,
+  onSearch,
+  viewSchool,
+  setViewSchool,
 }: MapSearchBarProps) {
-  const [suggestions, setSuggestions] = useState<SchoolMarker[]>([]);
+  const { initialLocationSet } = useMapViewStore();
+  const [localSuggestions, setLocalSuggestions] = useState<SearchBarMapProps[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
-  const [selectedSchoolDetail, setSelectedSchoolDetail] = useState<ItemSekolahModel | null>(null);
   const debounceTimerRef = useRef<number | null>(null);
 
   // Use predefined lists instead of extracting from markers
@@ -76,19 +54,21 @@ export function MapSearchBar({
   // Handler for MyDS SearchBar onValueChange
   const handleValueChange = (value: string) => {
     setQuery(value);
-    setSelected(null);
-
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
 
     const trimmedValue = value.trim();
-    if (trimmedValue.length >= 3) {
+    if (trimmedValue.length >= 3 && initialLocationSet) {
       debounceTimerRef.current = window.setTimeout(() => {
-        filterMarkers(value, selectedNegeri, selectedJenis);
+        onSearch({
+          namaSekolah: value,
+          negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
+          jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
+        });
       }, 500);
     } else {
-      setSuggestions([]);
+      setLocalSuggestions([]);
     }
   };
 
@@ -101,58 +81,21 @@ export function MapSearchBar({
     };
   }, []);
 
-  const filterMarkers = async (
-    value: string,
-    negeri: string,
-    jenis: string
-  ) => {
-    try {
-      const params: { namaSekolah?: string; negeri?: string; jenis?: string } =
-        {};
+  useEffect(() => {
+    if (!initialLocationSet) return;
+    onSearch({
+      namaSekolah: query.trim().length >= 3 ? query : "",
+      negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+      jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedJenis, selectedNegeri]);
 
-      if (value) {
-        params.namaSekolah = value;
-      }
+  useEffect(() => {
+    setLocalSuggestions(suggestions);
+  }, [suggestions]);
 
-      if (negeri && negeri !== "ALL") {
-        params.negeri = negeri;
-      }
-
-      if (jenis && jenis !== "ALL") {
-        params.jenis = jenis;
-      }
-
-      const results = await getSchoolSuggestion(params);
-
-      const transformed: SchoolMarker[] = results.map((school) => ({
-        namaSekolah: school.namaSekolah || "Sekolah Tidak Diketahui",
-        kodSekolah: school.kodSekolah || "",
-        lat: school.data.infoLokasi.koordinatYY,
-        lng: school.data.infoLokasi.koordinatXX,
-        negeri: school.data?.infoPentadbiran?.negeri || "",
-        bandarSurat: school.data?.infoKomunikasi?.bandarSurat || "",
-        jenisLabel: school.data?.infoSekolah?.jenisLabel || "",
-        jumlahPelajar: school.data?.infoSekolah?.jumlahPelajar || 0,
-        jumlahGuru: school.data?.infoSekolah?.jumlahGuru || 0,
-      }));
-
-      setZoom?.(13);
-      if (transformed.length > 0) {
-        panTo?.(transformed[0].lat, transformed[0].lng-offset);
-      }
-      setFilteredMarkers(transformed);
-      setSuggestions(transformed);
-    } catch (error) {
-      console.error("Error fetching school suggestions:", error);
-      setSuggestions([]);
-    }
-  };
-
-  const handleSelect = async (school: SchoolMarker) => {
-    setZoom?.(18);
-    panTo?.(school.lat, school.lng - offset);
-    setSelected(school);
-    
+  const handleSelect = async (school: SearchBarMapProps) => {
     try {
       if (!school.kodSekolah) {
         console.error("School code is null");
@@ -160,7 +103,7 @@ export function MapSearchBar({
       }
       const detail = await getSchoolId(school.kodSekolah);
       if (detail) {
-        setSelectedSchoolDetail(detail);
+        setViewSchool(detail);
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
@@ -233,21 +176,15 @@ export function MapSearchBar({
               selectedJenis={selectedJenis}
               negeriList={negeriList}
               jenisList={jenisList}
-              onNegeriChange={(val: string) => {
-                setSelectedNegeri(val);
-                filterMarkers(query, val, selectedJenis);
-              }}
-              onJenisChange={(val: string) => {
-                setSelectedJenis(val);
-                filterMarkers(query, selectedNegeri, val);
-              }}
+              setSelectedNegeri={setSelectedNegeri}
+              setSelectedJenis={setSelectedJenis}
             />
           )}
 
           {isExpanded && (
             <div className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1">
-              {suggestions.length > 0 ? (
-                suggestions.map((school, idx) => (
+              {localSuggestions.length > 0 ? (
+                localSuggestions.map((school, idx) => (
                   <li
                     key={idx}
                     onClick={() => handleSelect(school)}
@@ -290,16 +227,16 @@ export function MapSearchBar({
           )}
         </div>
       </div>
-      {selected && 
-      <div
-        className={clx(
-          "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
-          isExpanded ? "my-10" : "absolute top-[50px]"
-        )}
-      >
-        {selectedSchoolDetail && <SchoolInfoWindow school={selectedSchoolDetail} setSelected={setSelected} />}
-      </div>
-      }
+      {viewSchool && (
+        <div
+          className={clx(
+            "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
+            isExpanded ? "my-10" : "absolute top-[50px]"
+          )}
+        >
+          <SchoolInfoWindow school={viewSchool} setSelected={() => setViewSchool(null)} />
+        </div>
+      )}
     </div>
   );
 }
