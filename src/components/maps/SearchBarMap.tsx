@@ -53,8 +53,6 @@ export function SearchBarMap({
   // Handler for MyDS SearchBar onValueChange
   const handleValueChange = (value: string) => {
     setQuery(value);
-    setViewSchool(null);
-
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
