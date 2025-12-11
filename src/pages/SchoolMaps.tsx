@@ -67,6 +67,13 @@ export default function SchoolMaps() {
         jumlahGuru: school.data?.infoSekolah?.jumlahGuru || 0,
       }));
       setFilteredSearchResult(transformed);
+
+      if (transformed.length > 0 && mapRef) {
+        const firstResult = transformed[0];
+        mapRef.setView([firstResult.lat, firstResult.lng], 18);
+        setInitialPosition([firstResult.lat, firstResult.lng]);
+        setInitialZoom(18);
+      }
     } catch (error) {
       console.error("Error fetching school suggestions:", error);
       setFilteredSearchResult([]);
