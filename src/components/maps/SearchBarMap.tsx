@@ -81,6 +81,15 @@ export function SearchBarMap({
   }, []);
 
   useEffect(() => {
+    onSearch({
+      namaSekolah: query.trim().length >= 3 ? query : "",
+      negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+      jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedJenis, selectedNegeri]);
+
+  useEffect(() => {
     setLocalSuggestions(suggestions);
   }, [suggestions]);
 
@@ -167,19 +176,10 @@ export function SearchBarMap({
               jenisList={jenisList}
               onNegeriChange={(val: string) => {
                 setSelectedNegeri(val);
-                onSearch({
-                  namaSekolah: query.trim().length >= 3 ? query : undefined,
-                  negeri: val !== "ALL" ? val : undefined,
-                  jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
-                });
+          
               }}
               onJenisChange={(val: string) => {
                 setSelectedJenis(val);
-                onSearch({
-                  namaSekolah: query.trim().length >= 3 ? query : undefined,
-                  negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
-                  jenis: val !== "ALL" ? val : undefined,
-                });
               }}
             />
           )}
