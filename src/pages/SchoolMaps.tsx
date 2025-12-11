@@ -15,6 +15,8 @@ import {
 } from "../components/maps";
 import type { SchoolMarker } from "../types/maps";
 import offset from "../utils/coordinateOffSet";
+import { getStatePolygonLocal } from "../services/polygon.svc";
+import { STATE_STYLES } from "../contentData";
 
 // Fix for default markers in Leaflet
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
@@ -87,6 +89,45 @@ export default function SchoolMaps() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [mapRef, setMapRef] = useState<L.Map | null>(null);
 
+  const [polygonLayers, setPolygonLayers] = useState<L.GeoJSON[]>([]);
+
+  useEffect(() => {
+    if (!mapRef) return;
+  
+    const loadAllStates = async () => {
+      const states = ["Johor", "Selangor", "Pahang", "Sarawak", "Sabah", "Kelantan"];
+      const layers: L.GeoJSON[] = [];
+  
+      for (const state of states) {
+        try {
+          const raw = await getStatePolygonLocal(state);
+          const geojson = raw.pageProps?.geojson;
+          if (!geojson) continue;
+  
+          const layer = L.geoJSON(geojson, {
+            style: STATE_STYLES[state],
+          }).addTo(mapRef);
+  
+          layers.push(layer);
+        } catch (error) {
+          console.error(`Failed loading ${state}`, error);
+        }
+      }
+  
+      setPolygonLayers(layers);
+    };
+  
+    loadAllStates();
+  
+    return () => {
+      polygonLayers.forEach((layer) => {
+        if (mapRef.hasLayer(layer)) {
+          mapRef.removeLayer(layer);
+        }
+      });
+    };
+  }, [mapRef]);
+  
   console.log("User Location:", userLocation); // for future use
   console.log("Map Zoom Level:", zoom); // for future use
 
