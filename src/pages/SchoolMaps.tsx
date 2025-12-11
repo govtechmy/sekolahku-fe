@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { SearchBarMapProps } from "../types/maps";
-import { getSchoolSuggestion } from "../services/school.svc";
+import { getSchoolSuggestion, getSchoolNearby } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
 import L from "leaflet";
+import type { MarkerGroup } from "../models/response";
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
@@ -71,6 +72,22 @@ export default function SchoolMaps() {
     }
   };
 
+  // Fetch nearby schools - lifted from child component
+  const fetchNearbySchools = useCallback(async (latitude: number, longitude: number, radiusInMeter: number = 10000): Promise<MarkerGroup[]> => {
+    try {
+      console.log("Fetching schools near:", { latitude, longitude, radiusInMeter });
+      const nearbySchools = await getSchoolNearby({
+        latitude,
+        longitude,
+        radiusInMeter,
+      });
+      return nearbySchools?.markerGroups || [];
+    } catch (error) {
+      console.error("Failed to fetch nearby schools:", error);
+      return [];
+    }
+  }, []);
+
   return (
     <div className="h-full w-full flex relative">
       <SearchBarMap
@@ -89,6 +106,7 @@ export default function SchoolMaps() {
         setSchoolMarkers={setSchoolMarkers}
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}
+        fetchNearbySchools={fetchNearbySchools}
       />
       {showLocationPicker && (
         <LocationPickerWindow  setInitialPosition={setInitialPosition} onClose={() => setShowLocationPicker(false)}  setInitialZoom={setInitialZoom} />

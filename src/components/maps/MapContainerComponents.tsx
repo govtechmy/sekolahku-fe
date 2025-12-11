@@ -8,7 +8,6 @@ import {
 import { useEffect, useCallback, useMemo } from "react";
 import L from "leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
-import { getSchoolNearby } from "../../services/school.svc";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { MarkerType } from "../../types/maps";
 import type { MarkerGroup } from "../../models/response";
@@ -67,6 +66,7 @@ interface MapContainerProps {
   setDragStartPos: React.Dispatch<
     React.SetStateAction<{ lat: number; lng: number } | null>
   >;
+  fetchNearbySchools: (latitude: number, longitude: number, radiusInMeter?: number) => Promise<MarkerGroup[]>;
 }
 
 export function MapContainerComponent({
@@ -79,9 +79,17 @@ export function MapContainerComponent({
   setSchoolMarkers,
   dragStartPos,
   setDragStartPos,
+  fetchNearbySchools,
 }: MapContainerProps) {
 
-  // Memoize localStorage data - only parse once
+  // Clear cache on component mount (page refresh)
+  useEffect(() => {
+    // Clear localStorage cache on every page refresh
+    localStorage.removeItem("schoolMarkerData");
+    console.log("Cache cleared on page refresh");
+  }, []);
+
+  // Memoize localStorage data - will return null after cache is cleared
   const cachedSchoolData = useMemo(() => {
     const storedData = localStorage.getItem("schoolMarkerData");
     if (storedData) {
@@ -137,13 +145,11 @@ export function MapContainerComponent({
 
     async function loadInitialSchools() {
       try {
-        const nearbySchools = await getSchoolNearby({
-          latitude: initialPosition[0],
-          longitude: initialPosition[1],
-          radiusInMeter: 10000, 
-        });
-
-        const markersArray = nearbySchools?.markerGroups || [];
+        const markersArray = await fetchNearbySchools(
+          initialPosition[0],
+          initialPosition[1],
+          10000
+        );
         
         const schoolData = extractSchoolData(markersArray);
         
@@ -155,20 +161,18 @@ export function MapContainerComponent({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cachedSchoolData]);
+  }, [cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage]);
 
   const appendNewMarkers = useCallback(
     async (center: { lat: number; lng: number }) => {
       try {
-        console.log("Fetching schools near:", center);
-        const nearbySchools = await getSchoolNearby({
-          latitude: center.lat,
-          longitude: center.lng,
-          radiusInMeter: 10000, // 10000m radius for nearby search
-        });
+        const markersArray = await fetchNearbySchools(
+          center.lat,
+          center.lng,
+          10000
+        );
 
-        console.log("Received schools:", nearbySchools);
-        const markersArray = nearbySchools?.markerGroups || [];
+        console.log("Received schools:", markersArray);
 
         setSchoolMarkers((prevMap) => {
           const newMap = new Map(prevMap);
@@ -203,7 +207,7 @@ export function MapContainerComponent({
         console.error("Failed to fetch nearby schools:", error);
       }
     },
-    [setSchoolMarkers, saveToLocalStorage]
+    [setSchoolMarkers, saveToLocalStorage, fetchNearbySchools]
   );
 
   console.log("Rendering map with", schoolMarkers.size, "school markers");
