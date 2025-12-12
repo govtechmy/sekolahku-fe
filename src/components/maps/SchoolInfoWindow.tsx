@@ -10,11 +10,11 @@ import { toTitleCase } from "../../utils/titleCaseConverter";
 import { Button } from "@govtechmy/myds-react/button";
 import { InfoIconRow, InfoRow } from "../shared/CardInfo";
 import type { ItemSekolahModel } from "../../models/response";
-import type { SchoolMarker } from "../../types/maps";
+import type { SearchBarMapProps } from "../../types/maps";
 
 type SchoolInfoWindowProps = {
   school: ItemSekolahModel;
-    setSelected: (marker: SchoolMarker | null) => void;
+    setSelected: (marker: SearchBarMapProps | null) => void;
 };
 
 export function SchoolInfoWindow({ school, setSelected}: SchoolInfoWindowProps) {

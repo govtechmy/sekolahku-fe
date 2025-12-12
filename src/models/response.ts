@@ -73,3 +73,41 @@ export interface APIResponse<T> {
   statusCode: number
   data: T
 }
+
+export interface ViewInfoLokasi {
+  koordinatXX: number
+  koordinatYY: number
+  zoom: number
+}
+
+export interface MarkerItem {
+  kodSekolah: string
+  infoLokasi: {
+    koordinatXX: number
+    koordinatYY: number
+  }
+  dataUrl: string
+}
+
+export interface MarkerGroup {
+  markerType: string
+  radiusInMeter: number
+  items: MarkerItem[]
+}
+
+export interface NearbySchoolsModel {
+  viewInfoLokasi: ViewInfoLokasi
+  markerGroups: MarkerGroup[]
+}
+
+export interface NearbySchoolsParams {
+  latitude?: number
+  longitude?: number
+  radiusInMeter?: number
+}
+
+export interface schoolSearchModel {
+  negeri?: string
+  jenis?: string
+  namaSekolah?: string
+}
