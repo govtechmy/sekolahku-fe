@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import type { SearchBarMapProps } from "../types/maps";
-import { getSchoolSuggestion, getSchoolNearby, getSchoolS3Json } from "../services/school.svc";
+import { getSchoolSuggestion, getSchoolNearby } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
@@ -16,7 +16,6 @@ export function MapViewController() {
   }, [map, center, zoom]);
   return null;
 }
-
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
@@ -76,10 +75,11 @@ export default function SchoolMaps() {
         lat: school.data.infoLokasi.koordinatYY,
         lng: school.data.infoLokasi.koordinatXX,
         negeri: school.data?.infoPentadbiran?.negeri || "",
-        bandarSurat: school.data?.infoKomunikasi?.bandarSurat || "",
+        bandarSurat: school.data?.infoKomunikasi?.bandarSurat,
         jenisLabel: school.data?.infoSekolah?.jenisLabel || "",
         jumlahPelajar: school.data?.infoSekolah?.jumlahPelajar || 0,
         jumlahGuru: school.data?.infoSekolah?.jumlahGuru || 0,
+        parlimen: school.data?.infoPentadbiran?.parlimen || "",
       }));
       setFilteredSearchResult(transformed);
 
@@ -94,15 +94,6 @@ export default function SchoolMaps() {
     }
   };
 
-  const fetchS3SchoolData = async (dataUrl: string) => {
-    try {
-      const schoolData = await getSchoolS3Json(dataUrl);
-      return schoolData;
-    } catch (error) {
-      console.error("Error fetching S3 school data:", error);
-      return null;
-    }
-  }
 
   const fetchNearbySchools = useCallback(
     async (
@@ -150,7 +141,6 @@ export default function SchoolMaps() {
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
-        fetchS3SchoolData={fetchS3SchoolData}
         setViewSchool={setViewSchool}
       />
       {showLocationPicker && (

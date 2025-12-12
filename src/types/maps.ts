@@ -21,6 +21,7 @@ export type SearchBarMapProps = {
   distance?: number;
   jumlahPelajar?: number;
   jumlahGuru?: number;
+  parlimen?: string;
 };
 
 
