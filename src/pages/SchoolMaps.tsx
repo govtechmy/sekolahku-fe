@@ -156,7 +156,6 @@ export default function SchoolMaps() {
       {showLocationPicker && (
         <LocationPickerWindow
           onClose={() => setShowLocationPicker(false)}
-          setInitialLocationSet={setInitialLocationSet}
         />
       )}
     </div>
