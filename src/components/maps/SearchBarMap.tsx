@@ -7,7 +7,7 @@ import {
 } from "@govtechmy/myds-react/icon";
 import { FilterDropdowns } from "./FilterDropdowns";
 import type { SearchBarMapProps } from "../../types/maps";
-import { getSchoolId } from "../../services/school.svc";
+import { getSchoolS3Json } from "../../services/school.svc";
 import {
   SearchBar,
   SearchBarHint,
@@ -101,7 +101,7 @@ export function SearchBarMap({
         console.error("School code is null");
         return;
       }
-      const detail = await getSchoolId(school.kodSekolah);
+      const detail = await getSchoolS3Json(school.negeri, school.parlimen, school.kodSekolah);
       if (detail) {
         setViewSchool(detail);
       }
