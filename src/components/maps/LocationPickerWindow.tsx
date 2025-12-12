@@ -56,8 +56,8 @@ export function LocationPickerWindow({
 
     if (coords) {
       setMapCenter(coords);
-      onClose();
       setMapZoom(15);
+      onClose();
       setInitialLocationSet(true);
     }
 
