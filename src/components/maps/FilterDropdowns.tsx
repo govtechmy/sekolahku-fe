@@ -38,7 +38,7 @@ export function FilterDropdowns({
         >
           <SelectValue placeholder="Jenis Negeri" />
         </SelectTrigger>
-        <SelectContent className="z-[1000]">
+        <SelectContent className="z-[700]">
           <SelectGroup>
             <SelectItem value="ALL">Semua Negeri</SelectItem>
             {negeriList
@@ -64,7 +64,7 @@ export function FilterDropdowns({
         >
           <SelectValue placeholder="Jenis Sekolah" />
         </SelectTrigger>
-        <SelectContent className="z-[1000]">
+        <SelectContent className="z-[700]">
           <SelectGroup>
             <SelectItem value="ALL">Semua Jenis</SelectItem>
             {jenisList

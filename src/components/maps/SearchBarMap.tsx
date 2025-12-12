@@ -112,7 +112,7 @@ export function SearchBarMap({
 
   return (
     <div
-      className={`absolute flex justify-start z-[1000] bottom-0 
+      className={`absolute flex justify-start z-[500] bottom-0 
           ${
             isExpanded
               ? "top-0 left-0 gap-4"
