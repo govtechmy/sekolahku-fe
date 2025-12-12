@@ -46,6 +46,10 @@ export function SearchBarMap({
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
   const debounceTimerRef = useRef<number | null>(null);
+    const {
+    setCenter: setMapCenter,
+    setZoom: setMapZoom,
+  } = useMapViewStore();
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
@@ -101,9 +105,12 @@ export function SearchBarMap({
         console.error("School code is null");
         return;
       }
-      const detail = await getSchoolS3Json(school.negeri, school.parlimen, school.kodSekolah);
+      const detail = await getSchoolS3Json(undefined, school.negeri, school.parlimen, school.kodSekolah);
       if (detail) {
         setViewSchool(detail);
+        setMapCenter([school.lat, school.lng]);
+        setMapZoom(17);
+
       }
     } catch (error) {
       console.error("Error fetching school details:", error);

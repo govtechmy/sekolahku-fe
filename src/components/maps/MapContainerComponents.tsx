@@ -114,6 +114,8 @@ export function MapContainerComponent({
   const initialLoadRequestedRef = useRef(false);
   useEffect(() => {
     // Use memoized cached data
+    //FIX LATER, this will hit everytime useEffect Runs
+    loadInitialSchools();
     if (cachedSchoolData && cachedSchoolData.size > 0) {
       setSchoolMarkers(cachedSchoolData);
     } else {
