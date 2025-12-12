@@ -158,6 +158,9 @@ export default function SchoolMaps() {
           onClose={() => setShowLocationPicker(false)}
         />
       )}
+      {!initialLocationSet && (
+        <div className="fixed inset-0 z-[800] bg-bg-black-900/40 backdrop-blur-sm pointer-events-auto" />
+      )}
     </div>
   );
 }
