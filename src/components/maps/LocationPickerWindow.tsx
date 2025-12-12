@@ -17,22 +17,16 @@ import StateFlagImage from "../../icons/StateFlagIcon";
 import { clx } from "@govtechmy/myds-react/utils";
 
 interface LocationPickerWindowProps {
-  onClose: () => void;
-  onLocationSelect?: (state: string, district: string) => void;
-  setInitialLocationSet: (value: boolean) => void;
+  onClose: () => void; 
 }
 
 type DistrictEntry = Record<string, [number, number]>;
 
 export function LocationPickerWindow({
   onClose,
-  setInitialLocationSet,
 }: LocationPickerWindowProps) {
-  const { setCenter: setMapCenter, setZoom: setMapZoom } = useMapViewStore();
-  
-  const [currentView, setCurrentView] = useState<"states" | "districts">(
-    "states"
-  );
+  const { setCenter: setMapCenter, setZoom: setMapZoom, setInitialLocationSet } = useMapViewStore();
+  const [currentView, setCurrentView] = useState<"states" | "districts">("states");
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
 

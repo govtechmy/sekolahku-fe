@@ -1,6 +1,11 @@
-
-import { useState } from "react";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../shared/SelectMydsFix";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../shared/SelectMydsFix";
 
 type FilterDropdownsProps = {
   selectedNegeri: string;
@@ -19,8 +24,6 @@ export function FilterDropdowns({
   setSelectedNegeri,
   setSelectedJenis,
 }: FilterDropdownsProps) {
-  const [negeriOpen, setNegeriOpen] = useState<boolean>(false);
-  const [jenisOpen, setJenisOpen] = useState<boolean>(false);
   return (
     <div className="px-3 py-4 border-t border-gray-200 flex gap-2 text-sm">
       <Select
@@ -28,10 +31,11 @@ export function FilterDropdowns({
         variant="outline"
         onValueChange={setSelectedNegeri}
         value={selectedNegeri ?? "ALL"}
-        open={negeriOpen}
-        onOpenChange={setNegeriOpen}
       >
-        <SelectTrigger aria-label="Pilih Negeri" className="w-[155px] justify-between">
+        <SelectTrigger
+          aria-label="Pilih Negeri"
+          className="w-[155px] justify-between"
+        >
           <SelectValue placeholder="Jenis Negeri" />
         </SelectTrigger>
         <SelectContent className="z-[1000]">
@@ -53,10 +57,11 @@ export function FilterDropdowns({
         variant="outline"
         onValueChange={setSelectedJenis}
         value={selectedJenis ?? "ALL"}
-        open={jenisOpen}
-        onOpenChange={setJenisOpen}
       >
-        <SelectTrigger aria-label="Pilih Jenis" className="w-[155px] justify-between">
+        <SelectTrigger
+          aria-label="Pilih Jenis"
+          className="w-[155px] justify-between"
+        >
           <SelectValue placeholder="Jenis Sekolah" />
         </SelectTrigger>
         <SelectContent className="z-[1000]">
