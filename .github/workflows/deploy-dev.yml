@@ -29,27 +29,27 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      # FETCH JSON FILES FROM S3
-      - name: Fetch school-list.json
-        run: |
-          echo "Downloading school-list.json"
-          curl -fSL "https://my.gov.digital.sekolahku-public-dev/common/school-list.json" \
-            -o school-list.json
-
-      - name: Fetch snap-routes.json
-        run: |
-          echo "Downloading snap-routes.json"
-          curl -fSL "https://my.gov.digital.sekolahku-public-dev/common/snap-routes.json" \
-            -o snap-routes.json
-
-      - name: Build project
-        run: pnpm run build --mode development
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ap-southeast-5
+
+      # FETCH JSON FILES FROM S3
+      - name: Fetch school-list.json from S3
+        run: |
+          echo "Downloading school-list.json"
+          aws s3 cp s3://${{ secrets.S3_PUBLIC_DEV }}/common/school-list.json school-list.json \
+            || (echo "Failed to download school-list.json, using existing local file" && ls -l school-list.json || true)
+
+      - name: Fetch snap-routes.json from S3
+        run: |
+          echo "Downloading snap-routes.json"
+          aws s3 cp s3://${{ secrets.S3_PUBLIC_DEV }}/common/snap-routes.json snap-routes.json \
+            || (echo "Failed to download snap-routes.json, using existing local file" && ls -l snap-routes.json || true)
+
+      - name: Build project
+        run: pnpm run build --mode development
 
       - name: Deploy to S3
         run: |
