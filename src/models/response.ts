@@ -37,6 +37,7 @@ export interface SchoolInfoLokasi {
 }
 
 export interface SchoolInfoPentadbiran {
+  parlimen: string
   negeri: string
   ppd: string
   bantuan: string
@@ -110,4 +111,11 @@ export interface schoolSearchModel {
   negeri?: string
   jenis?: string
   namaSekolah?: string
+}
+
+export interface S3JsonModel {
+  dataUrl?: string
+  negeri?: string
+  parlimen?: string
+  kodSekolah?: string
 }

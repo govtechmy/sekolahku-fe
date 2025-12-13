@@ -44,10 +44,21 @@ export const getSchoolNearby = async (params?: NearbySchoolsParams): Promise<Nea
   }
 }
 
-export const getSchoolS3Json = async (dataUrl: string): Promise<ItemSekolahModel> => {
+export const getSchoolS3Json = async (dataUrl?: string, negeri?: string, parlimen?: string, kodSekolah?: string): Promise<ItemSekolahModel> => {
   try {
+    if (!dataUrl) {
+      if (negeri && parlimen && kodSekolah) {
+        dataUrl = `https://sekolahku-data.govtechmy.xyz/${negeri}/${parlimen}/${kodSekolah}/${kodSekolah}.json`
+      } else {
+        throw new Error('Insufficient parameters to construct S3 URL')
+      }
+    }
     const response = await authAxios.get<ItemSekolahModel>(dataUrl)
+    console.log('dataUrl:', dataUrl)
+    console.log('Error fetching schodadwadawdawdwadwdadwdw')
+    console.log(response.data)
     return response.data
+    
   } catch (error) {
     console.error('Error fetching school JSON:', error)
     throw error

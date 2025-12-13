@@ -7,7 +7,7 @@ import {
 } from "@govtechmy/myds-react/icon";
 import { FilterDropdowns } from "./FilterDropdowns";
 import type { SearchBarMapProps } from "../../types/maps";
-import { getSchoolId } from "../../services/school.svc";
+import { getSchoolS3Json } from "../../services/school.svc";
 import {
   SearchBar,
   SearchBarHint,
@@ -46,6 +46,10 @@ export function SearchBarMap({
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
   const debounceTimerRef = useRef<number | null>(null);
+    const {
+    setCenter: setMapCenter,
+    setZoom: setMapZoom,
+  } = useMapViewStore();
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
@@ -101,9 +105,12 @@ export function SearchBarMap({
         console.error("School code is null");
         return;
       }
-      const detail = await getSchoolId(school.kodSekolah);
+      const detail = await getSchoolS3Json(undefined, school.negeri, school.parlimen, school.kodSekolah);
       if (detail) {
         setViewSchool(detail);
+        setMapCenter([school.lat, school.lng]);
+        setMapZoom(17);
+
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
@@ -112,7 +119,7 @@ export function SearchBarMap({
 
   return (
     <div
-      className={`absolute flex justify-start z-[1000] bottom-0 
+      className={`absolute flex justify-start z-[500] bottom-0 
           ${
             isExpanded
               ? "top-0 left-0 gap-4"

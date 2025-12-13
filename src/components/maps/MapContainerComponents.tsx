@@ -11,6 +11,7 @@ import { calculateDistance } from "../../utils/calculateDistance";
 import type { MarkerType } from "../../types/maps";
 import { useMapViewStore } from "../../store/mapView";
 import type { ItemSekolahModel, MarkerGroup } from "../../models/response";
+import { getSchoolS3Json } from "../../services/school.svc";
 
 function MapEvents({
   onZoomChange,
@@ -50,7 +51,6 @@ interface MapContainerProps {
     React.SetStateAction<{ lat: number; lng: number } | null>
   >;
   fetchNearbySchools: (latitude: number, longitude: number, radiusInMeter?: number) => Promise<MarkerGroup[]>;
-  fetchS3SchoolData: (dataUrl: string) => Promise<ItemSekolahModel | null>;
   setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
 }
 
@@ -61,7 +61,6 @@ export function MapContainerComponent({
   setDragStartPos,
   fetchNearbySchools,
   setViewSchool,
-  fetchS3SchoolData,
 }: MapContainerProps) {
   const { center: mapCenter, setCenter: setMapCenter, setZoom: setMapZoom } = useMapViewStore();
   useEffect(() => {
@@ -115,6 +114,8 @@ export function MapContainerComponent({
   const initialLoadRequestedRef = useRef(false);
   useEffect(() => {
     // Use memoized cached data
+    //FIX LATER, this will hit everytime useEffect Runs
+    loadInitialSchools();
     if (cachedSchoolData && cachedSchoolData.size > 0) {
       setSchoolMarkers(cachedSchoolData);
     } else {
@@ -249,7 +250,7 @@ export function MapContainerComponent({
           onClick={async () => {
             console.log("Clicked on school:", kodSekolah);
             setViewSchool(null); // Reset before setting new school
-            setViewSchool(await fetchS3SchoolData(coords.dataUrl));
+            setViewSchool(await getSchoolS3Json(coords.dataUrl));
             setMapCenter([coords.lat, coords.lng]);
             setMapZoom(18);
           }}
