@@ -37,6 +37,7 @@ export interface SchoolInfoLokasi {
 }
 
 export interface SchoolInfoPentadbiran {
+  parlimen: string
   negeri: string
   ppd: string
   bantuan: string
@@ -72,4 +73,49 @@ export interface APIResponse<T> {
   status: string
   statusCode: number
   data: T
+}
+
+export interface ViewInfoLokasi {
+  koordinatXX: number
+  koordinatYY: number
+  zoom: number
+}
+
+export interface MarkerItem {
+  kodSekolah: string
+  infoLokasi: {
+    koordinatXX: number
+    koordinatYY: number
+  }
+  dataUrl: string
+}
+
+export interface MarkerGroup {
+  markerType: string
+  radiusInMeter: number
+  items: MarkerItem[]
+}
+
+export interface NearbySchoolsModel {
+  viewInfoLokasi: ViewInfoLokasi
+  markerGroups: MarkerGroup[]
+}
+
+export interface NearbySchoolsParams {
+  latitude?: number
+  longitude?: number
+  radiusInMeter?: number
+}
+
+export interface schoolSearchModel {
+  negeri?: string
+  jenis?: string
+  namaSekolah?: string
+}
+
+export interface S3JsonModel {
+  dataUrl?: string
+  negeri?: string
+  parlimen?: string
+  kodSekolah?: string
 }

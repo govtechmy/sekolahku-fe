@@ -5,15 +5,15 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@govtechmy/myds-react/select";
+} from "../shared/SelectMydsFix";
 
 type FilterDropdownsProps = {
   selectedNegeri: string;
   selectedJenis: string;
   negeriList: (string | undefined)[];
   jenisList: (string | undefined)[];
-  onNegeriChange: (value: string) => void;
-  onJenisChange: (value: string) => void;
+  setSelectedNegeri: (value: string) => void;
+  setSelectedJenis: (value: string) => void;
 };
 
 export function FilterDropdowns({
@@ -21,21 +21,24 @@ export function FilterDropdowns({
   selectedJenis,
   negeriList,
   jenisList,
-  onNegeriChange,
-  onJenisChange,
+  setSelectedNegeri,
+  setSelectedJenis,
 }: FilterDropdownsProps) {
   return (
     <div className="px-3 py-4 border-t border-gray-200 flex gap-2 text-sm">
       <Select
         size="small"
         variant="outline"
-        onValueChange={onNegeriChange}
-        value={selectedNegeri}
+        onValueChange={setSelectedNegeri}
+        value={selectedNegeri ?? "ALL"}
       >
-        <SelectTrigger aria-label="Pilih Negeri" className="w-[155px] justify-between">
+        <SelectTrigger
+          aria-label="Pilih Negeri"
+          className="w-[155px] justify-between"
+        >
           <SelectValue placeholder="Jenis Negeri" />
         </SelectTrigger>
-        <SelectContent className="z-[1000]">
+        <SelectContent className="z-[700]">
           <SelectGroup>
             <SelectItem value="ALL">Semua Negeri</SelectItem>
             {negeriList
@@ -52,13 +55,16 @@ export function FilterDropdowns({
       <Select
         size="small"
         variant="outline"
-        onValueChange={onJenisChange}
-        value={selectedJenis}
+        onValueChange={setSelectedJenis}
+        value={selectedJenis ?? "ALL"}
       >
-        <SelectTrigger aria-label="Pilih Jenis" className="w-[155px] justify-between">
+        <SelectTrigger
+          aria-label="Pilih Jenis"
+          className="w-[155px] justify-between"
+        >
           <SelectValue placeholder="Jenis Sekolah" />
         </SelectTrigger>
-        <SelectContent className="z-[1000]">
+        <SelectContent className="z-[700]">
           <SelectGroup>
             <SelectItem value="ALL">Semua Jenis</SelectItem>
             {jenisList

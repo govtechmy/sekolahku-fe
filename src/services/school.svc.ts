@@ -1,4 +1,4 @@
-import type { schoolSearchModel, ListSekolahModel, APIResponse, ItemSekolahModel } from '../models/response'
+import type { schoolSearchModel, ListSekolahModel, APIResponse, ItemSekolahModel, NearbySchoolsModel, NearbySchoolsParams } from '../models/response'
 import { authAxios } from './http'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
@@ -27,6 +27,40 @@ export const getSchoolSuggestion = async (params?: schoolSearchModel): Promise<I
     return filteredData
   } catch (error) {
     console.error('Error fetching school suggestions:', error)
+    throw error
+  }
+}
+
+export const getSchoolNearby = async (params?: NearbySchoolsParams): Promise<NearbySchoolsModel> => {
+  try {
+    const response = await authAxios.get<APIResponse<NearbySchoolsModel>>(`${BASE_URL}${SCHOOL_ENDPOINT}/find-nearby`, {
+      params,
+      paramsSerializer: { indexes: null },
+    })
+    return response.data.data
+  } catch (error) {
+    console.error('Error fetching nearby schools:', error)
+    throw error
+  }
+}
+
+export const getSchoolS3Json = async (dataUrl?: string, negeri?: string, parlimen?: string, kodSekolah?: string): Promise<ItemSekolahModel> => {
+  try {
+    if (!dataUrl) {
+      if (negeri && parlimen && kodSekolah) {
+        dataUrl = `https://sekolahku-data.govtechmy.xyz/${negeri}/${parlimen}/${kodSekolah}/${kodSekolah}.json`
+      } else {
+        throw new Error('Insufficient parameters to construct S3 URL')
+      }
+    }
+    const response = await authAxios.get<ItemSekolahModel>(dataUrl)
+    console.log('dataUrl:', dataUrl)
+    console.log('Error fetching schodadwadawdawdwadwdadwdw')
+    console.log(response.data)
+    return response.data
+    
+  } catch (error) {
+    console.error('Error fetching school JSON:', error)
     throw error
   }
 }

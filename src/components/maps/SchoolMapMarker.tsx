@@ -1,24 +1,17 @@
 import { Marker } from "react-leaflet";
-import L from "leaflet";
-import type { SchoolMarker } from "../../types/maps";
+import type { SchoolMarkerInfo } from "../../types/maps";
+import { schoolIcon } from "../../icons/MapMarker";
 
-// Custom school icon
-const schoolIcon = new L.Icon({
-  iconUrl: "/images/iconSchool.png",
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
 
 type SchoolMapMarkerProps = {
-  school: SchoolMarker;
+  school: SchoolMarkerInfo;
   onClick: () => void;
 };
 
 export function SchoolMapMarker({ school, onClick }: SchoolMapMarkerProps) {
   return (
     <Marker
-      position={[school.lat, school.lng]}
+      position={[school.koordinatXX, school.koordinatYY]}
       icon={schoolIcon}
       eventHandlers={{
         click: onClick,

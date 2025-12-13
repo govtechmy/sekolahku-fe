@@ -1,164 +1,155 @@
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMapEvents,
-  useMap,
-} from "react-leaflet";
-import { useEffect, useState } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import { Button } from "@govtechmy/myds-react/button";
-import {
-  MapSearchBar,
-  LocationPickerWindow,
-} from "../components/maps";
-import type { SchoolMarker } from "../types/maps";
-import offset from "../utils/coordinateOffSet";
+import { useEffect, useState, useCallback, useRef } from "react";
+import type { SearchBarMapProps } from "../types/maps";
+import { getSchoolSuggestion, getSchoolNearby } from "../services/school.svc";
+import { SearchBarMap } from "../components/maps/SearchBarMap";
+import { MapContainerComponent } from "../components/maps/MapContainerComponents";
+import { LocationPickerWindow } from "../components/maps";
+import type { ItemSekolahModel, MarkerGroup } from "../models/response";
+import { useMap } from "react-leaflet";
+import { useMapViewStore } from "../store/mapView";
 
-// Fix for default markers in Leaflet
-delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
-  ._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
-
-// Custom school icon
-const schoolIcon = new L.Icon({
-  iconUrl: "/images/iconSchool.png",
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
-
-function MapEvents({
-  onZoomChange,
-  onCenterChange,
-  onDragStart,
-}: {
-  onZoomChange: (zoom: number) => void;
-  onCenterChange: (center: { lat: number; lng: number }) => void;
-  onDragStart?: () => void;
-}) {
-  useMapEvents({
-    zoomend: (e) => onZoomChange(e.target.getZoom()),
-    moveend: (e) => {
-      const center = e.target.getCenter();
-      onCenterChange({ lat: center.lat, lng: center.lng });
-    },
-    dragstart: () => {
-      onDragStart?.();
-    },
-  });
-  return null;
-}
-
-// Note: MapSearchBar will be rendered in a top-level sidebar div
-
-function MapInstanceBridge({
-  onMapReady,
-}: {
-  onMapReady: (map: L.Map) => void;
-}) {
+export function MapViewController() {
   const map = useMap();
+  const { center, zoom } = useMapViewStore();
   useEffect(() => {
-    onMapReady(map);
-  }, [map, onMapReady]);
+    map.setView(center, zoom);
+  }, [map, center, zoom]);
   return null;
 }
 
 export default function SchoolMaps() {
-  const initialPosition: [number, number] = [4.1969, 101.2561];
-  const schoolMarkers: SchoolMarker[] = [];
-  const [selected, setSelected] = useState<SchoolMarker | null>(null);
   const [query, setQuery] = useState("");
-  const [filteredMarkers, setFilteredMarkers] =
-    useState<SchoolMarker[]>(schoolMarkers);
-  const [userLocation, setUserLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>({ lat: initialPosition[0], lng: initialPosition[1] });
-  const [zoom, setZoom] = useState(7);
+  const [filteredSearchResult, setFilteredSearchResult] = useState< SearchBarMapProps[]>([]);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
-  const [mapRef, setMapRef] = useState<L.Map | null>(null);
+  const {
+    setCenter: setMapCenter,
+    setZoom: setMapZoom,
+    initialLocationSet,
+    setInitialLocationSet,
+  } = useMapViewStore();
+  const [schoolMarkers, setSchoolMarkers] = useState< Map<string, { lat: number; lng: number; dataUrl: string }> >(new Map());
+  const [dragStartPos, setDragStartPos] = useState<{ lat: number; lng: number; } | null>(null);
+  const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
+  const geolocationRequestedRef = useRef(false);
 
-  console.log("User Location:", userLocation); // for future use
-  console.log("Map Zoom Level:", zoom); // for future use
+  useEffect(() => {
+    if (!("geolocation" in navigator)) {
+      console.warn("Geolocation is not supported in this browser.");
+      return;
+    }
+    if (geolocationRequestedRef.current) {
+      return;
+    }
+    geolocationRequestedRef.current = true;
+    const options: PositionOptions = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+    };
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        console.log("Geolocation success:", { latitude, longitude });
+        setMapCenter([latitude, longitude]);
+        setMapZoom(17);
+        setInitialLocationSet(true);
+      },
+      (error) => {
+        if (error) setShowLocationPicker(true);
+      },
+      options
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSearch = async (params: {
+    namaSekolah?: string;
+    negeri?: string;
+    jenis?: string;
+  }) => {
+    try {
+      const results = await getSchoolSuggestion(params);
+      const transformed: SearchBarMapProps[] = results.map((school) => ({
+        namaSekolah: school.namaSekolah || "Sekolah Tidak Diketahui",
+        kodSekolah: school.kodSekolah || "",
+        lat: school.data.infoLokasi.koordinatYY,
+        lng: school.data.infoLokasi.koordinatXX,
+        negeri: school.data?.infoPentadbiran?.negeri || "",
+        bandarSurat: school.data?.infoKomunikasi?.bandarSurat,
+        jenisLabel: school.data?.infoSekolah?.jenisLabel || "",
+        jumlahPelajar: school.data?.infoSekolah?.jumlahPelajar || 0,
+        jumlahGuru: school.data?.infoSekolah?.jumlahGuru || 0,
+        parlimen: school.data?.infoPentadbiran?.parlimen || "",
+      }));
+      setFilteredSearchResult(transformed);
+
+      if (transformed.length > 0) {
+        const firstResult = transformed[0];
+        setMapCenter([firstResult.lat, firstResult.lng]);
+        setMapZoom(18);
+      }
+    } catch (error) {
+      console.error("Error fetching school suggestions:", error);
+      setFilteredSearchResult([]);
+    }
+  };
+
+
+  const fetchNearbySchools = useCallback(
+    async (
+      latitude: number,
+      longitude: number,
+      radiusInMeter: number = 10000
+    ): Promise<MarkerGroup[]> => {
+      if (!initialLocationSet) {
+        console.log("not set yet");
+        return [];
+      }
+      try {
+        console.log("Fetching schools near:", {
+          latitude,
+          longitude,
+          radiusInMeter,
+        });
+        const nearbySchools = await getSchoolNearby({
+          latitude,
+          longitude,
+          radiusInMeter,
+        });
+        return nearbySchools?.markerGroups || [];
+      } catch (error) {
+        console.error("Failed to fetch nearby schools:", error);
+        return [];
+      }
+    },
+    [initialLocationSet]
+  );
 
   return (
     <div className="h-full w-full flex relative">
-      <div className="absolute top-4 right-4 z-[1000]">
-        {/* Temporary button */}
-        <Button
-          variant="default-outline"
-          onClick={() => setShowLocationPicker(true)}
-        >
-          Pilih Lokasi
-        </Button>
-      </div>
-      <MapSearchBar
+      <SearchBarMap
         query={query}
         setQuery={setQuery}
-        setFilteredMarkers={setFilteredMarkers}
-        markersToShow={filteredMarkers}
-        setSelected={(s) => {
-          setSelected(s);
-        } }
-        panTo={(lat: number, lng: number) => mapRef?.panTo([lat, lng])}
-        setZoom={(z: number) => mapRef?.setZoom(z)} 
-        selected={selected}      
-        />
-      <MapContainer
-        center={initialPosition}
-        zoom={7}
-        className="h-full w-full "
-        zoomControl={false}
-      >
-        {/* Bridge component to capture the Leaflet map instance */}
-        {mapRef === null && <MapInstanceBridge onMapReady={setMapRef} />}
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <MapEvents
-          onZoomChange={setZoom}
-          onCenterChange={setUserLocation}
-          onDragStart={() => {
-            if (selected) {
-              setSelected(null);
-            }
-          }}
-        />
-        {filteredMarkers.map((pos, index) => (
-          <Marker
-            key={index}
-            position={[pos.lat, pos.lng]}
-            icon={schoolIcon}
-            eventHandlers={{
-              click: () => {
-                if (selected?.kodSekolah === pos.kodSekolah) {
-                  return;
-                }
-                setSelected(pos);
-                if (mapRef) {
-                  mapRef.setView([pos.lat, pos.lng - offset], 17, {
-                    animate: true,
-                    duration: 0.5,
-                  });
-                }
-              },
-            }}
-          />
-        ))}
-
-      </MapContainer>
+        suggestions={filteredSearchResult}
+        onSearch={handleSearch}
+        viewSchool={viewSchool}
+        setViewSchool={setViewSchool}
+      />
+      <MapContainerComponent
+        schoolMarkers={schoolMarkers}
+        setSchoolMarkers={setSchoolMarkers}
+        dragStartPos={dragStartPos}
+        setDragStartPos={setDragStartPos}
+        fetchNearbySchools={fetchNearbySchools}
+        setViewSchool={setViewSchool}
+      />
       {showLocationPicker && (
-        <LocationPickerWindow onClose={() => setShowLocationPicker(false)} />
+        <LocationPickerWindow
+          onClose={() => setShowLocationPicker(false)}
+        />
+      )}
+      {!initialLocationSet && (
+        <div className="fixed inset-0 z-[800] bg-bg-black-900/40 backdrop-blur-sm pointer-events-auto" />
       )}
     </div>
   );
