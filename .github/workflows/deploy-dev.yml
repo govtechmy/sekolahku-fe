@@ -20,11 +20,12 @@ jobs:
         with:
           version: latest
 
+      # Setup Node.js (UPDATED TO NODE 24)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "24"       # <— UPDATED
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install
