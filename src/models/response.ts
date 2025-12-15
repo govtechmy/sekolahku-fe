@@ -90,8 +90,12 @@ export interface MarkerItem {
   dataUrl: string
 }
 
-export interface MarkerGroup {
-  markerType: string
+export interface MarkerGroup extends MarkerItem {
+  markerType: 'GROUP' | 'INDIVIDUAL' | 'NEGERI' | 'PARLIMEN'
+  negeri?: string
+  parlimen?: string
+  total?: number
+
   radiusInMeter: number
   items: MarkerItem[]
 }

@@ -154,13 +154,12 @@ export function MapContainerComponent({
           10000
         );
 
-
         setSchoolMarkers((prevMap) => {
           const newMap = new Map(prevMap);
           let addedCount = 0;
 
           markersArray.forEach((marker) => {
-            if (marker.items) {
+            if (marker.markerType === "GROUP" && marker.items) {
               marker.items.forEach((item) => {
                 const key = `${item.kodSekolah}`;
                 if (!newMap.has(key)) {
@@ -172,6 +171,42 @@ export function MapContainerComponent({
                   addedCount++;
                 }
               });
+            }
+            
+            if (marker.markerType === "INDIVIDUAL") { 
+              const key = `${marker.kodSekolah}`;
+                if (!newMap.has(key)) {
+                  newMap.set(key, {
+                    lat: marker.infoLokasi.koordinatYY,
+                    lng: marker.infoLokasi.koordinatXX,
+                    dataUrl: marker.dataUrl,
+                  });
+                  addedCount++;
+                }
+            }
+
+            if (marker.markerType === "PARLIMEN") { 
+              const key = `${marker.negeri}-${marker.parlimen}`;
+                if (!newMap.has(key)) {
+                  newMap.set(key, {
+                    lat: marker.infoLokasi.koordinatYY,
+                    lng: marker.infoLokasi.koordinatXX,
+                    dataUrl: marker.total?.toString() ?? "",
+                  });
+                  addedCount++;
+                }
+            }
+
+            if (marker.markerType === "NEGERI") { 
+              const key = `${marker.negeri}`;
+                if (!newMap.has(key)) {
+                  newMap.set(key, {
+                    lat: marker.infoLokasi.koordinatYY,
+                    lng: marker.infoLokasi.koordinatXX,
+                    dataUrl: marker.total?.toString() ?? "",
+                  });
+                  addedCount++;
+                }
             }
           });
 
