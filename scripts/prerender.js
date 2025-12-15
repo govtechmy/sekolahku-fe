@@ -11,7 +11,7 @@ try {
 
   // Find correct JS entry file
   const entry = manifest['index.html']?.file || Object.values(manifest)[0].file
-  const scriptPath = `/assets/${entry}`
+  const scriptPath = `/${entry}`
 
   function escapeHTML(str) {
     if (!str) return ''
