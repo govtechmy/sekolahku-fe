@@ -4,6 +4,7 @@ import HeroMy from "../components/shared/HeroComponent";
 import BgSchoolProfile from "../asset/BgSchoolProfile";
 import HelmetMeta from "../seo/HelmetMeta";
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 type SchoolProps = {
   KODSEKOLAH: string;
@@ -12,12 +13,58 @@ type SchoolProps = {
 
 export default function SchoolProfile() {
   const { id } = useParams(); // ABA0001,YRA4101 etc
-  const schools = [] as SchoolProps[]
-  const school = schools.find((s:SchoolProps) => s.KODSEKOLAH === id)
+  const [schools, setSchools] = useState<SchoolProps[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSchools = async () => {
+      try {
+        const response = await fetch('/school-list.json');
+        if (response.ok) {
+          const data = await response.json();
+          setSchools(data);
+        } else {
+          throw new Error('Failed to fetch');
+        }
+      } catch (error) {
+        console.warn('Failed to fetch schools data:', error);
+        // In development or if fetch fails, try static import
+        // Note: This will only work if the file exists during build
+        setSchools([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSchools();
+  }, []);
+
+  const school = schools.find((s: SchoolProps) => s.KODSEKOLAH === id);
   const domain = import.meta.env.VITE_DOMAIN_NAME
   const schoolProfile = "/halaman-sekolah"
 
+  if (loading) {
+    return (
+      <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
+        <div className="text-center py-8">Loading school data...</div>
+      </div>
+    );
+  }
+
+  if (!school && schools.length > 0) {
+    return (
+      <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
+        <div className="text-center py-8">School not found</div>
+      </div>
+    );
+  }
+
   return (<>
+    <HelmetMeta
+      title={`${school?.NAMASEKOLAH} School Profile`}
+      description={`School profile page for ${school?.NAMASEKOLAH}.`}
+      canonical={`${domain}${schoolProfile}/${id}`}
+    />
     <HelmetMeta
       title={`${school?.NAMASEKOLAH} School Profile`}
       description={`School profile page for ${school?.NAMASEKOLAH}.`}
