@@ -4,7 +4,6 @@ import HeroMy from "../components/shared/HeroComponent";
 import BgSchoolProfile from "../asset/BgSchoolProfile";
 import HelmetMeta from "../seo/HelmetMeta";
 import { useParams } from "react-router-dom";
-import schools from "../../school-list.json";
 
 type SchoolProps = {
   KODSEKOLAH: string;
@@ -13,6 +12,7 @@ type SchoolProps = {
 
 export default function SchoolProfile() {
   const { id } = useParams(); // ABA0001,YRA4101 etc
+  const schools = [] as SchoolProps[]
   const school = schools.find((s:SchoolProps) => s.KODSEKOLAH === id)
   const domain = import.meta.env.VITE_DOMAIN_NAME
   const schoolProfile = "/halaman-sekolah"

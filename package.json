@@ -7,9 +7,7 @@
     "dev": "vite",
     "generate:routes": "node scripts/generate-routes.js",
     "generate:sitemap": "NODE_ENV=production node scripts/generate-sitemap.js",
-    "prebuild": "pnpm generate:sitemap",
     "build": "tsc -b && vite build",
-    "postbuild": "node scripts/prerender.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview"
