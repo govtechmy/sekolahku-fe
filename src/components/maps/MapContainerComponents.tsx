@@ -50,7 +50,7 @@ interface MapContainerProps {
   setDragStartPos: React.Dispatch<
     React.SetStateAction<{ lat: number; lng: number } | null>
   >;
-  fetchNearbySchools: (latitude: number, longitude: number, radiusInMeter?: number) => Promise<MarkerGroup[]>;
+  fetchNearbySchools: (latitude: number, longitude: number, radiusInMeter: number) => Promise<MarkerGroup[]>;
   setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
 }
 
@@ -62,7 +62,7 @@ export function MapContainerComponent({
   fetchNearbySchools,
   setViewSchool,
 }: MapContainerProps) {
-  const { center: mapCenter, setCenter: setMapCenter, setZoom: setMapZoom } = useMapViewStore();
+  const { center: mapCenter, setCenter: setMapCenter, setZoom, radius } = useMapViewStore();
   useEffect(() => {
     localStorage.removeItem("schoolMarkerData");
   }, []);
@@ -130,7 +130,7 @@ export function MapContainerComponent({
         const markersArray = await fetchNearbySchools(
           mapCenter[0],
           mapCenter[1],
-          10000
+          radius
         );
         
         const schoolData = extractSchoolData(markersArray);
@@ -151,7 +151,7 @@ export function MapContainerComponent({
         const markersArray = await fetchNearbySchools(
           center.lat,
           center.lng,
-          10000
+          radius
         );
 
         setSchoolMarkers((prevMap) => {
@@ -238,7 +238,7 @@ export function MapContainerComponent({
       />
       <MapEvents
         onZoomChange={(zoom) => {
-          setMapZoom(zoom);
+          setZoom(zoom);
         }}
         onCenterChange={(center) => {
           setMapCenter([center.lat, center.lng]);
@@ -264,7 +264,7 @@ export function MapContainerComponent({
       />
       <Circle
         center={mapCenter}
-        radius={10000}
+        radius={radius}
         pathOptions={{
           color: '#3b82f6',
           fillColor: '#3b82f6',
@@ -287,7 +287,7 @@ export function MapContainerComponent({
             setViewSchool(null); // Reset before setting new school
             setViewSchool(await getSchoolS3Json(coords.dataUrl));
             setMapCenter([coords.lat, coords.lng]);
-            setMapZoom(18);
+            setZoom(18);
           }}
         />
       ))}

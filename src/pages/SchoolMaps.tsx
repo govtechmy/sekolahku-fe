@@ -7,6 +7,7 @@ import { LocationPickerWindow } from "../components/maps";
 import type { ItemSekolahModel, MarkerGroup } from "../models/response";
 import { useMap } from "react-leaflet";
 import { useMapViewStore } from "../store/mapView";
+import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 
 export function MapViewController() {
   const map = useMap();
@@ -23,7 +24,11 @@ export default function SchoolMaps() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const {
     setCenter: setMapCenter,
+    center,
     setZoom: setMapZoom,
+    zoom,
+    radius,
+    setRadius,
     initialLocationSet,
     setInitialLocationSet,
   } = useMapViewStore();
@@ -62,6 +67,14 @@ export default function SchoolMaps() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(()=>{
+    if(zoom){
+      setRadius(CalculateRadiusZoomLevel(zoom,center[0])) 
+      console.log("THIS IS THE CALCULATED RADIUS",radius)
+    }
+
+  },[zoom,center,radius])
+
   const handleSearch = async (params: {
     namaSekolah?: string;
     negeri?: string;
@@ -99,7 +112,7 @@ export default function SchoolMaps() {
     async (
       latitude: number,
       longitude: number,
-      radiusInMeter: number = 10000
+      radiusInMeter: number
     ): Promise<MarkerGroup[]> => {
       if (!initialLocationSet) {
         console.log("not set yet");
@@ -111,6 +124,7 @@ export default function SchoolMaps() {
           longitude,
           radiusInMeter,
         });
+        
         const nearbySchools = await getSchoolNearby({
           latitude,
           longitude,
