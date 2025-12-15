@@ -50,8 +50,10 @@ jobs:
       - name: Build project
         run: pnpm run build --mode development
 
-      - name: Deploy to S3
+      - name: Deploy APP to S3
         run: |
-          aws s3 rm s3://${{ secrets.S3_BUCKET_DEV }} --recursive
-          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_DEV }}
+          aws s3 sync --delete --max-concurrent-requests 50 --exclude "halaman-sekolah/*" dist/ s3://${{ secrets.S3_BUCKET_DEV }}
 
+      - name: Deploy halaman-sekolah to S3
+        run: |
+          aws s3 sync --delete --max-concurrent-requests 50 dist/halaman-sekolah/ s3://${{ secrets.S3_BUCKET_DEV }}/halaman-sekolah/
