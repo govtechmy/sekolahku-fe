@@ -44,7 +44,6 @@ export default function SchoolMaps() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        console.log("Geolocation success:", { latitude, longitude });
         setMapCenter([latitude, longitude]);
         setMapZoom(17);
         setInitialLocationSet(true);
@@ -63,16 +62,9 @@ export default function SchoolMaps() {
     radiusInMeter: number
   ): Promise<MarkerGroup[]> => {
     if (!initialLocationSet) {
-      console.log("not set yet");
       return [];
     }
     try {
-      console.log("Fetching schools near:", {
-        latitude,
-        longitude,
-        radiusInMeter,
-      });
-
       const nearbySchools = await getSchoolNearby({
         latitude,
         longitude,
@@ -101,23 +93,6 @@ export default function SchoolMaps() {
     return null;
   }, []);
 
-  const extractSchoolData = (markers: MarkerGroup[]) => {
-    const schoolMap = new Map<string, { lat: number; lng: number; dataUrl: string }>();
-    markers.forEach((marker) => {
-      if (marker.items) {
-        marker.items.forEach((item) => {
-          const key = `${item.kodSekolah}`;
-          schoolMap.set(key, {
-            lat: item.infoLokasi.koordinatYY,
-            lng: item.infoLokasi.koordinatXX,
-            dataUrl: item.dataUrl,
-          });
-        });
-      }
-    });
-    return schoolMap;
-  };
-
   const saveToLocalStorage = (markersMap: Map<string, { lat: number; lng: number; dataUrl: string }>) => {
     try {
       const dataToStore = JSON.stringify([...markersMap]);
@@ -128,45 +103,58 @@ export default function SchoolMaps() {
   };
 
 
-      async function loadInitialSchools() {
-        try {
-          const markersArray = await fetchNearbySchools(
-            center[0],
-            center[1],
-            radius
-          );
+  async function loadInitialSchools() {
+    try {
+      const markersArray = await fetchNearbySchools(
+        center[0],
+        center[1],
+        radius
+      );
 
-          const schoolData = extractSchoolData(markersArray);
+      console.log("///////////////////////////jawdbaiwdbwaidjawh")
+      console.log(markersArray);
 
-          // Save to localStorage using memoized function
-          saveToLocalStorage(schoolData);
-          setSchoolMarkers(schoolData);
-        } catch (error) {
-          console.error("Failed to load initial schools:", error);
+      const schoolMap = new Map<string, { lat: number; lng: number; dataUrl: string }>();
+      markersArray.forEach((marker) => {
+        if (marker.items) {
+          marker.items.forEach((item) => {
+            const key = `${item.kodSekolah}`;
+            schoolMap.set(key, {
+              lat: item.infoLokasi.koordinatYY,
+              lng: item.infoLokasi.koordinatXX,
+              dataUrl: item.dataUrl,
+            });
+          });
         }
-      }
+      });
+
+      // Save to localStorage using memoized function
+      saveToLocalStorage(schoolMap);
+      setSchoolMarkers(schoolMap);
+    } catch (error) {
+      console.error("Failed to load initial schools:", error);
+    }
+  }
 
   useEffect(() => {
     // if (initialLocationSet) {
-      if (cachedSchoolData && cachedSchoolData.size > 0) {
-        setSchoolMarkers(cachedSchoolData);
+    if (cachedSchoolData && cachedSchoolData.size > 0) {
+      setSchoolMarkers(cachedSchoolData);
 
-      } else {
-        if (initialLoadRequestedRef.current) return;
-        initialLoadRequestedRef.current = true;
-        console.log("No cache found, loading initial schools");
-        loadInitialSchools();
-      }
+    } else {
+      if (initialLoadRequestedRef.current) return;
+      initialLoadRequestedRef.current = true;
+      loadInitialSchools();
+    }
 
     // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialLocationSet,cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage])//cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage
+  }, [initialLocationSet, cachedSchoolData, fetchNearbySchools, saveToLocalStorage])//cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage
 
   /////////////////////////////////////// CACHED SCHOOL DATA ///////////////////////////
   useEffect(() => {
     if (zoom) {
       setRadius(CalculateRadiusZoomLevel(zoom, center[0]))
-      console.log("THIS IS THE CALCULATED RADIUS", radius)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoom, center, radius])
