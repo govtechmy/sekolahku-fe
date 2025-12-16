@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo, useCallback } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import type { SearchBarMapProps } from "../types/maps";
 import { getSchoolSuggestion, getSchoolNearby } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
@@ -37,11 +37,6 @@ export default function SchoolMaps() {
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
   const geolocationRequestedRef = useRef(false);
 
-    useEffect(() => {
-    localStorage.removeItem("schoolMarkerData");
-  }, []);
-
-
   useEffect(() => {
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
@@ -72,36 +67,33 @@ export default function SchoolMaps() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-    const fetchNearbySchools = useCallback(
-    async (
-      latitude: number,
-      longitude: number,
-      radiusInMeter: number
-    ): Promise<MarkerGroup[]> => {
-      if (!initialLocationSet) {
-        console.log("not set yet");
-        return [];
-      }
-      try {
-        console.log("Fetching schools near:", {
-          latitude,
-          longitude,
-          radiusInMeter,
-        });
+  const fetchNearbySchools = async (
+    latitude: number,
+    longitude: number,
+    radiusInMeter: number
+  ): Promise<MarkerGroup[]> => {
+    if (!initialLocationSet) {
+      console.log("not set yet");
+      return [];
+    }
+    try {
+      console.log("Fetching schools near:", {
+        latitude,
+        longitude,
+        radiusInMeter,
+      });
 
-        const nearbySchools = await getSchoolNearby({
-          latitude,
-          longitude,
-          radiusInMeter,
-        });
-        return nearbySchools?.markerGroups || [];
-      } catch (error) {
-        console.error("Failed to fetch nearby schools:", error);
-        return [];
-      }
-    },
-    [initialLocationSet]
-  );
+      const nearbySchools = await getSchoolNearby({
+        latitude,
+        longitude,
+        radiusInMeter,
+      });
+      return nearbySchools?.markerGroups || [];
+    } catch (error) {
+      console.error("Failed to fetch nearby schools:", error);
+      return [];
+    }
+  };
   /////////////////////////////////////// CACHED SCHOOL DATA ///////////////////////////
   const initialLoadRequestedRef = useRef(false);
 
@@ -119,46 +111,32 @@ export default function SchoolMaps() {
     return null;
   }, []);
 
-  const extractSchoolData = useCallback(
-    (markers: MarkerGroup[]) => {
-      const schoolMap = new Map<string, { lat: number; lng: number; dataUrl: string }>();
-      markers.forEach((marker) => {
-        if (marker.items) {
-          marker.items.forEach((item) => {
-            const key = `${item.kodSekolah}`;
-            schoolMap.set(key, {
-              lat: item.infoLokasi.koordinatYY,
-              lng: item.infoLokasi.koordinatXX,
-              dataUrl: item.dataUrl,
-            });
+  const extractSchoolData = (markers: MarkerGroup[]) => {
+    const schoolMap = new Map<string, { lat: number; lng: number; dataUrl: string }>();
+    markers.forEach((marker) => {
+      if (marker.items) {
+        marker.items.forEach((item) => {
+          const key = `${item.kodSekolah}`;
+          schoolMap.set(key, {
+            lat: item.infoLokasi.koordinatYY,
+            lng: item.infoLokasi.koordinatXX,
+            dataUrl: item.dataUrl,
           });
-        }
-      });
-      return schoolMap;
-    },
-    []
-  );
-
-  const saveToLocalStorage = useCallback((markersMap: Map<string, { lat: number; lng: number; dataUrl: string }>) => {
-      try {
-        const dataToStore = JSON.stringify([...markersMap]);
-        localStorage.setItem("schoolMarkerData", dataToStore);
-      } catch (error) {
-        console.error("Failed to save to localStorage:", error);
+        });
       }
-  }, []);
+    });
+    return schoolMap;
+  };
 
-  useEffect(() => {
-    // if (initialLocationSet) {
-      loadInitialSchools();
-      if (cachedSchoolData && cachedSchoolData.size > 0) {
-        setSchoolMarkers(cachedSchoolData);
-      } else {
-        if (initialLoadRequestedRef.current) return;
-        initialLoadRequestedRef.current = true;
-        console.log("No cache found, loading initial schools");
-        loadInitialSchools();
-      }
+  const saveToLocalStorage = (markersMap: Map<string, { lat: number; lng: number; dataUrl: string }>) => {
+    try {
+      const dataToStore = JSON.stringify([...markersMap]);
+      localStorage.setItem("schoolMarkerData", dataToStore);
+    } catch (error) {
+      console.error("Failed to save to localStorage:", error);
+    }
+  };
+
 
       async function loadInitialSchools() {
         try {
@@ -177,6 +155,19 @@ export default function SchoolMaps() {
           console.error("Failed to load initial schools:", error);
         }
       }
+
+  useEffect(() => {
+    // if (initialLocationSet) {
+      if (cachedSchoolData && cachedSchoolData.size > 0) {
+        setSchoolMarkers(cachedSchoolData);
+
+      } else {
+        if (initialLoadRequestedRef.current) return;
+        initialLoadRequestedRef.current = true;
+        console.log("No cache found, loading initial schools");
+        loadInitialSchools();
+      }
+
     // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialLocationSet,cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage])//cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage

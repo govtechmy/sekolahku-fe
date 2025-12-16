@@ -4,7 +4,6 @@ import {
   useMapEvents,
   Circle,
 } from "react-leaflet";
-import { useCallback } from "react";
 import { MapViewController } from "../../pages/SchoolMaps";
 import { SchoolMapMarker } from "./SchoolMapMarker";
 import { calculateDistance } from "../../utils/calculateDistance";
@@ -79,84 +78,81 @@ export function MapContainerComponent({
     radius,
   } = useMapViewStore();
 
-  const appendNewMarkers = useCallback(
-    async (center: { lat: number; lng: number }) => {
-      try {
-        const markersArray = await fetchNearbySchools(
-          center.lat,
-          center.lng,
-          radius
-        );
+  const appendNewMarkers = async (center: { lat: number; lng: number }) => {
+    try {
+      const markersArray = await fetchNearbySchools(
+        center.lat,
+        center.lng,
+        radius
+      );
 
-        setSchoolMarkers((prevMap) => {
-          const newMap = new Map(prevMap);
-          let addedCount = 0;
+      setSchoolMarkers((prevMap) => {
+        const newMap = new Map(prevMap);
+        let addedCount = 0;
 
-          markersArray.forEach((marker) => {
-            if (marker.markerType === "GROUP" && marker.items) {
-              marker.items.forEach((item) => {
-                const key = `${item.kodSekolah}`;
-                if (!newMap.has(key)) {
-                  newMap.set(key, {
-                    lat: item.infoLokasi.koordinatYY,
-                    lng: item.infoLokasi.koordinatXX,
-                    dataUrl: item.dataUrl,
-                  });
-                  addedCount++;
-                }
-              });
-            }
-
-            if (marker.markerType === "INDIVIDUAL") {
-              const key = `${marker.kodSekolah}`;
+        markersArray.forEach((marker) => {
+          if (marker.markerType === "GROUP" && marker.items) {
+            marker.items.forEach((item) => {
+              const key = `${item.kodSekolah}`;
               if (!newMap.has(key)) {
                 newMap.set(key, {
-                  lat: marker.infoLokasi.koordinatYY,
-                  lng: marker.infoLokasi.koordinatXX,
-                  dataUrl: marker.dataUrl,
+                  lat: item.infoLokasi.koordinatYY,
+                  lng: item.infoLokasi.koordinatXX,
+                  dataUrl: item.dataUrl,
                 });
                 addedCount++;
               }
-            }
-
-            if (marker.markerType === "PARLIMEN") {
-              const key = `${marker.negeri}-${marker.parlimen}`;
-              if (!newMap.has(key)) {
-                newMap.set(key, {
-                  lat: marker.infoLokasi.koordinatYY,
-                  lng: marker.infoLokasi.koordinatXX,
-                  dataUrl: marker.total?.toString() ?? "",
-                });
-                addedCount++;
-              }
-            }
-
-            if (marker.markerType === "NEGERI") {
-              const key = `${marker.negeri}`;
-              if (!newMap.has(key)) {
-                newMap.set(key, {
-                  lat: marker.infoLokasi.koordinatYY,
-                  lng: marker.infoLokasi.koordinatXX,
-                  dataUrl: marker.total?.toString() ?? "",
-                });
-                addedCount++;
-              }
-            }
-          });
-
-          if (addedCount > 0) {
-            saveToLocalStorage(newMap);
-            return newMap;
+            });
           }
 
-          return prevMap;
+          if (marker.markerType === "INDIVIDUAL") {
+            const key = `${marker.kodSekolah}`;
+            if (!newMap.has(key)) {
+              newMap.set(key, {
+                lat: marker.infoLokasi.koordinatYY,
+                lng: marker.infoLokasi.koordinatXX,
+                dataUrl: marker.dataUrl,
+              });
+              addedCount++;
+            }
+          }
+
+          if (marker.markerType === "PARLIMEN") {
+            const key = `${marker.negeri}-${marker.parlimen}`;
+            if (!newMap.has(key)) {
+              newMap.set(key, {
+                lat: marker.infoLokasi.koordinatYY,
+                lng: marker.infoLokasi.koordinatXX,
+                dataUrl: marker.total?.toString() ?? "",
+              });
+              addedCount++;
+            }
+          }
+
+          if (marker.markerType === "NEGERI") {
+            const key = `${marker.negeri}`;
+            if (!newMap.has(key)) {
+              newMap.set(key, {
+                lat: marker.infoLokasi.koordinatYY,
+                lng: marker.infoLokasi.koordinatXX,
+                dataUrl: marker.total?.toString() ?? "",
+              });
+              addedCount++;
+            }
+          }
         });
-      } catch (error) {
-        console.error("Failed to fetch nearby schools:", error);
-      }
-    },
-    [setSchoolMarkers, saveToLocalStorage, fetchNearbySchools, radius]
-  );
+
+        if (addedCount > 0) {
+          saveToLocalStorage(newMap);
+          return newMap;
+        }
+
+        return prevMap;
+      });
+    } catch (error) {
+      console.error("Failed to fetch nearby schools:", error);
+    }
+  };
 
   return (
     <LeafletMapContainer
