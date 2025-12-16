@@ -9,7 +9,9 @@ export default function LayoutMain() {
       <MastheadMyds></MastheadMyds>
       <NavbarMyds></NavbarMyds>
       {/* use outlet instead of children to tell where to render child routes for the current route hierarchy. */}
-      <Outlet></Outlet>
+      <div className="mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
+        <Outlet />
+      </div>
       <FooterMyds></FooterMyds>
     </>
   );

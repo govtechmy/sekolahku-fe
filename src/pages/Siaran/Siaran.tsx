@@ -25,11 +25,24 @@ export default function Siaran() {
             title="Siaran Sekolahku"
             variant="full"
             search={<SearchBarMain desc='"tajuk siaran", "pengumuman"' />}
-            background={<img src="/utama/siaran/hero-banner/sekolahku-1.png" alt="siaran hero"/>}
+            background={
+                <>
+                    <img 
+                        src="/utama/siaran/hero-banner/mobile-sekolahku.svg" 
+                        alt="siaran hero"
+                        className="md:hidden w-full h-full object-cover object-center"
+                    />
+                    <img 
+                        src="/utama/siaran/hero-banner/large-sekolahku.svg" 
+                        alt="siaran hero"
+                        className="hidden md:block w-full h-full object-cover object-center"
+                    />
+                </>
+            }
             filters={<DateRangePicker/>}>
             </Hero>
 
-            <div className="px-4 md:px-20 py-12">
+            <div className="py-12">
                 <Card 
                     totalPages={totalPages}
                     currentPage={currentPage}
