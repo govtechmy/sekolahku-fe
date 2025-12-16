@@ -37,6 +37,11 @@ export default function SchoolMaps() {
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
   const geolocationRequestedRef = useRef(false);
 
+    useEffect(() => {
+    localStorage.removeItem("schoolMarkerData");
+  }, []);
+
+
   useEffect(() => {
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
