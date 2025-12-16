@@ -84,25 +84,55 @@ export function MapContainerComponent({
   //   return null;
   // }, []); 
 
-  // const extractSchoolData = useCallback(
-  //   (markers: MarkerGroup[]) => {
-  //     const schoolMap = new Map<string, { lat: number; lng: number; dataUrl: string }>();
-  //     markers.forEach((marker) => {
-  //       if (marker.items) {
-  //         marker.items.forEach((item) => {
-  //           const key = `${item.kodSekolah}`;
-  //           schoolMap.set(key, {
-  //             lat: item.infoLokasi.koordinatYY,
-  //             lng: item.infoLokasi.koordinatXX,
-  //             dataUrl: item.dataUrl,
-  //           });
-  //         });
-  //       }
-  //     });
-  //     return schoolMap;
-  //   },
-  //   []
-  // );
+  const extractSchoolData = useCallback(
+    (markers: MarkerGroup[]) => {
+      const schoolMap = new Map<string, { lat: number; lng: number; dataUrl: string }>();
+      markers.forEach((marker) => {
+        if (marker.markerType === "INDIVIDUAL") {
+          const key = `${marker.kodSekolah}`;
+          schoolMap.set(key, {
+            lat: marker.infoLokasi.koordinatYY,
+            lng: marker.infoLokasi.koordinatXX,
+            dataUrl: marker.dataUrl,
+          });
+          return;
+        }
+
+        if (marker.markerType === "PARLIMEN") {
+          const key = `${marker.negeri}-${marker.parlimen}`;
+          schoolMap.set(key, {
+            lat: marker.infoLokasi.koordinatYY,
+            lng: marker.infoLokasi.koordinatXX,
+            dataUrl: marker.total?.toString() ?? "",
+          });
+          return;
+        }
+
+        if (marker.markerType === "NEGERI") {
+          const key = `${marker.negeri}`;
+          schoolMap.set(key, {
+            lat: marker.infoLokasi.koordinatYY,
+            lng: marker.infoLokasi.koordinatXX,
+            dataUrl: marker.total?.toString() ?? "",
+          });
+          return;
+        }
+
+        if (marker.items) {
+          marker.items.forEach((item) => {
+            const key = `${item.kodSekolah}`;
+            schoolMap.set(key, {
+              lat: item.infoLokasi.koordinatYY,
+              lng: item.infoLokasi.koordinatXX,
+              dataUrl: item.dataUrl,
+            });
+          });
+        }
+      });
+      return schoolMap;
+    },
+    []
+  );
 
   // const saveToLocalStorage = useCallback((markersMap: Map<string, { lat: number; lng: number; dataUrl: string }>) => {
   //   try {
@@ -137,15 +167,15 @@ export function MapContainerComponent({
         
   //       const schoolData = extractSchoolData(markersArray);
         
-  //       // Save to localStorage using memoized function
-  //       saveToLocalStorage(schoolData);
-  //       setSchoolMarkers(schoolData);
-  //     } catch (error) {
-  //       console.error("Failed to load initial schools:", error);
-  //     }
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage]);
+        // Save to localStorage using memoized function
+        saveToLocalStorage(schoolData);
+        setSchoolMarkers(schoolData);
+      } catch (error) {
+        console.error("Failed to load initial schools:", error);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage, radius]);
 
   const appendNewMarkers = useCallback(
     async (center: { lat: number; lng: number }) => {
@@ -223,8 +253,7 @@ export function MapContainerComponent({
         console.error("Failed to fetch nearby schools:", error);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [setSchoolMarkers, saveToLocalStorage, fetchNearbySchools]
+    [setSchoolMarkers, saveToLocalStorage, fetchNearbySchools, radius]
   );
 
   return (
