@@ -4,7 +4,7 @@ import {
   useMapEvents,
   Circle,
 } from "react-leaflet";
-import { useEffect, useCallback, useMemo, useRef } from "react";
+import { useEffect, useCallback } from "react";
 import { MapViewController } from "../../pages/SchoolMaps";
 import { SchoolMapMarker } from "./SchoolMapMarker";
 import { calculateDistance } from "../../utils/calculateDistance";
@@ -52,6 +52,7 @@ interface MapContainerProps {
   >;
   fetchNearbySchools: (latitude: number, longitude: number, radiusInMeter: number) => Promise<MarkerGroup[]>;
   setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
+  saveToLocalStorage: (markersMap: Map<string, { lat: number; lng: number; dataUrl: string }>) => void;
 }
 
 export function MapContainerComponent({
@@ -61,6 +62,7 @@ export function MapContainerComponent({
   setDragStartPos,
   fetchNearbySchools,
   setViewSchool,
+  saveToLocalStorage
 }: MapContainerProps) {
   const { center: mapCenter, setCenter: setMapCenter, setZoom, radius } = useMapViewStore();
   useEffect(() => {
@@ -68,82 +70,82 @@ export function MapContainerComponent({
   }, []);
 
   // Memoize localStorage data - will return null after cache is cleared
-  const cachedSchoolData = useMemo(() => {
-    const storedData = localStorage.getItem("schoolMarkerData");
-    if (storedData) {
-      try {
-        const parsed = JSON.parse(storedData);
-        return new Map<string, { lat: number; lng: number; dataUrl: string }>(parsed);
-      } catch (error) {
-        console.error("Failed to parse localStorage data:", error);
-        return null;
-      }
-    }
-    return null;
-  }, []); 
+  // const cachedSchoolData = useMemo(() => {
+  //   const storedData = localStorage.getItem("schoolMarkerData");
+  //   if (storedData) {
+  //     try {
+  //       const parsed = JSON.parse(storedData);
+  //       return new Map<string, { lat: number; lng: number; dataUrl: string }>(parsed);
+  //     } catch (error) {
+  //       console.error("Failed to parse localStorage data:", error);
+  //       return null;
+  //     }
+  //   }
+  //   return null;
+  // }, []); 
 
-  const extractSchoolData = useCallback(
-    (markers: MarkerGroup[]) => {
-      const schoolMap = new Map<string, { lat: number; lng: number; dataUrl: string }>();
-      markers.forEach((marker) => {
-        if (marker.items) {
-          marker.items.forEach((item) => {
-            const key = `${item.kodSekolah}`;
-            schoolMap.set(key, {
-              lat: item.infoLokasi.koordinatYY,
-              lng: item.infoLokasi.koordinatXX,
-              dataUrl: item.dataUrl,
-            });
-          });
-        }
-      });
-      return schoolMap;
-    },
-    []
-  );
+  // const extractSchoolData = useCallback(
+  //   (markers: MarkerGroup[]) => {
+  //     const schoolMap = new Map<string, { lat: number; lng: number; dataUrl: string }>();
+  //     markers.forEach((marker) => {
+  //       if (marker.items) {
+  //         marker.items.forEach((item) => {
+  //           const key = `${item.kodSekolah}`;
+  //           schoolMap.set(key, {
+  //             lat: item.infoLokasi.koordinatYY,
+  //             lng: item.infoLokasi.koordinatXX,
+  //             dataUrl: item.dataUrl,
+  //           });
+  //         });
+  //       }
+  //     });
+  //     return schoolMap;
+  //   },
+  //   []
+  // );
 
-  const saveToLocalStorage = useCallback((markersMap: Map<string, { lat: number; lng: number; dataUrl: string }>) => {
-    try {
-      const dataToStore = JSON.stringify([...markersMap]);
-      localStorage.setItem("schoolMarkerData", dataToStore);
-    } catch (error) {
-      console.error("Failed to save to localStorage:", error);
-    }
-  }, []);
+  // const saveToLocalStorage = useCallback((markersMap: Map<string, { lat: number; lng: number; dataUrl: string }>) => {
+  //   try {
+  //     const dataToStore = JSON.stringify([...markersMap]);
+  //     localStorage.setItem("schoolMarkerData", dataToStore);
+  //   } catch (error) {
+  //     console.error("Failed to save to localStorage:", error);
+  //   }
+  // }, []);
 
-  const initialLoadRequestedRef = useRef(false);
-  useEffect(() => {
-    // Use memoized cached data
-    //FIX LATER, this will hit everytime useEffect Runs
-    loadInitialSchools();
-    if (cachedSchoolData && cachedSchoolData.size > 0) {
-      setSchoolMarkers(cachedSchoolData);
-    } else {
-      if (initialLoadRequestedRef.current) return;
-      initialLoadRequestedRef.current = true;
-      console.log("No cache found, loading initial schools");
-      loadInitialSchools();
-    }
+  // const initialLoadRequestedRef = useRef(false);
+  // useEffect(() => {
+  //   // Use memoized cached data
+  //   //FIX LATER, this will hit everytime useEffect Runs
+  //   loadInitialSchools();
+  //   if (cachedSchoolData && cachedSchoolData.size > 0) {
+  //     setSchoolMarkers(cachedSchoolData);
+  //   } else {
+  //     if (initialLoadRequestedRef.current) return;
+  //     initialLoadRequestedRef.current = true;
+  //     console.log("No cache found, loading initial schools");
+  //     loadInitialSchools();
+  //   }
 
-    async function loadInitialSchools() {
-      try {
-        const markersArray = await fetchNearbySchools(
-          mapCenter[0],
-          mapCenter[1],
-          radius
-        );
+  //   async function loadInitialSchools() {
+  //     try {
+  //       const markersArray = await fetchNearbySchools(
+  //         mapCenter[0],
+  //         mapCenter[1],
+  //         radius
+  //       );
         
-        const schoolData = extractSchoolData(markersArray);
+  //       const schoolData = extractSchoolData(markersArray);
         
-        // Save to localStorage using memoized function
-        saveToLocalStorage(schoolData);
-        setSchoolMarkers(schoolData);
-      } catch (error) {
-        console.error("Failed to load initial schools:", error);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage]);
+  //       // Save to localStorage using memoized function
+  //       saveToLocalStorage(schoolData);
+  //       setSchoolMarkers(schoolData);
+  //     } catch (error) {
+  //       console.error("Failed to load initial schools:", error);
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage]);
 
   const appendNewMarkers = useCallback(
     async (center: { lat: number; lng: number }) => {
@@ -221,6 +223,7 @@ export function MapContainerComponent({
         console.error("Failed to fetch nearby schools:", error);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setSchoolMarkers, saveToLocalStorage, fetchNearbySchools]
   );
 
