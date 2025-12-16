@@ -144,7 +144,6 @@ export function MapContainerComponent({
             id: kodSekolah,
           }}
           onClick={async () => {
-            console.log("Clicked on school:", kodSekolah);
             setViewSchool(null); // Reset before setting new school
             setViewSchool(await getSchoolS3Json(coords.dataUrl));
             setMapCenter([coords.lat, coords.lng]);

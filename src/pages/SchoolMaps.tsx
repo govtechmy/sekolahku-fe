@@ -43,16 +43,9 @@ export default function SchoolMaps() {
     radiusInMeter: number
   ): Promise<MarkerGroup[]> => {
     if (!initialLocationSet) {
-      console.log("not set yet");
       return [];
     }
     try {
-      console.log("Fetching schools near:", {
-        latitude,
-        longitude,
-        radiusInMeter,
-      });
-
       const nearbySchools = await getSchoolNearby({
         latitude,
         longitude,
