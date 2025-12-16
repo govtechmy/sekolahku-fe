@@ -5,11 +5,13 @@ import { useRef } from "react";
 interface HorizontalCardProps {
   mainTitle?: string;
   children?: React.ReactNode;
+  showNavigation?: boolean;
 }
 
 export default function HorizontalCard({
   mainTitle,
   children,
+  showNavigation = true,
 }: HorizontalCardProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -26,26 +28,28 @@ export default function HorizontalCard({
           {mainTitle}
         </div>
 
-        <div className="flex gap-2 pl-2 max-md:hidden">
-          <Button
-            variant="default-outline"
-            className="p-2"
-            onClick={() => scroll(-260)}
-          >
-            <ButtonIcon>
-              <ArrowBackIcon className="size-5" />
-            </ButtonIcon>
-          </Button>
-          <Button
-            variant="default-outline"
-            className="p-2"
-            onClick={() => scroll(260)}
-          >
-            <ButtonIcon>
-              <ArrowForwardIcon className="size-5" />
-            </ButtonIcon>
-          </Button>
-        </div>
+        {showNavigation && (
+          <div className="flex gap-2 pl-2 max-md:hidden">
+            <Button
+              variant="default-outline"
+              className="p-2"
+              onClick={() => scroll(-260)}
+            >
+              <ButtonIcon>
+                <ArrowBackIcon className="size-5" />
+              </ButtonIcon>
+            </Button>
+            <Button
+              variant="default-outline"
+              className="p-2"
+              onClick={() => scroll(260)}
+            >
+              <ButtonIcon>
+                <ArrowForwardIcon className="size-5" />
+              </ButtonIcon>
+            </Button>
+          </div>
+        )}
       </div>
       <div
         ref={scrollRef}
