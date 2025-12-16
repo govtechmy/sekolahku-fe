@@ -86,6 +86,36 @@ export function MapContainerComponent({
     (markers: MarkerGroup[]) => {
       const schoolMap = new Map<string, { lat: number; lng: number; dataUrl: string }>();
       markers.forEach((marker) => {
+        if (marker.markerType === "INDIVIDUAL") {
+          const key = `${marker.kodSekolah}`;
+          schoolMap.set(key, {
+            lat: marker.infoLokasi.koordinatYY,
+            lng: marker.infoLokasi.koordinatXX,
+            dataUrl: marker.dataUrl,
+          });
+          return;
+        }
+
+        if (marker.markerType === "PARLIMEN") {
+          const key = `${marker.negeri}-${marker.parlimen}`;
+          schoolMap.set(key, {
+            lat: marker.infoLokasi.koordinatYY,
+            lng: marker.infoLokasi.koordinatXX,
+            dataUrl: marker.total?.toString() ?? "",
+          });
+          return;
+        }
+
+        if (marker.markerType === "NEGERI") {
+          const key = `${marker.negeri}`;
+          schoolMap.set(key, {
+            lat: marker.infoLokasi.koordinatYY,
+            lng: marker.infoLokasi.koordinatXX,
+            dataUrl: marker.total?.toString() ?? "",
+          });
+          return;
+        }
+
         if (marker.items) {
           marker.items.forEach((item) => {
             const key = `${item.kodSekolah}`;
@@ -143,7 +173,7 @@ export function MapContainerComponent({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage]);
+  }, [cachedSchoolData, fetchNearbySchools, extractSchoolData, saveToLocalStorage, radius]);
 
   const appendNewMarkers = useCallback(
     async (center: { lat: number; lng: number }) => {
@@ -221,7 +251,7 @@ export function MapContainerComponent({
         console.error("Failed to fetch nearby schools:", error);
       }
     },
-    [setSchoolMarkers, saveToLocalStorage, fetchNearbySchools]
+    [setSchoolMarkers, saveToLocalStorage, fetchNearbySchools, radius]
   );
 
   return (
