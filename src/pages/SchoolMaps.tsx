@@ -5,18 +5,8 @@ import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
 import type { ItemSekolahModel, MarkerGroup } from "../models/response";
-import { useMap } from "react-leaflet";
 import { useMapViewStore } from "../store/mapView";
 import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
-
-export function MapViewController() {
-  const map = useMap();
-  const { center, zoom } = useMapViewStore();
-  useEffect(() => {
-    map.setView(center, zoom);
-  }, [map, center, zoom]);
-  return null;
-}
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
