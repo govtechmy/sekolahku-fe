@@ -2,11 +2,9 @@ import SectionItemNews from "../components/shared/SectionItemNews";
 import SectionHeader from "../components/shared/SectionHeader";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
-import { FilterAscIcon } from "@govtechmy/myds-react/icon";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
 import Hero from "../components/shared/Hero";
 import SearchBarHome from "../components/shared/SearchBarHome";
-import { Button } from "@govtechmy/myds-react/button";
 import Statistic from "../components/statistic";
 import {
   statisticYearlyData,
@@ -15,35 +13,34 @@ import {
   dataItemCalendar,
   dataItemLinks,
   dataItemNews,
+  popularLinks,
 } from "../contentData";
 
 export default function HomePage() {
   return (
     <div>
+      <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen -mt-16">
       <Hero
         title="Selamat Datang Ke Portal Sekolahku"
         search={<SearchBarHome />}
-        links={
-          <div className="flex flex-col gap-3">
-            <div className="text-body-sm text-txt-black-500">
-              Pautan Popular:
-            </div>
-            <Button
-              variant="default-outline"
-              className="rounded-full text-xs text-txt-black-900"
-              size="medium"
-            >
-              <div className="rounded-full bg-primary-50 text-txt-primary size-8 items-center justify-center flex">
-                <FilterAscIcon className="!size-5" />
-              </div>
-              Analitik Sekolah
-            </Button>
-          </div>
-        }
+        links={popularLinks}
         background={
-          <img src="/utama/sekolahku.png" alt="imej hero sekolahku" />
+          <>
+                    <div
+                        className="block h-full w-full bg-center bg-no-repeat bg-cover lg:hidden"
+                        style={{
+                            backgroundImage: `url('/utama/home-hero-mobile.svg')`,
+                        }}
+                    />
+                    <div
+                        className="hidden h-full w-full bg-cover bg-center bg-no-repeat lg:block"
+                        style={{
+                            backgroundImage: `url('/utama/sekolahku.png')`,
+                        }}
+                    />
+                </>
         }
-      ></Hero>
+      ></Hero></div>
 
       <SectionHeader
         header="SIARAN"

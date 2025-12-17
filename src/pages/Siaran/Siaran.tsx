@@ -21,28 +21,31 @@ export default function Siaran() {
 
     return (
         <div className="">
-            <Hero 
-            title="Siaran Sekolahku"
-            variant="full"
-            search={<SearchBarMain desc='"tajuk siaran", "pengumuman"' />}
-            background={
-                <>
-                    <div
-                        className="block h-full w-full bg-center bg-no-repeat bg-cover lg:hidden"
-                        style={{
-                            backgroundImage: `url('/utama/siaran/hero-banner/mobile-sekolahku.svg')`,
-                        }}
-                    />
-                    <div
-                        className="hidden h-full w-full bg-cover bg-center bg-no-repeat lg:block"
-                        style={{
-                            backgroundImage: `url('/utama/siaran/hero-banner/large-sekolahku.svg')`,
-                        }}
-                    />
-                </>
-            }
-            filters={<DateRangePicker/>}>
-            </Hero>
+            <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen -mt-16">
+                <Hero
+                title="Siaran Sekolahku"
+                variant="full"
+                search={<SearchBarMain desc='"tajuk siaran", "pengumuman"' />}
+                background={
+                    <>
+                        <div
+                            className="block h-full w-full bg-center bg-no-repeat bg-cover lg:hidden px-0!important"
+                            style={{
+                                backgroundImage: `url('/utama/siaran/hero-banner/mobile-sekolahku.svg')`,
+                            }}
+                        />
+                        <div
+                            className="hidden h-full w-full bg-cover bg-center bg-no-repeat lg:block"
+                            style={{
+                                backgroundImage: `url('/utama/siaran/hero-banner/large-sekolahku.svg')`,
+                            }}
+                        />
+                    </>
+                }
+                filters={<DateRangePicker/>}>
+                </Hero>
+            </div>
+         
 
             <div className="py-12">
                 <Card 
