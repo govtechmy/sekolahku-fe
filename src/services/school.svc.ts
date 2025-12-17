@@ -54,9 +54,6 @@ export const getSchoolS3Json = async (dataUrl?: string, negeri?: string, parlime
       }
     }
     const response = await authAxios.get<ItemSekolahModel>(dataUrl)
-    console.log('dataUrl:', dataUrl)
-    console.log('Error fetching schodadwadawdawdwadwdadwdw')
-    console.log(response.data)
     return response.data
     
   } catch (error) {
@@ -83,7 +80,7 @@ export const fetchNearbySchools = async (
         radiusInMeter,
         zoom,
       });
-      
+
       return nearbySchools?.markerGroups || [];
     } catch (error) {
       console.error("Failed to fetch nearby schools:", error);

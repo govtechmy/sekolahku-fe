@@ -9,8 +9,8 @@ const ICON_ANCHOR: [number, number] = [16, 32];
 const POPUP_ANCHOR: [number, number] = [0, -32];
 
 const sekolahMarkerHtml = renderToString(SekolahMarkerIcon());
-const parlimenMarkerHtml = renderToString(ParlimenMarkerIcon("SK"));
-const negeriMarkerHtml = renderToString(NegeriMarkerIcon("SK"));
+const parlimenMarkerHtml = renderToString(ParlimenMarkerIcon("PARLIMEN"));
+const negeriMarkerHtml = renderToString(NegeriMarkerIcon("NEGERI"));
 
 const createDivIcon = (html: string, typeClass: string) =>
   new L.DivIcon({
