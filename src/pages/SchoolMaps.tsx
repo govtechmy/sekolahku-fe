@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import type { SearchBarMapProps } from "../types/maps";
-import { getSchoolSuggestion, getSchoolNearby } from "../services/school.svc";
+import { fetchNearbySchools, getSchoolSuggestion } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
-import type { ItemSekolahModel, MarkerGroup } from "../models/response";
+import type { ItemSekolahModel, } from "../models/response";
 import { useMapViewStore } from "../store/mapView";
 import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 import { useInitialSchools } from "../hooks/useInitialSchools";
@@ -34,28 +34,6 @@ export default function SchoolMaps() {
   } | null>(null);
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
   const geolocationRequestedRef = useRef(false);
-
-  const fetchNearbySchools = async (
-    latitude: number,
-    longitude: number,
-    radiusInMeter: number
-  ): Promise<MarkerGroup[]> => {
-    if (!initialLocationSet) {
-      return [];
-    }
-    try {
-      const nearbySchools = await getSchoolNearby({
-        latitude,
-        longitude,
-        radiusInMeter,
-      });
-      return nearbySchools?.markerGroups || [];
-    } catch (error) {
-      console.error("Failed to fetch nearby schools:", error);
-      return [];
-    }
-  };
-  
   const initialLoadRequestedRef = useRef(false);
 
   // Load initial Schools Hook
