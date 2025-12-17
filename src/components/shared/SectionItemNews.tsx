@@ -1,4 +1,6 @@
 import HorizontalCard from "./HorizontalCard";
+import { Link, useParams } from "react-router-dom";
+import { ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
 
 type NewsItem = {
   imageSrc: string;
@@ -6,24 +8,30 @@ type NewsItem = {
   header: string;
   title: string;
   date: string;
+  id: string;
 };
 
 type SectionItemNewsProps = {
   dataItemNews: NewsItem[];
   mainTitle: string;
+  redirectDesc?: string;
 };
 
 export default function SectionItemNews({
   dataItemNews,
   mainTitle,
+  redirectDesc,
 }: SectionItemNewsProps) {
+  const { lang } = useParams<{ lang: string }>();
+
   return (
     <div className=" w-full">
       <HorizontalCard mainTitle={mainTitle}>
         {dataItemNews.map((item: NewsItem, index: number) => (
-          <div
+          <Link
             key={index}
-            className="border border-otl-gray-200 rounded-lg p-3 h-[354px] !w-[247px] flex-shrink-0 flex flex-col gap-4.5"
+            to={`/${lang}/siaran/${item.id}`}
+            className="group border border-otl-gray-200 rounded-lg p-3 h-[354px] !w-[247px] flex-shrink-0 flex flex-col gap-4.5 transition-shadow hover:shadow-lg cursor-pointer"
           >
             <img
               src={item.imageSrc}
@@ -48,10 +56,20 @@ export default function SectionItemNews({
               </div>
             </div>
 
-            <div className="px-3 pb-2 text-sm font-normal text-txt-black-500">
-              {item.date}
+            <div className="flex flex-row justify-between items-center">
+              <div className="px-3 pb-2 text-sm font-normal text-txt-black-500">
+                {item.date}
+              </div>
+              <div
+                className="px-2 md:px-3 pb-2 md:pb-0 flex items-center gap-1 text-txt-primary font-semibold
+                    text-xs md:text-sm opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0
+                    transition-all duration-300 ease-out"
+              >
+                <span>{redirectDesc}</span>
+                <ArrowOutgoingIcon />
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </HorizontalCard>
     </div>
