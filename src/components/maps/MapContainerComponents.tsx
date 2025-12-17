@@ -112,7 +112,7 @@ export function MapContainerComponent({
               newCenter.koordinatYY
             );
 
-            if (distance > radius) {
+            if (distance > 1000) {
               appendNewMarkers({ koordinatXX: newCenter.koordinatXX, koordinatYY: newCenter.koordinatYY });
             }
           }
