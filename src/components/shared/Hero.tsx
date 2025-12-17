@@ -21,7 +21,7 @@ export default function Hero({
       variant === "side" ? "px-[109px]" : "h-[350px]"
     )}>
       { background && (
-        <div className="absolute inset-0 -z-10 w-full h-full overflow-hidden">
+        <div className="absolute -z-10 flex h-full w-full justify-center overflow-hidden">
           {background} 
         </div>
       )}

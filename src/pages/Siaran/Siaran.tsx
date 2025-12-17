@@ -27,15 +27,17 @@ export default function Siaran() {
             search={<SearchBarMain desc='"tajuk siaran", "pengumuman"' />}
             background={
                 <>
-                    <img 
-                        src="/utama/siaran/hero-banner/mobile-sekolahku.svg" 
-                        alt="siaran hero"
-                        className="md:hidden w-full h-full object-cover object-center"
+                    <div
+                        className="block h-full w-full bg-center bg-no-repeat bg-cover lg:hidden"
+                        style={{
+                            backgroundImage: `url('/utama/siaran/hero-banner/mobile-sekolahku.svg')`,
+                        }}
                     />
-                    <img 
-                        src="/utama/siaran/hero-banner/large-sekolahku.svg" 
-                        alt="siaran hero"
-                        className="hidden md:block w-full h-full object-cover object-center"
+                    <div
+                        className="hidden h-full w-full bg-cover bg-center bg-no-repeat lg:block"
+                        style={{
+                            backgroundImage: `url('/utama/siaran/hero-banner/large-sekolahku.svg')`,
+                        }}
                     />
                 </>
             }
