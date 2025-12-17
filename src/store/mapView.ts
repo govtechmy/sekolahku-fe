@@ -1,16 +1,19 @@
 import { create } from "zustand";
 
 type Center = [number, number];
+type MarkerMap = Map<string, { lat: number; lng: number; dataUrl: string }>;
 
 interface MapViewState {
   center: Center;
   zoom: number;
   initialLocationSet: boolean;
   radius: number;
+  schoolMarkers: MarkerMap;
   setRadius: (r: number)=> void
   setCenter: (c: Center) => void;
   setZoom: (z: number) => void;
   setInitialLocationSet: (v: boolean) => void;
+  setSchoolMarkers: (markers: MarkerMap | ((prev: MarkerMap) => MarkerMap)) => void;
 }
 
 export const useMapViewStore = create<MapViewState>((set) => ({
@@ -18,20 +21,22 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   zoom: 6,
   radius: 0,
   initialLocationSet: false,
+  schoolMarkers: new Map(),
   setCenter: (c) => {
-    console.log("[mapView] setCenter:", c);
     set({ center: c });
   },
   setZoom: (z) => {
-    console.log("[mapView] setZoom:", z);
     set({ zoom: z });
   },
   setRadius: (r) => {
-    console.log("[mapView] setRadius:", r);
     set({ radius: r });
   },
   setInitialLocationSet: (v) => {
-    console.log("[mapView] setInitialLocationSet:", v);
     set({ initialLocationSet: v });
   },
+  setSchoolMarkers: (markers) => {
+    set((state) => ({
+      schoolMarkers: typeof markers === 'function' ? markers(state.schoolMarkers) : markers
+    }));
+  }
 }));

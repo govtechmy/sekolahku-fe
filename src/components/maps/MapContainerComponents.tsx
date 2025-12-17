@@ -54,14 +54,13 @@ interface MapContainerProps {
     koordinatXX: number,
     koordinatYY: number,
     radiusInMeter: number,
+    initialLocationSet?: boolean,
     zoom?: number
   ) => Promise<MarkerGroup[]>;
   setViewSchool: Dispatch<SetStateAction<ItemSekolahModel | null>>;
 }
 
 export function MapContainerComponent({
-  schoolMarkers,
-  setSchoolMarkers,
   dragStartPos,
   setDragStartPos,
   fetchNearbySchools,
@@ -73,11 +72,15 @@ export function MapContainerComponent({
     setZoom,
     zoom,
     radius,
+    schoolMarkers,
+    setSchoolMarkers,
+    initialLocationSet,
   } = useMapViewStore();
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
     setSchoolMarkers,
     radius,
+    initialLocationSet,
     zoom,
   });
 

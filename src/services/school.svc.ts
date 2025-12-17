@@ -1,5 +1,4 @@
 import type { schoolSearchModel, ListSekolahModel, APIResponse, ItemSekolahModel, NearbySchoolsModel, NearbySchoolsParams, MarkerGroup } from '../models/response'
-import { useMapViewStore } from '../store/mapView'
 import { authAxios } from './http'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
@@ -69,12 +68,12 @@ export const getSchoolS3Json = async (dataUrl?: string, negeri?: string, parlime
 export const fetchNearbySchools = async (
     latitude: number,
     longitude: number,
-    radiusInMeter: number
+    radiusInMeter: number,
+    initialLocationSet?: boolean,
+    zoom?: number
   ): Promise<MarkerGroup[]> => {
-
-    const { initialLocationSet} = useMapViewStore();
     
-    if (!initialLocationSet) {
+    if (initialLocationSet === false) {
       return [];
     }
     try {
@@ -82,6 +81,7 @@ export const fetchNearbySchools = async (
         latitude,
         longitude,
         radiusInMeter,
+        zoom,
       });
       return nearbySchools?.markerGroups || [];
     } catch (error) {

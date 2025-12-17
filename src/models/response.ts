@@ -109,6 +109,7 @@ export interface NearbySchoolsParams {
   latitude?: number
   longitude?: number
   radiusInMeter?: number
+  zoom?: number
 }
 
 export interface schoolSearchModel {

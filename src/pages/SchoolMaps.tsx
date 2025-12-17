@@ -27,6 +27,7 @@ export default function SchoolMaps() {
     setRadius,
     initialLocationSet,
     setInitialLocationSet,
+    setSchoolMarkers,
   } = useMapViewStore();
   const [schoolMarkers, setSchoolMarkers] = useState<
     Map<string, { lat: number; lng: number; dataUrl: string }>
@@ -42,6 +43,8 @@ export default function SchoolMaps() {
     center,
     radius,
     setSchoolMarkers,
+    initialLocationSet,
+    zoom,
   });
 
   //SET TO FETCH GEOLOCATION FROM USER
@@ -137,8 +140,6 @@ export default function SchoolMaps() {
         setViewSchool={setViewSchool}
       />
       <MapContainerComponent
-        schoolMarkers={schoolMarkers}
-        setSchoolMarkers={setSchoolMarkers}
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
