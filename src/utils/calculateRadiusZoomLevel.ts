@@ -10,7 +10,7 @@ export default function CalculateRadiusZoomLevel(zoom: number, latitude: number)
   
   // Assuming a typical viewport width of ~500 pixels for visible radius
   // Adjust this multiplier based on your map container size
-  const viewportPixels = 500;
+  const viewportPixels = 1000; // Increased by 15% from 500
   
   return metersPerPixel * viewportPixels;
 }
