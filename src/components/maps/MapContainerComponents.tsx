@@ -58,9 +58,6 @@ interface MapContainerProps {
     radiusInMeter: number
   ) => Promise<MarkerGroup[]>;
   setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
-  saveToLocalStorage: (
-    markersMap: Map<string, { lat: number; lng: number; dataUrl: string }>
-  ) => void;
 }
 
 export function MapContainerComponent({
@@ -70,7 +67,6 @@ export function MapContainerComponent({
   setDragStartPos,
   fetchNearbySchools,
   setViewSchool,
-  saveToLocalStorage,
 }: MapContainerProps) {
   const {
     center: mapCenter,
@@ -81,7 +77,6 @@ export function MapContainerComponent({
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
     setSchoolMarkers,
-    saveToLocalStorage,
     radius,
   });
 

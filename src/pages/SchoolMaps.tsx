@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { SearchBarMapProps } from "../types/maps";
 import { getSchoolSuggestion, getSchoolNearby } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
@@ -8,8 +8,6 @@ import type { ItemSekolahModel, MarkerGroup } from "../models/response";
 import { useMapViewStore } from "../store/mapView";
 import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 import { useInitialSchools } from "../hooks/useInitialSchools";
-import { saveToLocalStorage } from "../utils/saveToLocalStorage";
-import { extractSchoolData } from "../utils/extractSchoolData";
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
@@ -60,31 +58,11 @@ export default function SchoolMaps() {
   
   const initialLoadRequestedRef = useRef(false);
 
-  const cachedSchoolData = useMemo(() => {
-    const storedData = localStorage.getItem("schoolMarkerData");
-    if (storedData) {
-      try {
-        const parsed = JSON.parse(storedData);
-        return new Map<string, { lat: number; lng: number; dataUrl: string }>(
-          parsed
-        );
-      } catch (error) {
-        console.error("Failed to parse localStorage data:", error);
-        return null;
-      }
-    }
-    return null;
-  }, []);
-
-
-
   // Load initial Schools Hook
   const { loadInitialSchools } = useInitialSchools({
     fetchNearbySchools,
     center,
     radius,
-    extractSchoolData,
-    saveToLocalStorage,
     setSchoolMarkers,
   });
 
@@ -121,22 +99,14 @@ export default function SchoolMaps() {
   }, []);
 
   useEffect(() => {
-    if (cachedSchoolData && cachedSchoolData.size > 0) {
-      setSchoolMarkers(cachedSchoolData);
-    } else {
-      if (initialLoadRequestedRef.current) return;
-      initialLoadRequestedRef.current = true;
-      console.log("No cache found, loading initial schools");
-      loadInitialSchools();
-    }
+    if (initialLoadRequestedRef.current) return;
+    if (!initialLocationSet) return;
+    
+    initialLoadRequestedRef.current = true;
+    console.log("Loading initial schools");
+    loadInitialSchools();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    initialLocationSet,
-    cachedSchoolData,
-    fetchNearbySchools,
-    extractSchoolData,
-    saveToLocalStorage,
-  ]); 
+  }, [initialLocationSet]); 
 
   // SET RADIUS FOR MAP TO DISPLAY SCHOOL
   useEffect(() => {
@@ -196,7 +166,6 @@ export default function SchoolMaps() {
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
         setViewSchool={setViewSchool}
-        saveToLocalStorage={saveToLocalStorage}
       />
       {showLocationPicker && (
         <LocationPickerWindow onClose={() => setShowLocationPicker(false)} />
