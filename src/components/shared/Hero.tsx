@@ -18,7 +18,7 @@ export default function Hero({
   return (
     <section className={clx(
       "relative border-b border-outline-200",
-      variant === "side" ? "px-[109px]" : "h-[350px]"
+      variant === "side" ? "md:px-[109px]" : "h-[350px]"
     )}>
       { background && (
         <div className="absolute -z-10 flex shrink-0 h-full w-full justify-center overflow-x-hidden">
@@ -27,8 +27,8 @@ export default function Hero({
       )}
       <div className="w-full">
         <div className={clx(
-          "flex flex-col gap-8 py-16",
-          variant === "side" ? "w-[400px]" : "justify-center items-center text-center"
+          "flex flex-col gap-8 py-16 justify-center items-center text-center",
+          variant === "side" ? "w-[400px]" : ""
         )}>
           <h1 className="text-txt-black-900 font-heading font-semibold text-heading-md">
             <div className="text-[2rem]/10"> {title}</div>
