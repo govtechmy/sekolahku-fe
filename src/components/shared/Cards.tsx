@@ -1,5 +1,6 @@
 import { clx } from "@govtechmy/myds-react/utils";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
+import { ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
 import type { ReactNode } from "react";
 
 interface HorizontalCardProps {
@@ -47,6 +48,7 @@ interface HorizontalCardItemProps {
       header: string;
       date: string;
       title: string;
+      redirectDesc?: string;
     };
     className?: string;
     classNameHeader?: string; 
@@ -54,9 +56,14 @@ interface HorizontalCardItemProps {
   }
 
 function HorizontalCardItem({ item, className = "", classNameHeader="", onClick }: HorizontalCardItemProps) {
+
     return (
       <div
-        className={`border border-otl-gray-200 rounded-lg p-2 md:p-3 h-[260px] sm:h-[300px] md:h-[354px] w-full flex flex-col cursor-pointer ${className}`}
+      tabIndex={0}
+        className={`group border border-otl-gray-200 rounded-lg p-2 md:p-3
+          h-[260px] sm:h-[300px] md:h-[354px]
+          w-full flex flex-col cursor-pointer
+          transition-shadow hover:shadow-lg ${className}`}
         onClick={onClick}
       >
           <img
@@ -78,15 +85,26 @@ function HorizontalCardItem({ item, className = "", classNameHeader="", onClick 
             </p>
         </div>
 
-        <p className="text-xs md:text-sm text-txt-black-500 px-2 md:px-3 pb-2 md:pb-0 flex-shrink-0">
-            {item.date}
-        </p>
+        <div className="flex flex-row justify-between items-center">
+            <p className="text-xs md:text-sm text-txt-black-500 px-2 md:px-3 pb-2 md:pb-0 flex-shrink-0">
+                {item.date}
+            </p>
+            {item.redirectDesc && (
+                <div
+                  className="px-2 md:px-3 pb-2 md:pb-0 flex items-center gap-1 text-txt-primary font-semibold
+                    text-xs md:text-sm opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0
+                    transition-all duration-300 ease-out"
+                >
+                  <span>{item.redirectDesc}</span>
+                  <ArrowOutgoingIcon className="w-3 h-3 md:w-4 md:h-4" />
+                </div>
+              )}
+        </div>
     </div>
   );
 }
 Card.Pagination = HorizontalCardPagination;
 Card.Item = HorizontalCardItem;
-
 
 export default Card;
  

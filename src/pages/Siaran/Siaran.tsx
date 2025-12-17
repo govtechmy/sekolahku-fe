@@ -34,6 +34,7 @@ export default function Siaran() {
                     totalPages={totalPages}
                     currentPage={currentPage}
                     onPageChange={setCurrentPage}
+                    
                 >
                     <div className="flex flex-col justify-center gap-8">
                         <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
@@ -55,6 +56,7 @@ export default function Siaran() {
                                             header: item.header,
                                             date: item.date,
                                             title: item.title,
+                                            redirectDesc: "Baca",
                                         }} 
                                         onClick={() => {
                                             navigate(`/${lang}/siaran/${item.id}`);
