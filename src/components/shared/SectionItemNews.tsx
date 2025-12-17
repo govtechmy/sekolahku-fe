@@ -26,12 +26,12 @@ export default function SectionItemNews({
 
   return (
     <div className=" w-full">
-      <HorizontalCard mainTitle={mainTitle}>
-        {dataItemNews.map((item: NewsItem, index: number) => (
+      <HorizontalCard mainTitle={mainTitle} showNavigation={false} mobileVariant="grid">
+        {dataItemNews.slice(0, 4).map((item: NewsItem, index: number) => (
           <Link
             key={index}
             to={`/${lang}/siaran/${item.id}`}
-            className="group border border-otl-gray-200 rounded-lg p-3 h-[354px] !w-[247px] flex-shrink-0 flex flex-col gap-4.5 transition-shadow hover:shadow-lg cursor-pointer"
+            className="group border border-otl-gray-200 rounded-lg p-3 h-[354px] !max-w-[247px] flex-shrink-0 flex flex-col gap-4.5 transition-shadow hover:shadow-lg cursor-pointer"
           >
             <img
               src={item.imageSrc}
