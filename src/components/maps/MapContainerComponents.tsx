@@ -5,13 +5,17 @@ import {
   Circle,
 } from "react-leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
+import type { Dispatch, SetStateAction } from "react";
+import type { MarkerMap } from "../../utils/markerProcessors";
 import { calculateDistance } from "../../utils/calculateDistance";
-import type { MarkerType } from "../../types/maps";
+import type { Coordinates, MarkerType } from "../../types/maps";
 import { useMapViewStore } from "../../store/mapView";
 import type { ItemSekolahModel, MarkerGroup } from "../../models/response";
 import { getSchoolS3Json } from "../../services/school.svc";
 import { useAppendNewMarkers } from "../../hooks/useAppendNewMarkers";
 import { MapViewController } from "./MapViewController";
+
+// Use the shared MarkerMap shape used by marker processors (lat/lng)
 
 function MapEvents({
   onZoomChange,
@@ -20,45 +24,39 @@ function MapEvents({
   onDragEnd,
 }: {
   onZoomChange: (zoom: number) => void;
-  onCenterChange: (center: { lat: number; lng: number }) => void;
+  onCenterChange: (center: Coordinates) => void;
   onDragStart?: () => void;
-  onDragEnd?: (center: { lat: number; lng: number }) => void;
+  onDragEnd?: (center: Coordinates) => void;
 }) {
   useMapEvents({
     zoomend: (e) => onZoomChange(e.target.getZoom()),
     moveend: (e) => {
       const center = e.target.getCenter();
-      onCenterChange({ lat: center.lat, lng: center.lng });
+      onCenterChange({ koordinatXX: center.lat, koordinatYY: center.lng });
     },
     dragstart: () => {
       onDragStart?.();
     },
     dragend: (e) => {
       const center = e.target.getCenter();
-      onDragEnd?.({ lat: center.lat, lng: center.lng });
+      onDragEnd?.({ koordinatXX: center.lat, koordinatYY: center.lng });
     },
   });
   return null;
 }
 
 interface MapContainerProps {
-  schoolMarkers: Map<string, { lat: number; lng: number; dataUrl: string }>;
-  setSchoolMarkers: React.Dispatch<
-    React.SetStateAction<
-      Map<string, { lat: number; lng: number; dataUrl: string }>
-    >
-  >;
-  dragStartPos: { lat: number; lng: number } | null;
-  setDragStartPos: React.Dispatch<
-    React.SetStateAction<{ lat: number; lng: number } | null>
-  >;
+  schoolMarkers: MarkerMap;
+  setSchoolMarkers: Dispatch<SetStateAction<MarkerMap>>;
+  dragStartPos: Coordinates | null;
+  setDragStartPos: Dispatch<SetStateAction<Coordinates | null>>;
   fetchNearbySchools: (
-    latitude: number,
-    longitude: number,
+    koordinatXX: number,
+    koordinatYY: number,
     radiusInMeter: number,
     zoom?: number
   ) => Promise<MarkerGroup[]>;
-  setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
+  setViewSchool: Dispatch<SetStateAction<ItemSekolahModel | null>>;
 }
 
 export function MapContainerComponent({
@@ -100,22 +98,22 @@ export function MapContainerComponent({
           setZoom(zoom);
         }}
         onCenterChange={(center) => {
-          setMapCenter([center.lat, center.lng]);
+          setMapCenter([center.koordinatXX, center.koordinatYY]);
         }}
         onDragStart={() => {
-          setDragStartPos({ lat: mapCenter[0], lng: mapCenter[1] });
+          setDragStartPos({ koordinatXX: mapCenter[0], koordinatYY: mapCenter[1] });
         }}
         onDragEnd={(newCenter) => {
           if (dragStartPos) {
             const distance = calculateDistance(
-              dragStartPos.lat,
-              dragStartPos.lng,
-              newCenter.lat,
-              newCenter.lng
+              dragStartPos.koordinatXX,
+              dragStartPos.koordinatYY,
+              newCenter.koordinatXX,
+              newCenter.koordinatYY
             );
 
             if (distance > radius) {
-              appendNewMarkers({ lat: newCenter.lat, lng: newCenter.lng });
+              appendNewMarkers({ koordinatXX: newCenter.koordinatXX, koordinatYY: newCenter.koordinatYY });
             }
           }
           setDragStartPos(null);

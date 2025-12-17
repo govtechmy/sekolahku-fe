@@ -1,6 +1,6 @@
 export type SearchBarMapProps = {
-  lat: number;
-  lng: number;
+  koordinatXX: number;
+  koordinatYY: number;
   namaSekolah: string;
   kodSekolah?: string;
   noTelefon?: string;

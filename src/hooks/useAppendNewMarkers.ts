@@ -1,11 +1,12 @@
 import { useCallback } from "react";
 import type { MarkerGroup } from "../models/response";
 import { processMarkers, type MarkerMap } from "../utils/markerProcessors";
+import type { Coordinates } from "../types/maps";
 
 interface UseAppendNewMarkersParams {
   fetchNearbySchools: (
-    latitude: number,
-    longitude: number,
+    koordinatXX: number,
+    koordinatYY: number,
     radiusInMeter: number,
     zoom?: number
   ) => Promise<MarkerGroup[]>;
@@ -21,11 +22,11 @@ export function useAppendNewMarkers({
   zoom
 }: UseAppendNewMarkersParams) {
   const append = useCallback(
-    async (center: { lat: number; lng: number }) => {
+    async (center: Coordinates) => {
       try {
         const markersArray = await fetchNearbySchools(
-          center.lat,
-          center.lng,
+          center.koordinatXX,
+          center.koordinatYY,
           radius,
           zoom
         );
