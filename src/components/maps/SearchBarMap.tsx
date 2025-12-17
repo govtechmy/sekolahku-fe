@@ -108,7 +108,7 @@ export function SearchBarMap({
       const detail = await getSchoolS3Json(undefined, school.negeri, school.parlimen, school.kodSekolah);
       if (detail) {
         setViewSchool(detail);
-        setMapCenter([school.lat, school.lng]);
+        setMapCenter([school.koordinatXX, school.koordinatYY]);
         setMapZoom(17);
 
       }
