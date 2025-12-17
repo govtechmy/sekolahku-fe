@@ -55,7 +55,8 @@ interface MapContainerProps {
   fetchNearbySchools: (
     latitude: number,
     longitude: number,
-    radiusInMeter: number
+    radiusInMeter: number,
+    zoom?: number
   ) => Promise<MarkerGroup[]>;
   setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
 }
@@ -72,12 +73,14 @@ export function MapContainerComponent({
     center: mapCenter,
     setCenter: setMapCenter,
     setZoom,
+    zoom,
     radius,
   } = useMapViewStore();
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
     setSchoolMarkers,
     radius,
+    zoom,
   });
 
   return (
@@ -111,7 +114,7 @@ export function MapContainerComponent({
               newCenter.lng
             );
 
-            if (distance > 1000) {
+            if (distance > radius) {
               appendNewMarkers({ lat: newCenter.lat, lng: newCenter.lng });
             }
           }

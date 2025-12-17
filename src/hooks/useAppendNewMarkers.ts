@@ -6,16 +6,19 @@ interface UseAppendNewMarkersParams {
   fetchNearbySchools: (
     latitude: number,
     longitude: number,
-    radiusInMeter: number
+    radiusInMeter: number,
+    zoom?: number
   ) => Promise<MarkerGroup[]>;
   setSchoolMarkers: React.Dispatch<React.SetStateAction<MarkerMap>>;
   radius: number;
+  zoom?: number;
 }
 
 export function useAppendNewMarkers({
   fetchNearbySchools,
   setSchoolMarkers,
   radius,
+  zoom
 }: UseAppendNewMarkersParams) {
   const append = useCallback(
     async (center: { lat: number; lng: number }) => {
@@ -23,7 +26,8 @@ export function useAppendNewMarkers({
         const markersArray = await fetchNearbySchools(
           center.lat,
           center.lng,
-          radius
+          radius,
+          zoom
         );
 
         setSchoolMarkers((prevMap) => {
@@ -35,7 +39,7 @@ export function useAppendNewMarkers({
         console.error("Failed to fetch nearby schools:", error);
       }
     },
-    [fetchNearbySchools, setSchoolMarkers, radius]
+    [fetchNearbySchools, setSchoolMarkers, radius, zoom]
   );
 
   return append;
