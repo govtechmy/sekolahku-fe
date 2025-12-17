@@ -24,13 +24,13 @@ export default function HomePage() {
         title="Selamat Datang Ke Portal Sekolahku"
         search={<SearchBarHome />}
         links={
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col items-center md:items-start gap-3">
             <div className="text-body-sm text-txt-black-500">
               Pautan Popular:
             </div>
             <Button
               variant="default-outline"
-              className="rounded-full text-xs text-txt-black-900"
+              className="rounded-full text-xs flex justify-center text-txt-black-900"
               size="medium"
             >
               <div className="rounded-full bg-primary-50 text-txt-primary size-8 items-center justify-center flex">
@@ -52,6 +52,7 @@ export default function HomePage() {
           <SectionItemNews
             dataItemNews={dataItemNews}
             mainTitle="Apa yang Sedang Berlaku di Sekolah-sekolah Malaysia"
+            redirectDesc="Baca"
           />
         }
       />

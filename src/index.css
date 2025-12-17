@@ -4,8 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html body { overflow: hidden; }
-
 /* Hide scrollbar but keep functionality */
 .hide-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
