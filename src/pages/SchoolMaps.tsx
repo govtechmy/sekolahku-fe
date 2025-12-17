@@ -29,9 +29,6 @@ export default function SchoolMaps() {
     setInitialLocationSet,
     setSchoolMarkers,
   } = useMapViewStore();
-  const [schoolMarkers, setSchoolMarkers] = useState<
-    Map<string, { lat: number; lng: number; dataUrl: string }>
-  >(new Map());
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
   const geolocationRequestedRef = useRef(false);

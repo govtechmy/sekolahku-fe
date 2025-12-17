@@ -6,7 +6,6 @@ import {
 } from "react-leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
 import type { Dispatch, SetStateAction } from "react";
-import type { MarkerMap } from "../../utils/markerProcessors";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { Coordinates, MarkerType } from "../../types/maps";
 import { useMapViewStore } from "../../store/mapView";
@@ -46,8 +45,6 @@ function MapEvents({
 }
 
 interface MapContainerProps {
-  schoolMarkers: MarkerMap;
-  setSchoolMarkers: Dispatch<SetStateAction<MarkerMap>>;
   dragStartPos: Coordinates | null;
   setDragStartPos: Dispatch<SetStateAction<Coordinates | null>>;
   fetchNearbySchools: (
