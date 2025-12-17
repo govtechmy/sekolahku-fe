@@ -1,9 +1,37 @@
 import L from "leaflet";
+import { renderToString } from "react-dom/server";
+import { SekolahMarkerIcon } from "./SekolahMarkerIcon";
+import { NegeriMarkerIcon } from "./NegeriMarkerIcon";
+import { ParlimenMarkerIcon } from "./ParlimenMarkerIcon";
 
-// Custom school icon
-export const schoolIcon = new L.Icon({
-  iconUrl: "/images/iconSchool.png",
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
+const ICON_SIZE: [number, number] = [32, 32];
+const ICON_ANCHOR: [number, number] = [16, 32];
+const POPUP_ANCHOR: [number, number] = [0, -32];
+
+const sekolahMarkerHtml = renderToString(SekolahMarkerIcon());
+const parlimenMarkerHtml = renderToString(ParlimenMarkerIcon("SK"));
+const negeriMarkerHtml = renderToString(NegeriMarkerIcon("SK"));
+
+const createDivIcon = (html: string, typeClass: string) =>
+  new L.DivIcon({
+    className: `${typeClass}`,
+    html,
+    iconSize: ICON_SIZE,
+    iconAnchor: ICON_ANCHOR,
+    popupAnchor: POPUP_ANCHOR,
+  });
+
+export const sekolahMarkerIcon = createDivIcon(
+  sekolahMarkerHtml,
+  "sekolah-marker-icon"
+);
+
+export const parlimenMarkerIcon = createDivIcon(
+  parlimenMarkerHtml,
+  "parlimen-marker-icon"
+);
+
+export const negeriMarkerIcon = createDivIcon(
+  negeriMarkerHtml,
+  "negeri-marker-icon"
+);
