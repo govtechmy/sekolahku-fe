@@ -1,3 +1,5 @@
+import type { MarkerType } from "../types/maps"
+
 interface BaseListModel {
   totalRecords: number
   pageNumber: number
@@ -82,6 +84,7 @@ export interface ViewInfoLokasi {
 }
 
 export interface MarkerItem {
+  markerType: MarkerType
   kodSekolah: string
   infoLokasi: {
     koordinatXX: number

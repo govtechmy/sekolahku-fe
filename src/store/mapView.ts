@@ -1,7 +1,8 @@
 import { create } from "zustand";
+import type { MarkerType } from "../types/maps";
 
 type Center = [number, number];
-type MarkerMap = Map<string, { lat: number; lng: number; dataUrl: string }>;
+type MarkerMap = Map<string, { lat: number; lng: number; dataUrl: string; markerType: MarkerType }>;
 
 interface MapViewState {
   center: Center;

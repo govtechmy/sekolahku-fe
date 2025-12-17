@@ -25,7 +25,7 @@ export type SearchBarMapProps = {
 };
 
 
-export type MarkerType = "INDIVIDUAL" | "GROUP";
+export type MarkerType = "INDIVIDUAL" | "GROUP" | "NEGERI" | "PARLIMEN";
 
 export type SchoolMarkerInfo= {
   markerType: MarkerType;
@@ -46,7 +46,7 @@ export interface ViewInfoLokasi extends Coordinates {
 }
 
 export interface BaseMarkerGroup {
-  markerType: "INDIVIDUAL";
+  markerType: MarkerType;
   radiusInMeter: number;
   infoLokasi: Coordinates;
 }

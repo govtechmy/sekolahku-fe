@@ -7,7 +7,7 @@ import {
 import { SchoolMapMarker } from "./SchoolMapMarker";
 import type { Dispatch, SetStateAction } from "react";
 import { calculateDistance } from "../../utils/calculateDistance";
-import type { Coordinates, MarkerType } from "../../types/maps";
+import type { Coordinates } from "../../types/maps";
 import { useMapViewStore } from "../../store/mapView";
 import type { ItemSekolahModel, MarkerGroup } from "../../models/response";
 import { getSchoolS3Json } from "../../services/school.svc";
@@ -75,6 +75,7 @@ export function MapContainerComponent({
   } = useMapViewStore();
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
+    schoolMarkers,
     setSchoolMarkers,
     radius,
     initialLocationSet,
@@ -133,7 +134,7 @@ export function MapContainerComponent({
         <SchoolMapMarker
           key={kodSekolah}
           school={{
-            markerType: "INDIVIDUAL" as MarkerType,
+            markerType: coords.markerType,
             radiusInMeter: 0,
             koordinatXX: coords.lat,
             koordinatYY: coords.lng,

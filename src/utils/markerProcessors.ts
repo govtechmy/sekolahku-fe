@@ -1,7 +1,8 @@
 import type { MarkerGroup } from "../models/response";
+import type { MarkerType } from "../types/maps";
 
-export type MarkerMap = Map<string, { lat: number; lng: number; dataUrl: string }>;
-export type SchoolMarker = { lat: number; lng: number; dataUrl: string };
+export type MarkerMap = Map<string, { lat: number; lng: number; dataUrl: string; markerType: MarkerType }>;
+export type SchoolMarker = { lat: number; lng: number; dataUrl: string; markerType: MarkerType };
 
 /**
  * Helper function to add a marker if it doesn't exist
@@ -10,7 +11,7 @@ export type SchoolMarker = { lat: number; lng: number; dataUrl: string };
 const addMarkerIfNew = (
   map: MarkerMap,
   key: string,
-  marker: SchoolMarker
+  marker: SchoolMarker,
 ): boolean => {
   if (!map.has(key)) {
     map.set(key, marker);
@@ -31,6 +32,7 @@ const processGroupMarkers = (marker: MarkerGroup, map: MarkerMap): number => {
       lat: item.infoLokasi.koordinatYY,
       lng: item.infoLokasi.koordinatXX,
       dataUrl: item.dataUrl,
+      markerType: item.markerType,
     });
     if (added) count++;
   });
@@ -47,6 +49,7 @@ const processIndividualMarker = (marker: MarkerGroup, map: MarkerMap): number =>
     lat: marker.infoLokasi.koordinatYY,
     lng: marker.infoLokasi.koordinatXX,
     dataUrl: marker.dataUrl,
+    markerType: marker.markerType,
   }) ? 1 : 0;
 };
 
@@ -61,6 +64,7 @@ const processParlimenMarker = (marker: MarkerGroup, map: MarkerMap): number => {
     lat: marker.infoLokasi.koordinatYY,
     lng: marker.infoLokasi.koordinatXX,
     dataUrl: marker.total?.toString() ?? "",
+    markerType: marker.markerType,
   }) ? 1 : 0;
 };
 
@@ -74,6 +78,7 @@ const processNegeriMarker = (marker: MarkerGroup, map: MarkerMap): number => {
     lat: marker.infoLokasi.koordinatYY,
     lng: marker.infoLokasi.koordinatXX,
     dataUrl: marker.total?.toString() ?? "",
+    markerType: marker.markerType,
   }) ? 1 : 0;
 };
 
@@ -113,6 +118,7 @@ export const extractSchoolData = (markers: MarkerGroup[]): MarkerMap => {
           lat: item.infoLokasi.koordinatYY,
           lng: item.infoLokasi.koordinatXX,
           dataUrl: item.dataUrl,
+          markerType: item.markerType,
         });
       });
     }

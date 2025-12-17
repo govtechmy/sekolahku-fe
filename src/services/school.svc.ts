@@ -83,6 +83,7 @@ export const fetchNearbySchools = async (
         radiusInMeter,
         zoom,
       });
+      
       return nearbySchools?.markerGroups || [];
     } catch (error) {
       console.error("Failed to fetch nearby schools:", error);

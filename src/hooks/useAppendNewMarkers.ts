@@ -11,6 +11,7 @@ interface UseAppendNewMarkersParams {
     initialLocationSet?: boolean,
     zoom?: number
   ) => Promise<MarkerGroup[]>;
+  schoolMarkers: MarkerMap;
   setSchoolMarkers: React.Dispatch<React.SetStateAction<MarkerMap>>;
   radius: number;
   initialLocationSet?: boolean;
@@ -22,7 +23,8 @@ export function useAppendNewMarkers({
   setSchoolMarkers,
   radius,
   initialLocationSet,
-  zoom
+  zoom,
+  schoolMarkers
 }: UseAppendNewMarkersParams) {
   const append = useCallback(
     async (center: Coordinates) => {
@@ -34,17 +36,23 @@ export function useAppendNewMarkers({
           initialLocationSet,
           zoom
         );
-
+        
+        const prevSchool = schoolMarkers.values().next().value?.markerType;
+        const newMarkerType = markersArray[0]?.markerType;
+        
         setSchoolMarkers((prevMap) => {
+          if (!prevSchool || newMarkerType !== prevSchool) {
+            return processMarkers(markersArray, new Map());
+          }
+          
           const newMap = processMarkers(markersArray, prevMap);
-          // Only update if new markers were added
           return newMap.size > prevMap.size ? newMap : prevMap;
         });
       } catch (error) {
         console.error("Failed to fetch nearby schools:", error);
       }
     },
-    [fetchNearbySchools, setSchoolMarkers, radius, initialLocationSet, zoom]
+    [fetchNearbySchools, setSchoolMarkers, radius, initialLocationSet, zoom, schoolMarkers]
   );
 
   return append;
