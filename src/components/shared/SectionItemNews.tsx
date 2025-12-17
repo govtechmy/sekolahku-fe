@@ -1,6 +1,5 @@
 import HorizontalCard from "./HorizontalCard";
 import { Link, useParams } from "react-router-dom";
-import { useState } from "react";
 import { ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
 
 type NewsItem = {
@@ -15,13 +14,14 @@ type NewsItem = {
 type SectionItemNewsProps = {
   dataItemNews: NewsItem[];
   mainTitle: string;
+  redirectDesc?: string;
 };
 
 export default function SectionItemNews({
   dataItemNews,
   mainTitle,
+  redirectDesc,
 }: SectionItemNewsProps) {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const { lang } = useParams<{ lang: string }>();
 
   return (
@@ -31,9 +31,7 @@ export default function SectionItemNews({
           <Link
             key={index}
             to={`/${lang}/siaran/${item.id}`}
-            className="border border-otl-gray-200 rounded-lg p-3 h-[354px] !w-[247px] flex-shrink-0 flex flex-col gap-4.5 transition-shadow hover:shadow-lg cursor-pointer"
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
+            className="group border border-otl-gray-200 rounded-lg p-3 h-[354px] !w-[247px] flex-shrink-0 flex flex-col gap-4.5 transition-shadow hover:shadow-lg cursor-pointer"
           >
             <img
               src={item.imageSrc}
@@ -63,14 +61,12 @@ export default function SectionItemNews({
                 {item.date}
               </div>
               <div
-                className={`px-3 pb-2 flex items-center gap-1 text-txt-primary font-semibold text-sm transition-all duration-300 ${
-                  hoveredIndex === index
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-2"
-                }`}
+                className="px-2 md:px-3 pb-2 md:pb-0 flex items-center gap-1 text-txt-primary font-semibold
+                    text-xs md:text-sm opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0
+                    transition-all duration-300 ease-out"
               >
-                <span>Baca</span>
-                <ArrowOutgoingIcon/>
+                <span>{redirectDesc}</span>
+                <ArrowOutgoingIcon />
               </div>
             </div>
           </Link>
