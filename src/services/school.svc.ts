@@ -67,7 +67,7 @@ export const fetchNearbySchools = async (
     longitude: number,
     radiusInMeter: number,
     initialLocationSet?: boolean,
-    zoom?: number
+    zoom?: number,
   ): Promise<MarkerGroup[]> => {
     
     if (initialLocationSet === false) {
@@ -86,4 +86,4 @@ export const fetchNearbySchools = async (
       console.error("Failed to fetch nearby schools:", error);
       return [];
     }
-  };
+};

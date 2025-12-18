@@ -11,6 +11,8 @@ import type { ItemSekolahModel } from "../models/response";
 import { useMapViewStore } from "../store/mapView";
 import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 import { useInitialSchools } from "../hooks/useInitialSchools";
+import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
+
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
@@ -27,12 +29,22 @@ export default function SchoolMaps() {
     setRadius,
     initialLocationSet,
     setInitialLocationSet,
+    setInitialLocationUser,
     setSchoolMarkers,
+    schoolMarkers
   } = useMapViewStore();
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
   const geolocationRequestedRef = useRef(false);
   const initialLoadRequestedRef = useRef(false);
+    const appendNewMarkers = useAppendNewMarkers({
+      fetchNearbySchools,
+      schoolMarkers,
+      setSchoolMarkers,
+      radius,
+      initialLocationSet,
+      zoom,
+    });
 
   // Load initial Schools Hook
   const { loadInitialSchools } = useInitialSchools({
@@ -44,7 +56,6 @@ export default function SchoolMaps() {
     zoom,
   });
 
-  //SET TO FETCH GEOLOCATION FROM USER
   useEffect(() => {
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
@@ -62,8 +73,8 @@ export default function SchoolMaps() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        console.log("Geolocation success:", { latitude, longitude });
         setCenter([latitude, longitude]);
+        setInitialLocationUser([latitude,longitude])
         setZoom(17);
         setInitialLocationSet(true);
       },
@@ -80,16 +91,14 @@ export default function SchoolMaps() {
     if (!initialLocationSet) return;
 
     initialLoadRequestedRef.current = true;
-    console.log("Loading initial schools");
     loadInitialSchools();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialLocationSet]);
 
-  // SET RADIUS FOR MAP TO DISPLAY SCHOOL
   useEffect(() => {
     if (zoom) {
       setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
-      console.log("THIS IS THE CALCULATED RADIUS", radius);
+      appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoom]);
@@ -117,7 +126,7 @@ export default function SchoolMaps() {
 
       if (transformed.length > 0) {
         const firstResult = transformed[0];
-        setCenter([firstResult.koordinatXX, firstResult.koordinatYY]);
+        setCenter([firstResult.koordinatYY, firstResult.koordinatXX]);
         setZoom(18);
       }
     } catch (error) {
