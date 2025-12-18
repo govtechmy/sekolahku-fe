@@ -139,9 +139,11 @@ export function MapContainerComponent({
             koordinatXX: coords.koordinatXX,
             koordinatYY: coords.koordinatYY,
             id: kodSekolah,
-            total: (coords as any).total,
+            total: coords.total,
           }}
           onClick={async () => {
+            if(coords.markerType !== "INDIVIDUAL")
+              return 0;
             setViewSchool(null); // Reset before setting new school
             setViewSchool(await getSchoolS3Json(coords.dataUrl));
             setCenter([coords.koordinatXX, coords.koordinatYY]);
