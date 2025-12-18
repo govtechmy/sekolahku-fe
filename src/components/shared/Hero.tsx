@@ -2,6 +2,7 @@ import { Button } from "@govtechmy/myds-react/button";
 import { FilterAscIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 
+
 interface HeroBanner {
   "top-gradient": string;
   "middle-gradient": string;
@@ -31,6 +32,7 @@ export default function Hero({
   background,
   heroBanner,
   variant = "side",
+  gradientColors,
 }: {
   title: string;
   search?: React.ReactNode;
@@ -39,11 +41,16 @@ export default function Hero({
   background?: React.ReactNode;
   heroBanner?: HeroBanner;
   variant?: "side" | "full";
+  gradientColors?: {
+    "top-gradient": string;
+    "middle-gradient": string;
+    "bottom-gradient": string;
+  };
 }) {
   return (
     <section className={clx(
-      "relative border-b border-outline-200",
-      variant === "side" ? "lg:px-[109px] h-[515px] md:h-full" : "h-[350px]"
+      "relative border-b border-outline-200 h-[515px]",
+      variant === "side" ? "" : ""
     )}>
       {variant === "side" && heroBanner ? (
         <div
@@ -73,17 +80,31 @@ export default function Hero({
           />
         </div>
       ) : background ? (
-        <div className="absolute -z-10 flex h-full w-full justify-center overflow-hidden">
+        <div 
+          style={
+            gradientColors ? {
+              "--top-gradient-color": gradientColors["top-gradient"],
+              "--middle-gradient-color": gradientColors["middle-gradient"],
+              "--bottom-gradient-color": gradientColors["bottom-gradient"],
+            } as React.CSSProperties : undefined
+          }
+          className={clx(
+            "absolute -z-10 flex h-full w-full justify-center overflow-hidden object-scale-down",
+            gradientColors && "bg-gradient-to-b from-[var(--top-gradient-color)] via-[var(--middle-gradient-color)] to-[var(--bottom-gradient-color)]"
+          )}
+        >
           {background} 
         </div>
       ) : null}
-      <div className="w-full flex justify-center lg:justify-start">
+      <div className={clx("w-full h-[520px] flex justify-center items-center p-6",
+        variant === "side" ? " lg:justify-start lg:px-[109px] " : ""
+      )}>
         <div className={clx(
-          "flex flex-col gap-8 py-16 justify-center items-center text-center",
-          variant === "side" ? "w-[400px] lg:justify-start lg:items-start lg:text-start" : ""
+          "flex flex-col gap-8 py-16 items-center lg:text-start text-center",
+          variant === "side" ? "w-[350px] justify-center" : " "
         )}>
           <h1 className="text-txt-black-900 font-heading font-semibold text-heading-md">
-            <div className="text-[2rem]/10"> {title}</div>
+            <div className="text-3xl"> {title}</div>
           </h1>
           {search && (
             <div className={clx(

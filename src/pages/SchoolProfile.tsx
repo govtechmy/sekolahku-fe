@@ -1,7 +1,5 @@
 import { CheckCircleFillIcon, CrossFillIcon } from "@govtechmy/myds-react/icon";
 import { dataSekolahAbout, dataSekolahInfo, dataSekolahJumlah, dataSekolahSuggestion } from "../contentData";
-import HeroMy from "../components/shared/HeroComponent";
-import BgSchoolProfile from "../asset/BgSchoolProfile";
 import HelmetMeta from "../seo/HelmetMeta";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -71,40 +69,6 @@ export default function SchoolProfile() {
       canonical={`${domain}${schoolProfile}/${id}`}
     />
     <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
-      <HeroMy className="relative w-full h-[408px] md:h-[408px] sm:h-[320px] max-sm:h-[300px] overflow-hidden border-b border-outline-200 bg-black">
-        <HeroMy.Background>
-          <div className="absolute inset-0 w-full h-full">
-            <BgSchoolProfile className="absolute inset-0 w-full h-full bg-cover bg-center"/>
-          </div>
-        </HeroMy.Background>
-        <HeroMy.Content className="max-lg:px-0 max-lg:py-0">
-          <div className="px-[109px] py-[50px] md:px-[109px] md:py-[50px] max-md:px-2 max-md:py-4">
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between h-full px-6 md:px-12">
-              {/* LEFT CONTENT */}
-              <div className="max-w-xl pt-10 md:pt-0 text-center md:text-left">
-                <div className="text-txt-primary font-semibold gap-6 pb-6">NAMA SEKOLAH</div>
-                <div className="text-txt-black-900 text-heading-md max-md:text-heading-sm font-semibold gap-7 pb-7 max-w-[495px]">
-                  {school?.NAMASEKOLAH ? school.NAMASEKOLAH : "Maktab Sultan Abu Bakar (English College)"}
-                </div>
-                <div className="text-txt-primary font-semibold">JENIS SEKOLAH 
-                  <span className="text-txt-black-500 font-medium"> : SMK </span>
-                </div>
-              </div>
-              {/* RIGHT LOGO */}
-              <div className="mt-8 md:mt-0 flex justify-center text-center">
-                <img
-                  src="/utama/image-159.png"
-                  alt="School Logo"
-                  width={260}
-                  height={260}
-                  className="object-contain drop-shadow-xl max-md:w-1/2"
-                />
-              </div>
-            </div>
-          </div>
-        </HeroMy.Content>
-      </HeroMy>
-
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-2 mt-0 md:px-12 max-md:px-0">
         {dataSekolahJumlah.map((item, idx) => (

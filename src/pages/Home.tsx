@@ -3,8 +3,6 @@ import SectionHeader from "../components/shared/SectionHeader";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
-import Hero from "../components/shared/Hero";
-import SearchBarHome from "../components/shared/SearchBarHome";
 import Statistic from "../components/statistic";
 import {
   statisticYearlyData,
@@ -13,35 +11,11 @@ import {
   dataItemCalendar,
   dataItemLinks,
   dataItemNews,
-  popularLinks,
 } from "../contentData";
 
 export default function HomePage() {
   return (
-    <div>
-      <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen -mt-16">
-      <Hero
-        title="Selamat Datang Ke Portal Sekolahku"
-        search={<SearchBarHome />}
-        links={popularLinks}
-        background={
-          <>
-                    <div
-                        className="block h-full w-full bg-center bg-no-repeat bg-cover lg:hidden"
-                        style={{
-                            backgroundImage: `url('/utama/home-hero-mobile.svg')`,
-                        }}
-                    />
-                    <div
-                        className="hidden h-full w-full bg-cover bg-center bg-no-repeat lg:block"
-                        style={{
-                            backgroundImage: `url('/utama/sekolahku.png')`,
-                        }}
-                    />
-                </>
-        }
-      ></Hero></div>
-
+    <>
       <SectionHeader
         header="SIARAN"
         ButtonLabel="Semua Berita"
@@ -84,6 +58,6 @@ export default function HomePage() {
         yearlyData={statisticYearlyData}
         chartBaseData={chartBaseData}
       />
-    </div>
+    </>
   );
 }
