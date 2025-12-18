@@ -215,7 +215,13 @@ export function SearchBarMap({
 
                         <span className="mt-1 flex items-center text-sm text-blue-600 gap-1">
                           <MapIcon className="w-4 h-4" />
-                          {calculateDistance(initialLocationUser[0], initialLocationUser[1], school.koordinatYY, school.koordinatXX).toFixed(2)} meter dari lokasi anda
+                          {(() => {
+                            const distanceInMeters = calculateDistance(initialLocationUser[0], initialLocationUser[1], school.koordinatYY, school.koordinatXX);
+                            if (distanceInMeters > 1000) {
+                              return `${(distanceInMeters / 1000).toFixed(2)} km dari lokasi anda`;
+                            }
+                            return `${distanceInMeters.toFixed(2)} meter dari lokasi anda`;
+                          })()}
                         </span>
                       </div>
 
