@@ -1,8 +1,7 @@
 import { create } from "zustand";
-import type { MarkerType } from "../types/maps";
+import type { MarkerMap } from "../utils/markerProcessors";
 
 type Center = [number, number];
-type MarkerMap = Map<string, { koordinatXX: number; koordinatYY: number; dataUrl: string; markerType: MarkerType }>;
 
 interface MapViewState {
   center: Center;
@@ -22,7 +21,7 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   zoom: 6,
   radius: 0,
   initialLocationSet: false,
-  schoolMarkers: new Map(),
+  schoolMarkers: new Map() as MarkerMap,
   setCenter: (c) => {
     set((prev) => {
       console.log("[mapView] setCenter", { prevCenter: prev.center, nextCenter: c });

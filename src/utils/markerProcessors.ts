@@ -1,8 +1,8 @@
 import type { MarkerGroup } from "../models/response";
 import type { MarkerType } from "../types/maps";
 
-export type MarkerMap = Map<string, { koordinatXX: number; koordinatYY: number; dataUrl: string; markerType: MarkerType }>;
-export type SchoolMarker = { koordinatXX: number; koordinatYY: number; dataUrl: string; markerType: MarkerType };
+export type MarkerMap = Map<string, { koordinatXX: number; koordinatYY: number; dataUrl: string; markerType: MarkerType; total?: number }>;
+export type SchoolMarker = { koordinatXX: number; koordinatYY: number; dataUrl: string; markerType: MarkerType; total?: number };
 
 /**
  * Helper function to add a marker if it doesn't exist
@@ -65,6 +65,7 @@ const processParlimenMarker = (marker: MarkerGroup, map: MarkerMap): number => {
     koordinatYY: marker.infoLokasi.koordinatXX,
     dataUrl: marker.total?.toString() ?? "",
     markerType: marker.markerType,
+    total:marker.total
   }) ? 1 : 0;
 };
 
@@ -79,6 +80,7 @@ const processNegeriMarker = (marker: MarkerGroup, map: MarkerMap): number => {
     koordinatYY: marker.infoLokasi.koordinatXX,
     dataUrl: marker.total?.toString() ?? "",
     markerType: marker.markerType,
+    total:marker.total
   }) ? 1 : 0;
 };
 

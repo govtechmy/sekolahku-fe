@@ -39,7 +39,6 @@ export function useAppendNewMarkers({
         
         const prevSchool = schoolMarkers.values().next().value?.markerType;
         const newMarkerType = markersArray[0]?.markerType;
-        
         setSchoolMarkers((prevMap) => {
           if (!prevSchool || newMarkerType !== prevSchool) {
             return processMarkers(markersArray, new Map());

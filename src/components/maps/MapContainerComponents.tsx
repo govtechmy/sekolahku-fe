@@ -139,6 +139,7 @@ export function MapContainerComponent({
             koordinatXX: coords.koordinatXX,
             koordinatYY: coords.koordinatYY,
             id: kodSekolah,
+            total: (coords as any).total,
           }}
           onClick={async () => {
             setViewSchool(null); // Reset before setting new school

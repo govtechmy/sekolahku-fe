@@ -37,6 +37,7 @@ export const getSchoolNearby = async (params?: NearbySchoolsParams): Promise<Nea
       params,
       paramsSerializer: { indexes: null },
     })
+    console.log("THIS IS RESPONSE DATA",response.data.data)
     return response.data.data
   } catch (error) {
     console.error('Error fetching nearby schools:', error)
@@ -67,7 +68,7 @@ export const fetchNearbySchools = async (
     longitude: number,
     radiusInMeter: number,
     initialLocationSet?: boolean,
-    zoom?: number
+    zoom?: number,
   ): Promise<MarkerGroup[]> => {
     
     if (initialLocationSet === false) {
@@ -81,9 +82,11 @@ export const fetchNearbySchools = async (
         zoom,
       });
 
+      console.log("HEHEHEHEHEHEHEHEHE", nearbySchools.markerGroups[0].total)
+
       return nearbySchools?.markerGroups || [];
     } catch (error) {
       console.error("Failed to fetch nearby schools:", error);
       return [];
     }
-  };
+};
