@@ -58,9 +58,8 @@ export default function SearchBarMain({
         {results.length > 0 ? (
           <SearchBarResultsList className="max-h-[400px] overflow-y-scroll">
             {results.map((item) => (
-              <SearchBarResultsItem key={item.key} value={item.name} onSelect={() => onClick(item.key)}
-              >
-                <span className="bg-primary-50 text-txt-primary rounded-full p-px">
+              <SearchBarResultsItem key={item.key} value={item.key} onSelect={() => onClick(item.key)}>
+                <span className="bg-primary-50 text-txt-primary rounded-full p-0.5">
                   <UserIcon className="size-4" />
                 </span>
                 <p className="line-clamp-1 flex-1 text-start">

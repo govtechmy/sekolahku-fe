@@ -49,8 +49,8 @@ export default function Siaran() {
     note: item.description,
   }));
   const searchResult = searchData.filter((item) =>
-    item.name.toLowerCase().includes(query.toLocaleLowerCase()) ||
-    item.note.toLowerCase().includes(query.toLocaleLowerCase())
+    item.name.toLowerCase().includes(query.toLowerCase()) ||
+    item.note.toLowerCase().includes(query.toLowerCase())
   );
   const handleClick = (id: string) => {
     // handle any additional logic on click

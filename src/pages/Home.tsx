@@ -51,9 +51,11 @@ export default function HomePage() {
     note: person.note,
   }));
   const searchResult = searchData.filter((person) =>
-    person.name.toLowerCase().includes(query.toLocaleLowerCase())
+    person.name.toLowerCase().includes(query.toLowerCase())
   );
   const handleClick = (id: string) => {
+    // temporary log, will be fix on another PR
+    console.log("Clicked item ID:", id);
     // handle any additional logic on click
     // navigate(`/${lang}/carian-sekolah?sekolahid=${id}`);
   }
