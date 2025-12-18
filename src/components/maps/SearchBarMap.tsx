@@ -215,13 +215,7 @@ export function SearchBarMap({
 
                         <span className="mt-1 flex items-center text-sm text-blue-600 gap-1">
                           <MapIcon className="w-4 h-4" />
-                          {calculateDistance(initialLocationUser[0], initialLocationUser[1], school.koordinatXX, school.koordinatYY)}
-                          Inital Location User Latitude : {initialLocationUser[0]}
-                          Inital Location User Longitude : {initialLocationUser[1]}
-                          ===
-                           Latitude {school.koordinatYY} ,
-                          Longitude : {school.koordinatXX} 
-
+                          {calculateDistance(initialLocationUser[0], initialLocationUser[1], school.koordinatYY, school.koordinatXX).toFixed(2)} meter dari lokasi anda
                         </span>
                       </div>
 
