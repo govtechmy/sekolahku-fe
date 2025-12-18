@@ -1,4 +1,4 @@
-import type { schoolSearchModel, ListSekolahModel, APIResponse, ItemSekolahModel, NearbySchoolsModel, NearbySchoolsParams } from '../models/response'
+import type { schoolSearchModel, ListSekolahModel, APIResponse, ItemSekolahModel, NearbySchoolsModel, NearbySchoolsParams, MarkerGroup } from '../models/response'
 import { authAxios } from './http'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
@@ -54,9 +54,6 @@ export const getSchoolS3Json = async (dataUrl?: string, negeri?: string, parlime
       }
     }
     const response = await authAxios.get<ItemSekolahModel>(dataUrl)
-    console.log('dataUrl:', dataUrl)
-    console.log('Error fetching schodadwadawdawdwadwdadwdw')
-    console.log(response.data)
     return response.data
     
   } catch (error) {
@@ -64,3 +61,29 @@ export const getSchoolS3Json = async (dataUrl?: string, negeri?: string, parlime
     throw error
   }
 }
+
+export const fetchNearbySchools = async (
+    latitude: number,
+    longitude: number,
+    radiusInMeter: number,
+    initialLocationSet?: boolean,
+    zoom?: number
+  ): Promise<MarkerGroup[]> => {
+    
+    if (initialLocationSet === false) {
+      return [];
+    }
+    try {
+      const nearbySchools = await getSchoolNearby({
+        latitude,
+        longitude,
+        radiusInMeter,
+        zoom,
+      });
+
+      return nearbySchools?.markerGroups || [];
+    } catch (error) {
+      console.error("Failed to fetch nearby schools:", error);
+      return [];
+    }
+  };
