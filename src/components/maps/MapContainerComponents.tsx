@@ -142,8 +142,14 @@ export function MapContainerComponent({
             total: coords.total,
           }}
           onClick={async () => {
-            if(coords.markerType !== "INDIVIDUAL")
-              return 0;
+            if(coords.markerType === "NEGERI"){
+            setCenter([coords.koordinatXX, coords.koordinatYY]);
+            setZoom(12);
+            }
+            if(coords.markerType === "PARLIMEN"){
+            setCenter([coords.koordinatXX, coords.koordinatYY]);
+            setZoom(16);
+            }
             setViewSchool(null); // Reset before setting new school
             setViewSchool(await getSchoolS3Json(coords.dataUrl));
             setCenter([coords.koordinatXX, coords.koordinatYY]);
