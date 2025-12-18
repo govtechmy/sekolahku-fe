@@ -30,7 +30,7 @@ export function SchoolMapMarker({ school, onClick }: SchoolMapMarkerProps) {
   return (
     <Marker
       position={[school.koordinatXX, school.koordinatYY]}
-      icon={icon as L.DivIcon | L.Icon<L.IconOptions>}
+      icon={icon as L.DivIcon}
       eventHandlers={{
         click: onClick,
       }}

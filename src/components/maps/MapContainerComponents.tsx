@@ -64,8 +64,8 @@ export function MapContainerComponent({
   setViewSchool,
 }: MapContainerProps) {
   const {
-    center: mapCenter,
-    setCenter: setMapCenter,
+    center,
+    setCenter,
     setZoom,
     zoom,
     radius,
@@ -99,10 +99,10 @@ export function MapContainerComponent({
           setZoom(zoom);
         }}
         onCenterChange={(center) => {
-          setMapCenter([center.koordinatXX, center.koordinatYY]);
+          setCenter([center.koordinatXX, center.koordinatYY]);
         }}
         onDragStart={() => {
-          setDragStartPos({ koordinatXX: mapCenter[0], koordinatYY: mapCenter[1] });
+          setDragStartPos({ koordinatXX: center[0], koordinatYY: center[1] });
         }}
         onDragEnd={(newCenter) => {
           if (dragStartPos) {
@@ -121,7 +121,7 @@ export function MapContainerComponent({
         }}
       />
       <Circle
-        center={mapCenter}
+        center={center}
         radius={radius}
         pathOptions={{
           color: "#3b82f6",
@@ -143,7 +143,7 @@ export function MapContainerComponent({
           onClick={async () => {
             setViewSchool(null); // Reset before setting new school
             setViewSchool(await getSchoolS3Json(coords.dataUrl));
-            setMapCenter([coords.lat, coords.lng]);
+            setCenter([coords.lat, coords.lng]);
             setZoom(18);
           }}
         />
