@@ -52,6 +52,10 @@ export default function Siaran() {
     item.name.toLowerCase().includes(query.toLocaleLowerCase()) ||
     item.note.toLowerCase().includes(query.toLocaleLowerCase())
   );
+  const handleClick = (id: string) => {
+    // handle any additional logic on click
+    navigate(`/${lang}/siaran/${id}`);
+  }
 
   return (
     <div className="">
@@ -68,6 +72,7 @@ export default function Siaran() {
             hasQuery={query.length > 0}
             inputRef={inputRef}
             results={searchResult}
+            onClick={handleClick}
           />
         }
         background={<img src="/utama/siaran/hero-banner/sekolahku-1.png" alt="siaran hero" />}
