@@ -99,6 +99,7 @@ export default function SchoolMaps() {
   // SET RADIUS FOR MAP TO DISPLAY SCHOOL
   useEffect(() => {
     if (zoom) {
+      console.log("=============================)", zoom);
       setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
       console.log("THIS IS THE CALCULATED RADIUS", radius);
       appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });

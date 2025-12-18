@@ -109,8 +109,9 @@ export function SearchBarMap({
       if (detail) {
         setViewSchool(detail);
         setMapCenter([school.koordinatYY, school.koordinatXX]);
+        setMapZoom(16);
+        console.log("aaaaaaaasaasadfaaffafaaffafafafa:");
         setMapZoom(17);
-        
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
