@@ -7,18 +7,24 @@ import {
     SearchBarResultsList,
     SearchBarClearButton,
     SearchBarHint,
+    SearchBarResultsItem,
   } from "@govtechmy/myds-react/search-bar";
   import { Pill } from "@govtechmy/myds-react/pill";
-  import { useState } from "react";
+import { ChevronRightIcon, UserIcon } from "@govtechmy/myds-react/icon";
   
   export default function SearchBarMain({
-    desc,
+    shortdesc, desc, hasFocus, setHasFocus, query, setQuery, hasQuery, inputRef, results
   }: {
+    shortdesc?: string;
     desc?: string;
+    hasFocus: boolean;
+    setHasFocus: (value: boolean) => void;
+    query: string;
+    setQuery: (value: string) => void;
+    hasQuery: boolean;
+    inputRef: React.RefObject<HTMLInputElement>;
+    results: { key: string; name: string; note: string }[];
   }) {
-    const [hasFocus, setHasFocus] = useState(false);
-    const [query, setQuery] = useState("");
-    const hasQuery = query.length > 0;
   
     return (
       <SearchBar
@@ -31,7 +37,8 @@ import {
       >
         <SearchBarInputContainer>
           <SearchBarInput
-            placeholder={`Cari kata kunci: ${desc}`}
+            ref={inputRef}
+            placeholder={shortdesc ? shortdesc : `Cari kata kunci: ${desc}`}
             value={query}
             onValueChange={setQuery}
             onFocus={() => setHasFocus(true)}
@@ -47,26 +54,25 @@ import {
           <SearchBarSearchButton />
         </SearchBarInputContainer>
         <SearchBarResults open={hasQuery && hasFocus}>
-          {hasQuery && (
-            <p className="text-txt-black-900 text-center">No results found</p>
-          )}
-          {hasQuery && (
+          {results.length > 0 ? (
             <SearchBarResultsList className="max-h-[400px] overflow-y-scroll">
-              {/* {results.map((item) => (
-                <SearchBarResultsItem key={item.name} value={item.name}>
+              {results.map((item) => (
+                <SearchBarResultsItem key={item.key} value={item.name}>
                   <span className="bg-primary-50 text-txt-primary rounded-full p-px">
                     <UserIcon className="size-4" />
                   </span>
-                  <p className="line-clamp-1 flex-1">
+                  <p className="line-clamp-1 flex-1 text-start">
                     {item.name}
-                    <span className="text-txt-black-500 text-xs">
+                    <span className="ml-2 text-txt-black-500 text-xs">
                       {item.note}
                     </span>
                   </p>
                   <ChevronRightIcon />
                 </SearchBarResultsItem>
-              ))} */}
+              ))}
             </SearchBarResultsList>
+          ):(
+            <p className="text-txt-black-900 text-center">No results found</p>
           )}
         </SearchBarResults>
       </SearchBar>
