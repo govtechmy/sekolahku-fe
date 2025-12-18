@@ -22,6 +22,7 @@ import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import type { ItemSekolahModel } from "../../models/response";
 import { useMapViewStore } from "../../store/mapView";
 import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
+import { calculateDistance } from "../../utils/calculateDistance";
 
 interface MapSearchBarProps{
   query: string;
@@ -46,10 +47,9 @@ export function SearchBarMap({
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
   const debounceTimerRef = useRef<number | null>(null);
-  const {
-    setCenter,
-    setZoom,
-  } = useMapViewStore();
+  const setCenter = useMapViewStore((s) => s.setCenter);
+  const setZoom = useMapViewStore((s) => s.setZoom);
+  const initialLocationUser = useMapViewStore((s) => s.initialLocationUser);
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
@@ -215,11 +215,13 @@ export function SearchBarMap({
 
                         <span className="mt-1 flex items-center text-sm text-blue-600 gap-1">
                           <MapIcon className="w-4 h-4" />
-                          {school.distance
-                            ? `${school.distance.toFixed(
-                              2
-                            )} km dari lokasi anda`
-                            : "Jarak tidak tersedia"}
+                          {calculateDistance(initialLocationUser[0], initialLocationUser[1], school.koordinatXX, school.koordinatYY)}
+                          Inital Location User Latitude : {initialLocationUser[0]}
+                          Inital Location User Longitude : {initialLocationUser[1]}
+                          ===
+                           Latitude {school.koordinatYY} ,
+                          Longitude : {school.koordinatXX} 
+
                         </span>
                       </div>
 

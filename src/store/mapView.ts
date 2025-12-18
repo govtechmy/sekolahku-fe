@@ -5,18 +5,23 @@ type Center = [number, number];
 
 interface MapViewState {
   center: Center;
+  initialLocationUser: Center;
   zoom: number;
   initialLocationSet: boolean;
   radius: number;
   schoolMarkers: MarkerMap;
-  setRadius: (r: number)=> void
   setCenter: (c: Center) => void;
+  setInitialLocationUser: (c: Center) => void;
+  setRadius: (r: number) => void;
   setZoom: (z: number) => void;
   setInitialLocationSet: (v: boolean) => void;
-  setSchoolMarkers: (markers: MarkerMap | ((prev: MarkerMap) => MarkerMap)) => void;
+  setSchoolMarkers: (
+    markers: MarkerMap | ((prev: MarkerMap) => MarkerMap)
+  ) => void;
 }
 
 export const useMapViewStore = create<MapViewState>((set) => ({
+  initialLocationUser:[3.760115447396889, 108.46252441406251],
   center: [3.760115447396889, 108.46252441406251],
   zoom: 6,
   radius: 0,
@@ -25,6 +30,11 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   setCenter: (c) => {
     set(() => {
       return { center: c };
+    });
+  },
+  setInitialLocationUser: (initlocuser) => {
+    set(() => {
+      return { initialLocationUser: initlocuser };
     });
   },
   setZoom: (z) => {
@@ -44,8 +54,9 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   },
   setSchoolMarkers: (markers) => {
     set((state) => {
-      const next = typeof markers === "function" ? markers(state.schoolMarkers) : markers;
+      const next =
+        typeof markers === "function" ? markers(state.schoolMarkers) : markers;
       return { schoolMarkers: next };
     });
-  }
+  },
 }));

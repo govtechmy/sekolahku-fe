@@ -29,6 +29,7 @@ export default function SchoolMaps() {
     setRadius,
     initialLocationSet,
     setInitialLocationSet,
+    setInitialLocationUser,
     setSchoolMarkers,
     schoolMarkers
   } = useMapViewStore();
@@ -73,6 +74,7 @@ export default function SchoolMaps() {
       (position) => {
         const { latitude, longitude } = position.coords;
         setCenter([latitude, longitude]);
+        setInitialLocationUser([latitude,longitude])
         setZoom(17);
         setInitialLocationSet(true);
       },
