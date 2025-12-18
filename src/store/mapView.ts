@@ -23,40 +23,29 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   initialLocationSet: false,
   schoolMarkers: new Map() as MarkerMap,
   setCenter: (c) => {
-    set((prev) => {
-      console.log("[mapView] setCenter", { prevCenter: prev.center, nextCenter: c });
+    set(() => {
       return { center: c };
     });
   },
   setZoom: (z) => {
-    set((prev) => {
-      console.log("[mapView] setZoom", { prevZoom: prev.zoom, nextZoom: z });
+    set(() => {
       return { zoom: z };
     });
   },
   setRadius: (r) => {
-    set((prev) => {
-      console.log("[mapView] setRadius", { prevRadius: prev.radius, nextRadius: r });
+    set(() => {
       return { radius: r };
     });
   },
   setInitialLocationSet: (v) => {
-    set((prev) => {
-      console.log("[mapView] setInitialLocationSet", { prev: prev.initialLocationSet, next: v });
+    set(() => {
       return { initialLocationSet: v };
     });
   },
   setSchoolMarkers: (markers) => {
     set((state) => {
       const next = typeof markers === "function" ? markers(state.schoolMarkers) : markers;
-      console.log("[mapView] setSchoolMarkers", {
-        inputType: typeof markers,
-        prevSize: state.schoolMarkers.size,
-        nextSize: next.size
-      });
       return { schoolMarkers: next };
     });
   }
 }));
-
-console.log("[mapView] useMapViewStore created");

@@ -46,9 +46,9 @@ export function SearchBarMap({
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
   const debounceTimerRef = useRef<number | null>(null);
-    const {
-    setCenter: setMapCenter,
-    setZoom: setMapZoom,
+  const {
+    setCenter,
+    setZoom,
   } = useMapViewStore();
 
   // Use predefined lists instead of extracting from markers
@@ -108,10 +108,11 @@ export function SearchBarMap({
       const detail = await getSchoolS3Json(undefined, school.negeri, school.parlimen, school.kodSekolah);
       if (detail) {
         setViewSchool(detail);
-        setMapCenter([school.koordinatYY, school.koordinatXX]);
-        setMapZoom(16);
-        console.log("aaaaaaaasaasadfaaffafaaffafafafa:");
-        setMapZoom(17);
+        setCenter([school.koordinatYY, school.koordinatXX]);
+        setZoom(16);
+        setTimeout(() => {
+          setZoom(17);
+        }, 0);
       }
     } catch (error) {
       console.error("Error fetching school details:", error);

@@ -55,7 +55,6 @@ export default function SchoolMaps() {
     zoom,
   });
 
-  //SET TO FETCH GEOLOCATION FROM USER
   useEffect(() => {
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
@@ -73,7 +72,6 @@ export default function SchoolMaps() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        console.log("Geolocation success:", { latitude, longitude });
         setCenter([latitude, longitude]);
         setZoom(17);
         setInitialLocationSet(true);
@@ -91,17 +89,13 @@ export default function SchoolMaps() {
     if (!initialLocationSet) return;
 
     initialLoadRequestedRef.current = true;
-    console.log("Loading initial schools");
     loadInitialSchools();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialLocationSet]);
 
-  // SET RADIUS FOR MAP TO DISPLAY SCHOOL
   useEffect(() => {
     if (zoom) {
-      console.log("=============================)", zoom);
       setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
-      console.log("THIS IS THE CALCULATED RADIUS", radius);
       appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
