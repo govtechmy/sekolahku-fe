@@ -127,3 +127,21 @@ export interface S3JsonModel {
   parlimen?: string
   kodSekolah?: string
 }
+
+export interface CategoryItem {
+  jenis: string
+  peratus: number
+  total: number
+}
+
+export interface AnalyticsData {
+  jenisLabel: CategoryItem[]
+  bantuan: CategoryItem[]
+}
+
+export interface AnalyticsModel {
+  jumlahSekolah: number
+  jumlahGuru: number
+  jumlahPelajar: number
+  data: AnalyticsData
+}
