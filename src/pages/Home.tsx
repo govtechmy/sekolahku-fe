@@ -11,6 +11,7 @@ import Statistic from "../components/statistic";
 import {
   statisticYearlyData,
   chartBaseData,
+  dataItemAnalytics,
   dataItemCalendar,
   dataItemLinks,
   dataItemNews,
@@ -71,8 +72,9 @@ export default function HomePage() {
         header="ANALITIK"
         title="Fakta Menarik Sekolah di Malaysia"
         children={
-          <SectionItemAnalytics />
+          <SectionItemAnalytics dataItemAnalytics={dataItemAnalytics} />
         }
+        ButtonLabel="Lihat Data Lengkap"
       />
 
       <SectionHeader
