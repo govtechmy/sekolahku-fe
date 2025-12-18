@@ -117,7 +117,7 @@ export default function SchoolMaps() {
 
       if (transformed.length > 0) {
         const firstResult = transformed[0];
-        setCenter([firstResult.koordinatXX, firstResult.koordinatYY]);
+        setCenter([firstResult.koordinatYY, firstResult.koordinatXX]);
         setZoom(18);
       }
     } catch (error) {

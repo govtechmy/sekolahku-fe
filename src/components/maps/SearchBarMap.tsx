@@ -108,9 +108,9 @@ export function SearchBarMap({
       const detail = await getSchoolS3Json(undefined, school.negeri, school.parlimen, school.kodSekolah);
       if (detail) {
         setViewSchool(detail);
-        setMapCenter([school.koordinatXX, school.koordinatYY]);
+        setMapCenter([school.koordinatYY, school.koordinatXX]);
         setMapZoom(17);
-
+        
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
