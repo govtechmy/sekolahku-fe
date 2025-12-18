@@ -148,7 +148,7 @@ export function MapContainerComponent({
             }
             if(coords.markerType === "PARLIMEN"){
             setCenter([coords.koordinatXX, coords.koordinatYY]);
-            setZoom(16);
+            setZoom(14);
             }
             if (coords.markerType === "INDIVIDUAL") {
             setViewSchool(null); // Reset before setting new school
