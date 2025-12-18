@@ -5,7 +5,6 @@ import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import { FilterAscIcon } from "@govtechmy/myds-react/icon";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
 import Hero from "../components/shared/Hero";
-import SearchBarHome from "../components/shared/SearchBarHome";
 import { Button } from "@govtechmy/myds-react/button";
 import Statistic from "../components/statistic";
 import {
@@ -15,14 +14,60 @@ import {
   dataItemCalendar,
   dataItemLinks,
   dataItemNews,
+  notableMalaysians,
 } from "../contentData";
+import { useEffect, useRef, useState } from "react";
+import SearchBarMain from "../components/shared/SearchBar";
 
 export default function HomePage() {
+  const inputRef = useRef<HTMLInputElement>(null!);
+  const [hasFocus, setHasFocus] = useState(false);
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Avoid triggering when typing in inputs
+      const target = e.target as HTMLElement;
+      const isTyping =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable;
+
+      if (isTyping) return;
+
+      if (e.key === "/") {
+        e.preventDefault(); // stop browser quick-find
+        inputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
+  const searchData = notableMalaysians.map((person, index) => ({
+    key: index.toString(),
+    name: person.name,
+    note: person.note,
+  }));
+  const searchResult = searchData.filter((person) =>
+    person.name.toLowerCase().includes(query.toLocaleLowerCase())
+  );
+
   return (
     <div className="mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
       <Hero
         title="Selamat Datang Ke Portal Sekolahku"
-        search={<SearchBarHome />}
+        search={<SearchBarMain
+          shortdesc="Cari siaran sekolah"
+          hasFocus={hasFocus}
+          setHasFocus={setHasFocus}
+          query={query}
+          setQuery={setQuery}
+          hasQuery={query.length > 0}
+          inputRef={inputRef}
+          results={searchResult}
+        />}
         links={
           <div className="flex flex-col items-center md:items-start gap-3">
             <div className="text-body-sm text-txt-black-500">
