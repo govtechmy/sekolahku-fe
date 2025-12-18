@@ -1,8 +1,8 @@
 import type { MarkerGroup } from "../models/response";
 import type { MarkerType } from "../types/maps";
 
-export type MarkerMap = Map<string, { lat: number; lng: number; dataUrl: string; markerType: MarkerType }>;
-export type SchoolMarker = { lat: number; lng: number; dataUrl: string; markerType: MarkerType };
+export type MarkerMap = Map<string, { koordinatXX: number; koordinatYY: number; dataUrl: string; markerType: MarkerType }>;
+export type SchoolMarker = { koordinatXX: number; koordinatYY: number; dataUrl: string; markerType: MarkerType };
 
 /**
  * Helper function to add a marker if it doesn't exist
@@ -29,8 +29,8 @@ const processGroupMarkers = (marker: MarkerGroup, map: MarkerMap): number => {
   let count = 0;
   marker.items.forEach((item) => {
     const added = addMarkerIfNew(map, item.kodSekolah, {
-      lat: item.infoLokasi.koordinatYY,
-      lng: item.infoLokasi.koordinatXX,
+      koordinatXX: item.infoLokasi.koordinatYY,
+      koordinatYY: item.infoLokasi.koordinatXX,
       dataUrl: item.dataUrl,
       markerType: item.markerType,
     });
@@ -46,8 +46,8 @@ const processIndividualMarker = (marker: MarkerGroup, map: MarkerMap): number =>
   if (marker.markerType !== "INDIVIDUAL") return 0;
   
   return addMarkerIfNew(map, marker.kodSekolah, {
-    lat: marker.infoLokasi.koordinatYY,
-    lng: marker.infoLokasi.koordinatXX,
+    koordinatXX: marker.infoLokasi.koordinatYY,
+    koordinatYY: marker.infoLokasi.koordinatXX,
     dataUrl: marker.dataUrl,
     markerType: marker.markerType,
   }) ? 1 : 0;
@@ -61,8 +61,8 @@ const processParlimenMarker = (marker: MarkerGroup, map: MarkerMap): number => {
   
   const key = `${marker.negeri}-${marker.parlimen}`;
   return addMarkerIfNew(map, key, {
-    lat: marker.infoLokasi.koordinatYY,
-    lng: marker.infoLokasi.koordinatXX,
+    koordinatXX: marker.infoLokasi.koordinatYY,
+    koordinatYY: marker.infoLokasi.koordinatXX,
     dataUrl: marker.total?.toString() ?? "",
     markerType: marker.markerType,
   }) ? 1 : 0;
@@ -75,8 +75,8 @@ const processNegeriMarker = (marker: MarkerGroup, map: MarkerMap): number => {
   if (marker.markerType !== "NEGERI" || !marker.negeri) return 0;
   
   return addMarkerIfNew(map, marker.negeri, {
-    lat: marker.infoLokasi.koordinatYY,
-    lng: marker.infoLokasi.koordinatXX,
+    koordinatXX: marker.infoLokasi.koordinatYY,
+    koordinatYY: marker.infoLokasi.koordinatXX,
     dataUrl: marker.total?.toString() ?? "",
     markerType: marker.markerType,
   }) ? 1 : 0;
@@ -115,8 +115,8 @@ export const extractSchoolData = (markers: MarkerGroup[]): MarkerMap => {
     if (marker.markerType === "GROUP" && marker.items) {
       marker.items.forEach((item) => {
         schoolMap.set(item.kodSekolah, {
-          lat: item.infoLokasi.koordinatYY,
-          lng: item.infoLokasi.koordinatXX,
+          koordinatXX: item.infoLokasi.koordinatYY,
+          koordinatYY: item.infoLokasi.koordinatXX,
           dataUrl: item.dataUrl,
           markerType: item.markerType,
         });

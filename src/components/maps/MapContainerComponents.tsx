@@ -136,14 +136,14 @@ export function MapContainerComponent({
           school={{
             markerType: coords.markerType,
             radiusInMeter: 0,
-            koordinatXX: coords.lat,
-            koordinatYY: coords.lng,
+            koordinatXX: coords.koordinatXX,
+            koordinatYY: coords.koordinatYY,
             id: kodSekolah,
           }}
           onClick={async () => {
             setViewSchool(null); // Reset before setting new school
             setViewSchool(await getSchoolS3Json(coords.dataUrl));
-            setCenter([coords.lat, coords.lng]);
+            setCenter([coords.koordinatXX, coords.koordinatYY]);
             setZoom(18);
           }}
         />
