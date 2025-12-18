@@ -1,9 +1,9 @@
+import HomeHero from "../Hero/HomeHero";
+import SchoolProfileHero from "../Hero/SchoolProfileHero";
+import SiaranHero from "../Hero/SiaranHero";
 import FooterMyds from "./FooterMyds";
 import MastheadMyds from "./MastheadMyds";
 import NavbarMyds from "./NavbarMyds";
-import HomeHero from "./HomeHero";
-import SiaranHero from "./SiaranHero";
-import SchoolProfileHero from "./SchoolProfileHero";
 import { Outlet, useLocation } from "react-router-dom";
 
 export default function LayoutMain() {
