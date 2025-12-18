@@ -11,6 +11,8 @@ import type { ItemSekolahModel } from "../models/response";
 import { useMapViewStore } from "../store/mapView";
 import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 import { useInitialSchools } from "../hooks/useInitialSchools";
+import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
+
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
@@ -28,11 +30,20 @@ export default function SchoolMaps() {
     initialLocationSet,
     setInitialLocationSet,
     setSchoolMarkers,
+    schoolMarkers
   } = useMapViewStore();
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
   const geolocationRequestedRef = useRef(false);
   const initialLoadRequestedRef = useRef(false);
+    const appendNewMarkers = useAppendNewMarkers({
+      fetchNearbySchools,
+      schoolMarkers,
+      setSchoolMarkers,
+      radius,
+      initialLocationSet,
+      zoom,
+    });
 
   // Load initial Schools Hook
   const { loadInitialSchools } = useInitialSchools({
@@ -90,6 +101,7 @@ export default function SchoolMaps() {
     if (zoom) {
       setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
       console.log("THIS IS THE CALCULATED RADIUS", radius);
+      appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoom]);

@@ -113,7 +113,7 @@ export function MapContainerComponent({
               newCenter.koordinatYY
             );
 
-            if (distance > (radius/10)) {
+            if (distance > (radius/100)) {
               appendNewMarkers({ koordinatXX: newCenter.koordinatXX, koordinatYY: newCenter.koordinatYY });
             }
           }
@@ -150,10 +150,12 @@ export function MapContainerComponent({
             setCenter([coords.koordinatXX, coords.koordinatYY]);
             setZoom(16);
             }
+            if (coords.markerType === "INDIVIDUAL") {
             setViewSchool(null); // Reset before setting new school
             setViewSchool(await getSchoolS3Json(coords.dataUrl));
             setCenter([coords.koordinatXX, coords.koordinatYY]);
             setZoom(18);
+            }
           }}
         />
       ))}
