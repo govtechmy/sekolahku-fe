@@ -37,16 +37,15 @@ export function useAppendNewMarkers({
           zoom
         );
         
-        // Do nothing if markersArray is null or empty
-        if (!markersArray || markersArray.length === 0) {
-          console.log("No markers to append, skipping update");
-          return;
-        }
-
         const prevSchool = schoolMarkers.values().next().value?.markerType;
         const newMarkerType = markersArray[0]?.markerType;
+        
+        if (!newMarkerType) {
+          return;
+        }
+        
         setSchoolMarkers((prevMap) => {
-          if (!prevSchool || newMarkerType !== prevSchool) {
+          if (!markersArray.length || !prevSchool || newMarkerType !== prevSchool) {
             return processMarkers(markersArray, new Map());
           }
           

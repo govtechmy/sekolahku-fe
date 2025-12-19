@@ -24,7 +24,7 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   initialLocationUser:[3.760115447396889, 108.46252441406251],
   center: [3.760115447396889, 108.46252441406251],
   zoom: 6,
-  radius: 0,
+  radius: 3000,
   initialLocationSet: false,
   schoolMarkers: new Map() as MarkerMap,
   setCenter: (c) => {

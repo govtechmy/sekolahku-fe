@@ -111,7 +111,7 @@ export function SearchBarMap({
         setCenter([school.koordinatYY, school.koordinatXX]);
         setZoom(16);
         setTimeout(() => {
-          setZoom(17);
+          setZoom(15);
         }, 0);
       }
     } catch (error) {

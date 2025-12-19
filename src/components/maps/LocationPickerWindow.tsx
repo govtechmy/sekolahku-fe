@@ -25,7 +25,7 @@ type DistrictEntry = Record<string, [number, number]>;
 export function LocationPickerWindow({
   onClose,
 }: LocationPickerWindowProps) {
-  const { setCenter: setMapCenter, setZoom: setMapZoom, setInitialLocationSet,initialLocationUser, setInitialLocationUser } = useMapViewStore();
+  const { setCenter, setZoom, setInitialLocationSet, setInitialLocationUser } = useMapViewStore();
   const [currentView, setCurrentView] = useState<"states" | "districts">("states");
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
@@ -55,13 +55,9 @@ export function LocationPickerWindow({
     const coords = entry ? (Object.values(entry)[0] as [number, number]) : null;
 
     if (coords) {
-      setMapCenter(coords);
-      console.log("THIS IS THE COORDINATES",coords)
+      setCenter(coords);
       setInitialLocationUser(coords)
-      console.log("Updated initialLocationUser:", useMapViewStore.getState().initialLocationUser);
-      console.log("this is old state",initialLocationUser)
-      console.log("THIS IS THE COORDINATES",coords)
-      setMapZoom(15);
+      setZoom(15);
       onClose();
       setInitialLocationSet(true);
     }
