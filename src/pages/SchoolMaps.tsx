@@ -78,7 +78,7 @@ export default function SchoolMaps() {
   //2. Fetch Nearby Zoom - Initial Trigger when zoom happens
   useEffect(() => {
 
-    //Guard to make sure if location set then zoom
+    // Guard to ensure location is set before processing zoom
     if (initialLocationSet) {
       if (zoom) {
         setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
