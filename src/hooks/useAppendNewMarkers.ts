@@ -40,8 +40,12 @@ export function useAppendNewMarkers({
         const prevSchool = schoolMarkers.values().next().value?.markerType;
         const newMarkerType = markersArray[0]?.markerType;
         
+        if (!newMarkerType) {
+          return;
+        }
+        
         setSchoolMarkers((prevMap) => {
-          if (!prevSchool || newMarkerType !== prevSchool) {
+          if (!markersArray.length || !prevSchool || newMarkerType !== prevSchool) {
             return processMarkers(markersArray, new Map());
           }
           
