@@ -77,8 +77,10 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
       <h3 className="text-lg font-semibold text-txt-primary mb-4 text-center">
         {title}
       </h3>
-      <div className="flex-1" style={{ minHeight: "400px", maxHeight: "400px" }}>
-        <Doughnut data={chartData} options={options} />
+      <div className="flex justify-center items-center">
+        <div className="w-full max-w-md" style={{ height: "300px" }}>
+          <Doughnut data={chartData} options={options} />
+        </div>
       </div>
       
       {/* Custom Legend - 2 Column Grid */}
