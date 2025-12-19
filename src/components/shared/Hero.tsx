@@ -32,7 +32,7 @@ export default function Hero({
   background,
   heroBanner,
   variant = "side",
-  gradientColors,
+  HeroclassName,
 }: {
   title: string;
   search?: React.ReactNode;
@@ -41,11 +41,7 @@ export default function Hero({
   background?: React.ReactNode;
   heroBanner?: HeroBanner;
   variant?: "side" | "full";
-  gradientColors?: {
-    "top-gradient": string;
-    "middle-gradient": string;
-    "bottom-gradient": string;
-  };
+  HeroclassName?: string;
 }) {
   return (
     <section className={clx(
@@ -54,26 +50,18 @@ export default function Hero({
     )}>
       {variant === "side" && heroBanner ? (
         <div
-          style={
-            {
-              "--top-gradient-color": heroBanner["top-gradient"],
-              "--middle-gradient-color": heroBanner["middle-gradient"],
-              "--bottom-gradient-color": heroBanner["bottom-gradient"],
-            } as React.CSSProperties
-          }
           className={clx(
-            "absolute -z-10 flex h-full w-full justify-start overflow-hidden bg-gradient-radial from-0% via-[27.57%] to-100%",
-            "from-[var(--middle-gradient-color)] via-[var(--top-gradient-color)] to-[var(--bottom-gradient-color)]"
+            `absolute -z-10 flex h-full w-full justify-start overflow-hidden bg-gradient-radial from-0% via-[27.57%] to-100%, ${HeroclassName}`
           )}
         >
           <div
-            className="hidden h-full w-full bg-cover bg-center bg-no-repeat lg:block 2xl:bg-contain"
+            className="hidden lg:block h-full w-full bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url('${typeof heroBanner.desktop.file_desktop !== "string" && heroBanner.desktop.file_desktop.url}')`,
             }}
           />
           <div
-            className="bg-fill block h-full w-full bg-center bg-no-repeat sm:bg-contain lg:hidden"
+            className="block lg:hidden h-full w-full bg-contain bg-center bg-no-repeat"
             style={{
               backgroundImage: `url('${typeof heroBanner.mobile.file_mobile !== "string" && heroBanner.mobile.file_mobile.url}')`,
             }}
@@ -81,16 +69,9 @@ export default function Hero({
         </div>
       ) : background ? (
         <div 
-          style={
-            gradientColors ? {
-              "--top-gradient-color": gradientColors["top-gradient"],
-              "--middle-gradient-color": gradientColors["middle-gradient"],
-              "--bottom-gradient-color": gradientColors["bottom-gradient"],
-            } as React.CSSProperties : undefined
-          }
           className={clx(
             "absolute -z-10 flex h-full w-full justify-center overflow-hidden object-scale-down",
-            gradientColors && "bg-gradient-to-b from-[var(--top-gradient-color)] via-[var(--middle-gradient-color)] to-[var(--bottom-gradient-color)]"
+            HeroclassName
           )}
         >
           {background} 
@@ -101,10 +82,10 @@ export default function Hero({
       )}>
         <div className={clx(
           "flex flex-col gap-8 py-16 items-center lg:text-start text-center",
-          variant === "side" ? "w-[350px] justify-center" : " "
+          variant === "side" ? "md:w-[550px] lg:w-[350px] justify-center" : " "
         )}>
-          <h1 className="text-txt-black-900 font-heading font-semibold text-heading-md">
-            <div className="text-3xl"> {title}</div>
+          <h1 className="text-txt-black-900 font-heading font-semibold text-3xl w-full">
+            {title}
           </h1>
           {search && (
             <div className={clx(
@@ -122,7 +103,7 @@ export default function Hero({
             </div>
             <div className={clx(
               "gap-2 mt-4",
-              links.length === 1 ? "flex md:justify-start justify-center" : "grid grid-cols-2"
+              links.length === 1 ? "flex lg:justify-start justify-center" : "grid grid-cols-2"
             )}>
               {links.map((item, index) => (
                 <Button

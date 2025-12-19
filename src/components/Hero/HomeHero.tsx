@@ -8,25 +8,11 @@ export default function HomeHero() {
       title="Selamat Datang Ke Portal Sekolahku"
       search={<SearchBarHome />}
       links={popularLinks}
-      gradientColors={{
-        "top-gradient": "#E6F0FF",
-        "middle-gradient": "#F2F7FF",
-        "bottom-gradient": "#FFFFFF"
-      }}
+      className="bg-gradient-to-b from-[#E6F0FF] via-[#F2F7FF] to-[#FFFFFF]"
       background={
         <>
-          <div
-            className="block h-full w-full bg-center bg-no-repeat bg-cover lg:hidden"
-            style={{
-              backgroundImage: `url('/utama/home-hero-mobile.svg')`,
-            }}
-          />
-          <div
-            className="hidden h-full w-full bg-cover bg-center bg-no-repeat lg:block"
-            style={{
-              backgroundImage: `url('/utama/sekolahku.png')`,
-            }}
-          />
+          <div className="block lg:hidden h-full w-full bg-[url('/utama/home-hero-mobile.svg')] bg-contain bg-center bg-no-repeat" />
+          <div className="hidden lg:block h-full w-full bg-[url('/utama/sekolahku.png')] bg-contain bg-center bg-no-repeat" />
         </>
       }
     />
