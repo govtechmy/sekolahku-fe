@@ -22,7 +22,3 @@ input[aria-controls="search-input"][cmdk-input][role="combobox"] {
 .sekolah-marker-icon, .parlimen-marker-icon, .negeri-marker-icon {
   background: transparent !important;
 }
-
-footer {
-  background-color: #FFFFFF !important;
-}
