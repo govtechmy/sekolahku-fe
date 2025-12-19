@@ -13,7 +13,6 @@ import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 import { useInitialSchools } from "../hooks/useInitialSchools";
 import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
 
-
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
   const [filteredSearchResult, setFilteredSearchResult] = useState<
@@ -31,20 +30,20 @@ export default function SchoolMaps() {
     setInitialLocationSet,
     setInitialLocationUser,
     setSchoolMarkers,
-    schoolMarkers
+    schoolMarkers,
   } = useMapViewStore();
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
   const geolocationRequestedRef = useRef(false);
   const initialLoadRequestedRef = useRef(false);
-    const appendNewMarkers = useAppendNewMarkers({
-      fetchNearbySchools,
-      schoolMarkers,
-      setSchoolMarkers,
-      radius,
-      initialLocationSet,
-      zoom,
-    });
+  const appendNewMarkers = useAppendNewMarkers({
+    fetchNearbySchools,
+    schoolMarkers,
+    setSchoolMarkers,
+    radius,
+    initialLocationSet,
+    zoom,
+  });
 
   // Load initial Schools Hook
   const { loadInitialSchools } = useInitialSchools({
@@ -56,6 +55,7 @@ export default function SchoolMaps() {
     zoom,
   });
 
+  //1. Load Initial Map
   useEffect(() => {
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
@@ -74,7 +74,7 @@ export default function SchoolMaps() {
       (position) => {
         const { latitude, longitude } = position.coords;
         setCenter([latitude, longitude]);
-        setInitialLocationUser([latitude,longitude])
+        setInitialLocationUser([latitude, longitude]);
         setZoom(17);
         setInitialLocationSet(true);
       },
@@ -86,6 +86,21 @@ export default function SchoolMaps() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  //2. Fetch Nearby Zoom - Initial Trigger when zoom happens
+  useEffect(() => {
+
+    //Guard to make sure if location set then zoom
+    if (initialLocationSet) {
+      if (zoom) {
+        setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
+        appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });
+        console.log("heheheheheehehehheeh")
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [zoom, initialLocationSet]);
+
+  //First Load
   useEffect(() => {
     if (initialLoadRequestedRef.current) return;
     if (!initialLocationSet) return;
@@ -94,14 +109,6 @@ export default function SchoolMaps() {
     loadInitialSchools();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialLocationSet]);
-
-  useEffect(() => {
-    if (zoom) {
-      setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
-      appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [zoom]);
 
   const handleSearch = async (params: {
     namaSekolah?: string;
