@@ -10,6 +10,7 @@ import {
 } from "@govtechmy/myds-react/breadcrumb";
 import { ClockIcon, LinkDiagonalIcon, EmailIcon, FacebookIcon, TwitterXIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
+import "./print.css";
 
 export default function SiaranId() {
     const { id } = useParams<{ id: string }>();
