@@ -10,7 +10,6 @@ import { LocationPickerWindow } from "../components/maps";
 import type { ItemSekolahModel } from "../models/response";
 import { useMapViewStore } from "../store/mapView";
 import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
-import { useInitialSchools } from "../hooks/useInitialSchools";
 import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
 
 export default function SchoolMaps() {
@@ -35,7 +34,6 @@ export default function SchoolMaps() {
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const [viewSchool, setViewSchool] = useState<ItemSekolahModel | null>(null);
   const geolocationRequestedRef = useRef(false);
-  const initialLoadRequestedRef = useRef(false);
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
     schoolMarkers,
@@ -45,15 +43,6 @@ export default function SchoolMaps() {
     zoom,
   });
 
-  // Load initial Schools Hook
-  const { loadInitialSchools } = useInitialSchools({
-    fetchNearbySchools,
-    center,
-    radius,
-    setSchoolMarkers,
-    initialLocationSet,
-    zoom,
-  });
 
   //1. Load Initial Map
   useEffect(() => {
@@ -98,16 +87,6 @@ export default function SchoolMaps() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoom, initialLocationSet]);
-
-  //First Load
-  useEffect(() => {
-    if (initialLoadRequestedRef.current) return;
-    if (!initialLocationSet) return;
-
-    initialLoadRequestedRef.current = true;
-    loadInitialSchools();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialLocationSet]);
 
   const handleSearch = async (params: {
     namaSekolah?: string;
