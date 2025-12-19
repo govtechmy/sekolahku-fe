@@ -57,7 +57,7 @@ export function LocationPickerWindow({
     if (coords) {
       setCenter(coords);
       setInitialLocationUser(coords)
-      setZoom(17);
+      setZoom(15);
       onClose();
       setInitialLocationSet(true);
     }
