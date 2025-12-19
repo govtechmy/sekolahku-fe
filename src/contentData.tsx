@@ -1139,3 +1139,22 @@ export const findNearbyGroup5 = {
     },
   ],
 };
+
+export const notableMalaysians = [
+  // Arts
+  {
+    name: "Michelle Yeoh",
+    field: "Arts",
+    note: "Internationally acclaimed actress",
+  },
+  {
+    name: "P. Ramlee",
+    field: "Arts",
+    note: "Iconic actor, director, and musician",
+  },
+  {
+    name: "Siti Nurhaliza",
+    field: "Arts",
+    note: "Award-winning singer and songwriter",
+  },
+];
