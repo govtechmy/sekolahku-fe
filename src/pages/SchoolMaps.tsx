@@ -94,7 +94,6 @@ export default function SchoolMaps() {
       if (zoom) {
         setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
         appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });
-        console.log("heheheheheehehehheeh")
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
