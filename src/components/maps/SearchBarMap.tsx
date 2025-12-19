@@ -242,7 +242,7 @@ export function SearchBarMap({
         <div
           className={clx(
             "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
-            isExpanded ? "my-10" : "absolute top-[50px]"
+            isExpanded ? "my-10" : "absolute top-[54px] max-h-[78vh]"
           )}
         >
           <SchoolInfoWindow school={viewSchool} setSelected={() => setViewSchool(null)} />
