@@ -23,6 +23,41 @@ input[aria-controls="search-input"][cmdk-input][role="combobox"] {
   background: transparent !important;
 }
 
-footer {
-  background-color: #FFFFFF !important;
+@media print {
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only printable area */
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  /* Exclude elements explicitly */
+  .print-area .no-print {
+    display: none !important;
+  }
+
+  /* Position printable content */
+  .print-area {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+  }
+
+  /* Page margins and footer */
+  @page {
+    margin: 1cm 1cm 2cm 1cm;
+    @top-center {
+      content: "";
+    }
+    @bottom-left {
+      content: "Sekolahku";
+    }
+    @bottom-right {
+      content: "Mukasurat " counter(page) "/" counter(pages);
+    }
+  }
 }
