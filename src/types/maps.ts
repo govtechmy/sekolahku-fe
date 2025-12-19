@@ -34,6 +34,7 @@ export type SchoolMarkerInfo= {
   koordinatYY: number;
   id?: string;
   name?: string;
+  total?: number;
 };
 
 export interface Coordinates {
