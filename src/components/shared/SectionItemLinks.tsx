@@ -23,6 +23,9 @@ export default function SectionItemLinks({
               variant={"default-outline"}
               size="large"
               className="flex justify-between gap-4.5 p-4.5 rounded-[14px] w-full"
+              onClick={() =>
+                window.open(item.link, "_blank", "noopener,noreferrer")
+              }
             >
               <div className="flex items-center">
                 <div className="bg-bg-white-hover size-12 rounded-full border border-otl-divider items-center justify-center flex">

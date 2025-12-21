@@ -469,12 +469,12 @@ export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
     name: "e-Operasi",
-    link: "https://apdm.moe.gov.my/",
+    link: "https://eoperasii.my/",
   },
   {
     icon: <JataNegaraIcon />,
     name: "e-GTukar",
-    link: "https://emis.moe.gov.my/",
+    link: "https://epgo.moe.gov.my/menu/maklumat_perlu.cfm",
   },
   {
     icon: <JataNegaraIcon />,
@@ -484,22 +484,12 @@ export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
     name: "EMIS",
-    link: "https://delima.moe.gov.my/",
+    link: "https://emisonline.moe.gov.my/",
   },
   {
     icon: <JataNegaraIcon />,
     name: "DELIMa",
-    link: "https://egtukar.moe.gov.my/",
-  },
-  {
-    icon: <JataNegaraIcon />,
-    name: "Nama Jabatan",
-    link: "https://egtukar.moe.gov.my/",
-  },
-  {
-    icon: <JataNegaraIcon />,
-    name: "DELIMa",
-    link: "https://egtukar.moe.gov.my/",
+    link: "https://delima.moe-dl.edu.my/",
   },
 ];
 
