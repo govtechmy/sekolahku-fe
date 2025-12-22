@@ -77,14 +77,17 @@ export default function Hero({
           {background} 
         </div>
       ) : null}
-      <div className={clx("w-full h-[520px] flex justify-center items-center p-6",
-        variant === "side" ? " lg:justify-start lg:px-[109px] " : ""
+      <div className={clx("w-full h-[520px] flex p-6 justify-center items-center ",
+        variant === "side" ? "md:max-w-[1328px] lg:px-[109px] mx-auto flex-1 lg:justify-start" : ""
       )}>
         <div className={clx(
           "flex flex-col gap-8 py-16 items-center lg:text-start text-center",
-          variant === "side" ? "md:w-[550px] lg:w-[350px] justify-center" : " "
+          variant === "side" ? "md:w-[550px] lg:w-[350px]" : " "
         )}>
-          <h1 className="text-txt-black-900 font-heading font-semibold text-3xl w-full">
+          <div></div>
+          <h1 className={clx("text-txt-black-900 font-heading font-semibold text-3xl w-full",
+            variant === "full" ? "text-center" : ""
+          )}>
             {title}
           </h1>
           {search && (
