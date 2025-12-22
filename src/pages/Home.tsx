@@ -40,9 +40,10 @@ export default function HomePage() {
   }, []);
 
   return (
+    <div>
+      <HomeHero/>
     <div className="mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
-      <HomeHero />
-
+      
       <SectionHeader
         header="SIARAN"
         ButtonLabel="Semua Berita"
@@ -85,6 +86,7 @@ export default function HomePage() {
         yearlyData={statisticYearlyData}
         chartBaseData={chartBaseData}
       />
+    </div>
     </div>
   );
 }
