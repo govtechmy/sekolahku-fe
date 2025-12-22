@@ -77,11 +77,6 @@ export function SearchBarMap() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedJenis, selectedNegeri]);
 
-  useEffect(() => {
-    setLocalSuggestions(localSuggestions);
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localSuggestions]);
-
   const handleSelect = async (school: SearchBarMapProps) => {
     try {
       if (!school.kodSekolah) {
