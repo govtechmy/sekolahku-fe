@@ -9,7 +9,7 @@ import { Link } from "@govtechmy/myds-react/link";
 
 export default function FooterMyds() {
   return (
-    <Footer>
+    <Footer className="md:max-xl:px-6 md:max-2xl:px-[104px]">
       <FooterSection className="text-txt-black-500 md:max-lg:gap-4.5 mx-auto flex w-full max-w-[1280px] flex-col justify-between text-sm max-md:gap-4 lg:flex-row lg:gap-6">
         <div className="flex flex-col gap-3 lg:flex-row w-[412px]">
           <SiteInfo>
