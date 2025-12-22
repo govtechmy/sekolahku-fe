@@ -1,4 +1,5 @@
- import { useState } from "react";
+ import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 // import { useNavigate, useParams } from "react-router-dom";
 // import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 // import { GlobeIcon } from "@govtechmy/myds-react/icon";
@@ -23,9 +24,17 @@ export default function NavbarMyds() {
   // const navigate = useNavigate();
   // const { lang } = useParams<{ lang: string }>();
   const [isHidden, setIsHidden] = useState(false);
+  const [activeItem, setActiveItem] = useState("home");
+  const location = useLocation();
   // const [selectedLang, setSelectedLang] = useState(
   //   localStorage.getItem("lang") || "ms"
   // );
+
+  useEffect(() => {
+    const pathSegments = location.pathname.split("/").filter(Boolean);
+    const currentPath = pathSegments.length > 1 ? pathSegments[1] : pathSegments[0] || "home";
+    setActiveItem(currentPath);
+  }, [location]);
 
   // Sync state when URL param changes (for manual URL changes or navigation)
   // useEffect(() => {
@@ -53,13 +62,20 @@ export default function NavbarMyds() {
       </div>
       <NavbarMenu
         classNameNavDesktop=""
-        classNameNavMobile={`top-[-4vh] ${isHidden ? "block" : "hidden"}`}
+        classNameNavMobile={` ${isHidden ? "block" : "hidden"}`}
       >
-        <NavbarMenuItem href="/menu1">Utama</NavbarMenuItem>
-        <NavbarMenuItem href="/menu2">Analitik</NavbarMenuItem>
-        <NavbarMenuItem href="carian-sekolah">Carian Sekolah</NavbarMenuItem>
-        <NavbarMenuItem href="siaran">Siaran</NavbarMenuItem>
-        <NavbarMenuItem href="/menu5">Acara</NavbarMenuItem>
+        <NavbarMenuItem href="home" aria-current={activeItem === "home" ? "page" : undefined}>
+          Utama
+        </NavbarMenuItem>
+        <NavbarMenuItem href="carian-sekolah" aria-current={activeItem === "carian-sekolah" ? "page" : undefined}>
+          Carian Sekolah
+        </NavbarMenuItem>
+        <NavbarMenuItem href="siaran" aria-current={activeItem === "siaran" ? "page" : undefined}>
+          Siaran
+        </NavbarMenuItem>
+        <NavbarMenuItem href="acara" aria-current={activeItem === "acara" ? "page" : undefined}>
+          Acara
+        </NavbarMenuItem>
       </NavbarMenu>
 
       <NavbarAction onClick={() => setIsHidden((prev) => !prev)}>
