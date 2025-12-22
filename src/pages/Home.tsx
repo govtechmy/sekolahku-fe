@@ -13,6 +13,7 @@ import {
   dataItemLinks,
   dataItemNews,
 } from "../contentData";
+import HomeHero from "../components/Hero/HomeHero";
 import { useEffect, useState } from "react";
 
 export default function HomePage() {
@@ -35,9 +36,10 @@ export default function HomePage() {
     fetchAnalytics();
   }, []);
   return (
-    <div className="mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
-
-      <SectionHeader
+    <>    
+    <HomeHero/>
+    <div className=" mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
+    <SectionHeader
         header="SIARAN"
         ButtonLabel="Semua Berita"
         children={
@@ -83,5 +85,6 @@ export default function HomePage() {
         chartBaseData={chartBaseData}
       />
     </div>
+    </>
   );
 }

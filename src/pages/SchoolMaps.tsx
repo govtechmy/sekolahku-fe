@@ -43,8 +43,6 @@ export default function SchoolMaps() {
     zoom,
   });
 
-
-  //1. Load Initial Map
   useEffect(() => {
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
@@ -75,10 +73,8 @@ export default function SchoolMaps() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //2. Fetch Nearby Zoom - Initial Trigger when zoom happens
   useEffect(() => {
 
-    // Guard to ensure location is set before processing zoom
     if (initialLocationSet) {
       if (zoom) {
         setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
@@ -87,6 +83,23 @@ export default function SchoolMaps() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoom, initialLocationSet]);
+  
+
+  const transformSchoolData = (school: ItemSekolahModel): SearchBarMapProps => {
+    
+    return {
+      namaSekolah: school.namaSekolah ?? "Sekolah Tidak Diketahui",
+      kodSekolah: school.kodSekolah ?? "",
+      koordinatYY: school.data.infoLokasi.koordinatYY,
+      koordinatXX: school.data.infoLokasi.koordinatXX,
+      negeri: school.data.infoPentadbiran.negeri ?? "",
+      bandarSurat: school.data.infoKomunikasi.bandarSurat,
+      jenisLabel: school.data.infoSekolah.jenisLabel ?? "",
+      jumlahPelajar: school.data.infoSekolah.jumlahPelajar ?? 0,
+      jumlahGuru: school.data.infoSekolah.jumlahGuru ?? 0,
+      parlimen: school.data.infoPentadbiran.parlimen ?? "",
+    };
+  };
 
   const handleSearch = async (params: {
     namaSekolah?: string;
@@ -95,18 +108,7 @@ export default function SchoolMaps() {
   }) => {
     try {
       const results = await getSchoolSuggestion(params);
-      const transformed: SearchBarMapProps[] = results.map((school) => ({
-        namaSekolah: school.namaSekolah || "Sekolah Tidak Diketahui",
-        kodSekolah: school.kodSekolah || "",
-        koordinatYY: school.data.infoLokasi.koordinatYY,
-        koordinatXX: school.data.infoLokasi.koordinatXX,
-        negeri: school.data?.infoPentadbiran?.negeri || "",
-        bandarSurat: school.data?.infoKomunikasi?.bandarSurat,
-        jenisLabel: school.data?.infoSekolah?.jenisLabel || "",
-        jumlahPelajar: school.data?.infoSekolah?.jumlahPelajar || 0,
-        jumlahGuru: school.data?.infoSekolah?.jumlahGuru || 0,
-        parlimen: school.data?.infoPentadbiran?.parlimen || "",
-      }));
+      const transformed = results.map(transformSchoolData);
       setFilteredSearchResult(transformed);
 
       if (transformed.length > 0) {

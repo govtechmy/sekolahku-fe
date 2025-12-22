@@ -174,11 +174,15 @@ export default function CustomChart({
                 padding: "12px",
                 boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
               }}
-              formatter={(value: number) => [
+              formatter={(value) => (
                 <span style={{ color: "#3B82F6", fontWeight: "bold" }}>
-                  {`Total: ${value.toLocaleString()}`}
-                </span>,
-              ]}
+                  {`Total: ${Array.isArray(value)
+                    ? value.join(", ")
+                    : typeof value === "number"
+                    ? value.toLocaleString()
+                    : (value ?? 0).toString()}`}
+                </span>
+              )}
               labelFormatter={(label) => (
                 <span style={{ color: "#1F2937", fontWeight: "600" }}>
                   {`Month: ${label}`}
