@@ -23,6 +23,7 @@ import type { ItemSekolahModel } from "../../models/response";
 import { useMapViewStore } from "../../store/mapView";
 import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
+import { hasKodRef } from "../../store/mapGuards";
 
 interface MapSearchBarProps{
   query: string;
@@ -107,6 +108,7 @@ export function SearchBarMap({
       }
       const detail = await getSchoolS3Json(undefined, school.negeri, school.parlimen, school.kodSekolah);
       if (detail) {
+        hasKodRef.current = true;
         setViewSchool(detail);
         setCenter([school.koordinatYY, school.koordinatXX]);
         setZoom(16);

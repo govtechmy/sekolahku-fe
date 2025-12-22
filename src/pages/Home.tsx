@@ -14,12 +14,22 @@ import {
   dataItemCalendar,
   dataItemLinks,
   dataItemNews,
-  notableMalaysians,
 } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import SearchBarMain from "../components/shared/SearchBar";
+import { useNavigate, useParams } from "react-router-dom";
+import { getSchoolSuggestion } from "../services/school.svc";
+
+export type SearchProps = {
+  key: string;
+  name: string;
+  note: string;
+};
 
 export default function HomePage() {
+  const navigate = useNavigate();
+  const { lang } = useParams<{ lang: string }>();
+  const [filteredSearchResult, setFilteredSearchResult] = useState<SearchProps[]>([]);
   const inputRef = useRef<HTMLInputElement>(null!);
   const [hasFocus, setHasFocus] = useState(false);
   const [query, setQuery] = useState("");
@@ -45,19 +55,28 @@ export default function HomePage() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  const searchData = notableMalaysians.map((person, index) => ({
-    key: index.toString(),
-    name: person.name,
-    note: person.note,
-  }));
-  const searchResult = searchData.filter((person) =>
-    person.name.toLowerCase().includes(query.toLowerCase())
-  );
+  const handleSearch = async (params: {
+    namaSekolah?: string;
+    negeri?: string;
+    jenis?: string;
+  }) => {
+    try {
+      const results = await getSchoolSuggestion(params);
+      const transformed: SearchProps[] = results.map((school) => ({
+        name: school.namaSekolah || "Sekolah Tidak Diketahui",
+        key: school.kodSekolah || "",
+        note: school.data?.infoSekolah?.jenisLabel || "",
+      }));
+      setFilteredSearchResult(transformed);
+
+    } catch (error) {
+      console.error("Error fetching school suggestions:", error);
+      setFilteredSearchResult([]);
+    }
+  };
   const handleClick = (id: string) => {
-    // temporary log, will be fix on another PR
-    console.log("Clicked item ID:", id);
-    // handle any additional logic on click
-    // navigate(`/${lang}/carian-sekolah?sekolahid=${id}`);
+    // handle redirect to school map
+    navigate(`/${lang}/carian-sekolah?kod=${id}`);
   }
 
   return (
@@ -69,10 +88,10 @@ export default function HomePage() {
           hasFocus={hasFocus}
           setHasFocus={setHasFocus}
           query={query}
-          setQuery={setQuery}
+          setQuery={(val: string) => {handleSearch({ namaSekolah: val }), setQuery(val)}}
           hasQuery={query.length > 0}
           inputRef={inputRef}
-          results={searchResult}
+          results={filteredSearchResult}
           onClick={handleClick}
         />}
         links={

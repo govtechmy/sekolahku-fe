@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { MarkerMap } from "../utils/markerProcessors";
+import { centerSourceRef, hasKodRef } from "./mapGuards";
 
 type Center = [number, number];
 
@@ -28,6 +29,20 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   initialLocationSet: false,
   schoolMarkers: new Map() as MarkerMap,
   setCenter: (c) => {
+    if (hasKodRef.current) {
+      // Allow ONLY URL or Leaflet updates
+      if (
+        centerSourceRef.current !== "URL" &&
+        centerSourceRef.current !== "LEAFLET"
+      ) {
+        console.log("Blocked center update from non-authorized source");
+        return;
+      }
+      centerSourceRef.current = "OTHER"; // Reset after update
+      set(() => {
+        return { center: c };
+      });
+    }
     set(() => {
       return { center: c };
     });

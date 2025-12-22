@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import type { Coordinates, SearchBarMapProps } from "../types/maps";
 import {
   fetchNearbySchools,
+  getSchoolId,
   getSchoolSuggestion,
 } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
@@ -11,6 +12,8 @@ import type { ItemSekolahModel } from "../models/response";
 import { useMapViewStore } from "../store/mapView";
 import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
+import { useSearchParams } from "react-router-dom";
+import { centerSourceRef, hasKodRef } from "../store/mapGuards";
 
 export default function SchoolMaps() {
   const [query, setQuery] = useState("");
@@ -42,10 +45,14 @@ export default function SchoolMaps() {
     initialLocationSet,
     zoom,
   });
+  const searchParams = useSearchParams();
+  const kodSekolah = searchParams[0].get("kod");
+  const hasLoadedRef = useRef(false);
 
 
   //1. Load Initial Map
   useEffect(() => {
+    if (kodSekolah) return;
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
       return;
@@ -87,6 +94,37 @@ export default function SchoolMaps() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoom, initialLocationSet]);
+
+  //3. Load School by kodSekolah from URL Param
+  useEffect(() => {
+    if (!kodSekolah) {
+      // No ?kod → never lock
+      hasKodRef.current = false;
+      centerSourceRef.current = "OTHER";
+      return
+    };
+    if (hasLoadedRef.current) return;
+    hasLoadedRef.current = true;
+    setInitialLocationSet(false);
+    setViewSchool(null); // Reset viewSchool
+    setZoom(5);
+
+    getSchoolId(kodSekolah).then((id) => {
+      hasKodRef.current = true;
+      if (!id) return;
+      const { koordinatXX, koordinatYY } = id.data.infoLokasi;
+      setViewSchool(id);
+      
+      centerSourceRef.current = "URL";
+      setCenter([koordinatYY, koordinatXX]);
+      setInitialLocationUser([koordinatYY, koordinatXX]);
+      setZoom(18);
+      setInitialLocationSet(true);
+    }).catch((error) => {
+      console.error("Error fetching school by kodSekolah:", error);
+      setShowLocationPicker(true);
+    });
+  }, [kodSekolah]);
 
   const handleSearch = async (params: {
     namaSekolah?: string;

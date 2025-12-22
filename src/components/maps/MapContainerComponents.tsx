@@ -13,6 +13,7 @@ import type { ItemSekolahModel, MarkerGroup } from "../../models/response";
 import { getSchoolS3Json } from "../../services/school.svc";
 import { useAppendNewMarkers } from "../../hooks/useAppendNewMarkers";
 import { MapViewController } from "./MapViewController";
+import { centerSourceRef, hasKodRef } from "../../store/mapGuards";
 
 // Use the shared MarkerMap shape used by marker processors (lat/lng)
 
@@ -99,6 +100,7 @@ export function MapContainerComponent({
           setZoom(zoom);
         }}
         onCenterChange={(center) => {
+          centerSourceRef.current = "LEAFLET";
           setCenter([center.koordinatXX, center.koordinatYY]);
         }}
         onDragStart={() => {
@@ -142,6 +144,7 @@ export function MapContainerComponent({
             total: coords.total,
           }}
           onClick={async () => {
+            hasKodRef.current = false;
             if(coords.markerType === "NEGERI"){
             setCenter([coords.koordinatXX, coords.koordinatYY]);
             setZoom(12);
