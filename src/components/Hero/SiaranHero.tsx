@@ -9,7 +9,6 @@ export default function SiaranHero() {
       title="Siaran Sekolahku"
       variant="full"
       search={<SearchBarMain            
-        desc='"tajuk siaran", "pengumuman"'
 />}
       background={
         <>
