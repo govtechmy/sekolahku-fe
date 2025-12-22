@@ -3,6 +3,7 @@ import { dataSekolahAbout, dataSekolahInfo, dataSekolahJumlah, dataSekolahSugges
 import HelmetMeta from "../seo/HelmetMeta";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import SchoolProfileHero from "../components/Hero/SchoolProfileHero";
 
 type SchoolProps = {
   KODSEKOLAH: string;
@@ -68,6 +69,7 @@ export default function SchoolProfile() {
       description={`School profile page for ${school?.NAMASEKOLAH}.`}
       canonical={`${domain}${schoolProfile}/${id}`}
     />
+    <SchoolProfileHero school={school} />
     <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-2 mt-0 md:px-12 max-md:px-0">
