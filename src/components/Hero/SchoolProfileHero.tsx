@@ -1,45 +1,16 @@
 import Hero from "../shared/Hero";
 import BgSchoolProfile from "../../asset/BgSchoolProfile";
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 
 type SchoolProps = {
   KODSEKOLAH: string;
   NAMASEKOLAH: string;
 }
 
-export default function SchoolProfileHero() {
-  const { id } = useParams();
-  const [schools, setSchools] = useState<SchoolProps[]>([]);
-  const [loading, setLoading] = useState(true);
+interface SchoolProfileHeroProps {
+  school: SchoolProps | undefined;
+}
 
-  useEffect(() => {
-    const fetchSchools = async () => {
-      try {
-        const response = await fetch('/school-list.json');
-        if (response.ok) {
-          const data = await response.json();
-          setSchools(data);
-        } else {
-          throw new Error('Failed to fetch');
-        }
-      } catch (error) {
-        console.warn('Failed to fetch schools data:', error);
-        setSchools([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSchools();
-  }, []);
-
-  const school = schools.find((s: SchoolProps) => s.KODSEKOLAH === id);
-
-  if (loading) {
-    return null;
-  }
-
+export default function SchoolProfileHero({ school }: SchoolProfileHeroProps) {
   return (
     <Hero
       title=""
