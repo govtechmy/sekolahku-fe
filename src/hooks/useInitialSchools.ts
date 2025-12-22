@@ -4,8 +4,8 @@ import { processMarkers, type MarkerMap } from "../utils/markerProcessors";
 
 interface UseInitialSchoolsParams {
   fetchNearbySchools: (
-    latitude: number,
-    longitude: number,
+    koordinatXX: number,
+    koordinatYY: number,
     radiusInMeter: number,
     initialLocationSet?: boolean,
     zoom?: number

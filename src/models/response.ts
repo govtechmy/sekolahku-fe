@@ -91,6 +91,7 @@ export interface MarkerItem {
     koordinatYY: number
   }
   dataUrl: string
+  total?:number
 }
 
 export interface MarkerGroup extends MarkerItem {
@@ -98,7 +99,6 @@ export interface MarkerGroup extends MarkerItem {
   negeri?: string
   parlimen?: string
   total?: number
-
   radiusInMeter: number
   items: MarkerItem[]
 }

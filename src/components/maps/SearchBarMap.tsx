@@ -22,6 +22,7 @@ import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import type { ItemSekolahModel } from "../../models/response";
 import { useMapViewStore } from "../../store/mapView";
 import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
+import { calculateDistance } from "../../utils/calculateDistance";
 
 interface MapSearchBarProps{
   query: string;
@@ -46,10 +47,9 @@ export function SearchBarMap({
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
   const debounceTimerRef = useRef<number | null>(null);
-    const {
-    setCenter: setMapCenter,
-    setZoom: setMapZoom,
-  } = useMapViewStore();
+  const setCenter = useMapViewStore((s) => s.setCenter);
+  const setZoom = useMapViewStore((s) => s.setZoom);
+  const initialLocationUser = useMapViewStore((s) => s.initialLocationUser);
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
@@ -108,9 +108,11 @@ export function SearchBarMap({
       const detail = await getSchoolS3Json(undefined, school.negeri, school.parlimen, school.kodSekolah);
       if (detail) {
         setViewSchool(detail);
-        setMapCenter([school.koordinatXX, school.koordinatYY]);
-        setMapZoom(17);
-
+        setCenter([school.koordinatYY, school.koordinatXX]);
+        setZoom(16);
+        setTimeout(() => {
+          setZoom(15);
+        }, 0);
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
@@ -213,11 +215,13 @@ export function SearchBarMap({
 
                         <span className="mt-1 flex items-center text-sm text-primary-600 gap-1">
                           <MapIcon className="w-4 h-4" />
-                          {school.distance
-                            ? `${school.distance.toFixed(
-                              2
-                            )} km dari lokasi anda`
-                            : "Jarak tidak tersedia"}
+                          {(() => {
+                            const distanceInMeters = calculateDistance(initialLocationUser[0], initialLocationUser[1], school.koordinatYY, school.koordinatXX);
+                            if (distanceInMeters > 1000) {
+                              return `${(distanceInMeters / 1000).toFixed(2)} km dari lokasi anda`;
+                            }
+                            return `${distanceInMeters.toFixed(2)} meter dari lokasi anda`;
+                          })()}
                         </span>
                       </div>
 
@@ -238,7 +242,7 @@ export function SearchBarMap({
         <div
           className={clx(
             "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
-            isExpanded ? "my-10" : "absolute top-[50px]"
+            isExpanded ? "my-10" : "absolute top-[54px] max-h-[78vh]"
           )}
         >
           <SchoolInfoWindow school={viewSchool} setSelected={() => setViewSchool(null)} />
