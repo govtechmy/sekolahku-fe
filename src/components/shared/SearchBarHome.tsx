@@ -11,25 +11,45 @@ import {
 } from "@govtechmy/myds-react/search-bar";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { ChevronRightIcon, UserIcon } from "@govtechmy/myds-react/icon";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useMapViewStore } from "../../store/mapView";
 
 export default function SearchBarHome() {
   const [hasFocus, setHasFocus] = useState(false);
+  const debounceTimerRef = useRef<number | null>(null);
+  
   const {
     query,
     setQuery,
-    handleSearch
+    handleSearch,
+    localSuggestions,
+    setLocalSuggestions
   } = useMapViewStore();
 
   
-  handleSearch({
-    namaSekolah: query.trim().length >= 3 ? query : "",
-    negeri: "ALL",
-    jenis: "ALL",
-  });
+  const handleValueChange = (value: string) => {
+    setQuery(value);
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    const trimmedValue = value.trim();
+    if (trimmedValue.length >= 3) {
+      debounceTimerRef.current = window.setTimeout(() => {
+        handleSearch({
+          namaSekolah: value,
+          negeri: "ALL",
+          jenis: "ALL",
+        });
+      }, 500);
+    } else {
+      setLocalSuggestions([]);
+    }
+  };
+
+  console.log("localSuggestions", localSuggestions);
 
   const hasQuery = query.length > 0;
+
 
   return (
     <SearchBar
@@ -44,7 +64,7 @@ export default function SearchBarHome() {
         <SearchBarInput
           placeholder="Carian sekolah, siaran"
           value={query}
-          onValueChange={setQuery}
+          onValueChange={handleValueChange}
           onFocus={() => setHasFocus(true)}
           onBlur={() => setHasFocus(false)}
         />
@@ -57,20 +77,20 @@ export default function SearchBarHome() {
         <SearchBarSearchButton />
       </SearchBarInputContainer>
       <SearchBarResults open={hasQuery && hasFocus}>
-        {hasQuery && !results.length && (
+        {hasQuery && !localSuggestions.length && (
           <p className="text-txt-black-900 text-center">No results found</p>
         )}
-        {hasQuery && results.length > 0 && (
+        {hasQuery && localSuggestions.length > 0 && (
           <SearchBarResultsList className="max-h-[400px] overflow-y-scroll">
-            {results.map((item) => (
-              <SearchBarResultsItem key={item.name} value={item.name}>
+            {localSuggestions.map((item) => (
+              <SearchBarResultsItem key={item.kodSekolah} value={item.namaSekolah}>
                 <span className="bg-primary-50 text-txt-primary rounded-full p-px">
                   <UserIcon className="size-4" />
                 </span>
                 <p className="line-clamp-1 flex-1">
-                  {item.name}
+                  {item.namaSekolah}
                   <span className="text-txt-black-500 text-xs">
-                    {item.note}
+                    {" "}· {item.bandarSurat}, {item.negeri}
                   </span>
                 </p>
                 <ChevronRightIcon />

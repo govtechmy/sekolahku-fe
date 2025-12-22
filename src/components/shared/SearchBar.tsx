@@ -5,27 +5,51 @@ import {
   SearchBarSearchButton,
   SearchBarResults,
   SearchBarResultsList,
+  SearchBarResultsItem,
   SearchBarClearButton,
   SearchBarHint,
-  SearchBarResultsItem,
 } from "@govtechmy/myds-react/search-bar";
 import { Pill } from "@govtechmy/myds-react/pill";
-import { ChevronRightIcon, UserIcon } from "@govtechmy/myds-react/icon";
+import { ChevronRightIcon } from "@govtechmy/myds-react/icon";
+import { useState, useRef } from "react";
+import { useMapViewStore } from "../../store/mapView";
 
-export default function SearchBarMain({
-  shortdesc, desc, hasFocus, setHasFocus, query, setQuery, hasQuery, inputRef, results, onClick
-}: {
-  shortdesc?: string;
-  desc?: string;
-  hasFocus: boolean;
-  setHasFocus: (value: boolean) => void;
-  query: string;
-  setQuery: (value: string) => void;
-  hasQuery: boolean;
-  inputRef: React.RefObject<HTMLInputElement>;
-  results: { key: string; name: string; note: string }[];
-  onClick: (id: string) => void;
-}) {
+export default function SearchBarHome() {
+  const [hasFocus, setHasFocus] = useState(false);
+  const debounceTimerRef = useRef<number | null>(null);
+  
+  const {
+    query,
+    setQuery,
+    handleSearch,
+    localSuggestions,
+    setLocalSuggestions
+  } = useMapViewStore();
+
+  
+  const handleValueChange = (value: string) => {
+    setQuery(value);
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    const trimmedValue = value.trim();
+    if (trimmedValue.length >= 3) {
+      debounceTimerRef.current = window.setTimeout(() => {
+        handleSearch({
+          namaSekolah: value,
+          negeri: "ALL",
+          jenis: "ALL",
+        });
+      }, 500);
+    } else {
+      setLocalSuggestions([]);
+    }
+  };
+
+  console.log("localSuggestions", localSuggestions);
+
+  const hasQuery = query.length > 0;
+
 
   return (
     <SearchBar
@@ -38,42 +62,35 @@ export default function SearchBarMain({
     >
       <SearchBarInputContainer>
         <SearchBarInput
-          ref={inputRef}
-          placeholder={shortdesc ? shortdesc : `Cari kata kunci: ${desc}`}
+          placeholder="Carian sekolah"
           value={query}
-          onValueChange={setQuery}
+          onValueChange={handleValueChange}
           onFocus={() => setHasFocus(true)}
           onBlur={() => setHasFocus(false)}
-          className="truncate"
         />
         {query && <SearchBarClearButton onClick={() => setQuery("")} />}
         {!hasFocus && (
           <SearchBarHint className="hidden lg:flex">
-            Tekan <Pill size="small">/</Pill> untuk cari
+            Tekan untuk cari <Pill size="small">/</Pill>
           </SearchBarHint>
         )}
         <SearchBarSearchButton />
       </SearchBarInputContainer>
       <SearchBarResults open={hasQuery && hasFocus}>
-        {results.length > 0 ? (
+        {hasQuery && !localSuggestions.length && (
+          <p className="text-txt-black-900 text-center">No results found</p>
+        )}
+        {hasQuery && localSuggestions.length > 0 && (
           <SearchBarResultsList className="max-h-[400px] overflow-y-scroll">
-            {results.map((item) => (
-              <SearchBarResultsItem key={item.key} value={item.key} onSelect={() => onClick(item.key)}>
-                <span className="bg-primary-50 text-txt-primary rounded-full p-0.5">
-                  <UserIcon className="size-4" />
-                </span>
-                <p className="line-clamp-1 flex-1 text-start">
-                  {item.name}
-                  <span className="ml-2 text-txt-black-500 text-xs">
-                    {item.note}
-                  </span>
+            {localSuggestions.map((item) => (
+              <SearchBarResultsItem key={item.kodSekolah} value={item.namaSekolah}>
+                <p className="line-clamp-1 flex-1 text-left">
+                  {item.namaSekolah}
                 </p>
                 <ChevronRightIcon />
               </SearchBarResultsItem>
             ))}
           </SearchBarResultsList>
-        ) : (
-          <p className="text-txt-black-900 text-center">No results found</p>
         )}
       </SearchBarResults>
     </SearchBar>
