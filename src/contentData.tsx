@@ -493,6 +493,13 @@ export const dataItemLinks = [
   },
 ];
 
+export const popularLinks = [
+  {
+    label: "Analitik Sekolah",
+    link: "/analitik",
+  },
+]
+
 // SekolahDetails-Data to Fetch
 export const dataSekolahJumlah = [
   { label: "PELAJAR", value: "1", amount: "4,065", icon: <UserGroupIcon /> },

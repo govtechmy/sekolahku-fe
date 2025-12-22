@@ -2,10 +2,7 @@ import SectionItemNews from "../components/shared/SectionItemNews";
 import SectionHeader from "../components/shared/SectionHeader";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
-import { FilterAscIcon } from "@govtechmy/myds-react/icon";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
-import Hero from "../components/shared/Hero";
-import { Button } from "@govtechmy/myds-react/button";
 import Statistic from "../components/statistic";
 import {
   statisticYearlyData,
@@ -112,5 +109,6 @@ export default function HomePage() {
         chartBaseData={chartBaseData}
       />
     </div>
+    </>
   );
 }
