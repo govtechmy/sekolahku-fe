@@ -9,7 +9,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { Coordinates } from "../../types/maps";
 import { useMapViewStore } from "../../store/mapView";
-import type { ItemSekolahModel, MarkerGroup } from "../../models/response";
+import type { MarkerGroup } from "../../models/response";
 import { getSchoolS3Json } from "../../services/school.svc";
 import { useAppendNewMarkers } from "../../hooks/useAppendNewMarkers";
 import { MapViewController } from "./MapViewController";
@@ -54,14 +54,12 @@ interface MapContainerProps {
     initialLocationSet?: boolean,
     zoom?: number
   ) => Promise<MarkerGroup[]>;
-  setViewSchool: Dispatch<SetStateAction<ItemSekolahModel | null>>;
 }
 
 export function MapContainerComponent({
   dragStartPos,
   setDragStartPos,
   fetchNearbySchools,
-  setViewSchool,
 }: MapContainerProps) {
   const {
     center,
@@ -72,6 +70,7 @@ export function MapContainerComponent({
     schoolMarkers,
     setSchoolMarkers,
     initialLocationSet,
+    setViewSchool
   } = useMapViewStore();
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,

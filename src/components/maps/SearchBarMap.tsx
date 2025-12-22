@@ -19,7 +19,6 @@ import { clx } from "@govtechmy/myds-react/utils";
 import { Button } from "@govtechmy/myds-react/button";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
-import type { ItemSekolahModel } from "../../models/response";
 import { useMapViewStore } from "../../store/mapView";
 import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
@@ -29,8 +28,6 @@ interface MapSearchBarProps{
   setQuery: (val: string) => void;
   suggestions: SearchBarMapProps[];
   onSearch: (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => void;
-  viewSchool: ItemSekolahModel | null;
-  setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
 }
 
 export function SearchBarMap({
@@ -38,10 +35,8 @@ export function SearchBarMap({
   setQuery,
   suggestions,
   onSearch,
-  viewSchool,
-  setViewSchool,
 }: MapSearchBarProps) {
-  const { initialLocationSet } = useMapViewStore();
+  const { initialLocationSet, viewSchool, setViewSchool } = useMapViewStore();
   const [localSuggestions, setLocalSuggestions] = useState<SearchBarMapProps[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
