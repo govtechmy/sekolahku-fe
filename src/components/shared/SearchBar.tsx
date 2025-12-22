@@ -83,11 +83,12 @@ export default function SearchBarHome() {
             {localSuggestions.map((item) => (
               <SearchBarResultsItem 
                 key={item.kodSekolah} 
-                value={item.namaSekolah}
-                onClick={() => {
+                value={"awdawdawdwadawdw"}
+                onSelect={() => {
                   setQuery(item.namaSekolah);
                   setHasFocus(false);
                   navigate(`/${lang || 'en'}/carian-sekolah`);
+                  console.log("Untuk melihat maklumat sekolah, sila gunakan fungsi carian di halaman 'Carian Sekolah'.");
                 }}
               >
                 <p className="line-clamp-1 flex-1 text-left">

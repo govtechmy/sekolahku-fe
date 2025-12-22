@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import type { MarkerGroup } from "../models/response";
 import { processMarkers, type MarkerMap } from "../utils/markerProcessors";
 import type { Coordinates } from "../types/maps";
+import { useMapViewStore } from "../store/mapView";
 
 interface UseAppendNewMarkersParams {
   fetchNearbySchools: (
@@ -9,13 +10,15 @@ interface UseAppendNewMarkersParams {
     koordinatYY: number,
     radiusInMeter: number,
     initialLocationSet?: boolean,
-    zoom?: number
+    zoom?: number,
+    query?: string
   ) => Promise<MarkerGroup[]>;
   schoolMarkers: MarkerMap;
   setSchoolMarkers: React.Dispatch<React.SetStateAction<MarkerMap>>;
   radius: number;
   initialLocationSet?: boolean;
   zoom?: number;
+  query?: string;
 }
 
 export function useAppendNewMarkers({
@@ -26,17 +29,21 @@ export function useAppendNewMarkers({
   zoom,
   schoolMarkers
 }: UseAppendNewMarkersParams) {
+    const {
+      query: name
+    } = useMapViewStore();
   const append = useCallback(
     async (center: Coordinates) => {
       try {
+        console.log("Fetching nearby schools with query:", name);
         const markersArray = await fetchNearbySchools(
           center.koordinatXX,
           center.koordinatYY,
           radius,
           initialLocationSet,
-          zoom
+          zoom,
+          name
         );
-        
         const prevSchool = schoolMarkers.values().next().value?.markerType;
         const newMarkerType = markersArray[0]?.markerType;
         
@@ -56,7 +63,7 @@ export function useAppendNewMarkers({
         console.error("Failed to fetch nearby schools:", error);
       }
     },
-    [fetchNearbySchools, setSchoolMarkers, radius, initialLocationSet, zoom, schoolMarkers]
+    [fetchNearbySchools, setSchoolMarkers, radius, initialLocationSet, zoom, schoolMarkers, name]
   );
 
   return append;

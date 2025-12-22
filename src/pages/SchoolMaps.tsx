@@ -24,6 +24,7 @@ export default function SchoolMaps() {
     setInitialLocationUser,
     setSchoolMarkers,
     schoolMarkers,
+    query
   } = useMapViewStore();
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
@@ -76,6 +77,17 @@ export default function SchoolMaps() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoom, initialLocationSet]);
+
+  useEffect(() => {
+    if (initialLocationSet) {
+      if (query) {
+        setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
+        appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });
+        console.log("Query changed:", query);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, initialLocationSet]);
   
 
   return (
