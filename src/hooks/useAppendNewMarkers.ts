@@ -35,7 +35,6 @@ export function useAppendNewMarkers({
   const append = useCallback(
     async (center: Coordinates) => {
       try {
-        console.log("Fetching nearby schools with query:", name);
         const markersArray = await fetchNearbySchools(
           center.koordinatXX,
           center.koordinatYY,
