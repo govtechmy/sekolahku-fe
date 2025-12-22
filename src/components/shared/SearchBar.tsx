@@ -64,7 +64,6 @@ export default function SearchBarHome() {
           value={query}
           onValueChange={handleValueChange}
           onFocus={() => setHasFocus(true)}
-          onBlur={() => setHasFocus(false)}
         />
         {query && <SearchBarClearButton onClick={() => setQuery("")} />}
         {!hasFocus && (
@@ -81,9 +80,10 @@ export default function SearchBarHome() {
         {hasQuery && localSuggestions.length > 0 && (
           <SearchBarResultsList className="max-h-[400px] overflow-y-scroll">
             {localSuggestions.map((item) => (
-              <SearchBarResultsItem 
-                key={item.kodSekolah} 
+              <SearchBarResultsItem
+                key={item.kodSekolah}
                 value={item.namaSekolah}
+                onMouseDown={(e) => e.preventDefault()}
                 onSelect={() => {
                   setQuery(item.namaSekolah);
                   setHasFocus(false);

@@ -150,9 +150,11 @@ export function SearchBarMap() {
                   readOnly={!isExpanded}
                   className={clx(isExpanded ? "pl-0" : "")}
                 />
-                <SearchBarHint className="">
-                  Tekan <Pill size="small">/</Pill> untuk cari
-                </SearchBarHint>
+                {(!query || query.trim().length === 0) && (
+                  <SearchBarHint className="">
+                    Tekan <Pill size="small">/</Pill> untuk cari
+                  </SearchBarHint>
+                )}
                 <SearchBarSearchButton />
               </SearchBarInputContainer>
             </SearchBar>
