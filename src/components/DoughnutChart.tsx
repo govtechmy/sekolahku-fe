@@ -78,7 +78,7 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
         {title}
       </h3>
       <div className="flex justify-center items-center">
-        <div className="w-full max-w-md" style={{ height: "300px" }}>
+        <div className="w-full max-w-[180px]" style={{ height: "300px" }}>
           <Doughnut data={chartData} options={options} />
         </div>
       </div>
