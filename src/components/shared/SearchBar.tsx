@@ -76,19 +76,18 @@ export default function SearchBarHome() {
       </SearchBarInputContainer>
       <SearchBarResults open={hasQuery && hasFocus}>
         {hasQuery && !localSuggestions.length && (
-          <p className="text-txt-black-900 text-center">No results found</p>
+          <p className="text-txt-black-900 text-center">No results found awdawdawda</p>
         )}
         {hasQuery && localSuggestions.length > 0 && (
           <SearchBarResultsList className="max-h-[400px] overflow-y-scroll">
             {localSuggestions.map((item) => (
               <SearchBarResultsItem 
                 key={item.kodSekolah} 
-                value={"awdawdawdwadawdw"}
+                value={item.namaSekolah}
                 onSelect={() => {
                   setQuery(item.namaSekolah);
                   setHasFocus(false);
                   navigate(`/${lang || 'en'}/carian-sekolah`);
-                  console.log("Untuk melihat maklumat sekolah, sila gunakan fungsi carian di halaman 'Carian Sekolah'.");
                 }}
               >
                 <p className="line-clamp-1 flex-1 text-left">

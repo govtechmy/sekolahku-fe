@@ -83,7 +83,6 @@ export default function SchoolMaps() {
       if (query) {
         setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
         appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });
-        console.log("Query changed:", query);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

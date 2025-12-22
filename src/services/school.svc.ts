@@ -33,7 +33,6 @@ export const getSchoolSuggestion = async (params?: schoolSearchModel): Promise<I
 
 export const getSchoolNearby = async (params?: NearbySchoolsParams): Promise<NearbySchoolsModel> => {
   try {
-    console.log("Fetching nearby schools with params:", params);
     const response = await authAxios.get<APIResponse<NearbySchoolsModel>>(`${BASE_URL}${SCHOOL_ENDPOINT}/find-nearby`, {
       params,
       paramsSerializer: { indexes: null },
