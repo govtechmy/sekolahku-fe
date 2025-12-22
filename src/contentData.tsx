@@ -1,6 +1,5 @@
 import {
   UserGroupIcon,
-  BookIcon,
   GovtOfficeIcon,
   JataNegaraIcon,
   UserIcon,
@@ -420,23 +419,7 @@ export const dataItemCalendar = [
     imageAlt: "xxx",
   },
 ];
-export const dataItemAnalytics = [
-  {
-    icon: <GovtOfficeIcon />,
-    statistic: "10,200",
-    title: "Jumlah Sekolah di Malaysia",
-  },
-  {
-    icon: <BookIcon />,
-    statistic: "78,828",
-    title: "Pelajar Guru di Malaysia",
-  },
-  {
-    icon: <UserGroupIcon />,
-    statistic: "313,352",
-    title: "Jumlah Pelajar di Malaysia",
-  },
-];
+
 export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
