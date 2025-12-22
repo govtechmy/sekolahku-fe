@@ -1,34 +1,14 @@
-import { useEffect, useState } from "react";
-import { getAnalytics } from "../../services/analytics.svc";
 import type { AnalyticsModel } from "../../models/response";
 import { GovtOfficeIcon, BookIcon, UserGroupIcon } from "@govtechmy/myds-react/icon";
 import DoughnutChart from "../DoughnutChart";
 
-export default function SectionItemAnalytics() {
-  const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
-  const [loading, setLoading] = useState(true);
+interface SectionItemAnalyticsProps {
+  analytics: AnalyticsModel;
+}
 
-  useEffect(() => {
-    const fetchAnalytics = async () => {
-      try {
-        setLoading(true);
-        const data = await getAnalytics();
-        
-        setAnalytics(data);
-      } catch (err) {
-        console.error('Error fetching analytics:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAnalytics();
-  }, []);
-
-  if (loading || !analytics) {
-    return <div className="p-6 text-center">Loading analytics...</div>;
-  }
-
+export default function SectionItemAnalytics(
+  { analytics }: SectionItemAnalyticsProps
+) {
   return (
     <>
       <div className="border border-otl-gray-200 rounded-lg overflow-hidden">

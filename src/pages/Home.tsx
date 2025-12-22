@@ -8,6 +8,9 @@ import Hero from "../components/shared/Hero";
 import SearchBarHome from "../components/shared/SearchBarHome";
 import { Button } from "@govtechmy/myds-react/button";
 import Statistic from "../components/statistic";
+import { useEffect, useState } from "react";
+import { getAnalytics } from "../services/analytics.svc";
+import type { AnalyticsModel } from "../models/response";
 import {
   statisticYearlyData,
   chartBaseData,
@@ -17,6 +20,24 @@ import {
 } from "../contentData";
 
 export default function HomePage() {
+  const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        setLoading(true);
+        const data = await getAnalytics();
+        setAnalytics(data);
+      } catch (err) {
+        console.error('Error fetching analytics:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalytics();
+  }, []);
   return (
     <div className="mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
       <Hero
@@ -71,7 +92,11 @@ export default function HomePage() {
         header="ANALITIK"
         title="Fakta Menarik Sekolah di Malaysia"
         children={
-          <SectionItemAnalytics />
+          loading || !analytics ? (
+            <div className="p-6 text-center">Loading analytics...</div>
+          ) : (
+            <SectionItemAnalytics analytics={analytics} />
+          )
         }
       />
 

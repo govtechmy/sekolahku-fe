@@ -211,7 +211,7 @@ export function SearchBarMap({
                           {school.bandarSurat}, {school.negeri}
                         </span>
 
-                        <span className="mt-1 flex items-center text-sm text-blue-600 gap-1">
+                        <span className="mt-1 flex items-center text-sm text-primary-600 gap-1">
                           <MapIcon className="w-4 h-4" />
                           {school.distance
                             ? `${school.distance.toFixed(

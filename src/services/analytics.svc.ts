@@ -9,6 +9,7 @@ export const getAnalytics = async (): Promise<AnalyticsModel> => {
     const response = await authAxios.get<APIResponse<AnalyticsModel>>(`${BASE_URL}${ANALYTICS_ENDPOINT}`)
     
     console.log('Analytics response data:', response.data)
+
     return response.data.data
   } catch (error) {
     console.error('Error fetching analytics:', error)
