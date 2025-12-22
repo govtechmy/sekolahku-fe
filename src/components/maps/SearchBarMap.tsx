@@ -23,21 +23,8 @@ import { useMapViewStore } from "../../store/mapView";
 import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
 
-interface MapSearchBarProps{
-  query: string;
-  setQuery: (val: string) => void;
-  suggestions: SearchBarMapProps[];
-  onSearch: (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => void;
-}
-
-export function SearchBarMap({
-  query,
-  setQuery,
-  suggestions,
-  onSearch,
-}: MapSearchBarProps) {
-  const { initialLocationSet, viewSchool, setViewSchool } = useMapViewStore();
-  const [localSuggestions, setLocalSuggestions] = useState<SearchBarMapProps[]>([]);
+export function SearchBarMap() {
+  const { initialLocationSet, viewSchool, setViewSchool, localSuggestions, setLocalSuggestions, query, setQuery, handleSearch } = useMapViewStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
@@ -60,7 +47,7 @@ export function SearchBarMap({
     const trimmedValue = value.trim();
     if (trimmedValue.length >= 3 && initialLocationSet) {
       debounceTimerRef.current = window.setTimeout(() => {
-        onSearch({
+        handleSearch({
           namaSekolah: value,
           negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
           jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
@@ -82,7 +69,7 @@ export function SearchBarMap({
 
   useEffect(() => {
     if (!initialLocationSet) return;
-    onSearch({
+    handleSearch({
       namaSekolah: query.trim().length >= 3 ? query : "",
       negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
       jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
@@ -91,8 +78,9 @@ export function SearchBarMap({
   }, [selectedJenis, selectedNegeri]);
 
   useEffect(() => {
-    setLocalSuggestions(suggestions);
-  }, [suggestions]);
+    setLocalSuggestions(localSuggestions);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localSuggestions]);
 
   const handleSelect = async (school: SearchBarMapProps) => {
     try {

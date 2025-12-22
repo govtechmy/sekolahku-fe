@@ -11,7 +11,6 @@ import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
 
 export default function SchoolMaps() {
-  const [query, setQuery] = useState("");
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const {
     center,
@@ -25,8 +24,6 @@ export default function SchoolMaps() {
     setInitialLocationUser,
     setSchoolMarkers,
     schoolMarkers,
-    handleSearch,
-    localSuggestions,
   } = useMapViewStore();
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
@@ -83,12 +80,7 @@ export default function SchoolMaps() {
 
   return (
     <div className="h-full w-full flex relative">
-      <SearchBarMap
-        query={query}
-        setQuery={setQuery}
-        suggestions={localSuggestions}
-        onSearch={handleSearch}
-      />
+      <SearchBarMap/>
       <MapContainerComponent
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}

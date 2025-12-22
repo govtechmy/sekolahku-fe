@@ -15,6 +15,7 @@ interface MapViewState {
   schoolMarkers: MarkerMap;
   localSuggestions: SearchBarMapProps[];
   viewSchool: ItemSekolahModel | null;
+  query: string;
   setCenter: (c: Center) => void;
   setInitialLocationUser: (c: Center) => void;
   setRadius: (r: number) => void;
@@ -30,6 +31,7 @@ interface MapViewState {
     negeri?: string;
     jenis?: string;
   }) => Promise<void>;
+  setQuery: (q: string) => void;
 }
 
 export const useMapViewStore = create<MapViewState>((set) => ({
@@ -41,6 +43,7 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   schoolMarkers: new Map() as MarkerMap,
   localSuggestions: [],
   viewSchool: null,
+  query: "",
   setCenter: (c) => {
     set(() => {
       return { center: c };
@@ -110,6 +113,9 @@ export const useMapViewStore = create<MapViewState>((set) => ({
       console.error("Error fetching school suggestions:", error);
       set({ localSuggestions: [] });
     }
+  },
+  setQuery: (q) => {
+    set({ query: q });
   }
 }));
 
