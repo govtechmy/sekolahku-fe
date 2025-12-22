@@ -18,10 +18,10 @@ export function SchoolMapMarker({ school, onClick }: SchoolMapMarkerProps) {
       icon = sekolahMarkerIcon;
       break;
     case "PARLIMEN":
-      icon = parlimenMarkerIcon;
+      icon = parlimenMarkerIcon(school.total);
       break;
     case "NEGERI":
-      icon = negeriMarkerIcon;
+      icon = negeriMarkerIcon(school.total);
       break;
     default:
       icon = sekolahMarkerIcon;
@@ -30,7 +30,7 @@ export function SchoolMapMarker({ school, onClick }: SchoolMapMarkerProps) {
   return (
     <Marker
       position={[school.koordinatXX, school.koordinatYY]}
-      icon={icon as L.DivIcon | L.Icon<L.IconOptions>}
+      icon={icon}
       eventHandlers={{
         click: onClick,
       }}

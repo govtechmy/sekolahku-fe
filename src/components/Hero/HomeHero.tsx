@@ -8,7 +8,7 @@ export default function HomeHero() {
       title="Selamat Datang Ke Portal Sekolahku"
       search={<SearchBarHome />}
       links={popularLinks}
-      className="bg-gradient-to-b from-[#E6F0FF] via-[#F2F7FF] to-[#FFFFFF]"
+      HeroclassName="bg-gradient-to-b from-[#E6F0FF] via-[#F2F7FF] to-[#FFFFFF]"
       background={
         <>
           <div className="block lg:hidden h-full w-full bg-[url('/utama/home-hero-mobile.svg')] bg-contain bg-center bg-no-repeat" />

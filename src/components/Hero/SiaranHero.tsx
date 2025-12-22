@@ -3,11 +3,14 @@ import SearchBarMain from "../shared/SearchBar";
 import { DateRangePicker } from "@govtechmy/myds-react/daterange-picker";
 
 export default function SiaranHero() {
+
   return (
     <Hero
       title="Siaran Sekolahku"
       variant="full"
-      search={<SearchBarMain desc='"tajuk siaran", "pengumuman"' />}
+      search={<SearchBarMain            
+        desc='"tajuk siaran", "pengumuman"'
+/>}
       background={
         <>
           <div className="block lg:hidden h-full w-full bg-[url('/utama/siaran/hero-banner/mobile-sekolahku.svg')] bg-contain bg-center bg-no-repeat" />

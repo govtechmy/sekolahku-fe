@@ -14,6 +14,7 @@ import {
 } from "../contentData";
 
 export default function HomePage() {
+
   return (
     <>
       <SectionHeader

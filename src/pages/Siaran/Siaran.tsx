@@ -1,20 +1,42 @@
 import Card from "../../components/shared/Cards";
 import { dataItemNews } from "../../contentData";
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { clx } from "@govtechmy/myds-react/utils";
 
 export default function Siaran() {
-    const [currentPage, setCurrentPage] = useState(0);
-    const navigate = useNavigate();
-    const { lang } = useParams<{ lang: string }>();
-    
-    const PAGE_SIZE = 12;
-    const totalPages = Math.ceil(dataItemNews.length / PAGE_SIZE);
+  const [currentPage, setCurrentPage] = useState(0);
+  const navigate = useNavigate();
+  const { lang } = useParams<{ lang: string }>();
+  const inputRef = useRef<HTMLInputElement>(null!);
 
-    const startIndex = currentPage * PAGE_SIZE;
-    const endIndex = startIndex + PAGE_SIZE;
-    const currentCards = dataItemNews.slice(startIndex, endIndex);
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Avoid triggering when typing in inputs
+      const target = e.target as HTMLElement;
+      const isTyping =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable;
+
+      if (isTyping) return;
+
+      if (e.key === "/") {
+        e.preventDefault(); // stop browser quick-find
+        inputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
+  const PAGE_SIZE = 12;
+  const totalPages = Math.ceil(dataItemNews.length / PAGE_SIZE);
+
+  const startIndex = currentPage * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const currentCards = dataItemNews.slice(startIndex, endIndex);
 
     return (
         <div className="py-12">
