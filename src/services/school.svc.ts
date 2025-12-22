@@ -73,10 +73,12 @@ export const fetchNearbySchools = async (
     if (initialLocationSet === false) {
       return [];
     }
+    const latitudeFixed = parseFloat(latitude.toFixed(4));
+    const longitudeFixed = parseFloat(longitude.toFixed(4));
     try {
       const nearbySchools = await getSchoolNearby({
-        latitude,
-        longitude,
+        latitude: latitudeFixed,
+        longitude: longitudeFixed,
         radiusInMeter,
         zoom,
       });
