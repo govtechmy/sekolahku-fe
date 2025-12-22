@@ -1,12 +1,12 @@
 import { popularLinks } from "../../contentData";
 import Hero from "../shared/Hero";
-import SearchBarHome from "../shared/SearchBarHome";
+import SearchBar from "../shared/SearchBar";
 
 export default function HomeHero() {
   return (
     <Hero
       title="Selamat Datang Ke Portal Sekolahku"
-      search={<SearchBarHome />}
+      search={<SearchBar />}
       links={popularLinks}
       HeroclassName="bg-gradient-to-b from-[#E6F0FF] via-[#F2F7FF] to-[#FFFFFF]"
       background={

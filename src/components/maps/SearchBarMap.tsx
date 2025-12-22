@@ -19,30 +19,12 @@ import { clx } from "@govtechmy/myds-react/utils";
 import { Button } from "@govtechmy/myds-react/button";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
-import type { ItemSekolahModel } from "../../models/response";
 import { useMapViewStore } from "../../store/mapView";
 import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
 
-interface MapSearchBarProps{
-  query: string;
-  setQuery: (val: string) => void;
-  suggestions: SearchBarMapProps[];
-  onSearch: (params: { namaSekolah?: string; negeri?: string; jenis?: string }) => void;
-  viewSchool: ItemSekolahModel | null;
-  setViewSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>;
-}
-
-export function SearchBarMap({
-  query,
-  setQuery,
-  suggestions,
-  onSearch,
-  viewSchool,
-  setViewSchool,
-}: MapSearchBarProps) {
-  const { initialLocationSet } = useMapViewStore();
-  const [localSuggestions, setLocalSuggestions] = useState<SearchBarMapProps[]>([]);
+export function SearchBarMap() {
+  const { initialLocationSet, viewSchool, setViewSchool, localSuggestions, setLocalSuggestions, query, setQuery, handleSearch } = useMapViewStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
@@ -65,7 +47,7 @@ export function SearchBarMap({
     const trimmedValue = value.trim();
     if (trimmedValue.length >= 3 && initialLocationSet) {
       debounceTimerRef.current = window.setTimeout(() => {
-        onSearch({
+        handleSearch({
           namaSekolah: value,
           negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
           jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
@@ -87,17 +69,13 @@ export function SearchBarMap({
 
   useEffect(() => {
     if (!initialLocationSet) return;
-    onSearch({
+    handleSearch({
       namaSekolah: query.trim().length >= 3 ? query : "",
       negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
       jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedJenis, selectedNegeri]);
-
-  useEffect(() => {
-    setLocalSuggestions(suggestions);
-  }, [suggestions]);
 
   const handleSelect = async (school: SearchBarMapProps) => {
     try {
