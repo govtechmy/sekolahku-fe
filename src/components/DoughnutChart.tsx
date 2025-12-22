@@ -93,7 +93,7 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
       <div
         className={clx(
           "w-2 h-2 rounded-full flex-shrink-0",
-          colorClasses[index] ?? "bg-blue-500"
+          colorClasses[index] ?? "bg-primary-500"
         )}
       />
       <span className="text-txt-black-700 truncate">
