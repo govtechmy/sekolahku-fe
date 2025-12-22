@@ -13,7 +13,7 @@ import {
   dataItemNews,
 } from "../contentData";
 import { useEffect, useRef } from "react";
-import SearchBarMain from "../components/shared/SearchBar";
+import HomeHero from "../components/Hero/HomeHero";
 
 export default function HomePage() {
   const inputRef = useRef<HTMLInputElement>(null!);
@@ -41,30 +41,7 @@ export default function HomePage() {
 
   return (
     <div className="mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
-      <Hero
-        title="Selamat Datang Ke Portal Sekolahku"
-        search={<SearchBarMain/>}
-        links={
-          <div className="flex flex-col items-center md:items-start gap-3">
-            <div className="text-body-sm text-txt-black-500">
-              Pautan Popular:
-            </div>
-            <Button
-              variant="default-outline"
-              className="rounded-full text-xs flex justify-center text-txt-black-900"
-              size="medium"
-            >
-              <div className="rounded-full bg-primary-50 text-txt-primary size-8 items-center justify-center flex">
-                <FilterAscIcon className="!size-5" />
-              </div>
-              Analitik Sekolah
-            </Button>
-          </div>
-        }
-        background={
-          <img src="/utama/sekolahku.png" alt="imej hero sekolahku" />
-        }
-      ></Hero>
+      <HomeHero />
 
       <SectionHeader
         header="SIARAN"
@@ -109,6 +86,5 @@ export default function HomePage() {
         chartBaseData={chartBaseData}
       />
     </div>
-    </>
   );
 }
