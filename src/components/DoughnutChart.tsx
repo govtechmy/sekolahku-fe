@@ -7,6 +7,7 @@ import {
 } from "chart.js";
 import type { ChartOptions } from "chart.js";
 import type { CategoryItem } from "../models/response";
+import { clx } from "@govtechmy/myds-react/utils";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -70,7 +71,9 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
     },
   };
 
-  const chartColors = colors || defaultColors.slice(0, data.length);
+  const colorClasses = colors?.length
+  ? colors
+  : defaultColors;
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -78,25 +81,27 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
         {title}
       </h3>
       <div className="flex justify-center items-center">
-        <div className="w-full max-w-[180px]" style={{ height: "300px" }}>
+        <div className="w-full max-w-[180px] h-[300px]">
           <Doughnut data={chartData} options={options} />
         </div>
       </div>
       
       {/* Custom Legend - 2 Column Grid */}
       <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-4 text-sm">
-        {data.map((item, index) => (
-          <div key={index} className="flex justify-center items-center gap-2">
-            <div 
-              className="w-2 h-2 rounded-full flex-shrink-0" 
-              style={{ backgroundColor: chartColors[index] }}
-            />
-            <span className="text-txt-black-700 truncate">
-              {item.jenis}: {item.total.toLocaleString()} ({item.peratus}%)
-            </span>
-          </div>
-        ))}
-      </div>
+  {data.map((item, index) => (
+    <div key={index} className="flex justify-center items-center gap-2">
+      <div
+        className={clx(
+          "w-2 h-2 rounded-full flex-shrink-0",
+          colorClasses[index] ?? "bg-blue-500"
+        )}
+      />
+      <span className="text-txt-black-700 truncate">
+        {item.jenis}: {item.total.toLocaleString()} ({item.peratus}%)
+      </span>
+    </div>
+  ))}
+    </div>
     </div>
   );
 }
