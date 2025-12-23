@@ -1,7 +1,6 @@
 import type { AnalyticsModel } from "../../models/response";
 import { GovtOfficeIcon, BookIcon, UserGroupIcon } from "@govtechmy/myds-react/icon";
 import DoughnutChart from "../DoughnutChart";
-
 interface SectionItemAnalyticsProps {
   analytics: AnalyticsModel;
 }
