@@ -11,6 +11,7 @@ import { Button } from "@govtechmy/myds-react/button";
 import { InfoIconRow, InfoRow } from "../shared/CardInfo";
 import type { ItemSekolahModel } from "../../models/response";
 import type { SearchBarMapProps } from "../../types/maps";
+import { useNavigate } from "react-router-dom";
 
 type SchoolInfoWindowProps = {
   school: ItemSekolahModel;
@@ -18,6 +19,9 @@ type SchoolInfoWindowProps = {
 };
 
 export function SchoolInfoWindow({ school, setSelected}: SchoolInfoWindowProps) {
+  const navigate = useNavigate();
+  const lang = localStorage.getItem("lang") || "ms";
+
   return (
     <div className="relative bg-white rounded-b-xl">
       <div className="sticky top-0 -mt-12 flex justify-end p-2 bg-transparent">
@@ -87,7 +91,11 @@ export function SchoolInfoWindow({ school, setSelected}: SchoolInfoWindowProps) 
         </div>
       </div>
       <div className="p-2 w-full">
-        <Button variant="primary-outline" className="w-full justify-center">
+          <Button variant="primary-outline" className="w-full justify-center" onClick={() => {
+            if (school?.kodSekolah) {
+              navigate(`/${lang}/halaman-sekolah/${school.kodSekolah}`);
+            }
+          }}>
           Lihat Laman Web
         </Button>
       </div>

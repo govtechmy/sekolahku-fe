@@ -1,16 +1,13 @@
 import Hero from "../shared/Hero";
 import BgSchoolProfile from "../../asset/BgSchoolProfile";
-
-type SchoolProps = {
-  KODSEKOLAH: string;
-  NAMASEKOLAH: string;
-}
+import type { ItemSekolahModel } from "../../models/response";
 
 interface SchoolProfileHeroProps {
-  school: SchoolProps | undefined;
+  school: ItemSekolahModel | undefined;
+  url: string;
 }
 
-export default function SchoolProfileHero({ school }: SchoolProfileHeroProps) {
+export default function SchoolProfileHero({ school, url }: SchoolProfileHeroProps) {
   return (
     <Hero
       title=""
@@ -26,16 +23,16 @@ export default function SchoolProfileHero({ school }: SchoolProfileHeroProps) {
                 <div className="max-w-xl pt-10 md:pt-0 text-center md:text-left">
                   <div className="text-txt-primary font-semibold gap-6 pb-6">NAMA SEKOLAH</div>
                   <div className="text-txt-black-900 text-heading-md max-md:text-heading-sm font-semibold gap-7 pb-7 max-w-[495px]">
-                    {school?.NAMASEKOLAH ? school.NAMASEKOLAH : "Maktab Sultan Abu Bakar (English College)"}
+                    {school?.namaSekolah ? school.namaSekolah : "Maktab Sultan Abu Bakar (English College)"}
                   </div>
                   <div className="text-txt-primary font-semibold">JENIS SEKOLAH 
-                    <span className="text-txt-black-500 font-medium"> : SMK </span>
+                    <span className="text-txt-black-500 font-medium"> : {school?.data.infoSekolah?.jenisLabel} </span>
                   </div>
                 </div>
                 {/* RIGHT LOGO */}
                 <div className="mt-8 md:mt-0 flex justify-center text-center">
                   <img
-                    src="/utama/image-159.png"
+                    src={url}
                     alt="School Logo"
                     width={260}
                     height={260}

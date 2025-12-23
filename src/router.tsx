@@ -24,7 +24,6 @@ export default function AppRoutes() {
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
 
-          <Route path="halaman-sekolah" element={<SchoolProfile />} />
           <Route path="halaman-sekolah/:id" element={<SchoolProfile />} />
           <Route path="siaran" element={<Siaran />} />
           <Route path="siaran/:id" element={<SiaranId />} />

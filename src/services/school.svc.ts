@@ -55,7 +55,7 @@ export const getSchoolS3Json = async (dataUrl?: string, negeri?: string, parlime
     }
     const response = await authAxios.get<ItemSekolahModel>(dataUrl)
     return response.data
-    
+
   } catch (error) {
     console.error('Error fetching school JSON:', error)
     throw error
@@ -63,40 +63,80 @@ export const getSchoolS3Json = async (dataUrl?: string, negeri?: string, parlime
 }
 
 export const fetchNearbySchools = async (
-    latitude: number,
-    longitude: number,
-    radiusInMeter: number,
-    initialLocationSet?: boolean,
-    zoom?: number,
-    name?: string
-  ): Promise<MarkerGroup[]> => {
-    
-    if (initialLocationSet === false) {
-      return [];
+  latitude: number,
+  longitude: number,
+  radiusInMeter: number,
+  initialLocationSet?: boolean,
+  zoom?: number,
+  name?: string
+): Promise<MarkerGroup[]> => {
+
+  if (initialLocationSet === false) {
+    return [];
+  }
+  const latitudeFixed = parseFloat(latitude.toFixed(4));
+  const longitudeFixed = parseFloat(longitude.toFixed(4));
+  try {
+    if (name && name !== "") {
+      const nearbySchools = await getSchoolNearby({
+        latitude: latitudeFixed,
+        longitude: longitudeFixed,
+        radiusInMeter,
+        zoom,
+        name
+      });
+      return nearbySchools?.markerGroups || [];
+    } else {
+      const nearbySchools = await getSchoolNearby({
+        latitude: latitudeFixed,
+        longitude: longitudeFixed,
+        radiusInMeter,
+        zoom
+      });
+      return nearbySchools?.markerGroups || [];
     }
-    const latitudeFixed = parseFloat(latitude.toFixed(4));
-    const longitudeFixed = parseFloat(longitude.toFixed(4));
-    try {
-      if(name && name !== "") {
-        const nearbySchools = await getSchoolNearby({
-          latitude: latitudeFixed,
-          longitude: longitudeFixed,
-          radiusInMeter,
-          zoom,
-          name
-        });
-        return nearbySchools?.markerGroups || [];
-      } else {
-        const nearbySchools = await getSchoolNearby({
-          latitude: latitudeFixed,
-          longitude: longitudeFixed,
-          radiusInMeter,
-          zoom
-        });
-        return nearbySchools?.markerGroups || [];
-      }
-    } catch (error) {
-      console.error("Failed to fetch nearby schools:", error);
-      return [];
+  } catch (error) {
+    console.error("Failed to fetch nearby schools:", error);
+    return [];
+  }
+};
+
+export const fetchSchools = async (
+  id: string,
+  setSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>,
+  setSchoolNearbyDetails: React.Dispatch<React.SetStateAction<ItemSekolahModel[]>>,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+) => {
+  try {
+    if (!id) throw new Error('School ID is undefined');
+    const response = await getSchoolId(id);
+
+    if (!response?.data?.infoPentadbiran) {
+      throw new Error('Invalid school data structure');
     }
+    const s3response = await getSchoolS3Json(undefined, response.data.infoPentadbiran.negeri, response.data.infoPentadbiran.parlimen, response.kodSekolah);
+    setSchool(s3response);
+
+    const nearbyResponse = await fetchNearbySchools(response.data.infoLokasi.koordinatYY, response.data.infoLokasi.koordinatXX, 1000, true, 15);
+
+    if (nearbyResponse && nearbyResponse.length > 0) {
+      const nearbyDetailsPromises = nearbyResponse.slice(0, 3).map(async (school) => {
+        try {
+          return await getSchoolS3Json(school.dataUrl, undefined, undefined, undefined);
+        } catch (error) {
+          console.warn(`Failed to fetch data for school ${school.kodSekolah}:`, error);
+          return null;
+        }
+      });
+
+      const nearbyDetails = await Promise.all(nearbyDetailsPromises);
+      setSchoolNearbyDetails(nearbyDetails.filter((s): s is ItemSekolahModel => s !== null));
+    }
+
+  } catch (error) {
+    console.warn('Failed to fetch schools data:', error);
+    setSchool(null);
+  } finally {
+    setLoading(false);
+  }
 };
