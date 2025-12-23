@@ -35,7 +35,7 @@ export default function SiaranId() {
     }
 
     return (
-        <div className=" py-12 px-[18px] md:px-20  md:flex md:justify-center">
+        <div className=" py-12 px-[18px] lg:px-20  md:flex md:justify-center">
           <div className="flex flex-col gap-6 max-w-[825px]">
             <Breadcrumb className="md:px-10">
                 <BreadcrumbItem>

@@ -3,10 +3,7 @@ import SectionHeader from "../components/shared/SectionHeader";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
-import Statistic from "../components/statistic";
 import {
-  statisticYearlyData,
-  chartBaseData,
   dataItemAnalytics,
   dataItemCalendar,
   dataItemLinks,
@@ -82,10 +79,6 @@ export default function HomePage() {
         children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
       />
 
-      <Statistic
-        yearlyData={statisticYearlyData}
-        chartBaseData={chartBaseData}
-      />
     </div>
     </div>
   );
