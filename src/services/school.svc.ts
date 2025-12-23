@@ -68,6 +68,7 @@ export const fetchNearbySchools = async (
     radiusInMeter: number,
     initialLocationSet?: boolean,
     zoom?: number,
+    name?: string
   ): Promise<MarkerGroup[]> => {
     
     if (initialLocationSet === false) {
@@ -76,14 +77,24 @@ export const fetchNearbySchools = async (
     const latitudeFixed = parseFloat(latitude.toFixed(4));
     const longitudeFixed = parseFloat(longitude.toFixed(4));
     try {
-      const nearbySchools = await getSchoolNearby({
-        latitude: latitudeFixed,
-        longitude: longitudeFixed,
-        radiusInMeter,
-        zoom,
-      });
-
-      return nearbySchools?.markerGroups || [];
+      if(name && name !== "") {
+        const nearbySchools = await getSchoolNearby({
+          latitude: latitudeFixed,
+          longitude: longitudeFixed,
+          radiusInMeter,
+          zoom,
+          name
+        });
+        return nearbySchools?.markerGroups || [];
+      } else {
+        const nearbySchools = await getSchoolNearby({
+          latitude: latitudeFixed,
+          longitude: longitudeFixed,
+          radiusInMeter,
+          zoom
+        });
+        return nearbySchools?.markerGroups || [];
+      }
     } catch (error) {
       console.error("Failed to fetch nearby schools:", error);
       return [];
