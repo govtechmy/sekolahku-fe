@@ -8,8 +8,10 @@ import {
     BreadcrumbSeparator,
     BreadcrumbPage,
   } from "@govtechmy/myds-react/breadcrumb";
-  import { ClockIcon, LinkDiagonalIcon, EmailIcon, FacebookIcon, TwitterXIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
+import { ClockIcon } from "@govtechmy/myds-react/icon";
+import { ShareBar } from "../../components/shared/ShareBar";
+  
 
 export default function SiaranId() {
     const { id } = useParams<{ id: string }>();
@@ -18,6 +20,7 @@ export default function SiaranId() {
     
     // Find the news item by ID
     const newsItem = dataItemNews.find(item => item.id === id);
+      
 
     // If item not found, show error message
     if (!newsItem) {
@@ -35,7 +38,7 @@ export default function SiaranId() {
     }
 
     return (
-        <div className=" py-12 px-[18px] md:px-20  md:flex md:justify-center">
+        <div className="mx-auto px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 items-center justify-center flex">
           <div className="flex flex-col gap-6 max-w-[825px]">
             <Breadcrumb className="md:px-10">
                 <BreadcrumbItem>
@@ -56,29 +59,21 @@ export default function SiaranId() {
                 </span>
                 <p className=" text-2xl font-semibold">{newsItem.title}</p>
 
-                <div className=" flex flex-row gap-2 text-bg-black-500">
-                    <div className=" flex flex-row gap-1"><ClockIcon/> Bacaan {newsItem.readTime}</div>
-                    .
+                <div className="flex items-center gap-2 self-start text-bg-black-500">
+                    <div className="flex items-center gap-1">
+                        <ClockIcon />
+                        <div>Bacaan {newsItem.readTime}</div>
+                    </div>
+                    <div className="">
+                      <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="5" cy="5" r="1.5" fill="gray" />
+                      </svg>
+                    </div>
                     <div>{newsItem.date}, 2:30PM</div>
                 </div>
             </div>
 
-            <div className="md:px-10">
-                <div className=" flex flex-row justify-between pb-[18px] border-b-2 border-gray-200">
-                    <ul className=" flex flex-row items-center gap-4">
-                        <li className=" hover:text-primary-500"><LinkDiagonalIcon/></li>
-                        <li className=" hover:text-primary-500"><EmailIcon/></li>
-                        <li className=" hover:text-primary-500"><FacebookIcon/></li>
-                        <li className=" hover:text-primary-500"><TwitterXIcon/></li>
-                    </ul>
-
-                    <div className=" py-[6px] px-[10px] flex flex-row gap-2 border border-otl-gray-200 rounded-md hover:bg-otl-gray-100 cursor-pointer">
-                        <PrinterIcon/>
-                        <span className="text-sm font-medium">Cetak</span>
-                    </div>
-                </div>
-            </div>
-                        
+           <ShareBar title={newsItem.title} />
 
             <div className="flex flex-col gap-3">
                 <img 
