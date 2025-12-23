@@ -9,9 +9,15 @@ import {
     BreadcrumbPage,
   } from "@govtechmy/myds-react/breadcrumb";
 import { clx } from "@govtechmy/myds-react/utils";
-import { ClockIcon } from "@govtechmy/myds-react/icon";
-import { ShareBar } from "../../components/shared/ShareBar";
-  
+import {
+    LinkDiagonalIcon,
+    EmailIcon,
+    FacebookIcon,
+    TwitterXIcon,
+    PrinterIcon,
+    ClockIcon,
+  } from "@govtechmy/myds-react/icon";
+import DotIcon from "../../icons/DotIcon";
 
 export default function SiaranId() {
     const { id } = useParams<{ id: string }>();
@@ -20,9 +26,54 @@ export default function SiaranId() {
     
     // Find the news item by ID
     const newsItem = dataItemNews.find(item => item.id === id);
-      
+    
+    const currentUrl = window.location.href;
+    const encodedUrl = encodeURIComponent(currentUrl);
+    const encodedTitle = newsItem ? encodeURIComponent(newsItem.title) : '';
 
-    // If item not found, show error message
+    const shareIcons = [
+        {
+            name: "Copy Link",
+            icon: <LinkDiagonalIcon />,
+            action: async () => {
+                try {
+                    await navigator.clipboard.writeText(currentUrl);
+                } catch {
+                    alert("Failed to copy link");
+                }
+            },
+        },
+        {
+            name: "Email",
+            icon: <EmailIcon />,
+            action: () =>
+                window.open(
+                    `mailto:?subject=${encodedTitle}&body=${encodedUrl}`,
+                    "_self"
+                ),
+        },
+        {
+            name: "Facebook",
+            icon: <FacebookIcon />,
+            action: () =>
+                window.open(
+                    `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+                    "_blank",
+                    "noopener,noreferrer"
+                ),
+        },
+        {
+            name: "Twitter",
+            icon: <TwitterXIcon />,
+            action: () =>
+                window.open(
+                    `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+                    "_blank",
+                    "noopener,noreferrer"
+                ),
+        },
+    ];
+
     if (!newsItem) {
         return (
             <div className="px-4 md:px-20 py-12">
@@ -38,9 +89,9 @@ export default function SiaranId() {
     }
 
     return (
-        <div className="mx-auto px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 items-center justify-center flex">
+        <div className="mx-auto px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-12 items-center justify-center flex">
           <div className="flex flex-col gap-6 max-w-[825px]">
-            <Breadcrumb className="md:px-10">
+            <Breadcrumb className="">
                 <BreadcrumbItem>
                     <BreadcrumbLink href={`/${lang}/siaran`}>Siaran</BreadcrumbLink>
                 </BreadcrumbItem>
@@ -50,7 +101,7 @@ export default function SiaranId() {
                 </BreadcrumbItem>
             </Breadcrumb>
            
-            <div className="flex flex-col gap-3 md:px-10">
+            <div className="flex flex-col gap-3">
                 <span className={
                     clx("text-sm font-semibold", 
                     newsItem.header === "Berita" ? "text-txt-primary" : "text-success-700"
@@ -64,16 +115,39 @@ export default function SiaranId() {
                         <ClockIcon />
                         <div>Bacaan {newsItem.readTime}</div>
                     </div>
-                    <div className="">
-                      <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="5" cy="5" r="1.5" fill="gray" />
-                      </svg>
+                    <div>
+                      <DotIcon />
                     </div>
                     <div>{newsItem.date}, 2:30PM</div>
                 </div>
             </div>
 
-           <ShareBar title={newsItem.title} />
+           <div className="flex flex-row justify-between">
+            <div className="flex flex-row gap-2">
+                {shareIcons.map((iconItem) => (
+                    <Button 
+                        key={iconItem.name}
+                        variant="default-ghost"
+                        onClick={iconItem.action}
+                        aria-label={iconItem.name}
+                    >
+                        {iconItem.icon}
+                    </Button>
+                ))}
+            </div>
+
+            <div>
+                <Button
+                    variant="default-outline"
+                    onClick={() => window.print()}
+                >
+                    <PrinterIcon className="mr-2" />
+                    Cetak
+                </Button>
+            </div>
+           </div>
+
+           <hr />
 
             <div className="flex flex-col gap-3">
                 <img 
@@ -84,9 +158,9 @@ export default function SiaranId() {
                 <span className="text-bg-black-500 text-center">Image from {newsItem.link}</span>
             </div>
 
-            <p className=" text-2xl font-semibold md:px-10">{newsItem.description}</p>
+            <p className=" text-2xl font-semibold">{newsItem.description}</p>
 
-            <p className="md:px-10">{newsItem.content}</p>
+            <p>{newsItem.content}</p>
          
             </div>
         </div>
