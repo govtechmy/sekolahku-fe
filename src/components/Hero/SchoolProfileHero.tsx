@@ -29,8 +29,8 @@ export default function SchoolProfileHero({ school, url }: SchoolProfileHeroProp
             <BgSchoolProfileNoLogo className="absolute inset-0 w-full h-full bg-cover bg-center" />
           )}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-full px-[109px] py-[50px] md:px-[109px] md:py-[50px] max-md:px-2 max-md:py-4">
-              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between w-full px-6 md:px-12">
+            <div className="w-full max-w-[1328px] px-6 lg:px-[109px] py-[50px] md:py-[50px] max-md:py-4 mx-auto">
+              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between w-full">
                 <div className="max-w-xl pt-10 md:pt-0 text-center md:text-left">
                   <div className="text-txt-primary font-semibold gap-6 pb-6">NAMA SEKOLAH</div>
                   <div className="text-txt-black-900 text-heading-md max-md:text-heading-sm font-semibold gap-7 pb-7 max-w-[495px]">
