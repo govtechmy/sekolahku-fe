@@ -9,8 +9,8 @@ import { Link } from "@govtechmy/myds-react/link";
 
 export default function FooterMyds() {
   return (
-    <Footer className="md:max-xl:px-6 md:max-2xl:px-[104px]">
-      <FooterSection className="text-txt-black-500 md:max-lg:gap-4.5 mx-auto flex w-full max-w-[1280px] flex-col justify-between text-sm max-md:gap-4 lg:flex-row lg:gap-6">
+    <Footer className="w-full max-md:px-0 md:px-0 gap-0">
+      <FooterSection className="text-txt-black-500 md:max-lg:gap-4.5 mx-auto flex w-full max-w-screen-xl flex-col justify-between text-sm max-md:gap-4 lg:flex-row lg:gap-6 px-4.5 md:px-6 gap-0">
         <div className="flex flex-col gap-3 lg:flex-row w-[412px]">
           <SiteInfo>
             <div className="text-txt-black-900 flex items-center gap-x-2.5">
@@ -82,7 +82,7 @@ export default function FooterMyds() {
           </div>
         </div>
       </FooterSection>
-      <FooterSection className="text-gray-500 md:max-lg:gap-4.5 mx-auto flex w-full max-w-[1280px] flex-col justify-between border-none text-sm max-md:gap-4 lg:flex-row lg:gap-6 md:pb-0">
+      <FooterSection className="text-txt-black-500 md:max-lg:gap-4.5 mx-auto flex w-full max-w-screen-xl flex-col justify-between border-none text-sm max-md:gap-4 lg:flex-row lg:gap-6 px-4.5 md:px-6 gap-0 pt-6 md:pb-0">
         <div className="flex flex-col gap-3 lg:flex-row">
           <p>© 2025 Kementerian Pendidikan. Semua hakcipta terpelihara.</p>
           <p className="hidden lg:inline">|</p>
