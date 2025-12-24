@@ -10,7 +10,7 @@ import {
 } from "@govtechmy/myds-react/breadcrumb";
 import { ClockIcon, LinkDiagonalIcon, EmailIcon, FacebookIcon, TwitterXIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
-import "./print.css";
+import { SiteLink } from "@govtechmy/myds-react/footer";
 
 export default function SiaranId() {
     const { id } = useParams<{ id: string }>();
@@ -36,9 +36,9 @@ export default function SiaranId() {
     }
 
     return (
-        <div className=" py-12 px-[18px] md:px-20  md:flex md:justify-center">
-            <div className="flex flex-col gap-6 max-w-[825px] print-area">
-                <Breadcrumb className="md:px-10 no-print">
+        <div className=" py-12 px-[18px] md:px-20  md:flex md:justify-center print:py-0">
+            <div className="flex flex-col gap-6 max-w-[825px]">
+                <Breadcrumb className="md:px-10 print:hidden">
                     <BreadcrumbItem>
                         <BreadcrumbLink href={`/${lang}/siaran`}>Siaran</BreadcrumbLink>
                     </BreadcrumbItem>
@@ -58,19 +58,19 @@ export default function SiaranId() {
                     <p className=" text-2xl font-semibold">{newsItem.title}</p>
 
                     <div className=" flex flex-row gap-2 text-bg-black-500">
-                        <div className=" flex flex-row gap-1"><ClockIcon /> Bacaan {newsItem.readTime}</div>
+                        <div className=" flex flex-row gap-1 items-center"><ClockIcon /> Bacaan {newsItem.readTime}</div>
                         .
                         <div>{newsItem.date}, 2:30PM</div>
                     </div>
                 </div>
 
-                <div className="md:px-10 no-print">
+                <div className="md:px-10 print:hidden">
                     <div className=" flex flex-row justify-between pb-[18px] border-b-2 border-gray-200">
                         <ul className=" flex flex-row items-center gap-4">
-                            <li className=" hover:text-primary-500"><LinkDiagonalIcon /></li>
-                            <li className=" hover:text-primary-500"><EmailIcon /></li>
-                            <li className=" hover:text-primary-500"><FacebookIcon /></li>
-                            <li className=" hover:text-primary-500"><TwitterXIcon /></li>
+                            <li className="cursor-pointer"><SiteLink className="hover:text-primary-500" href="#"><LinkDiagonalIcon /></SiteLink></li>
+                            <li className="cursor-pointer"><SiteLink className="hover:text-primary-500" href="#"><EmailIcon /></SiteLink></li>
+                            <li className="cursor-pointer"><SiteLink className="hover:text-primary-500" href="#"><FacebookIcon /></SiteLink></li>
+                            <li className="cursor-pointer"><SiteLink className="hover:text-primary-500" href="#"><TwitterXIcon /></SiteLink></li>
                         </ul>
 
                         <div className=" py-[6px] px-[10px] flex flex-row gap-2 border border-otl-gray-200 rounded-md hover:bg-otl-gray-100 cursor-pointer" onClick={() => window.print()}>
@@ -93,7 +93,7 @@ export default function SiaranId() {
                 <p className=" text-2xl font-semibold md:px-10">{newsItem.description}</p>
 
                 <p className="md:px-10">{newsItem.content}</p>
-            
+                
             </div>
         </div>
     );
