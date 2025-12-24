@@ -14,7 +14,6 @@ export const NearbySchoolCard = ({ school, handleNearbySchoolClick, url }: Nearb
     e.currentTarget.className = "h-full w-full object-cover";
   };
 
-  console.log(url)
   return (
     <div
       key={school.kodSekolah}

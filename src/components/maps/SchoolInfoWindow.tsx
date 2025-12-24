@@ -59,7 +59,7 @@ export function SchoolInfoWindow({ school, setSelected}: SchoolInfoWindowProps) 
           />
           <InfoIconRow
             icon={<PinIcon />}
-            value={ toTitleCase(formatSchoolAddress(school))|| "Tiada Maklumat"}
+            value={ toTitleCase(formatSchoolAddress(school)) || "Tiada Maklumat"}
           />
         </div>
       </div>

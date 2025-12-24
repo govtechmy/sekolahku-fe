@@ -91,46 +91,6 @@ export const fetchNearbySchools = async (
   }
 };
 
-export const fetchSchools = async (
-  id: string,
-  setSchool: React.Dispatch<React.SetStateAction<ItemSekolahModel | null>>,
-  setSchoolNearbyDetails: React.Dispatch<React.SetStateAction<ItemSekolahModel[]>>,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
-) => {
-  try {
-    if (!id) throw new Error('School ID is undefined');
-    const response = await getSchoolId(id);
-
-    if (!response?.data?.infoPentadbiran) {
-      throw new Error('Invalid school data structure');
-    }
-    const s3response = await getSchoolS3Json(undefined, response.data.infoPentadbiran.negeri, response.data.infoPentadbiran.parlimen, response.kodSekolah);
-    setSchool(s3response);
-
-    const nearbyResponse = await fetchNearbySchools(response.data.infoLokasi.koordinatYY, response.data.infoLokasi.koordinatXX, 1000, true, 15);
-
-    if (nearbyResponse && nearbyResponse.length > 0) {
-      const nearbyDetailsPromises = nearbyResponse.slice(0, 3).map(async (school) => {
-        try {
-          return await getSchoolS3Json(school.dataUrl, undefined, undefined, undefined);
-        } catch (error) {
-          console.warn(`Failed to fetch data for school ${school.kodSekolah}:`, error);
-          return null;
-        }
-      });
-
-      const nearbyDetails = await Promise.all(nearbyDetailsPromises);
-      setSchoolNearbyDetails(nearbyDetails.filter((s): s is ItemSekolahModel => s !== null));
-    }
-
-  } catch (error) {
-    console.warn('Failed to fetch schools data:', error);
-    setSchool(null);
-  } finally {
-    setLoading(false);
-  }
-};
-
 export const getSchoolLogoUrl = (negeri: string, parlimen: string, kodSekolah: string): string => {
   return `${DATA_BASE_URL}/${negeri}/${parlimen}/${kodSekolah}/assets/logo.png`;
 };
