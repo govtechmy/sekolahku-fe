@@ -63,7 +63,7 @@ export default function NavbarMyds() {
         <NavbarMenuItem href={`/${lang}/home`} aria-current={activeItem === "home" ? "page" : undefined} className={activeItem === "home" ? "bg-bg-washed" : ""}>
           Utama
         </NavbarMenuItem>
-        <NavbarMenuItem href={`/${lang}/carian-sekolah`} aria-current={activeItem === "carian-sekolah" ? "page" : undefined} className={activeItem === "carian-sekolah" ? "bg-bg-washed" : ""}>
+        <NavbarMenuItem href={`/${lang}/carian-sekolah`} aria-current={activeItem === "carian-sekolah" || activeItem === "halaman-sekolah" ? "page" : undefined} className={activeItem === "carian-sekolah" || activeItem === "halaman-sekolah" ? "bg-bg-washed" : ""}>
           Carian Sekolah
         </NavbarMenuItem>
         <NavbarMenuItem href={`/${lang}/siaran`} aria-current={activeItem === "siaran" ? "page" : undefined} className={activeItem === "siaran" ? "bg-bg-washed" : ""}>
