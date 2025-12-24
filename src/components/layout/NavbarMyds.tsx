@@ -1,6 +1,6 @@
  import { useState } from "react";
 import { useLocation } from "react-router-dom";
-// import { useNavigate, useParams } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 // import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 // import { GlobeIcon } from "@govtechmy/myds-react/icon";
 import {
@@ -22,7 +22,7 @@ import {
 
 export default function NavbarMyds() {
   // const navigate = useNavigate();
-  // const { lang } = useParams<{ lang: string }>();
+  const lang = localStorage.getItem("lang") || "ms";
   const [isHidden, setIsHidden] = useState(false);
   const location = useLocation();
   // const [selectedLang, setSelectedLang] = useState(
@@ -60,16 +60,16 @@ export default function NavbarMyds() {
         classNameNavDesktop=""
         classNameNavMobile={` ${isHidden ? "block" : "hidden"}`}
       >
-        <NavbarMenuItem href="home" aria-current={activeItem === "home" ? "page" : undefined} className={activeItem === "home" ? "bg-bg-washed" : ""}>
+        <NavbarMenuItem href={`/${lang}/home`} aria-current={activeItem === "home" ? "page" : undefined} className={activeItem === "home" ? "bg-bg-washed" : ""}>
           Utama
         </NavbarMenuItem>
-        <NavbarMenuItem href="carian-sekolah" aria-current={activeItem === "carian-sekolah" ? "page" : undefined} className={activeItem === "carian-sekolah" ? "bg-bg-washed" : ""}>
+        <NavbarMenuItem href={`/${lang}/carian-sekolah`} aria-current={activeItem === "carian-sekolah" ? "page" : undefined} className={activeItem === "carian-sekolah" ? "bg-bg-washed" : ""}>
           Carian Sekolah
         </NavbarMenuItem>
-        <NavbarMenuItem href="siaran" aria-current={activeItem === "siaran" ? "page" : undefined} className={activeItem === "siaran" ? "bg-bg-washed" : ""}>
+        <NavbarMenuItem href={`/${lang}/siaran`} aria-current={activeItem === "siaran" ? "page" : undefined} className={activeItem === "siaran" ? "bg-bg-washed" : ""}>
           Siaran
         </NavbarMenuItem>
-        <NavbarMenuItem href="acara" aria-current={activeItem === "acara" ? "page" : undefined} className={activeItem === "acara" ? "bg-bg-washed" : ""}>
+        <NavbarMenuItem href={`/${lang}/acara`} aria-current={activeItem === "acara" ? "page" : undefined} className={activeItem === "acara" ? "bg-bg-washed" : ""}>
           Acara
         </NavbarMenuItem>
       </NavbarMenu>
