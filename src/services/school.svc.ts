@@ -3,17 +3,7 @@ import { authAxios } from './http'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 const SCHOOL_ENDPOINT = '/schools'
-
-export const getSchoolId = async (id: string): Promise<ItemSekolahModel | null> => {
-  try {
-    const response = await authAxios.get<APIResponse<ItemSekolahModel>>(`${BASE_URL}${SCHOOL_ENDPOINT}/${id}`)
-
-    return response.data.data || null
-  } catch (error) {
-    console.error('Error fetching school suggestions:', error)
-    throw error
-  }
-}
+const DATA_BASE_URL = import.meta.env.VITE_DATA_BASE_URL
 
 export const getSchoolSuggestion = async (params?: schoolSearchModel): Promise<ItemSekolahModel[]> => {
   try {
@@ -140,3 +130,60 @@ export const fetchSchools = async (
     setLoading(false);
   }
 };
+
+export const getSchoolLogoUrl = (negeri: string, parlimen: string, kodSekolah: string): string => {
+  return `${DATA_BASE_URL}/${negeri}/${parlimen}/${kodSekolah}/assets/logo.png`;
+};
+
+export const getSchoolProfile = async (
+  id: string,
+  nearbyLimit: number = 3,
+  nearbyRadius: number = 1000
+) => {
+  if (!id) {
+    throw new Error('School ID is required');
+  }
+
+  const basicSchoolInfo = await getSchoolId(id);
+  
+  if (!basicSchoolInfo?.data?.infoPentadbiran) {
+    throw new Error('School not found or invalid data structure');
+  }
+
+  const { negeri, parlimen } = basicSchoolInfo.data.infoPentadbiran;
+  const { kodSekolah } = basicSchoolInfo;
+  const schoolDetails = await getSchoolS3Json(undefined, negeri, parlimen, kodSekolah);
+
+  const { koordinatYY, koordinatXX } = basicSchoolInfo.data.infoLokasi;
+  const nearbyMarkers = await fetchNearbySchools(koordinatYY, koordinatXX, nearbyRadius, true, 15);
+
+  const nearbyDetailsPromises = nearbyMarkers
+    .slice(0, nearbyLimit)
+    .map(async (school) => {
+      try {
+        return await getSchoolS3Json(school.dataUrl);
+      } catch (error) {
+        console.warn(`Failed to fetch data for school ${school.kodSekolah}:`, error);
+        return null;
+      }
+    });
+
+  const nearbySchools = (await Promise.all(nearbyDetailsPromises))
+    .filter((s): s is ItemSekolahModel => s !== null);
+
+  return {
+    school: schoolDetails,
+    nearbySchools,
+  };
+};
+
+export const getSchoolId = async (id: string): Promise<ItemSekolahModel | null> => {
+  try {
+    const response = await authAxios.get<APIResponse<ItemSekolahModel>>(`${BASE_URL}${SCHOOL_ENDPOINT}/${id}`)
+
+    return response.data.data || null
+  } catch (error) {
+    console.error('Error fetching school suggestions:', error)
+    throw error
+  }
+}
