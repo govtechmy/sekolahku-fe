@@ -22,7 +22,7 @@ export const InfoGridItem = ({ label, value }: InfoGridItemProps) => {
         </div>
       );
     }
-    return <div className="text-txt-black-500">{value ?? 'N/A'}</div>;
+    return <div className="text-txt-black-500">{value}</div>;
   };
 
   return (

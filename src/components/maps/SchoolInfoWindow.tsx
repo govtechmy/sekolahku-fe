@@ -12,6 +12,7 @@ import { InfoIconRow, InfoRow } from "../shared/CardInfo";
 import type { ItemSekolahModel } from "../../models/response";
 import type { SearchBarMapProps } from "../../types/maps";
 import { useNavigate } from "react-router-dom";
+import { formatSchoolAddress } from "../../utils/schoolHelpers";
 
 type SchoolInfoWindowProps = {
   school: ItemSekolahModel;
@@ -58,17 +59,7 @@ export function SchoolInfoWindow({ school, setSelected}: SchoolInfoWindowProps) 
           />
           <InfoIconRow
             icon={<PinIcon />}
-            value={
-              school?.data?.infoKomunikasi
-                ? toTitleCase(
-                    `${school.data.infoKomunikasi.alamatSurat || ""}${
-                      school.data.infoKomunikasi.alamatSurat ? ", " : ""
-                    }${school.data.infoKomunikasi.poskodSurat || ""} ${school.data.infoKomunikasi.bandarSurat || ""}${
-                      school.data.infoPentadbiran?.negeri ? ", " + school.data.infoPentadbiran.negeri : ""
-                    }`
-                  )
-                : "Tiada Maklumat"
-            }
+            value={ toTitleCase(formatSchoolAddress(school))|| "Tiada Maklumat"}
           />
         </div>
       </div>

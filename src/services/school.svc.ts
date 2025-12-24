@@ -137,7 +137,6 @@ export const getSchoolLogoUrl = (negeri: string, parlimen: string, kodSekolah: s
 
 export const getSchoolProfile = async (
   id: string,
-  nearbyLimit: number = 3,
   nearbyRadius: number = 1000
 ) => {
   if (!id) {
@@ -158,7 +157,7 @@ export const getSchoolProfile = async (
   const nearbyMarkers = await fetchNearbySchools(koordinatYY, koordinatXX, nearbyRadius, true, 15);
 
   const nearbyDetailsPromises = nearbyMarkers
-    .slice(0, nearbyLimit)
+    .slice(1, 4)
     .map(async (school) => {
       try {
         return await getSchoolS3Json(school.dataUrl);

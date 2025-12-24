@@ -1,8 +1,6 @@
 import type { ItemSekolahModel } from "../models/response";
 
-/**
- * Helper function to format school address
- */
+
 export const formatSchoolAddress = (school: ItemSekolahModel): string => {
   const { alamatSurat, poskodSurat, bandarSurat } = school.data.infoKomunikasi;
   const { negeri } = school.data.infoPentadbiran || {};
@@ -16,9 +14,7 @@ export const formatSchoolAddress = (school: ItemSekolahModel): string => {
   return parts.join(', ');
 };
 
-/**
- * Builds a school logo URL
- */
+
 export const getSchoolLogoUrl = (
   baseUrl: string,
   negeri: string,

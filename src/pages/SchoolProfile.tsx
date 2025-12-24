@@ -13,9 +13,10 @@ export default function SchoolProfile() {
   const { school, nearbySchools, loading, error } = useSchoolProfile(id);
   const domain = import.meta.env.VITE_DOMAIN_NAME;
   const schoolProfile = "/halaman-sekolah";
+  const lang = localStorage.getItem("lang") || "ms";
 
   const handleNearbySchoolClick = (schoolId: string) => {
-    navigate(`${schoolProfile}/${schoolId}`);
+    navigate(`/${lang}/halaman-sekolah/${schoolId}`);
   };
 
   if (loading) {
@@ -49,23 +50,19 @@ export default function SchoolProfile() {
     />
     <SchoolProfileHero 
       school={school} 
-      url={getSchoolLogoUrl(
-        school.data.infoPentadbiran.negeri,
-        school.data.infoPentadbiran.parlimen,
-        school.kodSekolah
-      )}
+      url={getSchoolLogoUrl( school.data.infoPentadbiran.negeri, school.data.infoPentadbiran.parlimen, school.kodSekolah )}
     />
     <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
       <div className="grid grid-cols-2 md:grid-cols-2 mt-0 md:px-12 max-md:px-0">
         <StatCard
           icon={<UserGroupIcon />}
           label="PELAJAR"
-          value={school?.data?.infoSekolah?.jumlahPelajar ?? "Data Tidak Tersedia"}
+          value={school?.data?.infoSekolah?.jumlahPelajar ?? "Tiada Maklumat"}
         />
         <StatCard
           icon={<UserIcon />}
           label="GURU"
-          value={school?.data?.infoSekolah?.jumlahGuru ?? "Data Tidak Tersedia"}
+          value={school?.data?.infoSekolah?.jumlahGuru ?? "Tiada Maklumat"}
         />
       </div>
 
@@ -96,11 +93,7 @@ export default function SchoolProfile() {
           </div>
           <div>
             <img
-              src={getSchoolLogoUrl(
-                school.data.infoPentadbiran.negeri,
-                school.data.infoPentadbiran.parlimen,
-                school.kodSekolah
-              )}
+              src="/utama/school-outline.png"
               alt="School building outline"
             />
           </div>
@@ -125,12 +118,8 @@ export default function SchoolProfile() {
             <NearbySchoolCard
               key={school.kodSekolah}
               school={school}
-              url={getSchoolLogoUrl(
-                school.data.infoPentadbiran.negeri,
-                school.data.infoPentadbiran.parlimen,
-                school.kodSekolah
-              )}
-              onSchoolClick={handleNearbySchoolClick}
+              url={getSchoolLogoUrl( school.data.infoPentadbiran.negeri,school.data.infoPentadbiran.parlimen,school.kodSekolah )}
+              handleNearbySchoolClick={handleNearbySchoolClick}
             />
           ))}
         </div>
