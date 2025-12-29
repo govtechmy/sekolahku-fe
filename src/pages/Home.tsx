@@ -19,6 +19,7 @@ import HomeHero from "../components/Hero/HomeHero";
 export default function HomePage() {
   const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
   const [loading, setLoading] = useState(true);
+  const inputRef = useRef<HTMLInputElement>(null!);
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -34,7 +35,7 @@ export default function HomePage() {
     };
 
     fetchAnalytics();
-  }, []);  const inputRef = useRef<HTMLInputElement>(null!);
+  }, []); 
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
