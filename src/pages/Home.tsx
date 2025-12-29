@@ -4,13 +4,16 @@ import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
 import {
+  chartBaseData,
   dataItemAnalytics,
   dataItemCalendar,
   dataItemLinks,
   dataItemNews,
+  statisticYearlyData,
 } from "../contentData";
 import { useEffect, useRef } from "react";
 import HomeHero from "../components/Hero/HomeHero";
+import Statistic from "../components/statistic";
 
 export default function HomePage() {
   const inputRef = useRef<HTMLInputElement>(null!);
@@ -77,6 +80,11 @@ export default function HomePage() {
         header="PAUTAN PANTAS"
         title="Pautan Popular bagi guru, pelajar dan ibu bapa"
         children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
+      />
+
+      <Statistic
+        yearlyData={statisticYearlyData}
+        chartBaseData={chartBaseData}
       />
 
     </div>
