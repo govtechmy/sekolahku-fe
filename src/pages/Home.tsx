@@ -7,11 +7,11 @@ import Statistic from "../components/statistic";
 import { getAnalytics } from "../services/analytics.svc";
 import type { AnalyticsModel } from "../models/response";
 import {
-  statisticYearlyData,
   chartBaseData,
   dataItemCalendar,
   dataItemLinks,
   dataItemNews,
+  statisticYearlyData,
 } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
@@ -107,6 +107,7 @@ export default function HomePage() {
         yearlyData={statisticYearlyData}
         chartBaseData={chartBaseData}
       />
+
     </div>
     </div>
   );

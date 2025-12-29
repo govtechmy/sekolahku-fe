@@ -20,13 +20,13 @@ export default function SearchBarHome() {
   const debounceTimerRef = useRef<number | null>(null);
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
-  
+
   const {
     query,
     setQuery,
     handleSearch,
     localSuggestions,
-    setLocalSuggestions
+    setLocalSuggestions,
   } = useMapViewStore();
 
   const handleValueChange = (value: string) => {
@@ -66,9 +66,9 @@ export default function SearchBarHome() {
           onFocus={() => setHasFocus(true)}
         />
         {query && <SearchBarClearButton onClick={() => setQuery("")} />}
-        {!hasFocus && (
-          <SearchBarHint className="hidden lg:flex">
-            Tekan untuk cari <Pill size="small">/</Pill>
+        {(!query || query.trim().length === 0) && (
+          <SearchBarHint className="">
+            Tekan <Pill size="small">/</Pill> untuk cari
           </SearchBarHint>
         )}
         <SearchBarSearchButton />
@@ -87,7 +87,7 @@ export default function SearchBarHome() {
                 onSelect={() => {
                   setQuery(item.namaSekolah);
                   setHasFocus(false);
-                  navigate(`/${lang || 'en'}/carian-sekolah`);
+                  navigate(`/${lang || "en"}/carian-sekolah`);
                 }}
               >
                 <p className="line-clamp-1 flex-1 text-left">
