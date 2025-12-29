@@ -1,10 +1,6 @@
 import {
   UserGroupIcon,
-  BookIcon,
   GovtOfficeIcon,
-  FlagIcon,
-  DesktopIcon,
-  StarIcon,
   JataNegaraIcon,
   UserIcon,
   PhoneIcon,
@@ -423,38 +419,7 @@ export const dataItemCalendar = [
     imageAlt: "xxx",
   },
 ];
-export const dataItemAnalytics = [
-  {
-    icon: <UserGroupIcon />,
-    statistic: "313,352",
-    title: "Pelajar menduduki SPM 2024",
-  },
-  {
-    icon: <BookIcon />,
-    statistic: "78,828",
-    title: "Pelajar memilih aliran STEM",
-  },
-  {
-    icon: <GovtOfficeIcon />,
-    statistic: "10,200",
-    title: "Jumlah Sekolah di Malaysia",
-  },
-  {
-    icon: <FlagIcon />,
-    statistic: "50,041",
-    title: "Pelajar menyertai sukan MSSM setiap tahun",
-  },
-  {
-    icon: <DesktopIcon />,
-    statistic: "7,587",
-    title: "Sekolah telah menggunakan e-Learning",
-  },
-  {
-    icon: <StarIcon />,
-    statistic: "125,875",
-    title: "Pelajar mendapat semua A untuk SPM 2024",
-  },
-];
+
 export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
