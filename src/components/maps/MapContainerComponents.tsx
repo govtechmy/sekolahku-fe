@@ -9,7 +9,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { Coordinates } from "../../types/maps";
 import { useMapViewStore } from "../../store/mapView";
-import type { ItemSekolahModel, MarkerGroup } from "../../models/response";
+import type { MarkerGroup } from "../../models/response";
 import { getSchoolS3Json } from "../../services/school.svc";
 import { useAppendNewMarkers } from "../../hooks/useAppendNewMarkers";
 import { MapViewController } from "./MapViewController";
@@ -54,24 +54,23 @@ interface MapContainerProps {
     initialLocationSet?: boolean,
     zoom?: number
   ) => Promise<MarkerGroup[]>;
-  setViewSchool: Dispatch<SetStateAction<ItemSekolahModel | null>>;
 }
 
 export function MapContainerComponent({
   dragStartPos,
   setDragStartPos,
   fetchNearbySchools,
-  setViewSchool,
 }: MapContainerProps) {
   const {
-    center: mapCenter,
-    setCenter: setMapCenter,
+    center,
+    setCenter,
     setZoom,
     zoom,
     radius,
     schoolMarkers,
     setSchoolMarkers,
     initialLocationSet,
+    setViewSchool
   } = useMapViewStore();
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
@@ -99,10 +98,10 @@ export function MapContainerComponent({
           setZoom(zoom);
         }}
         onCenterChange={(center) => {
-          setMapCenter([center.koordinatXX, center.koordinatYY]);
+          setCenter([center.koordinatXX, center.koordinatYY]);
         }}
         onDragStart={() => {
-          setDragStartPos({ koordinatXX: mapCenter[0], koordinatYY: mapCenter[1] });
+          setDragStartPos({ koordinatXX: center[0], koordinatYY: center[1] });
         }}
         onDragEnd={(newCenter) => {
           if (dragStartPos) {
@@ -113,7 +112,7 @@ export function MapContainerComponent({
               newCenter.koordinatYY
             );
 
-            if (distance > (radius/10)) {
+            if (distance > (radius/100)) {
               appendNewMarkers({ koordinatXX: newCenter.koordinatXX, koordinatYY: newCenter.koordinatYY });
             }
           }
@@ -121,7 +120,7 @@ export function MapContainerComponent({
         }}
       />
       <Circle
-        center={mapCenter}
+        center={center}
         radius={radius}
         pathOptions={{
           color: "#3b82f6",
@@ -136,15 +135,26 @@ export function MapContainerComponent({
           school={{
             markerType: coords.markerType,
             radiusInMeter: 0,
-            koordinatXX: coords.lat,
-            koordinatYY: coords.lng,
+            koordinatXX: coords.koordinatXX,
+            koordinatYY: coords.koordinatYY,
             id: kodSekolah,
+            total: coords.total,
           }}
           onClick={async () => {
+            if(coords.markerType === "NEGERI"){
+            setCenter([coords.koordinatXX, coords.koordinatYY]);
+            setZoom(12);
+            }
+            if(coords.markerType === "PARLIMEN"){
+            setCenter([coords.koordinatXX, coords.koordinatYY]);
+            setZoom(14);
+            }
+            if (coords.markerType === "INDIVIDUAL") {
             setViewSchool(null); // Reset before setting new school
             setViewSchool(await getSchoolS3Json(coords.dataUrl));
-            setMapCenter([coords.lat, coords.lng]);
+            setCenter([coords.koordinatXX, coords.koordinatYY]);
             setZoom(18);
+            }
           }}
         />
       ))}

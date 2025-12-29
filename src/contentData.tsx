@@ -469,12 +469,12 @@ export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
     name: "e-Operasi",
-    link: "https://apdm.moe.gov.my/",
+    link: "https://eoperasii.my/",
   },
   {
     icon: <JataNegaraIcon />,
     name: "e-GTukar",
-    link: "https://emis.moe.gov.my/",
+    link: "https://epgo.moe.gov.my/menu/maklumat_perlu.cfm",
   },
   {
     icon: <JataNegaraIcon />,
@@ -484,24 +484,21 @@ export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
     name: "EMIS",
-    link: "https://delima.moe.gov.my/",
+    link: "https://emisonline.moe.gov.my/",
   },
   {
     icon: <JataNegaraIcon />,
     name: "DELIMa",
-    link: "https://egtukar.moe.gov.my/",
-  },
-  {
-    icon: <JataNegaraIcon />,
-    name: "Nama Jabatan",
-    link: "https://egtukar.moe.gov.my/",
-  },
-  {
-    icon: <JataNegaraIcon />,
-    name: "DELIMa",
-    link: "https://egtukar.moe.gov.my/",
+    link: "https://delima.moe-dl.edu.my/",
   },
 ];
+
+export const popularLinks = [
+  {
+    label: "Analitik Sekolah",
+    link: "/analitik",
+  },
+]
 
 // SekolahDetails-Data to Fetch
 export const dataSekolahJumlah = [
@@ -1139,3 +1136,22 @@ export const findNearbyGroup5 = {
     },
   ],
 };
+
+export const notableMalaysians = [
+  // Arts
+  {
+    name: "Michelle Yeoh",
+    field: "Arts",
+    note: "Internationally acclaimed actress",
+  },
+  {
+    name: "P. Ramlee",
+    field: "Arts",
+    note: "Iconic actor, director, and musician",
+  },
+  {
+    name: "Siti Nurhaliza",
+    field: "Arts",
+    note: "Award-winning singer and songwriter",
+  },
+];

@@ -9,8 +9,10 @@ const ICON_ANCHOR: [number, number] = [16, 32];
 const POPUP_ANCHOR: [number, number] = [0, -32];
 
 const sekolahMarkerHtml = renderToString(SekolahMarkerIcon());
-const parlimenMarkerHtml = renderToString(ParlimenMarkerIcon("PARLIMEN"));
-const negeriMarkerHtml = renderToString(NegeriMarkerIcon("NEGERI"));
+const parlimenMarkerHtml = (total?: number | string) =>
+  renderToString(ParlimenMarkerIcon(String(total ?? "")));
+const negeriMarkerHtml = (total?: number | string) =>
+  renderToString(NegeriMarkerIcon(String(total ?? "")));
 
 const createDivIcon = (html: string, typeClass: string) =>
   new L.DivIcon({
@@ -26,12 +28,8 @@ export const sekolahMarkerIcon = createDivIcon(
   "sekolah-marker-icon"
 );
 
-export const parlimenMarkerIcon = createDivIcon(
-  parlimenMarkerHtml,
-  "parlimen-marker-icon"
-);
+export const parlimenMarkerIcon = (total?: number | string) =>
+  createDivIcon(parlimenMarkerHtml(total), "parlimen-marker-icon");
 
-export const negeriMarkerIcon = createDivIcon(
-  negeriMarkerHtml,
-  "negeri-marker-icon"
-);
+export const negeriMarkerIcon = (total?: number | string) =>
+  createDivIcon(negeriMarkerHtml(total), "negeri-marker-icon");
