@@ -5,7 +5,7 @@ import type { ItemSekolahModel } from "../../models/response";
 import { useState } from "react";
 
 interface SchoolProfileHeroProps {
-  school: ItemSekolahModel | undefined;
+  school: ItemSekolahModel;
   url: string;
 }
 

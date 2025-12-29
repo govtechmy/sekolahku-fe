@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 interface InfoRowProps {
   icon: ReactNode;
-  text: string | undefined;
+  text: string;
 }
 
 /**
