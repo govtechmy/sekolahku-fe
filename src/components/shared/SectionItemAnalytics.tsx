@@ -18,7 +18,7 @@ export default function SectionItemAnalytics(
             </div>
             <div>
               <div className="text-txt-primary font-body text-body-xl font-semibold">
-                {analytics.jumlahSekolah.toLocaleString()}
+                {analytics?.jumlahSekolah.toLocaleString()}
               </div>
               <div className="text-txt-black-700 font-body text-body-md font-semibold">
                 Jumlah Sekolah di Malaysia
@@ -32,7 +32,7 @@ export default function SectionItemAnalytics(
             </div>
             <div>
               <div className="text-txt-primary font-body text-body-xl font-semibold">
-                {analytics.jumlahGuru.toLocaleString()}
+                {analytics?.jumlahGuru.toLocaleString()}
               </div>
               <div className="text-txt-black-700 font-body text-body-md font-semibold">
                 Pelajar Guru di Malaysia
@@ -46,7 +46,7 @@ export default function SectionItemAnalytics(
             </div>
             <div>
               <div className="text-txt-primary font-body text-body-xl font-semibold">
-                {analytics.jumlahPelajar.toLocaleString()}
+                {analytics?.jumlahPelajar.toLocaleString()}
               </div>
               <div className="text-txt-black-700 font-body text-body-md font-semibold">
                 Jumlah Pelajar di Malaysia
@@ -60,13 +60,13 @@ export default function SectionItemAnalytics(
           <div className="p-6 border-t border-otl-gray-200">
             <DoughnutChart 
               title="Sekolah Mengikut Peringkat"
-              data={analytics.data.jenisLabel}
+              data={analytics?.data.jenisLabel}
             />
           </div>
           <div className="p-6 border-t border-otl-gray-200 lg:border-l">
             <DoughnutChart 
               title="Jenis Bantuan"
-              data={analytics.data.bantuan}
+              data={analytics?.data.bantuan}
             />
           </div>
         </div>
