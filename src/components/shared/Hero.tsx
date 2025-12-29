@@ -74,7 +74,7 @@ export default function Hero({
             HeroclassName
           )}
         >
-          {background} 
+          {background}
         </div>
       ) : null}
       <div className={clx("w-full h-[520px] flex p-6 justify-center items-center ",
