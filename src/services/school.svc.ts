@@ -3,7 +3,7 @@ import { authAxios } from './http'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 const SCHOOL_ENDPOINT = '/schools'
-const DATA_BASE_URL = import.meta.env.VITE_DATA_BASE_URL
+export const DATA_BASE_URL = import.meta.env.VITE_DATA_BASE_URL
 
 export const getSchoolSuggestion = async (params?: schoolSearchModel): Promise<ItemSekolahModel[]> => {
   try {
@@ -89,10 +89,6 @@ export const fetchNearbySchools = async (
     console.error("Failed to fetch nearby schools:", error);
     return [];
   }
-};
-
-export const getSchoolLogoUrl = (negeri: string, parlimen: string, kodSekolah: string): string => {
-  return `${DATA_BASE_URL}/${negeri}/${parlimen}/${kodSekolah}/assets/logo.png`;
 };
 
 export const getSchoolProfile = async (

@@ -2,10 +2,9 @@ import { EmailIcon, GovtOfficeIcon, PhoneIcon, PinIcon, PrinterIcon, UserGroupIc
 import HelmetMeta from "../seo/HelmetMeta";
 import { useParams, useNavigate } from "react-router-dom";
 import SchoolProfileHero from "../components/Hero/SchoolProfileHero";
-import { getSchoolLogoUrl } from "../services/school.svc";
 import { useSchoolProfile } from "../hooks/useSchoolProfile";
 import { StatCard, InfoRow, InfoGridItem, NearbySchoolCard } from "../components/SchoolProfile";
-import { formatSchoolAddress } from "../utils/schoolHelpers";
+import { formatSchoolAddress, getSchoolLogoUrl } from "../utils/schoolHelpers";
 
 export default function SchoolProfile() {
   const { id } = useParams();

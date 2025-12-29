@@ -1,4 +1,5 @@
 import type { ItemSekolahModel } from "../models/response";
+import { DATA_BASE_URL } from "../services/school.svc";
 
 
 export const formatSchoolAddress = (school: ItemSekolahModel): string => {
@@ -14,12 +15,6 @@ export const formatSchoolAddress = (school: ItemSekolahModel): string => {
   return parts.join(', ');
 };
 
-
-export const getSchoolLogoUrl = (
-  baseUrl: string,
-  negeri: string,
-  parlimen: string,
-  kodSekolah: string
-): string => {
-  return `${baseUrl}/${negeri}/${parlimen}/${kodSekolah}/assets/logo.png`;
+export const getSchoolLogoUrl = (negeri: string, parlimen: string, kodSekolah: string): string => {
+  return `${DATA_BASE_URL}/${negeri}/${parlimen}/${kodSekolah}/assets/logo.png`;
 };
