@@ -193,7 +193,7 @@ export function SearchBarMap() {
                           {school.bandarSurat}, {school.negeri}
                         </span>
 
-                        <span className="mt-1 flex items-center text-sm text-blue-600 gap-1">
+                        <span className="mt-1 flex items-center text-sm text-primary-600 gap-1">
                           <MapIcon className="w-4 h-4" />
                           {(() => {
                             const distanceInMeters = calculateDistance(initialLocationUser[0], initialLocationUser[1], school.koordinatYY, school.koordinatXX);

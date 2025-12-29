@@ -3,20 +3,39 @@ import SectionHeader from "../components/shared/SectionHeader";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
+import Statistic from "../components/statistic";
+import { getAnalytics } from "../services/analytics.svc";
+import type { AnalyticsModel } from "../models/response";
 import {
   chartBaseData,
-  dataItemAnalytics,
   dataItemCalendar,
   dataItemLinks,
   dataItemNews,
   statisticYearlyData,
 } from "../contentData";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
-import Statistic from "../components/statistic";
 
 export default function HomePage() {
+  const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
+  const [loading, setLoading] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null!);
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        setLoading(true);
+        const data = await getAnalytics();
+        setAnalytics(data);
+      } catch (err) {
+        console.error('Error fetching analytics:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalytics();
+  }, []); 
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -71,9 +90,12 @@ export default function HomePage() {
         header="ANALITIK"
         title="Fakta Menarik Sekolah di Malaysia"
         children={
-          <SectionItemAnalytics dataItemAnalytics={dataItemAnalytics} />
+          loading || !analytics ? (
+            <div className="p-6 text-center">Loading analytics...</div>
+          ) : (
+            <SectionItemAnalytics analytics={analytics} />
+          )
         }
-        ButtonLabel="Lihat Data Lengkap"
       />
 
       <SectionHeader

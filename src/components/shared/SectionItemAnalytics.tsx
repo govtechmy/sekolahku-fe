@@ -1,52 +1,77 @@
-type AnalyticsItem = {
-  icon: React.ReactElement;
-  title: string;
-  statistic: string;
-};
+import type { AnalyticsModel } from "../../models/response";
+import { GovtOfficeIcon, BookIcon, UserGroupIcon } from "@govtechmy/myds-react/icon";
+import DoughnutChart from "../DoughnutChart";
+interface SectionItemAnalyticsProps {
+  analytics: AnalyticsModel;
+}
 
-type SectionItemAnalyticsProps = {
-  dataItemAnalytics: AnalyticsItem[];
-};
-
-import React from "react";
-
-export default function SectionItemAnalytics({
-  dataItemAnalytics,
-}: SectionItemAnalyticsProps) {
+export default function SectionItemAnalytics(
+  { analytics }: SectionItemAnalyticsProps
+) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 border border-otl-gray-200 rounded-lg overflow-hidden">
-      {dataItemAnalytics.map((item: AnalyticsItem, index: number) => (
-        <div
-          key={index}
-          className={`
-        flex items-center gap-6 px-6 py-8
-        border-otl-gray-200
-        border-b
-        last:border-b-0
-
-        md:border-b
-        md:[&:nth-last-child(-n+2)]:border-b-0
-        md:[&:nth-last-child(2n)]:border-r
-
-        xl:[&:nth-last-child(-n+3)]:border-b-0
-        xl:[&:nth-child(3n+1)]:border-r
-        xl:[&:nth-child(3n+2)]:border-r
-        xl:[&:nth-child(6n+3)]:!border-r-0
-      `}
-        >
-          <div className="size-16 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
-            {React.cloneElement(item.icon, { className: "w-8 h-8" } as React.HTMLAttributes<HTMLElement>)}
-          </div>
-          <div>
-            <div className="text-txt-primary font-body text-body-xl font-semibold">
-              {item.statistic}
+    <>
+      <div className="border border-otl-gray-200 rounded-lg overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-3">
+          <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0">
+            <div className="size-16 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
+              <GovtOfficeIcon />
             </div>
-            <div className="text-txt-black-700 font-body text-body-md font-semibold">
-              {item.title}
+            <div>
+              <div className="text-txt-primary font-body text-body-xl font-semibold">
+                {analytics?.jumlahSekolah.toLocaleString()}
+              </div>
+              <div className="text-txt-black-700 font-body text-body-md font-semibold">
+                Jumlah Sekolah di Malaysia
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0">
+            <div className="size-16 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
+              <BookIcon />
+            </div>
+            <div>
+              <div className="text-txt-primary font-body text-body-xl font-semibold">
+                {analytics?.jumlahGuru.toLocaleString()}
+              </div>
+              <div className="text-txt-black-700 font-body text-body-md font-semibold">
+                Pelajar Guru di Malaysia
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b last:border-b-0 lg:border-b-0 lg:border-r-0">
+            <div className="size-16 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
+              <UserGroupIcon />
+            </div>
+            <div>
+              <div className="text-txt-primary font-body text-body-xl font-semibold">
+                {analytics?.jumlahPelajar.toLocaleString()}
+              </div>
+              <div className="text-txt-black-700 font-body text-body-md font-semibold">
+                Jumlah Pelajar di Malaysia
+              </div>
             </div>
           </div>
         </div>
-      ))}
-    </div>
+        
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="p-6 border-t border-otl-gray-200">
+            <DoughnutChart 
+              title="Sekolah Mengikut Peringkat"
+              data={analytics?.data.jenisLabel}
+            />
+          </div>
+          <div className="p-6 border-t border-otl-gray-200 lg:border-l">
+            <DoughnutChart 
+              title="Jenis Bantuan"
+              data={analytics?.data.bantuan}
+            />
+          </div>
+        </div>
+      </div>
+
+    </>
   );
 }
