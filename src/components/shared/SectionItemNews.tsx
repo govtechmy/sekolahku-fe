@@ -45,7 +45,7 @@ export default function SectionItemNews({
                   {item.header}
                 </div>
               )}
-              {item.header === "Penggumuman" && (
+              {item.header === "Pengumuman" && (
                 <div className="text-txt-success font-body text-sm font-semibold">
                   {item.header}
                 </div>

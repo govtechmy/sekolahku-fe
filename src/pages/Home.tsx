@@ -3,17 +3,17 @@ import SectionHeader from "../components/shared/SectionHeader";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
-import Statistic from "../components/statistic";
 import {
-  statisticYearlyData,
   chartBaseData,
   dataItemAnalytics,
   dataItemCalendar,
   dataItemLinks,
   dataItemNews,
+  statisticYearlyData,
 } from "../contentData";
 import { useEffect, useRef } from "react";
 import HomeHero from "../components/Hero/HomeHero";
+import Statistic from "../components/statistic";
 
 export default function HomePage() {
   const inputRef = useRef<HTMLInputElement>(null!);
@@ -86,6 +86,7 @@ export default function HomePage() {
         yearlyData={statisticYearlyData}
         chartBaseData={chartBaseData}
       />
+
     </div>
     </div>
   );
