@@ -9,6 +9,8 @@ import SchoolProfile from "./pages/SchoolProfile";
 import Siaran from "./pages/Siaran/Siaran";
 import SiaranId from "./pages/Siaran/SiaranId";
 import LayoutMap from "./components/layout/LayoutMap";
+import Acara from "./pages/Acara/Acara";
+import AcaraId from "./pages/Acara/AcaraId";
 
 export default function AppRoutes() {
   const lang = localStorage.getItem("lang") || "ms";
@@ -27,6 +29,8 @@ export default function AppRoutes() {
           <Route path="halaman-sekolah/:id" element={<SchoolProfile />} />
           <Route path="siaran" element={<Siaran />} />
           <Route path="siaran/:id" element={<SiaranId />} />
+          <Route path="acara" element={<Acara />} />
+          <Route path="acara/:id" element={<AcaraId />} />
           <Route
             path="testingpage"
             element={<div> this is testing page</div>}

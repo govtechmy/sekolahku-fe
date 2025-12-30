@@ -3,15 +3,15 @@ import SectionHeader from "../components/shared/SectionHeader";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
-import Statistic from "../components/statistic";
+//import Statistic from "../components/statistic";
 import { getAnalytics } from "../services/analytics.svc";
 import type { AnalyticsModel } from "../models/response";
 import {
-  chartBaseData,
+  //chartBaseData,
   dataItemCalendar,
   dataItemLinks,
   dataItemNews,
-  statisticYearlyData,
+  //statisticYearlyData,
 } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
@@ -104,10 +104,10 @@ export default function HomePage() {
         children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
       />
 
-      <Statistic
+      {/* <Statistic
         yearlyData={statisticYearlyData}
         chartBaseData={chartBaseData}
-      />
+      /> */}
 
     </div>
     </div>
