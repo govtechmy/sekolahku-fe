@@ -8,11 +8,10 @@ import {
     BreadcrumbSeparator,
     BreadcrumbPage,
 } from "@govtechmy/myds-react/breadcrumb";
-import { ClockIcon, EmailIcon, FacebookIcon, LinkDiagonalIcon, PrinterIcon, TwitterXIcon } from "@govtechmy/myds-react/icon";
+import { ClockIcon,PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
 import { siaranSocialLinks } from "../../contentData";
-import { SiteLink } from "@govtechmy/myds-react/footer";
 
 export default function SiaranId() {
     const { id } = useParams<{ id: string }>();
