@@ -416,6 +416,7 @@ export const dataItemNews = [
 ];
 export const dataItemCalendar = [
   {
+    id: 1,
     day: "SABTU",
     date: "15 FEB",
     title: "Hari Kanak-Kanak Sedunia",
@@ -423,6 +424,7 @@ export const dataItemCalendar = [
     imageAlt: "xxx",
   },
   {
+    id: 2,
     day: "ISNIN",
     date: "11 MAC",
     title: "Hari Sukan Malaysia 2025",
@@ -430,6 +432,7 @@ export const dataItemCalendar = [
     imageAlt: "xxx",
   },
   {
+    id: 3,
     day: "JUMAAT",
     date: "16 MEI",
     title: "Hari Guru Malaysia 2025",
@@ -437,6 +440,7 @@ export const dataItemCalendar = [
     imageAlt: "xxx",
   },
   {
+    id: 4,
     day: "ISNIN",
     date: "11 MAC",
     title: "Hari Bapa Malaysia 2025",
@@ -444,6 +448,7 @@ export const dataItemCalendar = [
     imageAlt: "xxx",
   },
   {
+    id: 5,
     day: "ISNIN",
     date: "11 MAC",
     title: "Hari Sukan Malaysia 2025",
@@ -451,6 +456,7 @@ export const dataItemCalendar = [
     imageAlt: "xxx",
   },
   {
+    id: 6,
     day: "JUMAAT",
     date: "16 MEI",
     title: "Hari Guru Malaysia 2025",
@@ -458,6 +464,47 @@ export const dataItemCalendar = [
     imageAlt: "xxx",
   },
   {
+    id: 7,
+    day: "ISNIN",
+    date: "11 MAC",
+    title: "Hari Bapa Malaysia 2025",
+    imageSrc: "/utama/calendaritem/4.jpg",
+    imageAlt: "xxx",
+  },
+  {
+    id: 8,
+    day: "JUMAAT",
+    date: "16 MEI",
+    title: "Hari Guru Malaysia 2025",
+    imageSrc: "/utama/calendaritem/3.jpg",
+    imageAlt: "xxx",
+  },
+  {
+    id: 9,
+    day: "ISNIN",
+    date: "11 MAC",
+    title: "Hari Bapa Malaysia 2025",
+    imageSrc: "/utama/calendaritem/4.jpg",
+    imageAlt: "xxx",
+  },
+  {
+    id: 10,
+    day: "ISNIN",
+    date: "11 MAC",
+    title: "Hari Sukan Malaysia 2025",
+    imageSrc: "/utama/calendaritem/2.jpg",
+    imageAlt: "xxx",
+  },
+  {
+    id: 11,
+    day: "JUMAAT",
+    date: "16 MEI",
+    title: "Hari Guru Malaysia 2025",
+    imageSrc: "/utama/calendaritem/3.jpg",
+    imageAlt: "xxx",
+  },
+  {
+    id: 12,
     day: "ISNIN",
     date: "11 MAC",
     title: "Hari Bapa Malaysia 2025",
