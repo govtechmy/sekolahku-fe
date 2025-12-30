@@ -74,13 +74,12 @@ const processParlimenMarker = (marker: MarkerGroup, map: MarkerMap): number => {
  */
 const processNegeriMarker = (marker: MarkerGroup, map: MarkerMap): number => {
   if (marker.markerType !== "NEGERI" || !marker.negeri) return 0;
-  
   return addMarkerIfNew(map, marker.negeri, {
-    koordinatXX: marker.infoLokasi.koordinatYY,
-    koordinatYY: marker.infoLokasi.koordinatXX,
+      koordinatXX: marker.infoLokasi.koordinatYY,
+      koordinatYY: marker.infoLokasi.koordinatXX,
     dataUrl: marker.total?.toString() ?? "",
     markerType: marker.markerType,
-    total:marker.total
+    total: marker.total
   }) ? 1 : 0;
 };
 
@@ -104,27 +103,4 @@ export const processMarkers = (
   });
   
   return newMap;
-};
-
-/**
- * Extract school data from marker groups (backward compatibility)
- * Only processes GROUP type markers
- */
-export const extractSchoolData = (markers: MarkerGroup[]): MarkerMap => {
-  const schoolMap = new Map<string, SchoolMarker>();
-  
-  markers.forEach((marker) => {
-    if (marker.markerType === "GROUP" && marker.items) {
-      marker.items.forEach((item) => {
-        schoolMap.set(item.kodSekolah, {
-          koordinatXX: item.infoLokasi.koordinatYY,
-          koordinatYY: item.infoLokasi.koordinatXX,
-          dataUrl: item.dataUrl,
-          markerType: item.markerType,
-        });
-      });
-    }
-  });
-  
-  return schoolMap;
 };

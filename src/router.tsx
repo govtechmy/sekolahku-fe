@@ -19,13 +19,13 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<Navigate to={`/${lang}`} replace />} />
       <Route path=":lang" element={<LangWrapper />}>
+    
         <Route element={<LayoutMain />}>
           {/* no home is not on / but on /home  so redirect */}
           <Route index element={<RedirectHomePage />} />
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
 
-          <Route path="halaman-sekolah" element={<SchoolProfile />} />
           <Route path="halaman-sekolah/:id" element={<SchoolProfile />} />
           <Route path="siaran" element={<Siaran />} />
           <Route path="siaran/:id" element={<SiaranId />} />

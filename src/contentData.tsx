@@ -1,10 +1,6 @@
 import {
   UserGroupIcon,
-  BookIcon,
   GovtOfficeIcon,
-  FlagIcon,
-  DesktopIcon,
-  StarIcon,
   JataNegaraIcon,
   UserIcon,
   PhoneIcon,
@@ -13,6 +9,52 @@ import {
   PinIcon,
 } from "@govtechmy/myds-react/icon";
 import type { FindNearbyUpdatedEndpoint } from "./types/maps";
+
+export const siaranSocialLinks = [
+  {
+    platform: "hyperlink",
+    href: "#",
+    ariaLabel: "Siaran link",
+  },
+  {
+    platform: "email",
+    href: "#",
+    ariaLabel: "Email link",
+  },
+  {
+    platform: "facebook",
+    href: "#",
+    ariaLabel: "Facebook link",
+  },
+  {
+    platform: "twitter",
+    href: "#",
+    ariaLabel: "Twitter link",
+  }
+];
+
+export const footerSocialLinks = [
+  {
+    platform: "facebook",
+    href: "#",
+    ariaLabel: "Facebook link",
+  },
+  {
+    platform: "twitter",
+    href: "#",
+    ariaLabel: "Twitter link",
+  },
+  {
+    platform: "instagram",
+    href: "#",
+    ariaLabel: "Instagram link",
+  },
+  {
+    platform: "youtube",
+    href: "#",
+    ariaLabel: "Youtube link",
+  },
+];
 
 export const findNearbyUpdatedEndpoint: FindNearbyUpdatedEndpoint = {
   viewInfoLokasi: {
@@ -423,38 +465,7 @@ export const dataItemCalendar = [
     imageAlt: "xxx",
   },
 ];
-export const dataItemAnalytics = [
-  {
-    icon: <UserGroupIcon />,
-    statistic: "313,352",
-    title: "Pelajar menduduki SPM 2024",
-  },
-  {
-    icon: <BookIcon />,
-    statistic: "78,828",
-    title: "Pelajar memilih aliran STEM",
-  },
-  {
-    icon: <GovtOfficeIcon />,
-    statistic: "10,200",
-    title: "Jumlah Sekolah di Malaysia",
-  },
-  {
-    icon: <FlagIcon />,
-    statistic: "50,041",
-    title: "Pelajar menyertai sukan MSSM setiap tahun",
-  },
-  {
-    icon: <DesktopIcon />,
-    statistic: "7,587",
-    title: "Sekolah telah menggunakan e-Learning",
-  },
-  {
-    icon: <StarIcon />,
-    statistic: "125,875",
-    title: "Pelajar mendapat semua A untuk SPM 2024",
-  },
-];
+
 export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
@@ -469,12 +480,12 @@ export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
     name: "e-Operasi",
-    link: "https://apdm.moe.gov.my/",
+    link: "https://eoperasii.my/",
   },
   {
     icon: <JataNegaraIcon />,
     name: "e-GTukar",
-    link: "https://emis.moe.gov.my/",
+    link: "https://epgo.moe.gov.my/menu/maklumat_perlu.cfm",
   },
   {
     icon: <JataNegaraIcon />,
@@ -484,24 +495,21 @@ export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
     name: "EMIS",
-    link: "https://delima.moe.gov.my/",
+    link: "https://emisonline.moe.gov.my/",
   },
   {
     icon: <JataNegaraIcon />,
     name: "DELIMa",
-    link: "https://egtukar.moe.gov.my/",
-  },
-  {
-    icon: <JataNegaraIcon />,
-    name: "Nama Jabatan",
-    link: "https://egtukar.moe.gov.my/",
-  },
-  {
-    icon: <JataNegaraIcon />,
-    name: "DELIMa",
-    link: "https://egtukar.moe.gov.my/",
+    link: "https://delima.moe-dl.edu.my/",
   },
 ];
+
+export const popularLinks = [
+  {
+    label: "Analitik Sekolah",
+    link: "/analitik",
+  },
+]
 
 // SekolahDetails-Data to Fetch
 export const dataSekolahJumlah = [
@@ -1139,3 +1147,22 @@ export const findNearbyGroup5 = {
     },
   ],
 };
+
+export const notableMalaysians = [
+  // Arts
+  {
+    name: "Michelle Yeoh",
+    field: "Arts",
+    note: "Internationally acclaimed actress",
+  },
+  {
+    name: "P. Ramlee",
+    field: "Arts",
+    note: "Iconic actor, director, and musician",
+  },
+  {
+    name: "Siti Nurhaliza",
+    field: "Arts",
+    note: "Award-winning singer and songwriter",
+  },
+];

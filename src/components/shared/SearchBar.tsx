@@ -1,75 +1,104 @@
 import {
-    SearchBar,
-    SearchBarInput,
-    SearchBarInputContainer,
-    SearchBarSearchButton,
-    SearchBarResults,
-    SearchBarResultsList,
-    SearchBarClearButton,
-    SearchBarHint,
-  } from "@govtechmy/myds-react/search-bar";
-  import { Pill } from "@govtechmy/myds-react/pill";
-  import { useState } from "react";
-  
-  export default function SearchBarMain({
-    desc,
-  }: {
-    desc?: string;
-  }) {
-    const [hasFocus, setHasFocus] = useState(false);
-    const [query, setQuery] = useState("");
-    const hasQuery = query.length > 0;
-  
-    return (
-      <SearchBar
-        size="large"
-        onBlur={(e) => {
-          const blurredByChild = e.currentTarget.contains(e.relatedTarget);
-          if (blurredByChild) return;
-          setHasFocus(false);
-        }}
-      >
-        <SearchBarInputContainer>
-          <SearchBarInput
-            placeholder={`Cari kata kunci: ${desc}`}
-            value={query}
-            onValueChange={setQuery}
-            onFocus={() => setHasFocus(true)}
-            onBlur={() => setHasFocus(false)}
-            className="truncate"
-          />
-          {query && <SearchBarClearButton onClick={() => setQuery("")} />}
-          {!hasFocus && (
-            <SearchBarHint className="hidden lg:flex">
-              Tekan <Pill size="small">/</Pill> untuk cari
-            </SearchBarHint>
-          )}
-          <SearchBarSearchButton />
-        </SearchBarInputContainer>
-        <SearchBarResults open={hasQuery && hasFocus}>
-          {hasQuery && (
-            <p className="text-txt-black-900 text-center">No results found</p>
-          )}
-          {hasQuery && (
-            <SearchBarResultsList className="max-h-[400px] overflow-y-scroll">
-              {/* {results.map((item) => (
-                <SearchBarResultsItem key={item.name} value={item.name}>
-                  <span className="bg-primary-50 text-txt-primary rounded-full p-px">
-                    <UserIcon className="size-4" />
-                  </span>
-                  <p className="line-clamp-1 flex-1">
-                    {item.name}
-                    <span className="text-txt-black-500 text-xs">
-                      {item.note}
-                    </span>
-                  </p>
-                  <ChevronRightIcon />
-                </SearchBarResultsItem>
-              ))} */}
-            </SearchBarResultsList>
-          )}
-        </SearchBarResults>
-      </SearchBar>
-    );
-  }
-  
+  SearchBar,
+  SearchBarInput,
+  SearchBarInputContainer,
+  SearchBarSearchButton,
+  SearchBarResults,
+  SearchBarResultsList,
+  SearchBarResultsItem,
+  SearchBarClearButton,
+  SearchBarHint,
+} from "@govtechmy/myds-react/search-bar";
+import { Pill } from "@govtechmy/myds-react/pill";
+import { ChevronRightIcon } from "@govtechmy/myds-react/icon";
+import { useState, useRef } from "react";
+import { useMapViewStore } from "../../store/mapView";
+import { useNavigate, useParams } from "react-router-dom";
+
+export default function SearchBarHome() {
+  const [hasFocus, setHasFocus] = useState(false);
+  const debounceTimerRef = useRef<number | null>(null);
+  const navigate = useNavigate();
+  const { lang } = useParams<{ lang: string }>();
+
+  const {
+    query,
+    setQuery,
+    handleSearch,
+    localSuggestions,
+    setLocalSuggestions,
+  } = useMapViewStore();
+
+  const handleValueChange = (value: string) => {
+    setQuery(value);
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    const trimmedValue = value.trim();
+    if (trimmedValue.length >= 3) {
+      debounceTimerRef.current = window.setTimeout(() => {
+        handleSearch({
+          namaSekolah: value,
+          negeri: "ALL",
+          jenis: "ALL",
+        });
+      }, 500);
+    } else {
+      setLocalSuggestions([]);
+    }
+  };
+  const hasQuery = query.length > 0;
+
+  return (
+    <SearchBar
+      size="large"
+      onBlur={(e) => {
+        const blurredByChild = e.currentTarget.contains(e.relatedTarget);
+        if (blurredByChild) return;
+        setHasFocus(false);
+      }}
+    >
+      <SearchBarInputContainer>
+        <SearchBarInput
+          placeholder="Carian sekolah"
+          value={query}
+          onValueChange={handleValueChange}
+          onFocus={() => setHasFocus(true)}
+        />
+        {query && <SearchBarClearButton onClick={() => setQuery("")} />}
+        {(!query || query.trim().length === 0) && (
+          <SearchBarHint className="">
+            Tekan <Pill size="small">/</Pill> untuk cari
+          </SearchBarHint>
+        )}
+        <SearchBarSearchButton />
+      </SearchBarInputContainer>
+      <SearchBarResults open={hasQuery && hasFocus}>
+        {hasQuery && !localSuggestions.length && (
+          <p className="text-txt-black-900 text-center">No results found</p>
+        )}
+        {hasQuery && localSuggestions.length > 0 && (
+          <SearchBarResultsList className="max-h-[400px] overflow-y-scroll">
+            {localSuggestions.map((item) => (
+              <SearchBarResultsItem
+                key={item.kodSekolah}
+                value={item.namaSekolah}
+                onMouseDown={(e) => e.preventDefault()}
+                onSelect={() => {
+                  setQuery(item.namaSekolah);
+                  setHasFocus(false);
+                  navigate(`/${lang || "en"}/carian-sekolah`);
+                }}
+              >
+                <p className="line-clamp-1 flex-1 text-left">
+                  {item.namaSekolah}
+                </p>
+                <ChevronRightIcon />
+              </SearchBarResultsItem>
+            ))}
+          </SearchBarResultsList>
+        )}
+      </SearchBarResults>
+    </SearchBar>
+  );
+}

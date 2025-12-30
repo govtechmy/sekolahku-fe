@@ -24,6 +24,8 @@ interface HorizontalCardPaginationItemProps {
     handlePageChange: (page: number) => void;
 }
 
+//maintain image aspect ratio 16:9
+
 function HorizontalCardPagination({ pageNumber, pageSize, totalRecords, type, handlePageChange }: HorizontalCardPaginationItemProps) {
   const totalPages = Math.ceil(totalRecords / pageSize);
 
@@ -61,7 +63,6 @@ function HorizontalCardItem({ item, className = "", classNameHeader="", onClick 
       <div
       tabIndex={0}
         className={`group border border-otl-gray-200 rounded-lg p-2 md:p-3
-          h-[260px] sm:h-[300px] md:h-[354px]
           w-full flex flex-col cursor-pointer
           transition-shadow hover:shadow-lg ${className}`}
         onClick={onClick}
@@ -69,10 +70,10 @@ function HorizontalCardItem({ item, className = "", classNameHeader="", onClick 
           <img
             src={item.imageSrc}
             alt={item.imageAlt}
-            className="w-full h-[110px] sm:h-[130px] md:h-[150px] rounded-[6px] object-cover flex-shrink-0"
+            className="w-full aspect-[16/9] rounded-[6px] object-cover flex-shrink-0"
         />
 
-        <div className="flex flex-col gap-1.5 md:gap-2 px-2 md:px-3 flex-1 min-h-0 overflow-hidden pt-2 md:pt-3">
+        <div className="flex flex-col gap-1.5 md:gap-2 px-2 md:px-3 pt-2 md:pt-3 pb-2 min-h-[120px] md:min-h-[140px]">
             <p className={clx(
                 "text-xs md:text-sm font-semibold flex-shrink-0",
                 classNameHeader
@@ -80,12 +81,12 @@ function HorizontalCardItem({ item, className = "", classNameHeader="", onClick 
                 {item.header}
             </p>
 
-            <p className="text-sm md:text-body-lg font-semibold text-txt-black-900 line-clamp-3 flex-1">
+            <p className="text-sm md:text-body-lg font-semibold text-txt-black-900 line-clamp-2 md:line-clamp-3">
                 {item.title}
             </p>
         </div>
 
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center flex-shrink-0">
             <p className="text-xs md:text-sm text-txt-black-500 px-2 md:px-3 pb-2 md:pb-0 flex-shrink-0">
                 {item.date}
             </p>
