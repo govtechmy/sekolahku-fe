@@ -8,8 +8,10 @@ import {
     BreadcrumbSeparator,
     BreadcrumbPage,
 } from "@govtechmy/myds-react/breadcrumb";
-import { ClockIcon, LinkDiagonalIcon, EmailIcon, FacebookIcon, TwitterXIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
+import { ClockIcon, EmailIcon, FacebookIcon, LinkDiagonalIcon, PrinterIcon, TwitterXIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
+import SocialLinks from "../../components/shared/SocialLinks";
+import { siaranSocialLinks } from "../../contentData";
 import { SiteLink } from "@govtechmy/myds-react/footer";
 
 export default function SiaranId() {
@@ -65,17 +67,12 @@ export default function SiaranId() {
                 </div>
 
                 <div className="md:px-10 print:hidden">
-                    <div className=" flex flex-row justify-between pb-[18px] border-b-2 border-gray-200">
-                        <ul className=" flex flex-row items-center gap-4">
-                            <li className="cursor-pointer"><SiteLink className="hover:text-primary-500" href="#"><LinkDiagonalIcon /></SiteLink></li>
-                            <li className="cursor-pointer"><SiteLink className="hover:text-primary-500" href="#"><EmailIcon /></SiteLink></li>
-                            <li className="cursor-pointer"><SiteLink className="hover:text-primary-500" href="#"><FacebookIcon /></SiteLink></li>
-                            <li className="cursor-pointer"><SiteLink className="hover:text-primary-500" href="#"><TwitterXIcon /></SiteLink></li>
-                        </ul>
-
-                        <div className=" py-[6px] px-[10px] flex flex-row gap-2 border border-otl-gray-200 rounded-md hover:bg-otl-gray-100 cursor-pointer" onClick={() => window.print()}>
-                            <PrinterIcon />
-                            <span className="text-sm font-medium">Cetak</span>
+                    <div className="flex justify-between pb-[18px] border-b-2 border-gray-200">
+                        <SocialLinks links={siaranSocialLinks} classNameButton="p-2" />
+                        <div className="flex items-center ">
+                            <Button variant="default-outline" onClick={() => window.print()}>
+                               <PrinterIcon /> Cetak
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -93,7 +90,7 @@ export default function SiaranId() {
                 <p className=" text-2xl font-semibold md:px-10">{newsItem.description}</p>
 
                 <p className="md:px-10">{newsItem.content}</p>
-                
+
             </div>
         </div>
     );

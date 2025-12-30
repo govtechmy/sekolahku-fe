@@ -2,10 +2,12 @@ import {
   Footer,
   SiteInfo,
   FooterSection,
-  FooterLogo
+  FooterLogo,
+  SiteLinkGroup
 } from "@govtechmy/myds-react/footer";
-import { FacebookIcon, TwitterXIcon, InstagramIcon, YoutubeIcon } from "@govtechmy/myds-react/icon";
-import { Link } from "@govtechmy/myds-react/link";
+import { footerSocialLinks } from "../../contentData";
+import SocialLinks from "../shared/SocialLinks";
+import { SiteLink } from "@govtechmy/myds-react/footer";
 
 export default function FooterMyds() {
   return (
@@ -30,56 +32,14 @@ export default function FooterMyds() {
               Kementerian Pendidikan, Blok E8, Kompleks E, Pusat Pentadbiran Kerajaan Persekutuan, 62604 W.P. Putrajaya, Malaysia
             </p>
             <p className="text-txt-black-900 text-body-sm font-semibold not-prose">Follow Us</p>
-            <div className="flex gap-3">
-              <Link
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook link"
-                underline="none"
-                className="hover:text-txt-black-900"
-              >
-                <FacebookIcon className="text-txt-black-700" />
-              </Link>
-              <Link
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Twitter link"
-                underline="none"
-                className="hover:text-txt-black-900"
-              >
-                <TwitterXIcon className="text-txt-black-700" />
-              </Link>
-              <Link
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram link"
-                underline="none"
-                className="hover:text-txt-black-900"
-              >
-                <InstagramIcon className="text-txt-black-700" />
-              </Link>
-              <Link
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Youtube link"
-                underline="none"
-                className="hover:text-txt-black-900"
-              >
-                <YoutubeIcon className="text-txt-black-700" />
-              </Link>
-            </div>
+            <SocialLinks links={footerSocialLinks} className="gap-3" classNameButton="p-0 hover:text-txt-black-900" />
           </SiteInfo>
         </div>
-        <div className="flex flex-col gap-3 font-semibold">
-          <a href="#">Open Source</a>
-          <div className="flex flex-col gap-2 font-normal">
-            <a href="#">Github Repo</a>
-            <a href="#">Figma</a>
-          </div>
+        <div className="flex flex-col gap-3">
+          <SiteLinkGroup groupTitle="Open Source">
+            <SiteLink href="#">Github Repo</SiteLink>
+            <SiteLink href="#">Figma</SiteLink>
+          </SiteLinkGroup>
         </div>
       </FooterSection>
       <FooterSection className="text-txt-black-500 md:max-lg:gap-4.5 mx-auto flex w-full max-w-screen-xl flex-col justify-between border-none text-sm max-md:gap-4 lg:flex-row lg:gap-6 px-4.5 md:px-6 gap-0 pt-6 md:pb-0">
@@ -87,8 +47,8 @@ export default function FooterMyds() {
           <p>© 2025 Kementerian Pendidikan. Semua hakcipta terpelihara.</p>
           <p className="hidden lg:inline">|</p>
           <div className="text-txt-black-700 flex flex-grow flex-row gap-3">
-            <a href="#">Penafian </a>
-            <a href="#">Dasar Privasi</a>
+            <SiteLink href="#">Penafian</SiteLink>
+            <SiteLink href="#">Dasar Privasi</SiteLink>
           </div>
         </div>
         <div className="text-gray-500 flex flex-grow flex-col gap-3 lg:flex-row lg:gap-3 lg:justify-end">
