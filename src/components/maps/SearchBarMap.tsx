@@ -32,6 +32,7 @@ export function SearchBarMap() {
   const setCenter = useMapViewStore((s) => s.setCenter);
   const setZoom = useMapViewStore((s) => s.setZoom);
   const initialLocationUser = useMapViewStore((s) => s.initialLocationUser);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
@@ -57,6 +58,23 @@ export function SearchBarMap() {
       setLocalSuggestions([]);
     }
   };
+
+  useEffect(() => {
+    const handleSlashFocus = (e: KeyboardEvent) => {
+      if (e.key === "/" && !isExpanded) {
+        e.preventDefault();
+        setIsExpanded(true);
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 0);
+      } else if (e.key === "/" && isExpanded && document.activeElement !== inputRef.current) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleSlashFocus);
+    return () => window.removeEventListener("keydown", handleSlashFocus);
+  }, [isExpanded]);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -144,6 +162,7 @@ export function SearchBarMap() {
                 )}
               >
                 <SearchBarInput
+                  ref={inputRef}
                   placeholder="Carian Sekolah"
                   value={query}
                   onValueChange={handleValueChange}

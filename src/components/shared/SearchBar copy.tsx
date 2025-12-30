@@ -11,33 +11,43 @@ import {
 } from "@govtechmy/myds-react/search-bar";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { ChevronRightIcon } from "@govtechmy/myds-react/icon";
-import { useEffect, useRef, useState } from "react";
+import { useState, useRef } from "react";
+import { useMapViewStore } from "../../store/mapView";
+import { useNavigate, useParams } from "react-router-dom";
 
-interface SearchBarHomeProps<T> {
-  query: string;
-  setQuery: (value: string) => void;
-  handleValueChange: (value: string) => void;
-  suggestions?: T[];
-  getKey: (item: T) => string;
-  getLabel: (item: T) => string;
-  onSelect?: (item: T) => void;
-}
-
-export default function SearchBarHome<T>({ query, setQuery, handleValueChange, suggestions = [], getKey, getLabel, onSelect }: SearchBarHomeProps<T>) {
+export default function SearchBarHome() {
   const [hasFocus, setHasFocus] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const hasQuery = query.length > 0;
+  const debounceTimerRef = useRef<number | null>(null);
+  const navigate = useNavigate();
+  const { lang } = useParams<{ lang: string }>();
 
-  useEffect(() => {
-    const handleSlashFocus = (e: KeyboardEvent) => {
-      if (e.key === "/" && !hasFocus) {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    };
-    window.addEventListener("keydown", handleSlashFocus);
-    return () => window.removeEventListener("keydown", handleSlashFocus);
-  }, [hasFocus]);
+  const {
+    query,
+    setQuery,
+    handleSearch,
+    localSuggestions,
+    setLocalSuggestions,
+  } = useMapViewStore();
+
+  const handleValueChange = (value: string) => {
+    setQuery(value);
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    const trimmedValue = value.trim();
+    if (trimmedValue.length >= 3) {
+      debounceTimerRef.current = window.setTimeout(() => {
+        handleSearch({
+          namaSekolah: value,
+          negeri: "ALL",
+          jenis: "ALL",
+        });
+      }, 500);
+    } else {
+      setLocalSuggestions([]);
+    }
+  };
+  const hasQuery = query.length > 0;
 
   return (
     <SearchBar
@@ -50,7 +60,6 @@ export default function SearchBarHome<T>({ query, setQuery, handleValueChange, s
     >
       <SearchBarInputContainer>
         <SearchBarInput
-          ref={inputRef}
           placeholder="Carian sekolah"
           value={query}
           onValueChange={handleValueChange}
@@ -65,27 +74,24 @@ export default function SearchBarHome<T>({ query, setQuery, handleValueChange, s
         <SearchBarSearchButton />
       </SearchBarInputContainer>
       <SearchBarResults open={hasQuery && hasFocus}>
-        {hasQuery && !(suggestions && suggestions.length) && (
+        {hasQuery && !localSuggestions.length && (
           <p className="text-txt-black-900 text-center">No results found</p>
         )}
-        {hasQuery && suggestions && suggestions.length > 0 && (
+        {hasQuery && localSuggestions.length > 0 && (
           <SearchBarResultsList className="max-h-[400px] overflow-y-scroll">
-            {suggestions.map((item) => (
+            {localSuggestions.map((item) => (
               <SearchBarResultsItem
-                key={getKey(item)}
-                value={getLabel(item)}
+                key={item.kodSekolah}
+                value={item.namaSekolah}
                 onMouseDown={(e) => e.preventDefault()}
                 onSelect={() => {
-                  if (onSelect) {
-                    onSelect(item);
-                    setHasFocus(false);
-                  } else {
-                    setHasFocus(false);
-                  }
+                  setQuery(item.namaSekolah);
+                  setHasFocus(false);
+                  navigate(`/${lang || "en"}/carian-sekolah`);
                 }}
               >
                 <p className="line-clamp-1 flex-1 text-left">
-                  {getLabel(item)}
+                  {item.namaSekolah}
                 </p>
                 <ChevronRightIcon />
               </SearchBarResultsItem>
