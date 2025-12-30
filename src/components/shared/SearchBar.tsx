@@ -11,7 +11,7 @@ import {
 } from "@govtechmy/myds-react/search-bar";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { ChevronRightIcon } from "@govtechmy/myds-react/icon";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useMapViewStore } from "../../store/mapView";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -20,6 +20,7 @@ export default function SearchBarHome() {
   const debounceTimerRef = useRef<number | null>(null);
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const {
     query,
@@ -28,6 +29,17 @@ export default function SearchBarHome() {
     localSuggestions,
     setLocalSuggestions,
   } = useMapViewStore();
+
+  useEffect(() => {
+    const handleSlashFocus = (e: KeyboardEvent) => {
+      if (e.key === "/" && !hasFocus) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleSlashFocus);
+    return () => window.removeEventListener("keydown", handleSlashFocus);
+  }, [hasFocus]);
 
   const handleValueChange = (value: string) => {
     setQuery(value);
@@ -60,6 +72,7 @@ export default function SearchBarHome() {
     >
       <SearchBarInputContainer>
         <SearchBarInput
+          ref={inputRef}
           placeholder="Carian sekolah"
           value={query}
           onValueChange={handleValueChange}
