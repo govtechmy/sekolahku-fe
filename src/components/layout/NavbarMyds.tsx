@@ -52,10 +52,10 @@ export default function NavbarMyds() {
 
   return (
     <Navbar>
-      <div className="flex items-center gap-2.5">
-        <img src="/JataNegara.svg" />
-        <div className="font-heading text-txt-black-900 text-body-lg font-semibold">Sekolahku</div>
-      </div>
+        <Link to={`/${currentLang}/home`} className="flex items-center gap-2.5"> 
+          <img src="/JataNegara.svg" />
+          <div className="font-heading text-txt-black-900 text-body-lg font-semibold">Sekolahku</div>
+        </Link>
       <NavbarMenu
         classNameNavDesktop=""
         classNameNavMobile={` ${isHidden ? "block" : "hidden"}`}
