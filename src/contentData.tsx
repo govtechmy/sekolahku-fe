@@ -10,6 +10,52 @@ import {
 } from "@govtechmy/myds-react/icon";
 import type { FindNearbyUpdatedEndpoint } from "./types/maps";
 
+export const siaranSocialLinks = [
+  {
+    platform: "hyperlink",
+    href: "#",
+    ariaLabel: "Siaran link",
+  },
+  {
+    platform: "email",
+    href: "#",
+    ariaLabel: "Email link",
+  },
+  {
+    platform: "facebook",
+    href: "#",
+    ariaLabel: "Facebook link",
+  },
+  {
+    platform: "twitter",
+    href: "#",
+    ariaLabel: "Twitter link",
+  }
+];
+
+export const footerSocialLinks = [
+  {
+    platform: "facebook",
+    href: "#",
+    ariaLabel: "Facebook link",
+  },
+  {
+    platform: "twitter",
+    href: "#",
+    ariaLabel: "Twitter link",
+  },
+  {
+    platform: "instagram",
+    href: "#",
+    ariaLabel: "Instagram link",
+  },
+  {
+    platform: "youtube",
+    href: "#",
+    ariaLabel: "Youtube link",
+  },
+];
+
 export const findNearbyUpdatedEndpoint: FindNearbyUpdatedEndpoint = {
   viewInfoLokasi: {
     koordinatXX: 37.7749,
