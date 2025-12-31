@@ -90,6 +90,9 @@ importers:
       globals:
         specifier: ^16.3.0
         version: 16.5.0
+      husky:
+        specifier: ^9.1.7
+        version: 9.1.7
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
@@ -1660,6 +1663,11 @@ packages:
 
   html-parse-stringify@3.0.1:
     resolution: {integrity: sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==}
+
+  husky@9.1.7:
+    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   i18next@25.7.3:
     resolution: {integrity: sha512-2XaT+HpYGuc2uTExq9TVRhLsso+Dxym6PWaKpn36wfBmTI779OQ7iP/XaZHzrnGyzU4SHpFrTYLKfVyBfAhVNA==}
@@ -3911,6 +3919,8 @@ snapshots:
   html-parse-stringify@3.0.1:
     dependencies:
       void-elements: 3.1.0
+
+  husky@9.1.7: {}
 
   i18next@25.7.3(typescript@5.8.3):
     dependencies:
