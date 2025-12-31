@@ -3,7 +3,7 @@ import { LockIcon } from "@govtechmy/myds-react/icon";
 import React, { useEffect, useState } from "react";
 
 interface AccessGuardProps {
-  correctCode: string;         // The access code
+  correctCode: string; // The access code
   onAccessGranted: () => void; // Callback after success
 }
 
@@ -40,9 +40,8 @@ const AccessGuard: React.FC<AccessGuardProps> = ({
       style={{ fontFamily: "Inter, sans-serif" }}
     >
       <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8 text-center">
-
         {/* Logo */}
-        <img src="/JataNegara.svg" className="mx-auto mb-6 w-20 h-auto"/>
+        <img src="/JataNegara.svg" className="mx-auto mb-6 w-20 h-auto" />
 
         <h1 className="text-2xl font-semibold mb-2">Development Access</h1>
         <p className="text-gray-600 text-sm mb-6">
@@ -60,8 +59,13 @@ const AccessGuard: React.FC<AccessGuardProps> = ({
           />
 
           {error && <p className="text-txt-danger text-lg mb-4">{error}</p>}
-          
-          <Button variant="primary-fill" size="large" type="submit" className="w-full">
+
+          <Button
+            variant="primary-fill"
+            size="large"
+            type="submit"
+            className="w-full"
+          >
             <div className="flex items-center w-full justify-center">
               <LockIcon />
               <div className="pl-2">Access Application</div>

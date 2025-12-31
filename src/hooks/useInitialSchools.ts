@@ -8,7 +8,7 @@ interface UseInitialSchoolsParams {
     koordinatYY: number,
     radiusInMeter: number,
     initialLocationSet?: boolean,
-    zoom?: number
+    zoom?: number,
   ) => Promise<MarkerGroup[]>;
   center: [number, number];
   radius: number;
@@ -27,13 +27,26 @@ export function useInitialSchools({
 }: UseInitialSchoolsParams) {
   const loadInitialSchools = useCallback(async () => {
     try {
-      const markersArray = await fetchNearbySchools(center[0], center[1], radius, initialLocationSet, zoom);
+      const markersArray = await fetchNearbySchools(
+        center[0],
+        center[1],
+        radius,
+        initialLocationSet,
+        zoom,
+      );
       const schoolData = processMarkers(markersArray);
       setSchoolMarkers(schoolData);
     } catch (error) {
       console.error("Failed to load initial schools:", error);
     }
-  }, [fetchNearbySchools, center, radius, setSchoolMarkers, initialLocationSet, zoom]);
+  }, [
+    fetchNearbySchools,
+    center,
+    radius,
+    setSchoolMarkers,
+    initialLocationSet,
+    zoom,
+  ]);
 
   return { loadInitialSchools };
 }

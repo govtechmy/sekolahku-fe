@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Pie, PieChart, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { useState } from "react";
+import { Pie, PieChart, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import type { CategoryItem } from "../models/response";
 
 interface DoughnutChartProps {
@@ -9,28 +9,32 @@ interface DoughnutChartProps {
 }
 
 const defaultColors = [
-  '#172554',
-  '#1E3A8A',
-  '#1E40AF',
-  '#1D4ED8',
-  '#2563EB',
-  '#3A75F6',
-  '#6394FF',
-  '#96B7FF',
-  '#C2D5FF',
-  '#DBEAFE',
-  '#99cdf0',
-  '#b3d9f4',
-  '#cce5f8',
-  '#e6f2fc',
-  '#f0f7fd',
-  '#f5faff',
-  '#f9fcff',
-  '#fcfeff',
-  '#feffff',
+  "#172554",
+  "#1E3A8A",
+  "#1E40AF",
+  "#1D4ED8",
+  "#2563EB",
+  "#3A75F6",
+  "#6394FF",
+  "#96B7FF",
+  "#C2D5FF",
+  "#DBEAFE",
+  "#99cdf0",
+  "#b3d9f4",
+  "#cce5f8",
+  "#e6f2fc",
+  "#f0f7fd",
+  "#f5faff",
+  "#f9fcff",
+  "#fcfeff",
+  "#feffff",
 ];
 
-export default function DoughnutChart({ title, data, colors }: DoughnutChartProps) {
+export default function DoughnutChart({
+  title,
+  data,
+  colors,
+}: DoughnutChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
   const chartColors = colors || defaultColors.slice(0, data.length);
   const chartData = data.map((item) => ({
@@ -44,7 +48,17 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
   const onPieLeave = () => {
     setActiveIndex(undefined);
   };
-  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number; payload: { percentage: number } }> }) => {
+  const CustomTooltip = ({
+    active,
+    payload,
+  }: {
+    active?: boolean;
+    payload?: Array<{
+      name: string;
+      value: number;
+      payload: { percentage: number };
+    }>;
+  }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 border border-otl-gray-200 rounded shadow-lg">
@@ -83,7 +97,7 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
       <h3 className="text-lg font-semibold text-txt-primary mb-4 text-center">
         {title}
       </h3>
-      
+
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
@@ -101,7 +115,9 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
               <Cell
                 key={`cell-${index}`}
                 fill={chartColors[index]}
-                opacity={activeIndex === undefined || activeIndex === index ? 1 : 0.6}
+                opacity={
+                  activeIndex === undefined || activeIndex === index ? 1 : 0.6
+                }
               />
             ))}
           </Pie>

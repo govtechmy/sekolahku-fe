@@ -23,7 +23,15 @@ interface SearchBarHomeProps<T> {
   onSelect?: (item: T) => void;
 }
 
-export default function SearchBarHome<T>({ query, setQuery, handleValueChange, suggestions = [], getKey, getLabel, onSelect }: SearchBarHomeProps<T>) {
+export default function SearchBarHome<T>({
+  query,
+  setQuery,
+  handleValueChange,
+  suggestions = [],
+  getKey,
+  getLabel,
+  onSelect,
+}: SearchBarHomeProps<T>) {
   const [hasFocus, setHasFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const hasQuery = (query?.length || 0) > 0;

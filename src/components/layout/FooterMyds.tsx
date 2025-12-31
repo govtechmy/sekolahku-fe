@@ -3,7 +3,7 @@ import {
   SiteInfo,
   FooterSection,
   FooterLogo,
-  SiteLinkGroup
+  SiteLinkGroup,
 } from "@govtechmy/myds-react/footer";
 import { footerSocialLinks } from "../../contentData";
 import SocialLinks from "../shared/SocialLinks";
@@ -17,7 +17,11 @@ export default function FooterMyds() {
           <SiteInfo>
             <div className="text-txt-black-900 flex items-center gap-x-2.5">
               <FooterLogo
-                logoTitle={<p className="font-poppins text-body-md whitespace-nowrap font-semibold">Kementerian Pendidikan</p>}
+                logoTitle={
+                  <p className="font-poppins text-body-md whitespace-nowrap font-semibold">
+                    Kementerian Pendidikan
+                  </p>
+                }
                 logo={
                   <img
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Coat_of_arms_of_Malaysia.svg/500px-Coat_of_arms_of_Malaysia.svg.png"
@@ -29,10 +33,17 @@ export default function FooterMyds() {
               />
             </div>
             <p className="text-txt-black-700 text-body-sm not-prose">
-              Kementerian Pendidikan, Blok E8, Kompleks E, Pusat Pentadbiran Kerajaan Persekutuan, 62604 W.P. Putrajaya, Malaysia
+              Kementerian Pendidikan, Blok E8, Kompleks E, Pusat Pentadbiran
+              Kerajaan Persekutuan, 62604 W.P. Putrajaya, Malaysia
             </p>
-            <p className="text-txt-black-900 text-body-sm font-semibold not-prose">Follow Us</p>
-            <SocialLinks links={footerSocialLinks} className="gap-3" classNameButton="p-0 hover:text-txt-black-900" />
+            <p className="text-txt-black-900 text-body-sm font-semibold not-prose">
+              Follow Us
+            </p>
+            <SocialLinks
+              links={footerSocialLinks}
+              className="gap-3"
+              classNameButton="p-0 hover:text-txt-black-900"
+            />
           </SiteInfo>
         </div>
         <div className="flex flex-col gap-3">

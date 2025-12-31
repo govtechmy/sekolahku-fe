@@ -7,9 +7,14 @@ interface NearbySchoolCardProps {
   url: string;
 }
 
-export const NearbySchoolCard = ({ school, handleNearbySchoolClick, url }: NearbySchoolCardProps) => {
-
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+export const NearbySchoolCard = ({
+  school,
+  handleNearbySchoolClick,
+  url,
+}: NearbySchoolCardProps) => {
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+  ) => {
     e.currentTarget.src = "/utama/nearby-school-default.svg";
     e.currentTarget.className = "h-full w-full object-cover";
   };

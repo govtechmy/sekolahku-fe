@@ -19,7 +19,6 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<Navigate to={`/${lang}`} replace />} />
       <Route path=":lang" element={<LangWrapper />}>
-    
         <Route element={<LayoutMain />}>
           {/* no home is not on / but on /home  so redirect */}
           <Route index element={<RedirectHomePage />} />

@@ -55,11 +55,11 @@ export default function Statistic({
         cumulativeData.spm.total += parseInt(data.spm.total.replace(/,/g, ""));
         cumulativeData.stem.daily += data.stem.daily;
         cumulativeData.stem.total += parseInt(
-          data.stem.total.replace(/,/g, "")
+          data.stem.total.replace(/,/g, ""),
         );
         cumulativeData.koku.daily += data.koku.daily;
         cumulativeData.koku.total += parseInt(
-          data.koku.total.replace(/,/g, "")
+          data.koku.total.replace(/,/g, ""),
         );
       }
     }
@@ -89,7 +89,7 @@ export default function Statistic({
     const rect = sliderRef.current.getBoundingClientRect();
     const percentage = Math.max(
       0,
-      Math.min(100, ((clientX - rect.left) / rect.width) * 100)
+      Math.min(100, ((clientX - rect.left) / rect.width) * 100),
     );
     const yearRange = 2023 - 2020;
     return Math.round(2020 + (percentage / 100) * yearRange);
@@ -114,7 +114,7 @@ export default function Statistic({
         setSelectedYearRange({ start, end: Math.max(clickedYear, start) });
       }
     },
-    [isDragging, positionToYear, selectedYearRange]
+    [isDragging, positionToYear, selectedYearRange],
   );
 
   const handleMouseDown = useCallback(
@@ -122,7 +122,7 @@ export default function Statistic({
       event.stopPropagation();
       setIsDragging(handle);
     },
-    []
+    [],
   );
 
   const handleMouseMove = useCallback(
@@ -145,7 +145,7 @@ export default function Statistic({
         }));
       }
     },
-    [isDragging, positionToYear]
+    [isDragging, positionToYear],
   );
 
   const handleMouseUp = useCallback(() => {

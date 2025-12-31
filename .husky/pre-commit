@@ -2,3 +2,4 @@ echo "✅ Husky hook triggered"
 
 pnpm lint:fix
 pnpm build
+pnpm exec prettier . --write

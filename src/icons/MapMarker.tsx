@@ -25,7 +25,7 @@ const createDivIcon = (html: string, typeClass: string) =>
 
 export const sekolahMarkerIcon = createDivIcon(
   sekolahMarkerHtml,
-  "sekolah-marker-icon"
+  "sekolah-marker-icon",
 );
 
 export const parlimenMarkerIcon = (total?: number | string) =>

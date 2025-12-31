@@ -1,6 +1,10 @@
 import { Helmet } from "react-helmet-async";
 
-export default function HelmetMeta({ title, description, canonical } : Record<string, string>) {
+export default function HelmetMeta({
+  title,
+  description,
+  canonical,
+}: Record<string, string>) {
   return (
     <Helmet>
       <title>{title}</title>

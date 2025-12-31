@@ -6,10 +6,7 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from "@govtechmy/myds-react/breadcrumb";
-import {
-  CheckIcon,
-  ChevronRightIcon,
-} from "@govtechmy/myds-react/icon";
+import { CheckIcon, ChevronRightIcon } from "@govtechmy/myds-react/icon";
 import { useState } from "react";
 import { useMapViewStore } from "../../store/mapView";
 import { dataPilihLokasi } from "../../contentData";
@@ -17,19 +14,19 @@ import StateFlagImage from "../../icons/StateFlagIcon";
 import { clx } from "@govtechmy/myds-react/utils";
 
 interface LocationPickerWindowProps {
-  onClose: () => void; 
+  onClose: () => void;
 }
 
 type DistrictEntry = Record<string, [number, number]>;
 
-export function LocationPickerWindow({
-  onClose,
-}: LocationPickerWindowProps) {
-  const { setCenter, setZoom, setInitialLocationSet, setInitialLocationUser } = useMapViewStore();
-  const [currentView, setCurrentView] = useState<"states" | "districts">("states");
+export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
+  const { setCenter, setZoom, setInitialLocationSet, setInitialLocationUser } =
+    useMapViewStore();
+  const [currentView, setCurrentView] = useState<"states" | "districts">(
+    "states",
+  );
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
-
 
   const handleStateClick = (stateName: string) => {
     setSelectedState(stateName);
@@ -51,23 +48,26 @@ export function LocationPickerWindow({
 
     // Find the selected district entry and extract coordinates
     const stateData = dataPilihLokasi.find((s) => s.name === selectedState);
-    const entry = stateData?.districts.find((d) => Object.keys(d)[0] === selectedDistrict) as DistrictEntry | undefined;
+    const entry = stateData?.districts.find(
+      (d) => Object.keys(d)[0] === selectedDistrict,
+    ) as DistrictEntry | undefined;
     const coords = entry ? (Object.values(entry)[0] as [number, number]) : null;
 
     if (coords) {
       setCenter(coords);
-      setInitialLocationUser(coords)
+      setInitialLocationUser(coords);
       setZoom(15);
       onClose();
       setInitialLocationSet(true);
     }
-
   };
 
   const selectedStateData = selectedState
     ? dataPilihLokasi.find((state) => state.name === selectedState)
     : null;
-  const currentDistricts: DistrictEntry[] = selectedStateData ? (selectedStateData.districts as unknown as DistrictEntry[]) : [];
+  const currentDistricts: DistrictEntry[] = selectedStateData
+    ? (selectedStateData.districts as unknown as DistrictEntry[])
+    : [];
 
   return (
     <div
@@ -139,39 +139,39 @@ export function LocationPickerWindow({
                         </div>
                       </div>
                     ))
-                    : currentDistricts.map((districtObj) => {
+                  : currentDistricts.map((districtObj) => {
                       const district = Object.keys(districtObj)[0];
                       return (
-                      <div
-                        key={district}
-                        className={clx(
-                          "bg-white border rounded-lg px-4 py-3 shadow-sm cursor-pointer focus:outline-none",
-                          selectedDistrict === district
-                            ? "border-primary-600"
-                            : "border-otl-gray-200 hover:shadow-md"
-                        )}
-                        onClick={() => handleDistrictClick(district)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            handleDistrictClick(district);
-                          }
-                        }}
-                        tabIndex={0}
-                        role="button"
-                        aria-label={`Select ${district}`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-body-sm">
-                            {district}
-                          </span>
-                          {selectedDistrict === district && (
-                            <div className="text-primary-600">
-                              <CheckIcon className="h-4 w-4" />
-                            </div>
+                        <div
+                          key={district}
+                          className={clx(
+                            "bg-white border rounded-lg px-4 py-3 shadow-sm cursor-pointer focus:outline-none",
+                            selectedDistrict === district
+                              ? "border-primary-600"
+                              : "border-otl-gray-200 hover:shadow-md",
                           )}
+                          onClick={() => handleDistrictClick(district)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              handleDistrictClick(district);
+                            }
+                          }}
+                          tabIndex={0}
+                          role="button"
+                          aria-label={`Select ${district}`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-body-sm">
+                              {district}
+                            </span>
+                            {selectedDistrict === district && (
+                              <div className="text-primary-600">
+                                <CheckIcon className="h-4 w-4" />
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
                       );
                     })}
               </div>

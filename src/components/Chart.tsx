@@ -34,7 +34,7 @@ interface ChartProps {
 const generateChartData = (
   dataKey: string,
   yearRange: { start: number; end: number },
-  baseData: ChartBaseData
+  baseData: ChartBaseData,
 ) => {
   const months = [
     "Jan",
@@ -93,7 +93,7 @@ export default function CustomChart({
   const chartData = generateChartData(
     dataKey,
     selectedYearRange,
-    chartBaseData
+    chartBaseData,
   );
 
   return (
@@ -176,11 +176,13 @@ export default function CustomChart({
               }}
               formatter={(value) => (
                 <span style={{ color: "#3B82F6", fontWeight: "bold" }}>
-                  {`Total: ${Array.isArray(value)
-                    ? value.join(", ")
-                    : typeof value === "number"
-                    ? value.toLocaleString()
-                    : (value ?? 0).toString()}`}
+                  {`Total: ${
+                    Array.isArray(value)
+                      ? value.join(", ")
+                      : typeof value === "number"
+                        ? value.toLocaleString()
+                        : (value ?? 0).toString()
+                  }`}
                 </span>
               )}
               labelFormatter={(label) => (

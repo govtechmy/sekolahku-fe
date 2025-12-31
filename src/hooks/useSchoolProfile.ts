@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { getSchoolProfile } from '../services/school.svc';
-import type { ItemSekolahModel } from '../models/response';
+import { useEffect, useState } from "react";
+import { getSchoolProfile } from "../services/school.svc";
+import type { ItemSekolahModel } from "../models/response";
 
 interface UseSchoolProfileResult {
   school: ItemSekolahModel | null;
@@ -9,7 +9,9 @@ interface UseSchoolProfileResult {
   error: Error | null;
 }
 
-export const useSchoolProfile = (id: string | undefined): UseSchoolProfileResult => {
+export const useSchoolProfile = (
+  id: string | undefined,
+): UseSchoolProfileResult => {
   const [school, setSchool] = useState<ItemSekolahModel | null>(null);
   const [nearbySchools, setNearbySchools] = useState<ItemSekolahModel[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,14 +27,17 @@ export const useSchoolProfile = (id: string | undefined): UseSchoolProfileResult
       try {
         setLoading(true);
         setError(null);
-        
-        const { school: schoolData, nearbySchools: nearby } = await getSchoolProfile(id);
-        
+
+        const { school: schoolData, nearbySchools: nearby } =
+          await getSchoolProfile(id);
+
         setSchool(schoolData);
         setNearbySchools(nearby);
       } catch (err) {
-        console.error('Failed to fetch school profile:', err);
-        setError(err instanceof Error ? err : new Error('Unknown error occurred'));
+        console.error("Failed to fetch school profile:", err);
+        setError(
+          err instanceof Error ? err : new Error("Unknown error occurred"),
+        );
         setSchool(null);
         setNearbySchools([]);
       } finally {

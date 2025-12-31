@@ -16,24 +16,32 @@ import { formatSchoolAddress } from "../../utils/schoolHelpers";
 
 type SchoolInfoWindowProps = {
   school: ItemSekolahModel;
-    setSelected: (marker: SearchBarMapProps | null) => void;
+  setSelected: (marker: SearchBarMapProps | null) => void;
 };
 
-export function SchoolInfoWindow({ school, setSelected}: SchoolInfoWindowProps) {
+export function SchoolInfoWindow({
+  school,
+  setSelected,
+}: SchoolInfoWindowProps) {
   const navigate = useNavigate();
   const lang = localStorage.getItem("lang") || "ms";
 
   return (
     <div className="relative bg-white rounded-b-xl">
       <div className="sticky top-0 -mt-12 flex justify-end p-2 bg-transparent">
-        <Button onClick={ () => setSelected(null) } variant={"default-outline"} className="p-1.5"><CrossIcon className="size-4" /></Button>
+        <Button
+          onClick={() => setSelected(null)}
+          variant={"default-outline"}
+          className="p-1.5"
+        >
+          <CrossIcon className="size-4" />
+        </Button>
       </div>
       <img
         src="/images/sekDefault.png"
         alt={school?.namaSekolah || "Sekolah"}
         className="w-full h-full object-cover rounded-t-xl"
       />
-    
 
       <div className="p-3 flex flex-col gap-3 justify-start">
         <div>
@@ -50,23 +58,26 @@ export function SchoolInfoWindow({ school, setSelected}: SchoolInfoWindowProps) 
             value={school?.kodSekolah || "Tiada Maklumat"}
           />
           <InfoIconRow
-            icon={<PhoneIcon/>}
+            icon={<PhoneIcon />}
             value={school?.data?.infoKomunikasi?.noTelefon || "Tiada Maklumat"}
           />
           <InfoIconRow
-            icon={<EmailIcon/>}
+            icon={<EmailIcon />}
             value={school?.data?.infoKomunikasi?.email || "Tiada Maklumat"}
           />
           <InfoIconRow
             icon={<PinIcon />}
-            value={ toTitleCase(formatSchoolAddress(school)) || "Tiada Maklumat"}
+            value={toTitleCase(formatSchoolAddress(school)) || "Tiada Maklumat"}
           />
         </div>
       </div>
       <div className="border-y border-otl-divider p-3 flex flex-col gap-2 ">
         <div className="font-body text-body-xs font-semibold">JPN</div>
         <div className="flex gap-1 flex-col">
-          <InfoRow label="Lokasi" value={school?.data?.infoPentadbiran?.negeri || "Tiada Maklumat"} />
+          <InfoRow
+            label="Lokasi"
+            value={school?.data?.infoPentadbiran?.negeri || "Tiada Maklumat"}
+          />
           <InfoRow label="Status SKM" value={"Tiada Maklumat"} />
           <InfoRow label="Kategori Pedalaman" value={"Tiada Maklumat"} />
         </div>
@@ -74,19 +85,32 @@ export function SchoolInfoWindow({ school, setSelected}: SchoolInfoWindowProps) 
       <div className="p-3 flex flex-col gap-2 ">
         <div className="font-body text-body-xs font-semibold">PPD</div>
         <div className="flex gap-1 flex-col">
-          <InfoRow label="Daerah" value={school?.data?.infoPentadbiran?.ppd || "Tiada Maklumat"} />
+          <InfoRow
+            label="Daerah"
+            value={school?.data?.infoPentadbiran?.ppd || "Tiada Maklumat"}
+          />
           <InfoRow label="Gred" value={"Tiada Maklumat"} />
-          <InfoRow label="Sesi" value={school?.data?.infoPentadbiran?.sesi || "Tiada Maklumat"} />
-          <InfoRow label="Jenis Bantuan" value={school?.data?.infoPentadbiran?.bantuan || "Tiada Maklumat"} />
+          <InfoRow
+            label="Sesi"
+            value={school?.data?.infoPentadbiran?.sesi || "Tiada Maklumat"}
+          />
+          <InfoRow
+            label="Jenis Bantuan"
+            value={school?.data?.infoPentadbiran?.bantuan || "Tiada Maklumat"}
+          />
           <InfoRow label="Tarikh Tubuh" value={"Tiada Maklumat"} />
         </div>
       </div>
       <div className="p-2 w-full">
-          <Button variant="primary-outline" className="w-full justify-center" onClick={() => {
+        <Button
+          variant="primary-outline"
+          className="w-full justify-center"
+          onClick={() => {
             if (school?.kodSekolah) {
               navigate(`/${lang}/halaman-sekolah/${school.kodSekolah}`);
             }
-          }}>
+          }}
+        >
           Lihat Laman Web
         </Button>
       </div>

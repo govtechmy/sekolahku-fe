@@ -1,4 +1,4 @@
- import { useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 // import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 // import { GlobeIcon } from "@govtechmy/myds-react/icon";
@@ -29,7 +29,8 @@ export default function NavbarMyds() {
   // );
 
   const pathSegments = location.pathname.split("/").filter(Boolean);
-  const activeItem = pathSegments.length > 1 ? pathSegments[1] : pathSegments[0] || "home";
+  const activeItem =
+    pathSegments.length > 1 ? pathSegments[1] : pathSegments[0] || "home";
   const currentLang = lang || localStorage.getItem("lang") || "ms";
 
   // Sync state when URL param changes (for manual URL changes or navigation)
@@ -52,24 +53,46 @@ export default function NavbarMyds() {
 
   return (
     <Navbar>
-        <Link to={`/${currentLang}/home`} className="flex items-center gap-2.5"> 
-          <img src="/JataNegara.svg" />
-          <div className="font-heading text-txt-black-900 text-body-lg font-semibold">Sekolahku</div>
-        </Link>
+      <Link to={`/${currentLang}/home`} className="flex items-center gap-2.5">
+        <img src="/JataNegara.svg" />
+        <div className="font-heading text-txt-black-900 text-body-lg font-semibold">
+          Sekolahku
+        </div>
+      </Link>
       <NavbarMenu
         classNameNavDesktop=""
         classNameNavMobile={` ${isHidden ? "block" : "hidden"}`}
       >
-        <NavbarMenuItem asChild href={`/${currentLang}/home`} aria-current={activeItem === "home" ? "page" : undefined} className={activeItem === "home" ? "bg-bg-washed" : ""}>
+        <NavbarMenuItem
+          asChild
+          href={`/${currentLang}/home`}
+          aria-current={activeItem === "home" ? "page" : undefined}
+          className={activeItem === "home" ? "bg-bg-washed" : ""}
+        >
           <Link to={`/${currentLang}/home`}>Utama</Link>
         </NavbarMenuItem>
-        <NavbarMenuItem asChild href={`/${currentLang}/carian-sekolah`} aria-current={activeItem === "carian-sekolah" ? "page" : undefined} className={activeItem === "carian-sekolah" ? "bg-bg-washed" : ""}>
+        <NavbarMenuItem
+          asChild
+          href={`/${currentLang}/carian-sekolah`}
+          aria-current={activeItem === "carian-sekolah" ? "page" : undefined}
+          className={activeItem === "carian-sekolah" ? "bg-bg-washed" : ""}
+        >
           <Link to={`/${currentLang}/carian-sekolah`}>Carian Sekolah</Link>
         </NavbarMenuItem>
-        <NavbarMenuItem asChild href={`/${currentLang}/siaran`} aria-current={activeItem === "siaran" ? "page" : undefined} className={activeItem === "siaran" ? "bg-bg-washed" : ""}>
+        <NavbarMenuItem
+          asChild
+          href={`/${currentLang}/siaran`}
+          aria-current={activeItem === "siaran" ? "page" : undefined}
+          className={activeItem === "siaran" ? "bg-bg-washed" : ""}
+        >
           <Link to={`/${currentLang}/siaran`}>Siaran</Link>
         </NavbarMenuItem>
-        <NavbarMenuItem asChild href={`/${currentLang}/acara`} aria-current={activeItem === "acara" ? "page" : undefined} className={activeItem === "acara" ? "bg-bg-washed" : ""}>
+        <NavbarMenuItem
+          asChild
+          href={`/${currentLang}/acara`}
+          aria-current={activeItem === "acara" ? "page" : undefined}
+          className={activeItem === "acara" ? "bg-bg-washed" : ""}
+        >
           <Link to={`/${currentLang}/acara`}>Acara</Link>
         </NavbarMenuItem>
       </NavbarMenu>

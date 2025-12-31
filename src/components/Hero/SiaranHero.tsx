@@ -9,7 +9,12 @@ interface SiaranHeroProps {
   suggestions: Array<{ id: string; title: string }>;
 }
 
-export default function SiaranHero({ query, setQuery, handleValueChange, suggestions }: SiaranHeroProps) {
+export default function SiaranHero({
+  query,
+  setQuery,
+  handleValueChange,
+  suggestions,
+}: SiaranHeroProps) {
   return (
     <Hero
       title="Siaran Sekolahku"
@@ -20,8 +25,8 @@ export default function SiaranHero({ query, setQuery, handleValueChange, suggest
           setQuery={setQuery}
           handleValueChange={handleValueChange}
           suggestions={suggestions}
-          getKey={item => item.id}
-          getLabel={item => item.title}
+          getKey={(item) => item.id}
+          getLabel={(item) => item.title}
         />
       }
       background={

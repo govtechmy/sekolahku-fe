@@ -19,6 +19,8 @@ input[aria-controls="search-input"][cmdk-input][role="combobox"] {
 }
 
 /* Remove default Leaflet DivIcon square background/border */
-.sekolah-marker-icon, .parlimen-marker-icon, .negeri-marker-icon {
+.sekolah-marker-icon,
+.parlimen-marker-icon,
+.negeri-marker-icon {
   background: transparent !important;
 }

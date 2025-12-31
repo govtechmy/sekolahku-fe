@@ -35,14 +35,14 @@ export default function Siaran() {
 
   const filteredResult = useMemo(() => {
     if (!query) return dataItemNews;
-    return dataItemNews.filter(item =>
-      item.title.toLowerCase().includes(query.toLowerCase())
+    return dataItemNews.filter((item) =>
+      item.title.toLowerCase().includes(query.toLowerCase()),
     );
   }, [query]);
 
   const handleValueChange = (value: string) => {
     setQuery(value);
-    setCurrentPage(0); 
+    setCurrentPage(0);
   };
 
   const PAGE_SIZE = 12;
@@ -61,7 +61,7 @@ export default function Siaran() {
         suggestions={filteredResult.slice(0, 10)}
       />
       <div className=" mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
-        <Card 
+        <Card
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
@@ -71,13 +71,18 @@ export default function Siaran() {
               {Array.from({ length: PAGE_SIZE }).map((_, index) => {
                 const item = currentCards[index];
                 if (!item) {
-                  return <div key={`placeholder-${index}`} className="h-[260px] sm:h-[300px] md:h-[354px]" />;
+                  return (
+                    <div
+                      key={`placeholder-${index}`}
+                      className="h-[260px] sm:h-[300px] md:h-[354px]"
+                    />
+                  );
                 }
                 return (
                   <Card.Item
-                    classNameHeader={clx(               
-                      item.header === 'Berita' && 'text-txt-primary',
-                      item.header === 'Pengumuman' && 'text-success-700',
+                    classNameHeader={clx(
+                      item.header === "Berita" && "text-txt-primary",
+                      item.header === "Pengumuman" && "text-success-700",
                     )}
                     key={startIndex + index}
                     item={{
@@ -87,16 +92,22 @@ export default function Siaran() {
                       date: item.date,
                       title: item.title,
                       redirectDesc: "Baca",
-                    }} 
+                    }}
                     onClick={() => {
                       navigate(`/${lang}/siaran/${item.id}`);
                     }}
                   />
                 );
-              })}  
+              })}
             </div>
             <div className="flex justify-center">
-              <Card.Pagination pageNumber={currentPage + 1} pageSize={PAGE_SIZE} totalRecords={filteredResult.length} type="default" handlePageChange={(page) => setCurrentPage(page - 1)} />
+              <Card.Pagination
+                pageNumber={currentPage + 1}
+                pageSize={PAGE_SIZE}
+                totalRecords={filteredResult.length}
+                type="default"
+                handlePageChange={(page) => setCurrentPage(page - 1)}
+              />
             </div>
           </div>
         </Card>
