@@ -1,5 +1,5 @@
 echo "✅ Husky hook triggered"
 
+pnpm exec prettier . --write
 pnpm lint:fix
 pnpm build
-pnpm exec prettier . --write
