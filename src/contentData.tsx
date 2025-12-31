@@ -417,7 +417,7 @@ export const dataItemNews = [
 
 export const dataItemCalendar = [
   {
-    id: 1,
+    id: "1",
     day: "SABTU",
     date: "15 FEB",
     year: 2025,
@@ -432,7 +432,7 @@ export const dataItemCalendar = [
       "Sambutan khas bagi menghargai kanak-kanak serta meningkatkan kesedaran tentang hak dan kebajikan mereka.",
   },
   {
-    id: 2,
+    id: "2",
     day: "ISNIN",
     date: "11 MAC",
     year: 2025,
@@ -447,7 +447,7 @@ export const dataItemCalendar = [
       "Kursus persediaan SPM percuma untuk semua calon. Daftar sekarang dan tingkatkan peluang kejayaan anda.",
   },
   {
-    id: 3,
+    id: "3",
     day: "JUMAAT",
     date: "16 MEI",
     year: 2025,
@@ -462,7 +462,7 @@ export const dataItemCalendar = [
       "Penghargaan kepada para pendidik atas jasa dan sumbangan mereka dalam membentuk generasi masa depan.",
   },
   {
-    id: 4,
+    id: "4",
     day: "ISNIN",
     date: "11 MAC",
     year: 2025,
@@ -477,7 +477,7 @@ export const dataItemCalendar = [
       "Hari istimewa untuk menghargai peranan dan pengorbanan seorang bapa dalam institusi keluarga.",
   },
   {
-    id: 5,
+    id: "5",
     day: "ISNIN",
     date: "11 MAC",
     year: 2025,
@@ -492,7 +492,7 @@ export const dataItemCalendar = [
       "Program dan aktiviti sukan kebangsaan bagi menggalakkan gaya hidup sihat dalam kalangan rakyat Malaysia.",
   },
   {
-    id: 6,
+    id: "6",
     day: "JUMAAT",
     date: "16 MEI",
     year: 2025,
@@ -507,7 +507,7 @@ export const dataItemCalendar = [
       "Sambutan ringkas tetapi bermakna bagi mengenang jasa dan dedikasi warga pendidik.",
   },
   {
-    id: 7,
+    id: "7",
     day: "ISNIN",
     date: "11 MAC",
     year: 2025,
@@ -522,7 +522,7 @@ export const dataItemCalendar = [
       "Mengiktiraf peranan bapa sebagai tonggak utama dalam pembangunan keluarga dan masyarakat.",
   },
   {
-    id: 8,
+    id: "8",
     day: "JUMAAT",
     date: "16 MEI",
     year: 2025,
@@ -537,7 +537,7 @@ export const dataItemCalendar = [
       "Acara tahunan bagi meraikan sumbangan guru dalam sistem pendidikan negara.",
   },
   {
-    id: 9,
+    id: "9",
     day: "ISNIN",
     date: "11 MAC",
     year: 2025,
@@ -552,7 +552,7 @@ export const dataItemCalendar = [
       "Kesedaran tentang kepentingan peranan seorang bapa dalam pembangunan sahsiah anak-anak.",
   },
   {
-    id: 10,
+    id: "10",
     day: "ISNIN",
     date: "11 MAC",
     year: 2025,
@@ -567,7 +567,7 @@ export const dataItemCalendar = [
       "Aktiviti sukan ringkas dan penyertaan komuniti bagi memupuk budaya aktif.",
   },
   {
-    id: 11,
+    id: "11",
     day: "JUMAAT",
     date: "16 MEI",
     year: 2025,
@@ -582,7 +582,7 @@ export const dataItemCalendar = [
       "Pengisian program dan aktiviti khas sempena sambutan Hari Guru peringkat kebangsaan.",
   },
   {
-    id: 12,
+    id: "12",
     day: "ISNIN",
     date: "11 MAC",
     year: 2025,
