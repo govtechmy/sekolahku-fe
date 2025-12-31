@@ -56,6 +56,31 @@ export const footerSocialLinks = [
   },
 ];
 
+export const siaranDocuments: any[] = [
+  {
+    name: "file1.pdf",
+    type: "application/pdf",
+    size: 5000,
+    fileurl: "",
+    isExistingFile: false,
+  },
+  {
+    name: "file2.pdf",
+    type: "application/pdf",
+    size: 50000,
+    fileurl: "",
+    isExistingFile: true,
+  },
+  {
+    name: "testinglongfilename.png",
+    type: "image/png",
+    size: 50000,
+    lastModified: 0,
+    fileurl: "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-bucket-dev/koleksi/6942133cbbee7f09b4f5b646/1765937980719-1.Galeri_Peristiwa-thumb.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAYYUPU5VVTECC2UFC%2F20251231%2Fap-southeast-5%2Fs3%2Faws4_request&X-Amz-Date=20251231T030103Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaDmFwLXNvdXRoZWFzdC01IkcwRQIgfewYUozDadzVYxqTRzQgAjOH4yZ8aXBJvlVylXuhJh8CIQDhJQFkNIjXS10F2zM8Muqt6Sy0cKb8z36PaP2u83JkoyqDBAjE%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDYwMjY3MDQyNzQ5OSIMCc3MVb9LwSbEwyLFKtcDyJHGUZKjWCyw%2BmrFbZIxloJ5bJkXjNXI3JyWVLn5KGYoQ3iGX8qhGbG%2BMqBxKQMzSGCkGc4FMMwYxXUznq%2B%2BXFj%2B0rZs1hFY35dBO%2BhXClgYb2%2BT9xabE2z64BLXDzfJaVUgZPSqe9pzLKS%2FhUJWJT3o%2BXj6Fgl%2F6MXEpgRD6GUVtEhkb4JiwcKBzoxkKvNOyf1szSC%2F6U%2BIHFDs%2FlS2XliUIIXxE7kJ3OkPfU0tMClZJeEuBc2L9a%2FemtDoPVq3Y9zUWovqkE8mYTjNzeg32l6kNFDeACmD0T%2BxQ4CP4RNpZ%2F6g95RFUhtYd1lr3EP6Dx8ct219DqZa9MUIHaUiqLib4kyy%2FBR5%2BlEJSz48B5AnSnlT9FAofWY0k1NFdYNl5dtxbes8AwendzRQx8%2BHLqGgP%2FrQhkkKl7Jwai2rul%2F5mV96gtYdhzVRTbo0TnD62UYLpCxTpLEIs87kNN9%2FYUgdoBaV0T1WTsQezjo%2BEnI3fa6Fgiv4Bzqz469h8lok2MBuPfcr5hcdS5xa8yknePzv%2BwJ8153PyJ9L2vYbQQmp11zFtPnNeQOK4K5aIdSPxB%2BW%2B9Gx0nbisJXmj9%2F4Fl9ywfSPnF56c6q1%2Fq%2FKYpBFvSS4VEBpMNKi0soGOqUBZAaEzf3VJbpNzbP%2BAUJKnFip0cJphb%2BiovT0y5u2yZYAJtr0MyaaqYAonPjWTFrdGrzvD8kPvBQxdr1KxfL4WS%2BhXYiwYSAIpOl5yacKy8cmwLhoZtmWd3K%2FGEysTkPOTeOBBh9dck5ZJ83YhJI8C407pM7CvAhXKH42idkrIavqN3q1i4C6Bymhj6oInqLbILqeLl2ITprw5eOrupWqfe3m0njo&X-Amz-Signature=f4111ca198bc531176806afe5f93ab950181b08ee63374ac2a8d037dfde006fd&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+    isExistingFile: true,
+  }
+];
+
 export const findNearbyUpdatedEndpoint: FindNearbyUpdatedEndpoint = {
   viewInfoLokasi: {
     koordinatXX: 37.7749,

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { dataItemNews } from "../../contentData";
+import { dataItemNews, siaranDocuments } from "../../contentData";
 import { Button } from "@govtechmy/myds-react/button";
 import {
     Breadcrumb,
@@ -8,11 +8,11 @@ import {
     BreadcrumbSeparator,
     BreadcrumbPage,
 } from "@govtechmy/myds-react/breadcrumb";
-import { ClockIcon, EmailIcon, FacebookIcon, LinkDiagonalIcon, PrinterIcon, TwitterXIcon } from "@govtechmy/myds-react/icon";
+import { ClockIcon, PdfIcon, PrinterIcon, } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
 import { siaranSocialLinks } from "../../contentData";
-import { SiteLink } from "@govtechmy/myds-react/footer";
+import DotIcon from "../../icons/DotIcon";
 
 export default function SiaranId() {
     const { id } = useParams<{ id: string }>();
@@ -21,6 +21,13 @@ export default function SiaranId() {
 
     // Find the news item by ID
     const newsItem = dataItemNews.find(item => item.id === id);
+    const filesItem = siaranDocuments;
+
+    const formatFileSize = (size: number) => {
+        if (size < 1024) return `${size} B`
+        if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`
+        return `${(size / 1024 / 1024).toFixed(1)} MB`
+    }
 
     // If item not found, show error message
     if (!newsItem) {
@@ -59,9 +66,9 @@ export default function SiaranId() {
                     </span>
                     <p className=" text-2xl font-semibold">{newsItem.title}</p>
 
-                    <div className=" flex flex-row gap-2 text-bg-black-500">
+                    <div className=" flex flex-row gap-2 text-bg-black-500 items-center">
                         <div className=" flex flex-row gap-1 items-center"><ClockIcon /> Bacaan {newsItem.readTime}</div>
-                        .
+                        <DotIcon />
                         <div>{newsItem.date}, 2:30PM</div>
                     </div>
                 </div>
@@ -71,7 +78,7 @@ export default function SiaranId() {
                         <SocialLinks links={siaranSocialLinks} classNameButton="p-2" />
                         <div className="flex items-center ">
                             <Button variant="default-outline" onClick={() => window.print()}>
-                               <PrinterIcon /> Cetak
+                                <PrinterIcon /> Cetak
                             </Button>
                         </div>
                     </div>
@@ -90,6 +97,107 @@ export default function SiaranId() {
                 <p className=" text-2xl font-semibold md:px-10">{newsItem.description}</p>
 
                 <p className="md:px-10">{newsItem.content}</p>
+
+                <div className="border-t border-otl-gray-200 md:mx-10">
+                    <div className="mt-6 flex flex-col sm:flex-row justify-between flex-wrap">
+                        {
+                            filesItem.map((file, index) => {
+                                const parts = file.name.split('.')
+                                const extension = parts.length > 1 ? '.' + parts.pop() : ''
+                                const basename = parts.join('.')
+
+                                return (
+                                    <div
+                                        key={index}
+                                        className="border border-otl-gray-200 w-full sm:w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 "
+                                    >
+                                        <div className="flex items-center gap-2 overflow-hidden">
+                                            {file.type.startsWith('image/')
+                                                ? (() => {
+                                                    const extendedFile = file as File & {
+                                                        isExistingFile?: boolean
+                                                        s3Url?: string
+                                                        fileurl?: string
+                                                        thumbnailUrl?: string
+                                                    }
+                                                    if (extendedFile.isExistingFile) {
+                                                        const imageUrl = extendedFile.thumbnailUrl || extendedFile.fileurl || extendedFile.s3Url
+                                                        const fullImageUrl = extendedFile.fileurl || extendedFile.s3Url || extendedFile.thumbnailUrl
+                                                        if (imageUrl) {
+                                                            return (
+                                                                <img
+                                                                    src={imageUrl}
+                                                                    alt={file.name}
+                                                                    className="shrink-0 size-[38px] rounded-[4px] object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                                                                    onClick={e => {
+                                                                        e.stopPropagation()
+                                                                        if (fullImageUrl) {
+                                                                            window.open(fullImageUrl, '_blank')
+                                                                        }
+                                                                    }}
+                                                                />
+                                                            )
+                                                        }
+                                                        return (
+                                                            <div className="shrink-0 size-[30px] rounded-[4px] bg-otl-gray-200 flex items-center justify-center">
+                                                                <span className="text-xs text-otl-gray-500">IMG</span>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    try {
+                                                        return (
+                                                            <img
+                                                                src={URL.createObjectURL(file)}
+                                                                alt={file.name}
+                                                                className="shrink-0 size-[38px] rounded-[4px] object-cover"
+                                                            />
+                                                        )
+                                                    } catch (error) {
+                                                        console.warn('Failed to create object URL:', error)
+                                                        return (
+                                                            <div className="shrink-0 size-[30px] rounded-[4px] bg-otl-gray-200 flex items-center justify-center">
+                                                                <span className="text-xs text-otl-gray-500">IMG</span>
+                                                            </div>
+                                                        )
+                                                    }
+                                                })()
+                                                : file.type === 'application/pdf'
+                                                    ? (() => {
+                                                        const extendedFile = file as File & {
+                                                            isExistingFile?: boolean
+                                                            s3Url?: string
+                                                            fileurl?: string
+                                                            thumbnailUrl?: string
+                                                        }
+                                                        const s3URLRedirect = extendedFile.fileurl || extendedFile.s3Url || extendedFile.thumbnailUrl
+                                                        return (
+                                                            <PdfIcon
+                                                                className="shrink-0 size-[30px] rounded-[4px] object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                                                                onClick={e => {
+                                                                    e.stopPropagation()
+                                                                    if (s3URLRedirect) {
+                                                                        window.open(s3URLRedirect, '_blank')
+                                                                    }
+                                                                }}
+                                                            />
+                                                        )
+                                                    })()
+                                                    : null}
+
+                                            <div className="text-start overflow-hidden">
+                                                <div className="flex items-center">
+                                                    <div className="max-w-[95px] truncate">{basename}</div>
+                                                    <div className="flex-shrink-0">{extension}</div>
+                                                </div>
+                                                <div className="text-[#71717A] text-xs">{formatFileSize(file.size)}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
 
             </div>
         </div>
