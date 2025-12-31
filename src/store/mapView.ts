@@ -22,7 +22,7 @@ interface MapViewState {
   setZoom: (z: number) => void;
   setInitialLocationSet: (v: boolean) => void;
   setSchoolMarkers: (
-    markers: MarkerMap | ((prev: MarkerMap) => MarkerMap)
+    markers: MarkerMap | ((prev: MarkerMap) => MarkerMap),
   ) => void;
   setLocalSuggestions: (suggestions: SearchBarMapProps[]) => void;
   setViewSchool: (school: ItemSekolahModel | null) => void;
@@ -35,7 +35,7 @@ interface MapViewState {
 }
 
 export const useMapViewStore = create<MapViewState>((set) => ({
-  initialLocationUser:[3.760115447396889, 108.46252441406251],
+  initialLocationUser: [3.760115447396889, 108.46252441406251],
   center: [3.760115447396889, 108.46252441406251],
   zoom: 6,
   radius: 3000,
@@ -87,26 +87,28 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   handleSearch: async (params) => {
     try {
       const results = await getSchoolSuggestion(params);
-      const transformed = results.map((school): SearchBarMapProps => ({
-        namaSekolah: school.namaSekolah ?? "Sekolah Tidak Diketahui",
-        kodSekolah: school.kodSekolah ?? "",
-        koordinatYY: school.data.infoLokasi.koordinatYY,
-        koordinatXX: school.data.infoLokasi.koordinatXX,
-        negeri: school.data.infoPentadbiran.negeri ?? "",
-        bandarSurat: school.data.infoKomunikasi.bandarSurat,
-        jenisLabel: school.data.infoSekolah.jenisLabel ?? "",
-        jumlahPelajar: school.data.infoSekolah.jumlahPelajar ?? 0,
-        jumlahGuru: school.data.infoSekolah.jumlahGuru ?? 0,
-        parlimen: school.data.infoPentadbiran.parlimen ?? "",
-      }));
-      
+      const transformed = results.map(
+        (school): SearchBarMapProps => ({
+          namaSekolah: school.namaSekolah ?? "Sekolah Tidak Diketahui",
+          kodSekolah: school.kodSekolah ?? "",
+          koordinatYY: school.data.infoLokasi.koordinatYY,
+          koordinatXX: school.data.infoLokasi.koordinatXX,
+          negeri: school.data.infoPentadbiran.negeri ?? "",
+          bandarSurat: school.data.infoKomunikasi.bandarSurat,
+          jenisLabel: school.data.infoSekolah.jenisLabel ?? "",
+          jumlahPelajar: school.data.infoSekolah.jumlahPelajar ?? 0,
+          jumlahGuru: school.data.infoSekolah.jumlahGuru ?? 0,
+          parlimen: school.data.infoPentadbiran.parlimen ?? "",
+        }),
+      );
+
       set({ localSuggestions: transformed });
 
       if (transformed.length > 0) {
         const firstResult = transformed[0];
-        set({ 
+        set({
           center: [firstResult.koordinatYY, firstResult.koordinatXX],
-          zoom: 18
+          zoom: 18,
         });
       }
     } catch (error) {
@@ -116,6 +118,5 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   },
   setQuery: (q) => {
     set({ query: q });
-  }
+  },
 }));
-

@@ -52,7 +52,7 @@ interface MapContainerProps {
     koordinatYY: number,
     radiusInMeter: number,
     initialLocationSet?: boolean,
-    zoom?: number
+    zoom?: number,
   ) => Promise<MarkerGroup[]>;
 }
 
@@ -70,7 +70,7 @@ export function MapContainerComponent({
     schoolMarkers,
     setSchoolMarkers,
     initialLocationSet,
-    setViewSchool
+    setViewSchool,
   } = useMapViewStore();
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
@@ -109,11 +109,14 @@ export function MapContainerComponent({
               dragStartPos.koordinatXX,
               dragStartPos.koordinatYY,
               newCenter.koordinatXX,
-              newCenter.koordinatYY
+              newCenter.koordinatYY,
             );
 
-            if (distance > (radius/100)) {
-              appendNewMarkers({ koordinatXX: newCenter.koordinatXX, koordinatYY: newCenter.koordinatYY });
+            if (distance > radius / 100) {
+              appendNewMarkers({
+                koordinatXX: newCenter.koordinatXX,
+                koordinatYY: newCenter.koordinatYY,
+              });
             }
           }
           setDragStartPos(null);
@@ -141,19 +144,19 @@ export function MapContainerComponent({
             total: coords.total,
           }}
           onClick={async () => {
-            if(coords.markerType === "NEGERI"){
-            setCenter([coords.koordinatXX, coords.koordinatYY]);
-            setZoom(12);
+            if (coords.markerType === "NEGERI") {
+              setCenter([coords.koordinatXX, coords.koordinatYY]);
+              setZoom(12);
             }
-            if(coords.markerType === "PARLIMEN"){
-            setCenter([coords.koordinatXX, coords.koordinatYY]);
-            setZoom(14);
+            if (coords.markerType === "PARLIMEN") {
+              setCenter([coords.koordinatXX, coords.koordinatYY]);
+              setZoom(14);
             }
             if (coords.markerType === "INDIVIDUAL") {
-            setViewSchool(null); // Reset before setting new school
-            setViewSchool(await getSchoolS3Json(coords.dataUrl));
-            setCenter([coords.koordinatXX, coords.koordinatYY]);
-            setZoom(18);
+              setViewSchool(null); // Reset before setting new school
+              setViewSchool(await getSchoolS3Json(coords.dataUrl));
+              setCenter([coords.koordinatXX, coords.koordinatYY]);
+              setZoom(18);
             }
           }}
         />

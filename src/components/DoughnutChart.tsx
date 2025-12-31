@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Pie, PieChart, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { useState } from "react";
+import { Pie, PieChart, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import type { CategoryItem } from "../models/response";
 
 interface DoughnutChartProps {
@@ -45,7 +45,17 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
   const onPieLeave = () => {
     setActiveIndex(undefined);
   };
-  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number; payload: { percentage: number } }> }) => {
+  const CustomTooltip = ({
+    active,
+    payload,
+  }: {
+    active?: boolean;
+    payload?: Array<{
+      name: string;
+      value: number;
+      payload: { percentage: number };
+    }>;
+  }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 border border-otl-gray-200 rounded shadow-lg">
@@ -103,7 +113,9 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
               <Cell
                 key={`cell-${index}`}
                 fill={chartColors[index]}
-                opacity={activeIndex === undefined || activeIndex === index ? 1 : 0.6}
+                opacity={
+                  activeIndex === undefined || activeIndex === index ? 1 : 0.6
+                }
               />
             ))}
           </Pie>

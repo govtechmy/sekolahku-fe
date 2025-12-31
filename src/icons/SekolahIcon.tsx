@@ -45,6 +45,5 @@ export default function SekolahIcon({ className }: { className?: string }) {
         fill="currentColor"
       />
     </svg>
-
   );
 }

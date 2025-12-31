@@ -1,5 +1,19 @@
 import { Button } from "@govtechmy/myds-react/button";
-import { FacebookIcon, TwitterXIcon, InstagramIcon, YoutubeIcon, LinkDiagonalIcon, EmailIcon, RSSIcon, LinkedinIcon, WhatsappIcon, TiktokIcon, FigmaIcon, TelegramIcon, GithubIcon } from "@govtechmy/myds-react/icon";
+import {
+  FacebookIcon,
+  TwitterXIcon,
+  InstagramIcon,
+  YoutubeIcon,
+  LinkDiagonalIcon,
+  EmailIcon,
+  RSSIcon,
+  LinkedinIcon,
+  WhatsappIcon,
+  TiktokIcon,
+  FigmaIcon,
+  TelegramIcon,
+  GithubIcon,
+} from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 
 interface SocialLinkProps {
@@ -14,26 +28,30 @@ interface SocialLinksProps {
   classNameButton?: string;
 }
 
-export default function SocialLinks({ links, className, classNameButton }: SocialLinksProps) {
+export default function SocialLinks({
+  links,
+  className,
+  classNameButton,
+}: SocialLinksProps) {
   const iconMap = {
-    "hyperlink": LinkDiagonalIcon,
-    "email": EmailIcon,
-    "facebook": FacebookIcon,
-    "twitter": TwitterXIcon,
-    "instagram": InstagramIcon,
-    "youtube": YoutubeIcon,
-    "rss": RSSIcon,
-    "linkedin": LinkedinIcon,
-    "whatsapp": WhatsappIcon,
-    "tiktok": TiktokIcon,
-    "figma": FigmaIcon,
-    "telegram": TelegramIcon,
-    "github": GithubIcon
+    hyperlink: LinkDiagonalIcon,
+    email: EmailIcon,
+    facebook: FacebookIcon,
+    twitter: TwitterXIcon,
+    instagram: InstagramIcon,
+    youtube: YoutubeIcon,
+    rss: RSSIcon,
+    linkedin: LinkedinIcon,
+    whatsapp: WhatsappIcon,
+    tiktok: TiktokIcon,
+    figma: FigmaIcon,
+    telegram: TelegramIcon,
+    github: GithubIcon,
   };
 
   const getIconByPlatform = (platform: string) => {
     const key = Object.keys(iconMap).find((k) =>
-      platform.toLowerCase().includes(k)
+      platform.toLowerCase().includes(k),
     );
 
     return key ? iconMap[key as keyof typeof iconMap] : null;
@@ -50,7 +68,7 @@ export default function SocialLinks({ links, className, classNameButton }: Socia
             variant="default-ghost"
             className={classNameButton}
             aria-label={ariaLabel}
-            onClick={() => window.open(href, '_blank', 'noopener,noreferrer')}
+            onClick={() => window.open(href, "_blank", "noopener,noreferrer")}
           >
             <Icon />
           </Button>

@@ -24,10 +24,9 @@ export type SearchBarMapProps = {
   parlimen?: string;
 };
 
-
 export type MarkerType = "INDIVIDUAL" | "GROUP" | "NEGERI" | "PARLIMEN";
 
-export type SchoolMarkerInfo= {
+export type SchoolMarkerInfo = {
   markerType: MarkerType;
   radiusInMeter: number;
   koordinatXX: number;

@@ -9,7 +9,10 @@ interface SchoolProfileHeroProps {
   url: string;
 }
 
-export default function SchoolProfileHero({ school, url }: SchoolProfileHeroProps) {
+export default function SchoolProfileHero({
+  school,
+  url,
+}: SchoolProfileHeroProps) {
   const [imageError, setImageError] = useState(false);
   const hasLogo = url && !imageError;
 
@@ -32,12 +35,20 @@ export default function SchoolProfileHero({ school, url }: SchoolProfileHeroProp
             <div className="w-full max-w-[1328px] px-6 lg:px-[109px] py-[50px] md:py-[50px] max-md:py-4 mx-auto">
               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between w-full">
                 <div className="max-w-xl pt-10 md:pt-0 text-center md:text-left">
-                  <div className="text-txt-primary font-semibold gap-6 pb-6">NAMA SEKOLAH</div>
-                  <div className="text-txt-black-900 text-heading-md max-md:text-heading-sm font-semibold gap-7 pb-7 max-w-[495px]">
-                    {school?.namaSekolah ? school.namaSekolah : "Maktab Sultan Abu Bakar (English College)"}
+                  <div className="text-txt-primary font-semibold gap-6 pb-6">
+                    NAMA SEKOLAH
                   </div>
-                  <div className="text-txt-primary font-semibold">JENIS SEKOLAH
-                    <span className="text-txt-black-500 font-medium"> : {school?.data.infoSekolah?.jenisLabel} </span>
+                  <div className="text-txt-black-900 text-heading-md max-md:text-heading-sm font-semibold gap-7 pb-7 max-w-[495px]">
+                    {school?.namaSekolah
+                      ? school.namaSekolah
+                      : "Maktab Sultan Abu Bakar (English College)"}
+                  </div>
+                  <div className="text-txt-primary font-semibold">
+                    JENIS SEKOLAH
+                    <span className="text-txt-black-500 font-medium">
+                      {" "}
+                      : {school?.data.infoSekolah?.jenisLabel}{" "}
+                    </span>
                   </div>
                 </div>
                 {hasLogo && (

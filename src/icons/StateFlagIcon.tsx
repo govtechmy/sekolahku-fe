@@ -14,4 +14,4 @@ const StateFlagImage = ({
   </div>
 );
 
-export default StateFlagImage
+export default StateFlagImage;

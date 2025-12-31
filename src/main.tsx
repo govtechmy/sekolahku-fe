@@ -14,5 +14,5 @@ createRoot(document.getElementById("root")!).render(
         </HelmetProvider>
       </Suspense>
     </ThemeProvider>
-  </StrictMode>
+  </StrictMode>,
 );

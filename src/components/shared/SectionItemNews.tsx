@@ -26,7 +26,11 @@ export default function SectionItemNews({
 
   return (
     <div className=" w-full">
-      <HorizontalCard mainTitle={mainTitle} showNavigation={false} mobileVariant="grid">
+      <HorizontalCard
+        mainTitle={mainTitle}
+        showNavigation={false}
+        mobileVariant="grid"
+      >
         {dataItemNews.slice(0, 4).map((item: NewsItem, index: number) => (
           <Link
             key={index}

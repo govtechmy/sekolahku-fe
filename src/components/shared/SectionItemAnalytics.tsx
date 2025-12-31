@@ -5,9 +5,9 @@ interface SectionItemAnalyticsProps {
   analytics: AnalyticsModel;
 }
 
-export default function SectionItemAnalytics(
-  { analytics }: SectionItemAnalyticsProps
-) {
+export default function SectionItemAnalytics({
+  analytics,
+}: SectionItemAnalyticsProps) {
   return (
     <>
       <div className="border border-otl-gray-200 rounded-lg overflow-hidden">
@@ -54,24 +54,23 @@ export default function SectionItemAnalytics(
             </div>
           </div>
         </div>
-        
+
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2">
           <div className="p-6 border-t border-otl-gray-200">
-            <DoughnutChart 
+            <DoughnutChart
               title="Sekolah Mengikut Peringkat"
               data={analytics?.data.jenisLabel}
             />
           </div>
           <div className="p-6 border-t border-otl-gray-200 lg:border-l">
-            <DoughnutChart 
+            <DoughnutChart
               title="Jenis Bantuan"
               data={analytics?.data.bantuan}
             />
           </div>
         </div>
       </div>
-
     </>
   );
 }

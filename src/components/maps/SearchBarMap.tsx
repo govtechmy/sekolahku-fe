@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowBackIcon,
@@ -24,7 +23,16 @@ import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
 
 export function SearchBarMap() {
-  const { initialLocationSet, viewSchool, setViewSchool, localSuggestions, setLocalSuggestions, query, setQuery, handleSearch } = useMapViewStore();
+  const {
+    initialLocationSet,
+    viewSchool,
+    setViewSchool,
+    localSuggestions,
+    setLocalSuggestions,
+    query,
+    setQuery,
+    handleSearch,
+  } = useMapViewStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
@@ -32,6 +40,7 @@ export function SearchBarMap() {
   const setCenter = useMapViewStore((s) => s.setCenter);
   const setZoom = useMapViewStore((s) => s.setZoom);
   const initialLocationUser = useMapViewStore((s) => s.initialLocationUser);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
@@ -58,6 +67,27 @@ export function SearchBarMap() {
     }
   };
 
+  useEffect(() => {
+    const handleSlashFocus = (e: KeyboardEvent) => {
+      if (e.key === "/" && !isExpanded) {
+        e.preventDefault();
+        setIsExpanded(true);
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 0);
+      } else if (
+        e.key === "/" &&
+        isExpanded &&
+        document.activeElement !== inputRef.current
+      ) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleSlashFocus);
+    return () => window.removeEventListener("keydown", handleSlashFocus);
+  }, [isExpanded]);
+
   // Cleanup timer on unmount
   useEffect(() => {
     return () => {
@@ -83,7 +113,12 @@ export function SearchBarMap() {
         console.error("School code is null");
         return;
       }
-      const detail = await getSchoolS3Json(undefined, school.negeri, school.parlimen, school.kodSekolah);
+      const detail = await getSchoolS3Json(
+        undefined,
+        school.negeri,
+        school.parlimen,
+        school.kodSekolah,
+      );
       if (detail) {
         setViewSchool(detail);
         setCenter([school.koordinatYY, school.koordinatXX]);
@@ -121,7 +156,7 @@ export function SearchBarMap() {
           <div
             className={clx(
               "flex items-center gap-2 ",
-              isExpanded ? "py-[16px] px-4" : ""
+              isExpanded ? "py-[16px] px-4" : "",
             )}
           >
             {isExpanded && (
@@ -140,10 +175,11 @@ export function SearchBarMap() {
             <SearchBar size="large" className="w-full">
               <SearchBarInputContainer
                 className={clx(
-                  isExpanded ? "border-none shadow-[none] !px-0" : "w-[326px]"
+                  isExpanded ? "border-none shadow-[none] !px-0" : "w-[326px]",
                 )}
               >
                 <SearchBarInput
+                  ref={inputRef}
                   placeholder="Carian Sekolah"
                   value={query}
                   onValueChange={handleValueChange}
@@ -196,7 +232,12 @@ export function SearchBarMap() {
                         <span className="mt-1 flex items-center text-sm text-primary-600 gap-1">
                           <MapIcon className="w-4 h-4" />
                           {(() => {
-                            const distanceInMeters = calculateDistance(initialLocationUser[0], initialLocationUser[1], school.koordinatYY, school.koordinatXX);
+                            const distanceInMeters = calculateDistance(
+                              initialLocationUser[0],
+                              initialLocationUser[1],
+                              school.koordinatYY,
+                              school.koordinatXX,
+                            );
                             if (distanceInMeters > 1000) {
                               return `${(distanceInMeters / 1000).toFixed(2)} km dari lokasi anda`;
                             }
@@ -222,10 +263,13 @@ export function SearchBarMap() {
         <div
           className={clx(
             "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
-            isExpanded ? "my-10" : "absolute top-[54px] max-h-[78vh]"
+            isExpanded ? "my-10" : "absolute top-[54px] max-h-[78vh]",
           )}
         >
-          <SchoolInfoWindow school={viewSchool} setSelected={() => setViewSchool(null)} />
+          <SchoolInfoWindow
+            school={viewSchool}
+            setSelected={() => setViewSchool(null)}
+          />
         </div>
       )}
     </div>

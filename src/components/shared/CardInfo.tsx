@@ -3,7 +3,7 @@ export type InfoRowProps = {
   value: string;
 };
 
-export  function InfoRow({ label, value }: InfoRowProps) {
+export function InfoRow({ label, value }: InfoRowProps) {
   return (
     <div className="flex items-center gap-2">
       <div className="text-txt-black-500 text-body-xs font-normal">{label}</div>
@@ -21,7 +21,9 @@ export function InfoIconRow({ icon, value }: InfoIconRowProps) {
   return (
     <div className="flex items-center gap-1.5">
       <div className="text-txt-primary">{icon}</div>
-      <span className="text-txt-black-500 text-body-xs font-medium">{value}</span>
+      <span className="text-txt-black-500 text-body-xs font-medium">
+        {value}
+      </span>
     </div>
   );
 }

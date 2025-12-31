@@ -57,7 +57,12 @@ export default function BgSchoolProfile({ className }: BgSchoolProfileProps) {
         </clipPath>
 
         <clipPath id="clip1_4_71">
-          <rect width="1920" height="520" fill="white" transform="translate(-240 -56)" />
+          <rect
+            width="1920"
+            height="520"
+            fill="white"
+            transform="translate(-240 -56)"
+          />
         </clipPath>
       </defs>
     </svg>

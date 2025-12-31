@@ -1,8 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import type { Coordinates } from "../types/maps";
-import {
-  fetchNearbySchools,
-} from "../services/school.svc";
+import { fetchNearbySchools } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
@@ -24,7 +22,7 @@ export default function SchoolMaps() {
     setInitialLocationUser,
     setSchoolMarkers,
     schoolMarkers,
-    query
+    query,
   } = useMapViewStore();
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
@@ -62,13 +60,12 @@ export default function SchoolMaps() {
       (error) => {
         if (error) setShowLocationPicker(true);
       },
-      options
+      options,
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-
     if (initialLocationSet) {
       if (zoom) {
         setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
@@ -87,11 +84,10 @@ export default function SchoolMaps() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, initialLocationSet]);
-  
 
   return (
     <div className="h-full w-full flex relative">
-      <SearchBarMap/>
+      <SearchBarMap />
       <MapContainerComponent
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}
