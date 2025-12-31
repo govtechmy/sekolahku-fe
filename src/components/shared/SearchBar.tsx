@@ -14,19 +14,19 @@ import { ChevronRightIcon } from "@govtechmy/myds-react/icon";
 import { useEffect, useRef, useState } from "react";
 
 interface SearchBarHomeProps<T> {
-  query: string;
-  setQuery: (value: string) => void;
-  handleValueChange: (value: string) => void;
+  query?: string;
+  setQuery?: (value: string) => void;
+  handleValueChange?: (value: string) => void;
   suggestions?: T[];
-  getKey: (item: T) => string;
-  getLabel: (item: T) => string;
+  getKey?: (item: T) => string;
+  getLabel?: (item: T) => string;
   onSelect?: (item: T) => void;
 }
 
 export default function SearchBarHome<T>({ query, setQuery, handleValueChange, suggestions = [], getKey, getLabel, onSelect }: SearchBarHomeProps<T>) {
   const [hasFocus, setHasFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const hasQuery = query.length > 0;
+  const hasQuery = (query?.length || 0) > 0;
 
   useEffect(() => {
     const handleSlashFocus = (e: KeyboardEvent) => {
@@ -56,7 +56,7 @@ export default function SearchBarHome<T>({ query, setQuery, handleValueChange, s
           onValueChange={handleValueChange}
           onFocus={() => setHasFocus(true)}
         />
-        {query && <SearchBarClearButton onClick={() => setQuery("")} />}
+        {query && <SearchBarClearButton onClick={() => setQuery?.("")} />}
         {(!query || query.trim().length === 0) && (
           <SearchBarHint className="">
             Tekan <Pill size="small">/</Pill> untuk cari
@@ -72,8 +72,8 @@ export default function SearchBarHome<T>({ query, setQuery, handleValueChange, s
           <SearchBarResultsList className="max-h-[400px] overflow-y-scroll">
             {suggestions.map((item) => (
               <SearchBarResultsItem
-                key={getKey(item)}
-                value={getLabel(item)}
+                key={getKey?.(item)}
+                value={getLabel?.(item)}
                 onMouseDown={(e) => e.preventDefault()}
                 onSelect={() => {
                   if (onSelect) {
@@ -85,7 +85,7 @@ export default function SearchBarHome<T>({ query, setQuery, handleValueChange, s
                 }}
               >
                 <p className="line-clamp-1 flex-1 text-left">
-                  {getLabel(item)}
+                  {getLabel?.(item)}
                 </p>
                 <ChevronRightIcon />
               </SearchBarResultsItem>
