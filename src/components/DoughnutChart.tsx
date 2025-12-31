@@ -101,6 +101,7 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
           >
             {chartData.map((_entry, index) => (
               <Cell
+                key={`cell-${index}`}
                 fill={chartColors[index]}
                 opacity={activeIndex === undefined || activeIndex === index ? 1 : 0.6}
               />
