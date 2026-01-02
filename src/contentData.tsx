@@ -56,6 +56,31 @@ export const footerSocialLinks = [
   },
 ];
 
+export const siaranAcaraDummyDocuments: any[] = [
+  {
+    name: "file1.pdf",
+    type: "application/pdf",
+    size: 5000,
+    fileurl: "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-bucket-dev/koleksi/6940f28bda85479d8fcadd5a/1765864075415-9.Teks_Ucapan.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAYYUPU5VVRZXW42B3%2F20260102%2Fap-southeast-5%2Fs3%2Faws4_request&X-Amz-Date=20260102T014005Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC01IkgwRgIhAMqZUFI0KT5LBTedGvyWbkwYR1q6O1xCSvPWbktlRVHwAiEAx%2Bti8sTmR%2F1QSTBCbEL%2FpucuukkK41IRxosqX4pz9t0qgwQI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2MDI2NzA0Mjc0OTkiDM8LwqwSQdv7W8%2FcASrXA4UAHmixQLrpfN1IoivYqvVJVeuR3epyKmoihiYXSjKGMrQd4kC44lUiyTKfXqW5vzdDeWw60G2EDnnnzOFRdOgB3LHYoHJRb%2FI17PTzVyR7rcn5lhQjSl5W0PjbW7XyoAsU8vOx09T3n8I1G7HSeWJPrimlFiu1SX25NzfQh1QmPdMiVTohubCykhqOYZuTpH4QylyeAgcHdlYlwCgbylOf3gbr6xJAaHqBBcYUDtHFdzI5OHwgCcDT0H%2F%2FPuI9%2B42nLyJzmtPkIWlqLhzICJxJWBjGi%2BQMkjzknHSlwMUj4zlON9rQugsKqC%2FoiithitbM0F25IlcEMY9lgu3Alr1iUyFa0w7N%2BneUMobKbXSXgAnKbfOQuVKZAWo0nUCYl1k09PZJ97wX4Scb0mAntnc%2BG%2FOTCb2%2F%2Bij26IaUYCDqbunLTAABYsLF%2FIx5M1lzz6ohDvJSaepDs0vtbupxDTdhh%2BZCspJ%2B3tvYlX0uhj13Zi%2BREue1uFy%2BWZvkoIx58CzaDH1pQ1IexGZW7FrHA%2BsID23xhhDRKPwNdU3nEltQ6M6pRt8Lqu3%2Fzfknjo3%2FhD2ZNXVh1AAQJlLPLDDJRTlZ4RUBpfDIhMakHvYYBgshrM9iOvrg1jDuwdzKBjqkAWMUyOcIMJ8VSQiBlC1adO6qOmf%2B2CmFTZ9pV55o3kysZOh1f0r40oQ8kCmknDfG8k7onqxAuEGT9RyVFnbzlNwQrSkslFvmcgboCv57OYIgPCs78%2Bka8YmXpU9xjyIij9hWpygdFGI5EOWXMmZVq0vW11zsrFIfEJuK3xbUOjoNmtxwFw9863sQGDHAsH1%2BfN7srF69GQFxP%2B57HnT63vJsMy7Q&X-Amz-Signature=2e0f54db7de110a87df88ce30936b60a9766d654d9e339047be6352aadb16771&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+    isExistingFile: false,
+  },
+  {
+    name: "file2.pdf",
+    type: "application/pdf",
+    size: 50000,
+    fileurl: "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-bucket-dev/koleksi/6940f28bda85479d8fcadd5a/1765864075415-9.Teks_Ucapan.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAYYUPU5VVRZXW42B3%2F20260102%2Fap-southeast-5%2Fs3%2Faws4_request&X-Amz-Date=20260102T014005Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC01IkgwRgIhAMqZUFI0KT5LBTedGvyWbkwYR1q6O1xCSvPWbktlRVHwAiEAx%2Bti8sTmR%2F1QSTBCbEL%2FpucuukkK41IRxosqX4pz9t0qgwQI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2MDI2NzA0Mjc0OTkiDM8LwqwSQdv7W8%2FcASrXA4UAHmixQLrpfN1IoivYqvVJVeuR3epyKmoihiYXSjKGMrQd4kC44lUiyTKfXqW5vzdDeWw60G2EDnnnzOFRdOgB3LHYoHJRb%2FI17PTzVyR7rcn5lhQjSl5W0PjbW7XyoAsU8vOx09T3n8I1G7HSeWJPrimlFiu1SX25NzfQh1QmPdMiVTohubCykhqOYZuTpH4QylyeAgcHdlYlwCgbylOf3gbr6xJAaHqBBcYUDtHFdzI5OHwgCcDT0H%2F%2FPuI9%2B42nLyJzmtPkIWlqLhzICJxJWBjGi%2BQMkjzknHSlwMUj4zlON9rQugsKqC%2FoiithitbM0F25IlcEMY9lgu3Alr1iUyFa0w7N%2BneUMobKbXSXgAnKbfOQuVKZAWo0nUCYl1k09PZJ97wX4Scb0mAntnc%2BG%2FOTCb2%2F%2Bij26IaUYCDqbunLTAABYsLF%2FIx5M1lzz6ohDvJSaepDs0vtbupxDTdhh%2BZCspJ%2B3tvYlX0uhj13Zi%2BREue1uFy%2BWZvkoIx58CzaDH1pQ1IexGZW7FrHA%2BsID23xhhDRKPwNdU3nEltQ6M6pRt8Lqu3%2Fzfknjo3%2FhD2ZNXVh1AAQJlLPLDDJRTlZ4RUBpfDIhMakHvYYBgshrM9iOvrg1jDuwdzKBjqkAWMUyOcIMJ8VSQiBlC1adO6qOmf%2B2CmFTZ9pV55o3kysZOh1f0r40oQ8kCmknDfG8k7onqxAuEGT9RyVFnbzlNwQrSkslFvmcgboCv57OYIgPCs78%2Bka8YmXpU9xjyIij9hWpygdFGI5EOWXMmZVq0vW11zsrFIfEJuK3xbUOjoNmtxwFw9863sQGDHAsH1%2BfN7srF69GQFxP%2B57HnT63vJsMy7Q&X-Amz-Signature=2e0f54db7de110a87df88ce30936b60a9766d654d9e339047be6352aadb16771&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+    isExistingFile: true,
+  },
+  {
+    name: "SBP-English College.png",
+    type: "image/png",
+    size: 50000,
+    lastModified: 0,
+    fileurl: "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-bucket-dev/koleksi/6942133cbbee7f09b4f5b646/1765937980719-1.Galeri_Peristiwa.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAYYUPU5VVYZT7ZWR5%2F20260102%2Fap-southeast-5%2Fs3%2Faws4_request&X-Amz-Date=20260102T010743Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC01IkYwRAIgUnvqZn3te4eclKIFhByWX2CcfBG41upzEELztvIG%2FOsCICdVpIIIoMnf4kHlkA4wGf%2FPsEdE0L%2FPrqmg5KBG9dZ3KoMECPL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjAyNjcwNDI3NDk5IgyIZsLN43VpvE9mmwUq1wMINs68cPkATWEY07IdCudwvqhvACbhnB%2BdJ2hXhx1F5UyeQozMwaqrfqcJN6HHY0gVz%2Fj8q%2Fnm5dNfL2wNcczeVYqbIgWAHG231beFLEqVSnCyKxWS8XFKoHWmRXndxrAm7OBG%2Fag%2BQ41Sg7JukNDcZGI2gcTAI6hgHYaosxMxopu%2BVu3XvEJZJwmflNdfI9N6%2BW84Q06yT6SykMYfLbXxiM3OI9zcx8uUsv0J7E6nZtNpdOe6wl0MZ3J4d76Zhv78oAoIogTIckvkoU16olIIJroP1SUqrSx9PhQIr%2Fh9lILX83pNJqEDMj%2Bu5lXFgBCWmgl8iNfkgQ2DqRp0GF2rRsiSBvLgMlbq0EmU9KPR3X61bNj8Li0sohNv3BdjLVrBGqFaazboqEk41sd0ImiQTyyYJTwSosbikO0%2FtBVMfMRMIlXrWVCutxAE0WwI4nzoxm1fJWM4cPvfuBoFeISrDj2bqFcDoXoh3Pu0Orlva1mzYafX7Ba%2BE8j1lF%2FjVrwbqZxIcwYcLAM5YEo%2FQKTG7%2BAFwjBfjDxknV0VWK8YXCX0U%2BsETMlkKZU4%2Foxm5h83gyC3QSHtxSyT2%2Bq2gCYZDJgmB4e5XZRCmFOz%2BjRS%2BKbG7kIXV7Yw87PcygY6pgHZtdak7kqED38uNGblEYlxDcKOCC0aluCaWMmnTuopkwdw38vp2jzw5yz2he2HLLepRQ15qcxCwhC1l657ljK61yGH7yYYhBxjzVWcqheXjwV7Fz%2FXur4wfdNh9p3fyfggld%2BcU22bNUEBqEQDZ8tayH%2F6CHAyqnMNg5kzCQX3mKpS5pRHIkhSKsmNdhLAJjGfj3Nivt9dSVqXOgfssyP7EmrmAjxp&X-Amz-Signature=2697d5f58096e1dc76bdac9ef17ef43a1b8b54f2ffc772c1bdcd7b537886fe42&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+    isExistingFile: true,
+  }
+];
+
 export const findNearbyUpdatedEndpoint: FindNearbyUpdatedEndpoint = {
   viewInfoLokasi: {
     koordinatXX: 37.7749,
