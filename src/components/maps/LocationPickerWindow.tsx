@@ -28,7 +28,9 @@ type ParlimenCenteroidProps = {
 };
 
 export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
-    const negeriDistrictCache = useRef<{ [state: string]: ParlimenCenteroidProps[] }>({});
+  const negeriDistrictCache = useRef<{
+    [state: string]: ParlimenCenteroidProps[];
+  }>({});
   const { setCenter, setZoom, setInitialLocationSet, setInitialLocationUser } =
     useMapViewStore();
   const [currentView, setCurrentView] = useState<"states" | "districts">(
@@ -48,7 +50,7 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
       setCurrentView("districts");
     } else {
       // Trigger loading while fetching
-      setMapParlimenCenteroid([]); 
+      setMapParlimenCenteroid([]);
       setCurrentView("districts");
       const dataParlimenCenteroid = await getMapParlimenCenteroid(stateName);
       negeriDistrictCache.current[stateName] = dataParlimenCenteroid;
