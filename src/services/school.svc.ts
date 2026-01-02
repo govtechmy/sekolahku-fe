@@ -108,8 +108,6 @@ export const fetchNearbySchools = async (
         radiusInMeter,
         zoom,
       });
-      console.log("Filtered Schools:", nearbySchools?.markerGroups || []);
-
       return nearbySchools?.markerGroups || [];
     }
   } catch (error) {
