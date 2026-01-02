@@ -4,14 +4,20 @@ const StateFlagImage = ({
 }: {
   flagFile: string;
   name: string;
-}) => (
-  <div className="rounded-sm overflow-hidden w-6 h-6 border-[1.5px] border-outline-200">
-    <img
-      src={`/images/negeri/${flagFile}`}
-      alt={`Flag of ${name}`}
-      className="h-full w-full object-cover"
-    />
-  </div>
-);
+}) => {
+  // If the state name contains "wilayah" (case-insensitive), use the Wilayah flag file
+  const isWilayah = typeof name === "string" && name.includes("Wilayah");
+  const fileToUse = isWilayah ? "Flag_of_the_Wilayah.svg" : flagFile;
+
+  return (
+    <div className="rounded-sm overflow-hidden w-7 h-7 border-[1.5px] border-outline-200">
+      <img
+        src={`/images/negeri/${fileToUse}`}
+        alt={`Flag of ${name}`}
+        className="h-full w-full object-cover"
+      />
+    </div>
+  );
+};
 
 export default StateFlagImage;
