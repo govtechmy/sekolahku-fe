@@ -183,7 +183,7 @@ export function SearchBarMap() {
                   placeholder="Carian Sekolah"
                   value={query}
                   onValueChange={handleValueChange}
-                  readOnly={!isExpanded}
+                  // readOnly={!isExpanded}
                   className={clx(isExpanded ? "pl-0" : "")}
                 />
                 {(!query || query.trim().length === 0) && (
