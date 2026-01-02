@@ -10,7 +10,7 @@ import {
   CheckCircleFillIcon,
   ChevronRightIcon,
 } from "@govtechmy/myds-react/icon";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useMapViewStore } from "../../store/mapView";
 import { NEGERI_LIST } from "../../contentData";
 import StateFlagImage from "../../icons/StateFlagIcon";
@@ -28,6 +28,7 @@ type ParlimenCenteroidProps = {
 };
 
 export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
+    const negeriDistrictCache = useRef<{ [state: string]: ParlimenCenteroidProps[] }>({});
   const { setCenter, setZoom, setInitialLocationSet, setInitialLocationUser } =
     useMapViewStore();
   const [currentView, setCurrentView] = useState<"states" | "districts">(
@@ -39,9 +40,20 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
     ParlimenCenteroidProps[]
   >([]);
 
-  const handleStateClick = (stateName: string) => {
+  // Cache for memoizing negeri district data
+  const handleStateClick = async (stateName: string) => {
     setSelectedState(stateName);
-    setCurrentView("districts");
+    if (negeriDistrictCache.current[stateName]) {
+      setMapParlimenCenteroid(negeriDistrictCache.current[stateName]);
+      setCurrentView("districts");
+    } else {
+      // Trigger loading while fetching
+      setMapParlimenCenteroid([]); 
+      setCurrentView("districts");
+      const dataParlimenCenteroid = await getMapParlimenCenteroid(stateName);
+      negeriDistrictCache.current[stateName] = dataParlimenCenteroid;
+      setMapParlimenCenteroid(dataParlimenCenteroid);
+    }
   };
 
   const handleDistrictClick = (districtName: string) => {
@@ -132,25 +144,17 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
                       role="button"
                       aria-label={`Select ${negeri}`}
                     >
-                      <div
-                        onClick={async () => {
-                          const dataParlimenCenteroid =
-                            await getMapParlimenCenteroid(negeri);
-                          setMapParlimenCenteroid(dataParlimenCenteroid);
-                        }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <StateFlagImage
-                              flagFile={`Flag_of_${toTitleCase(negeri)}.svg`}
-                              name={toTitleCase(negeri)}
-                            />
-                            <span className="font-medium text-body-md text-txt-black-700">
-                              {toTitleCase(negeri)}
-                            </span>
-                          </div>
-                          <ChevronRightIcon className="h-5 w-5 text-txt-black-500" />
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <StateFlagImage
+                            flagFile={`Flag_of_${toTitleCase(negeri)}.svg`}
+                            name={toTitleCase(negeri)}
+                          />
+                          <span className="font-medium text-body-md text-txt-black-700">
+                            {toTitleCase(negeri)}
+                          </span>
                         </div>
+                        <ChevronRightIcon className="h-5 w-5 text-txt-black-500" />
                       </div>
                     </div>
                   ))}
