@@ -24,7 +24,12 @@ export type SearchBarMapProps = {
   parlimen?: string;
 };
 
-export type MarkerType = "INDIVIDUAL" | "GROUP" | "NEGERI" | "PARLIMEN";
+export type MarkerType =
+  | "INDIVIDUAL"
+  | "GROUP"
+  | "NEGERI"
+  | "PARLIMEN"
+  | "WEST_EAST_MALAYSIA";
 
 export type SchoolMarkerInfo = {
   markerType: MarkerType;

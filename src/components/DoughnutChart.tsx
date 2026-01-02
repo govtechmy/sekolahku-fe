@@ -9,25 +9,25 @@ interface DoughnutChartProps {
 }
 
 const defaultColors = [
-  "#172554",
-  "#1E3A8A",
-  "#1E40AF",
-  "#1D4ED8",
-  "#2563EB",
-  "#3A75F6",
-  "#6394FF",
-  "#96B7FF",
-  "#C2D5FF",
-  "#DBEAFE",
-  "#99cdf0",
-  "#b3d9f4",
-  "#cce5f8",
-  "#e6f2fc",
-  "#f0f7fd",
-  "#f5faff",
-  "#f9fcff",
-  "#fcfeff",
-  "#feffff",
+  "#1F77B4",
+  "#FF7F0E",
+  "#2CA02C",
+  "#D62728",
+  "#9467BD",
+  "#8C564B",
+  "#E377C2",
+  "#7F7F7F",
+  "#BCBD22",
+  "#17BECF",
+  "#AEC7E8",
+  "#FFBB78",
+  "#98DF8A",
+  "#FF9896",
+  "#C5B0D5",
+  "#C49C94",
+  "#F7B6D2",
+  "#C7C7C7",
+  "#DBDB8D",
 ];
 
 export default function DoughnutChart({
@@ -64,9 +64,6 @@ export default function DoughnutChart({
         <div className="bg-white p-3 border border-otl-gray-200 rounded shadow-lg">
           <p className="font-semibold text-txt-black-900">{payload[0].name}</p>
           <p className="text-txt-black-700">
-            Total: {payload[0].value.toLocaleString()}
-          </p>
-          <p className="text-txt-black-700">
             Peratus: {payload[0].payload.percentage}%
           </p>
         </div>
@@ -76,16 +73,18 @@ export default function DoughnutChart({
   };
   const renderLegend = () => {
     return (
-      <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-4 text-sm">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-6 mt-4 text-sm">
         {data.map((item, index) => (
-          <div key={index} className="flex items-center gap-2">
-            <div
-              className="w-2 h-2 rounded-full flex-shrink-0"
-              style={{ backgroundColor: chartColors[index] }}
-            />
-            <span className="text-txt-black-700 truncate text-xs">
-              {item.jenis}: {item.total.toLocaleString()} ({item.peratus}%)
-            </span>
+          <div key={index} className="flex items-center justify-between gap-2">
+            <div className=" flex flex-row items-center  gap-4">
+              <div
+                className="w-6 h-6 rounded-full flex-shrink-0"
+                style={{ backgroundColor: chartColors[index] }}
+              />
+              {item.jenis}
+            </div>
+
+            <div>{item.peratus}%</div>
           </div>
         ))}
       </div>
@@ -94,18 +93,15 @@ export default function DoughnutChart({
 
   return (
     <div className="w-full h-full flex flex-col">
-      <h3 className="text-lg font-semibold text-txt-primary mb-4 text-center">
-        {title}
-      </h3>
-
-      <ResponsiveContainer width="100%" height={300}>
+      <h3 className="text-lg font-semibold mb-4 text-center">{title}</h3>
+      <ResponsiveContainer width="100%" height={180}>
         <PieChart>
           <Pie
             data={chartData}
             cx="50%"
             cy="50%"
-            innerRadius="60%"
-            outerRadius="80%"
+            innerRadius="50%"
+            outerRadius="100%"
             paddingAngle={0}
             dataKey="value"
             onMouseEnter={onPieEnter}

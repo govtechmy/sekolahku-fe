@@ -1,6 +1,6 @@
 import type { AnalyticsModel } from "../../models/response";
 import {
-  GovtOfficeIcon,
+  PutrajayaIcon,
   BookIcon,
   UserGroupIcon,
 } from "@govtechmy/myds-react/icon";
@@ -17,11 +17,11 @@ export default function SectionItemAnalytics({
       <div className="border border-otl-gray-200 rounded-lg overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-3">
           <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0">
-            <div className="size-16 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
-              <GovtOfficeIcon />
+            <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
+              <PutrajayaIcon className="w-8 h-8" />
             </div>
             <div>
-              <div className="text-txt-primary font-body text-body-xl font-semibold">
+              <div className="text-txt-primary font-body text-3xl font-semibold">
                 {analytics?.jumlahSekolah.toLocaleString()}
               </div>
               <div className="text-txt-black-700 font-body text-body-md font-semibold">
@@ -31,11 +31,11 @@ export default function SectionItemAnalytics({
           </div>
 
           <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0">
-            <div className="size-16 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
-              <BookIcon />
+            <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
+              <BookIcon className="w-8 h-8" />
             </div>
             <div>
-              <div className="text-txt-primary font-body text-body-xl font-semibold">
+              <div className="text-txt-primary font-body text-3xl font-semibold">
                 {analytics?.jumlahGuru.toLocaleString()}
               </div>
               <div className="text-txt-black-700 font-body text-body-md font-semibold">
@@ -45,11 +45,11 @@ export default function SectionItemAnalytics({
           </div>
 
           <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b last:border-b-0 lg:border-b-0 lg:border-r-0">
-            <div className="size-16 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
-              <UserGroupIcon />
+            <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
+              <UserGroupIcon className="w-8 h-8" />
             </div>
             <div>
-              <div className="text-txt-primary font-body text-body-xl font-semibold">
+              <div className="text-txt-primary font-body text-3xl font-semibold">
                 {analytics?.jumlahPelajar.toLocaleString()}
               </div>
               <div className="text-txt-black-700 font-body text-body-md font-semibold">
