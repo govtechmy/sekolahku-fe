@@ -22,6 +22,9 @@ export function SchoolMapMarker({ school, onClick }: SchoolMapMarkerProps) {
     case "NEGERI":
       icon = negeriMarkerIcon(school.total);
       break;
+    case "WEST_EAST_MALAYSIA":
+      icon = negeriMarkerIcon(school.total);
+      break;
     default:
       icon = sekolahMarkerIcon;
   }

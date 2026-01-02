@@ -144,6 +144,10 @@ export function MapContainerComponent({
             total: coords.total,
           }}
           onClick={async () => {
+            if (coords.markerType === "WEST_EAST_MALAYSIA") {
+              setCenter([coords.koordinatXX, coords.koordinatYY]);
+              setZoom(8);
+            }
             if (coords.markerType === "NEGERI") {
               setCenter([coords.koordinatXX, coords.koordinatYY]);
               setZoom(12);
