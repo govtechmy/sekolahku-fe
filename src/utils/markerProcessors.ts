@@ -91,7 +91,10 @@ const processNegeriMarker = (marker: MarkerGroup, map: MarkerMap): number => {
     : 0;
 };
 
-const processWestEastMalaysiaMarker = (marker: MarkerGroup, map: MarkerMap): number => {
+const processWestEastMalaysiaMarker = (
+  marker: MarkerGroup,
+  map: MarkerMap,
+): number => {
   if (marker.markerType !== "WEST_EAST_MALAYSIA" || !marker.region) return 0;
   return addMarkerIfNew(map, marker.region, {
     koordinatXX: marker.infoLokasi.koordinatYY,

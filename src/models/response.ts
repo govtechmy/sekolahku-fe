@@ -95,7 +95,12 @@ export interface MarkerItem {
 }
 
 export interface MarkerGroup extends MarkerItem {
-  markerType: "GROUP" | "INDIVIDUAL" | "NEGERI" | "PARLIMEN" | "WEST_EAST_MALAYSIA";
+  markerType:
+    | "GROUP"
+    | "INDIVIDUAL"
+    | "NEGERI"
+    | "PARLIMEN"
+    | "WEST_EAST_MALAYSIA";
   negeri?: string;
   parlimen?: string;
   total?: number;

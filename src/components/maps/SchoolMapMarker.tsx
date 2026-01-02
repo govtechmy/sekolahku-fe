@@ -24,7 +24,7 @@ export function SchoolMapMarker({ school, onClick }: SchoolMapMarkerProps) {
       break;
     case "WEST_EAST_MALAYSIA":
       icon = negeriMarkerIcon(school.total);
-    break;
+      break;
     default:
       icon = sekolahMarkerIcon;
   }
