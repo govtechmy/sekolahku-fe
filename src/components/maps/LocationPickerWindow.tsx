@@ -28,6 +28,7 @@ type ParlimenCenteroidProps = {
 };
 
 export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
+  // cache using useRef for negeri based data
   const negeriDistrictCache = useRef<{
     [state: string]: ParlimenCenteroidProps[];
   }>({});
@@ -42,7 +43,7 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
     ParlimenCenteroidProps[]
   >([]);
 
-  // Cache for memoizing negeri district data
+  // setting cache here
   const handleStateClick = async (stateName: string) => {
     setSelectedState(stateName);
     if (negeriDistrictCache.current[stateName]) {
