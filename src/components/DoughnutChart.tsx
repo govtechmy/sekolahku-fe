@@ -8,30 +8,33 @@ interface DoughnutChartProps {
   colors?: string[];
 }
 
-const defaultColors= [
-  '#1F77B4',
-  '#FF7F0E', 
-  '#2CA02C',
-  '#D62728', 
-  '#9467BD', 
-  '#8C564B',
-  '#E377C2',
-  '#7F7F7F', 
-  '#BCBD22', 
-  '#17BECF',
-  '#AEC7E8',
-  '#FFBB78', 
-  '#98DF8A',
-  '#FF9896', 
-  '#C5B0D5', 
-  '#C49C94', 
-  '#F7B6D2', 
-  '#C7C7C7', 
-  '#DBDB8D', 
+const defaultColors = [
+  "#1F77B4",
+  "#FF7F0E",
+  "#2CA02C",
+  "#D62728",
+  "#9467BD",
+  "#8C564B",
+  "#E377C2",
+  "#7F7F7F",
+  "#BCBD22",
+  "#17BECF",
+  "#AEC7E8",
+  "#FFBB78",
+  "#98DF8A",
+  "#FF9896",
+  "#C5B0D5",
+  "#C49C94",
+  "#F7B6D2",
+  "#C7C7C7",
+  "#DBDB8D",
 ];
 
-
-export default function DoughnutChart({ title, data, colors }: DoughnutChartProps) {
+export default function DoughnutChart({
+  title,
+  data,
+  colors,
+}: DoughnutChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
   const chartColors = colors || defaultColors.slice(0, data.length);
   const chartData = data.map((item) => ({
@@ -73,17 +76,15 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
       <div className="grid grid-cols-2 gap-x-6 gap-y-6 mt-4 text-sm">
         {data.map((item, index) => (
           <div key={index} className="flex items-center justify-between gap-2">
-            <div className=' flex flex-row items-center  gap-4'>
-            <div
-              className="w-6 h-6 rounded-full flex-shrink-0"
-              style={{ backgroundColor: chartColors[index] }}
-            />
-             {item.jenis}
+            <div className=" flex flex-row items-center  gap-4">
+              <div
+                className="w-6 h-6 rounded-full flex-shrink-0"
+                style={{ backgroundColor: chartColors[index] }}
+              />
+              {item.jenis}
             </div>
-            
-            <div>
-             {item.peratus}%
-            </div>
+
+            <div>{item.peratus}%</div>
           </div>
         ))}
       </div>
@@ -92,10 +93,7 @@ export default function DoughnutChart({ title, data, colors }: DoughnutChartProp
 
   return (
     <div className="w-full h-full flex flex-col">
-      <h3 className="text-lg font-semibold mb-4 text-center">
-        {title}
-      </h3>
-      
+      <h3 className="text-lg font-semibold mb-4 text-center">{title}</h3>
       <ResponsiveContainer width="100%" height={180}>
         <PieChart>
           <Pie
