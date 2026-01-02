@@ -6,7 +6,7 @@ const StateFlagImage = ({
   name: string;
 }) => {
   // If the state name contains "wilayah" (case-insensitive), use the Wilayah flag file
-  const isWilayah = typeof name === "string" && name.includes("Wilayah");
+  const isWilayah = name.includes("Wilayah");
   const fileToUse = isWilayah ? "Flag_of_the_Wilayah.svg" : flagFile;
 
   return (
