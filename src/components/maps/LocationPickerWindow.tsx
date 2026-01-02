@@ -23,6 +23,10 @@ interface LocationPickerWindowProps {
   onClose: () => void;
 }
 
+type ParlimenCenteroidProps = {
+  [district: string]: [number, number];
+};
+
 export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
   const { setCenter, setZoom, setInitialLocationSet, setInitialLocationUser } =
     useMapViewStore();
@@ -31,7 +35,9 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
   );
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
-  const [mapParlimenCenteroid, setMapParlimenCenteroid] = useState<any[]>([]);
+  const [mapParlimenCenteroid, setMapParlimenCenteroid] = useState<
+    ParlimenCenteroidProps[]
+  >([]);
 
   const handleStateClick = (stateName: string) => {
     setSelectedState(stateName);
@@ -104,8 +110,12 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
         <div className="flex-1 overflow-hidden">
           <div>
             <div className="w-full font-body pl-6 pr-1 pb-0">
-              <div className={clx("pt-6 overflow-y-auto max-h-[calc(80vh-200px)] space-y-3 pr-5",currentView === "districts" && "pt-0 pb-8")}
-     >
+              <div
+                className={clx(
+                  "pt-6 overflow-y-auto max-h-[calc(80vh-200px)] space-y-3 pr-5",
+                  currentView === "districts" && "pt-0 pb-8",
+                )}
+              >
                 {currentView === "states" &&
                   NEGERI_LIST.map((negeri, index) => (
                     <div
