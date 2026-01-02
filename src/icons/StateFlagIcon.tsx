@@ -10,7 +10,7 @@ const StateFlagImage = ({
   const fileToUse = isWilayah ? "Flag_of_the_Wilayah.svg" : flagFile;
 
   return (
-    <div className="rounded-sm overflow-hidden w-7 h-7 border-[1.5px] border-outline-200">
+    <div className="rounded-sm overflow-hidden w-7 h-7">
       <img
         src={`/images/negeri/${fileToUse}`}
         alt={`Flag of ${name}`}
