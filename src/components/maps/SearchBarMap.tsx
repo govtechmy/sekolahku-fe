@@ -19,10 +19,10 @@ import { Button } from "@govtechmy/myds-react/button";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import { useMapViewStore } from "../../store/mapView";
-import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
+import { NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
 
-export function SearchBarMap() {
+export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const {
     initialLocationSet,
     viewSchool,
@@ -44,7 +44,7 @@ export function SearchBarMap() {
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
-  const jenisList = JENIS_LIST;
+  const jenisList = schoolTypes;
 
   // Handler for MyDS SearchBar onValueChange
   const handleValueChange = (value: string) => {

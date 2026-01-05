@@ -186,3 +186,15 @@ export const getSchoolId = async (
     throw error;
   }
 };
+
+export const getSchoolTypes = async (): Promise<string[]> => {
+  try {
+    const response = await authAxios.get<APIResponse<string[]>>(
+      `${BASE_URL}${SCHOOL_ENDPOINT}/filter/school-type`,
+    );
+    return response.data.data || [];
+  } catch (error) {
+    console.error("Error fetching school types:", error);
+    throw error;
+  }
+};
