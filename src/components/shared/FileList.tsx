@@ -13,19 +13,21 @@ export default function FileList({ files, className }: FileListProps) {
     return parts.length > 1 ? parts.pop()?.toLowerCase() : "";
   };
 
-  const openFile = (e: React.MouseEvent, url?: string, filename?: string) => {
-    e.stopPropagation();
-    if (!url) return;
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename || "";
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const downloadFile = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
   };
 
   const renderFileIcon = (
@@ -79,7 +81,7 @@ export default function FileList({ files, className }: FileListProps) {
           <div
             key={index}
             className="border border-otl-gray-200 w-full sm:w-[217px] rounded-lg cursor-pointer flex items-center justify-between p-2 gap-2"
-            onClick={(e) => openFile(e, file.fileurl, file.name)}
+            onClick={() => downloadFile(file.fileurl, file.name)}
           >
             <div className="flex items-center gap-2 overflow-hidden">
               {getIcon(file)}

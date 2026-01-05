@@ -63,14 +63,14 @@ export const siaranAcaraDummyDocuments: Document[] = [
     type: "application/pdf",
     size: 5000,
     fileurl:
-      "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-public-dev/email-images/hero.pdf",
+      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.pdf",
   },
   {
     name: "file2.xlsx",
     type: "application/vnd.ms-excel",
     size: 50000,
     fileurl:
-      "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-public-dev/email-images/hero.xlsx",
+      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.xlsx",
   },
   {
     name: "file3.jpg",
@@ -83,7 +83,7 @@ export const siaranAcaraDummyDocuments: Document[] = [
     type: "image/png",
     size: 50000,
     fileurl:
-      "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-public-dev/email-images/hero.png",
+      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.png",
   },
 ];
 
