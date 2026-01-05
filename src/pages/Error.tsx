@@ -4,5 +4,6 @@ export default function ErrorPage() {
   return (
     <div>
       <ErrorPageHero />
-    </div>)
+    </div>
+  );
 }
