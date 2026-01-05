@@ -13,6 +13,7 @@ import type { ItemSekolahModel } from "../../models/response";
 import type { SearchBarMapProps } from "../../types/maps";
 import { useNavigate } from "react-router-dom";
 import { formatSchoolAddress } from "../../utils/schoolHelpers";
+import underScoreRemover from "../../utils/underscoreRemover";
 
 type SchoolInfoWindowProps = {
   school: ItemSekolahModel;
@@ -76,7 +77,7 @@ export function SchoolInfoWindow({
         <div className="flex gap-1 flex-col">
           <InfoRow
             label="Lokasi"
-            value={school?.data?.infoPentadbiran?.negeri || "Tiada Maklumat"}
+            value={underScoreRemover(school?.data?.infoPentadbiran?.negeri) || "Tiada Maklumat"}
           />
           <InfoRow label="Status SKM" value={"Tiada Maklumat"} />
           <InfoRow label="Kategori Pedalaman" value={"Tiada Maklumat"} />
