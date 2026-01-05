@@ -9,15 +9,11 @@ interface FileListProps {
 
 export default function FileList({ files, className }: FileListProps) {
   const getFileExtension = (url: string) => {
-    const parts = url.split('.');
-    return parts.length > 1 ? parts.pop()?.toLowerCase() : '';
+    const parts = url.split(".");
+    return parts.length > 1 ? parts.pop()?.toLowerCase() : "";
   };
 
-  const openFile = (
-    e: React.MouseEvent,
-    url?: string,
-    filename?: string
-  ) => {
+  const openFile = (e: React.MouseEvent, url?: string, filename?: string) => {
     e.stopPropagation();
     if (!url) return;
 
@@ -32,7 +28,6 @@ export default function FileList({ files, className }: FileListProps) {
     document.body.removeChild(link);
   };
 
-
   const renderFileIcon = (
     file: Document,
     Icon: React.ElementType,
@@ -45,22 +40,22 @@ export default function FileList({ files, className }: FileListProps) {
   );
 
   const getIcon = (file: Document) => {
-    const extension = getFileExtension(file.fileurl || '');
+    const extension = getFileExtension(file.fileurl || "");
     switch (extension) {
-      case 'jpg':
-      case 'jpeg':
-      case 'png':
-      case 'gif':
-      case 'webp':
-      case 'svg':
+      case "jpg":
+      case "jpeg":
+      case "png":
+      case "gif":
+      case "webp":
+      case "svg":
         return renderFileIcon(file, "img", "size-[38px]");
-      case 'pdf':
+      case "pdf":
         return renderFileIcon(file, PdfIcon, "size-[30px]");
-      case 'xls':
-      case 'xlsx':
+      case "xls":
+      case "xlsx":
         return renderFileIcon(file, ExcelIcon, "size-[30px]");
-      case 'doc':
-      case 'docx':
+      case "doc":
+      case "docx":
         return renderFileIcon(file, WordIcon, "size-[30px]");
       default:
         return null;
