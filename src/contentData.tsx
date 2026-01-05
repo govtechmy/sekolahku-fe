@@ -76,8 +76,7 @@ export const siaranAcaraDummyDocuments: Document[] = [
     name: "file3.jpg",
     type: "image/jpeg",
     size: 5000,
-    fileurl:
-      "",
+    fileurl: "",
   },
   {
     name: "SBP-English College.png",

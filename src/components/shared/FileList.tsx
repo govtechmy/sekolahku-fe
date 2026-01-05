@@ -58,7 +58,11 @@ export default function FileList({ files, className }: FileListProps) {
       case "docx":
         return renderFileIcon(file, WordIcon, "size-[30px]");
       default:
-        return <div className="shrink-0 size-[30px] rounded-[4px] bg-otl-gray-200 flex items-center justify-center"><span className="text-xs text-otl-gray-500">IMG</span></div>;
+        return (
+          <div className="shrink-0 size-[30px] rounded-[4px] bg-otl-gray-200 flex items-center justify-center">
+            <span className="text-xs text-otl-gray-500">IMG</span>
+          </div>
+        );
     }
   };
 
