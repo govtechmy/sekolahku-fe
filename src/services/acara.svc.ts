@@ -1,7 +1,7 @@
 import { authAxios } from "./http";
 
 //pageSize hardcoded until required to change
-export const getAllAcara = async (pageNumber: number) => {
+export const getAllAcara = async (pageNumber: number = 1) => {
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   try {
     const response = await authAxios.get(
