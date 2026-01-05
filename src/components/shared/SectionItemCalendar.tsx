@@ -1,22 +1,18 @@
 import { Tag } from "@govtechmy/myds-react/tag";
 import HorizontalCard from "./HorizontalCard";
+import type { AcaraItem } from "../../types/acara";
+import { formatEventDateMonth, formatEventDay } from "../../utils/date";
 
-type CalendarItem = {
-  day: string;
-  date: string;
-  title: string;
-  imageSrc: string;
-  imageAlt: string;
-};
 
 type SectionItemCalendarProps = {
-  dataItemCalendar: CalendarItem[];
+  dataItemCalendar: AcaraItem[];
   mainTitle: string;
 };
 export default function SectionItemCalendar({
   dataItemCalendar,
   mainTitle,
 }: SectionItemCalendarProps) {
+  console.log('testing 123', dataItemCalendar)
   return (
     <div className="w-full">
       <HorizontalCard mainTitle={mainTitle}>
@@ -27,8 +23,8 @@ export default function SectionItemCalendar({
           >
             {/* Background image */}
             <img
-              src={item.imageSrc}
-              alt={item.imageAlt}
+              src={item.imageHero.url}
+              alt={item.imageHero.alt}
               className="absolute inset-0 w-full h-full object-cover rounded-[6px] z-0 transition-transform duration-300 group-hover:scale-110"
             />
             {/* Background Layer (only half height) with hover darker gradient */}
@@ -37,9 +33,9 @@ export default function SectionItemCalendar({
             {/* Foreground content */}
             <div className="relative z-10 flex flex-col justify-end h-full text-white px-3 pb-4 rounded-[6px] ">
               <Tag variant="primary" className="w-fit">
-                <div>{item.day}</div>
-                <div> | </div>
-                <div>{item.date}</div>
+                    <div>{formatEventDay(item.articleDate)}</div>
+                    <div> | </div>
+                    <div>{formatEventDateMonth(item.articleDate)}</div>
               </Tag>
               <div className="text-txt-white text-body-lg font-semibold">
                 {item.title}
