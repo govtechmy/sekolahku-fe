@@ -30,9 +30,11 @@ export default function SiaranId() {
           <p className="text-gray-600 mb-6">
             Maaf, siaran yang anda cari tak wujud.
           </p>
-          <Button onClick={() => navigate(`/${lang}/siaran`)}>
-            Kembali ke Siaran
-          </Button>
+          <div className="flex justify-center">
+            <Button onClick={() => navigate(`/${lang}/siaran`)}>
+              Kembali ke Siaran
+            </Button>
+          </div>
         </div>
       </div>
     );
