@@ -16,7 +16,7 @@ import {
   siaranSocialLinks,
 } from "../../contentData";
 import DotIcon from "../../icons/DotIcon";
-import type { SiaranAcaraDocument } from "../../types/files";
+import type { Document } from "../../types/files";
 import FileList from "../../components/shared/FileList";
 
 export default function AcaraId() {
@@ -25,7 +25,7 @@ export default function AcaraId() {
 
   // Find the news item by ID
   const calendarItem = dataItemCalendar.find((item) => item.id);
-  const filesItem: SiaranAcaraDocument[] = siaranAcaraDummyDocuments;
+  const filesItem: Document[] = siaranAcaraDummyDocuments;
 
   // If item not found, show error message
   if (!calendarItem) {

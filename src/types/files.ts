@@ -1,9 +1,6 @@
-export interface SiaranAcaraDocument {
+export interface Document {
   name: string;
   type: string;
   size: number;
   fileurl: string;
-  isExistingFile: boolean;
-  s3Url?: string;
-  thumbnailUrl?: string;
 }

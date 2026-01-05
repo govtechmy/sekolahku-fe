@@ -14,7 +14,7 @@ import SocialLinks from "../../components/shared/SocialLinks";
 import FileList from "../../components/shared/FileList";
 import { siaranSocialLinks } from "../../contentData";
 import DotIcon from "../../icons/DotIcon";
-import type { SiaranAcaraDocument } from "../../types/files";
+import type { Document } from "../../types/files";
 
 export default function SiaranId() {
   const { id } = useParams<{ id: string }>();
@@ -23,7 +23,7 @@ export default function SiaranId() {
 
   // Find the news item by ID
   const newsItem = dataItemNews.find((item) => item.id === id);
-  const filesItem: SiaranAcaraDocument[] = siaranAcaraDummyDocuments;
+  const filesItem: Document[] = siaranAcaraDummyDocuments;
 
   // If item not found, show error message
   if (!newsItem) {

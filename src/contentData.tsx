@@ -9,7 +9,7 @@ import {
   PinIcon,
 } from "@govtechmy/myds-react/icon";
 import type { FindNearbyUpdatedEndpoint } from "./types/maps";
-import type { SiaranAcaraDocument } from "./types/files";
+import type { Document } from "./types/files";
 
 export const siaranSocialLinks = [
   {
@@ -57,30 +57,34 @@ export const footerSocialLinks = [
   },
 ];
 
-export const siaranAcaraDummyDocuments: SiaranAcaraDocument[] = [
+export const siaranAcaraDummyDocuments: Document[] = [
   {
     name: "file1.pdf",
     type: "application/pdf",
     size: 5000,
     fileurl:
       "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-bucket-dev/koleksi/6940f28bda85479d8fcadd5a/1765864075415-9.Teks_Ucapan.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAYYUPU5VVUGJABRBU%2F20260105%2Fap-southeast-5%2Fs3%2Faws4_request&X-Amz-Date=20260105T022517Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEO3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC01IkgwRgIhAKu3AlI5ZLK9MsTf%2FGnOqfF87A2i4AhKeB2baLc66ZgCAiEAoJ3MHqQPlBZ1qR2NrlUsSwWOk%2FeQHtikFHN7xmRfGn4q%2BgMIOxAAGgw2MDI2NzA0Mjc0OTkiDFSQT0cuLuIadMliPSrXAw6oKv8NklvvNILQyG3uoNj%2BNKxmFBTpiyIE5Z07wRC%2FYo2Ux8LkqsWseunsBQY6w%2BnY1%2BeN8tUSUZr5KYTl5hEElGfpFbsG4sMinHvcuAOBn9Nh53Z10DyFY%2FwkQeGdww7lfU6UM%2Fbf9Pnxit9kasjPbxH%2FGKGIwTK%2Bv42GV9wpKWxJukhMSy7HABHx1PhrETxH1Epm%2BwdA3AzdNHrkyuHzlqIXy6P7rH%2BIZ1Le5VajbAszRSyASLw80ejBVnK65P670vmzWUEH3WBEzMFI1RjHFj4VFShEHAuHKGQxJEUoMEuTzVJrL%2FyVYgrGs3E%2BH9v8arzEEXaIPKhoN27cqIeARwlTpGbk%2FXQHCZjex8I5IpRJCzSSX2iV6qw2CLdxMKmTa%2FHFClzQ7BkovcxyV0493erwugMNkwvEcsOTt%2B5BAC1FZPBhuBz3P6Oz2VHoC32NSwbXqjo15q7kJE1E2nTdZp6XdYEaNO0FvhNAIfZEDjbYE%2BnvmRtxIVdC5YI5xQ3b0IXV2y3qZbKMv0ud8YNyN0CyUCKmFPpGOHeHKSjfwaKYUA4xwBoSgdj1RFPc4tOF%2Fv3f58c%2FiJrFZ8Oz%2FVC4UQ%2Fava1%2BHlzE6rcKjIFPhmxnoc2RTDDuwOzKBjqkAYIb4%2FL5DVU8pLBfZvHcD5JMW6d3Gyh05JMwtRbQYqjpcMqdOMzUybrH%2FKtnKGyzSTYsiqZJXsbXHpcpEqA2myoSNvLavvCUJvqz3JXpe4FdcaF7qXIGQ1weWNXu1LUP1HFVbNZXC0BvuouArN7ZCFCjpo%2F31kwiQ6FvB7hKCpOZxcmcZE1yimPc7kJ5oNLH34iwO8gBld3Vuy7G%2BUH34arkzATC&X-Amz-Signature=4538cd57cafb5911436ac8f58e957ea1476ad7be8c1a8703d5dc4a5002dae363&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
-    isExistingFile: false,
   },
   {
-    name: "file2.pdf",
-    type: "application/pdf",
+    name: "file2.xlsx",
+    type: "application/vnd.ms-excel",
     size: 50000,
     fileurl:
       "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-bucket-dev/koleksi/6940f28bda85479d8fcadd5a/1765864075415-9.Teks_Ucapan.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAYYUPU5VVUGJABRBU%2F20260105%2Fap-southeast-5%2Fs3%2Faws4_request&X-Amz-Date=20260105T022517Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEO3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC01IkgwRgIhAKu3AlI5ZLK9MsTf%2FGnOqfF87A2i4AhKeB2baLc66ZgCAiEAoJ3MHqQPlBZ1qR2NrlUsSwWOk%2FeQHtikFHN7xmRfGn4q%2BgMIOxAAGgw2MDI2NzA0Mjc0OTkiDFSQT0cuLuIadMliPSrXAw6oKv8NklvvNILQyG3uoNj%2BNKxmFBTpiyIE5Z07wRC%2FYo2Ux8LkqsWseunsBQY6w%2BnY1%2BeN8tUSUZr5KYTl5hEElGfpFbsG4sMinHvcuAOBn9Nh53Z10DyFY%2FwkQeGdww7lfU6UM%2Fbf9Pnxit9kasjPbxH%2FGKGIwTK%2Bv42GV9wpKWxJukhMSy7HABHx1PhrETxH1Epm%2BwdA3AzdNHrkyuHzlqIXy6P7rH%2BIZ1Le5VajbAszRSyASLw80ejBVnK65P670vmzWUEH3WBEzMFI1RjHFj4VFShEHAuHKGQxJEUoMEuTzVJrL%2FyVYgrGs3E%2BH9v8arzEEXaIPKhoN27cqIeARwlTpGbk%2FXQHCZjex8I5IpRJCzSSX2iV6qw2CLdxMKmTa%2FHFClzQ7BkovcxyV0493erwugMNkwvEcsOTt%2B5BAC1FZPBhuBz3P6Oz2VHoC32NSwbXqjo15q7kJE1E2nTdZp6XdYEaNO0FvhNAIfZEDjbYE%2BnvmRtxIVdC5YI5xQ3b0IXV2y3qZbKMv0ud8YNyN0CyUCKmFPpGOHeHKSjfwaKYUA4xwBoSgdj1RFPc4tOF%2Fv3f58c%2FiJrFZ8Oz%2FVC4UQ%2Fava1%2BHlzE6rcKjIFPhmxnoc2RTDDuwOzKBjqkAYIb4%2FL5DVU8pLBfZvHcD5JMW6d3Gyh05JMwtRbQYqjpcMqdOMzUybrH%2FKtnKGyzSTYsiqZJXsbXHpcpEqA2myoSNvLavvCUJvqz3JXpe4FdcaF7qXIGQ1weWNXu1LUP1HFVbNZXC0BvuouArN7ZCFCjpo%2F31kwiQ6FvB7hKCpOZxcmcZE1yimPc7kJ5oNLH34iwO8gBld3Vuy7G%2BUH34arkzATC&X-Amz-Signature=4538cd57cafb5911436ac8f58e957ea1476ad7be8c1a8703d5dc4a5002dae363&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
-    isExistingFile: true,
+  },
+  {
+    name: "file3.word",
+    type: "application/msword",
+    size: 5000,
+    fileurl:
+      "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-bucket-dev/koleksi/6940f28bda85479d8fcadd5a/1765864075415-9.Teks_Ucapan.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAYYUPU5VVUGJABRBU%2F20260105%2Fap-southeast-5%2Fs3%2Faws4_request&X-Amz-Date=20260105T022517Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEO3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC01IkgwRgIhAKu3AlI5ZLK9MsTf%2FGnOqfF87A2i4AhKeB2baLc66ZgCAiEAoJ3MHqQPlBZ1qR2NrlUsSwWOk%2FeQHtikFHN7xmRfGn4q%2BgMIOxAAGgw2MDI2NzA0Mjc0OTkiDFSQT0cuLuIadMliPSrXAw6oKv8NklvvNILQyG3uoNj%2BNKxmFBTpiyIE5Z07wRC%2FYo2Ux8LkqsWseunsBQY6w%2BnY1%2BeN8tUSUZr5KYTl5hEElGfpFbsG4sMinHvcuAOBn9Nh53Z10DyFY%2FwkQeGdww7lfU6UM%2Fbf9Pnxit9kasjPbxH%2FGKGIwTK%2Bv42GV9wpKWxJukhMSy7HABHx1PhrETxH1Epm%2BwdA3AzdNHrkyuHzlqIXy6P7rH%2BIZ1Le5VajbAszRSyASLw80ejBVnK65P670vmzWUEH3WBEzMFI1RjHFj4VFShEHAuHKGQxJEUoMEuTzVJrL%2FyVYgrGs3E%2BH9v8arzEEXaIPKhoN27cqIeARwlTpGbk%2FXQHCZjex8I5IpRJCzSSX2iV6qw2CLdxMKmTa%2FHFClzQ7BkovcxyV0493erwugMNkwvEcsOTt%2B5BAC1FZPBhuBz3P6Oz2VHoC32NSwbXqjo15q7kJE1E2nTdZp6XdYEaNO0FvhNAIfZEDjbYE%2BnvmRtxIVdC5YI5xQ3b0IXV2y3qZbKMv0ud8YNyN0CyUCKmFPpGOHeHKSjfwaKYUA4xwBoSgdj1RFPc4tOF%2Fv3f58c%2FiJrFZ8Oz%2FVC4UQ%2Fava1%2BHlzE6rcKjIFPhmxnoc2RTDDuwOzKBjqkAYIb4%2FL5DVU8pLBfZvHcD5JMW6d3Gyh05JMwtRbQYqjpcMqdOMzUybrH%2FKtnKGyzSTYsiqZJXsbXHpcpEqA2myoSNvLavvCUJvqz3JXpe4FdcaF7qXIGQ1weWNXu1LUP1HFVbNZXC0BvuouArN7ZCFCjpo%2F31kwiQ6FvB7hKCpOZxcmcZE1yimPc7kJ5oNLH34iwO8gBld3Vuy7G%2BUH34arkzATC&X-Amz-Signature=4538cd57cafb5911436ac8f58e957ea1476ad7be8c1a8703d5dc4a5002dae363&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
   },
   {
     name: "SBP-English College.png",
     type: "image/png",
     size: 50000,
     fileurl:
-      "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-bucket-dev/koleksi/6942133cbbee7f09b4f5b646/1765937980719-1.Galeri_Peristiwa.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAYYUPU5VVYZT7ZWR5%2F20260102%2Fap-southeast-5%2Fs3%2Faws4_request&X-Amz-Date=20260102T010743Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC01IkYwRAIgUnvqZn3te4eclKIFhByWX2CcfBG41upzEELztvIG%2FOsCICdVpIIIoMnf4kHlkA4wGf%2FPsEdE0L%2FPrqmg5KBG9dZ3KoMECPL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjAyNjcwNDI3NDk5IgyIZsLN43VpvE9mmwUq1wMINs68cPkATWEY07IdCudwvqhvACbhnB%2BdJ2hXhx1F5UyeQozMwaqrfqcJN6HHY0gVz%2Fj8q%2Fnm5dNfL2wNcczeVYqbIgWAHG231beFLEqVSnCyKxWS8XFKoHWmRXndxrAm7OBG%2Fag%2BQ41Sg7JukNDcZGI2gcTAI6hgHYaosxMxopu%2BVu3XvEJZJwmflNdfI9N6%2BW84Q06yT6SykMYfLbXxiM3OI9zcx8uUsv0J7E6nZtNpdOe6wl0MZ3J4d76Zhv78oAoIogTIckvkoU16olIIJroP1SUqrSx9PhQIr%2Fh9lILX83pNJqEDMj%2Bu5lXFgBCWmgl8iNfkgQ2DqRp0GF2rRsiSBvLgMlbq0EmU9KPR3X61bNj8Li0sohNv3BdjLVrBGqFaazboqEk41sd0ImiQTyyYJTwSosbikO0%2FtBVMfMRMIlXrWVCutxAE0WwI4nzoxm1fJWM4cPvfuBoFeISrDj2bqFcDoXoh3Pu0Orlva1mzYafX7Ba%2BE8j1lF%2FjVrwbqZxIcwYcLAM5YEo%2FQKTG7%2BAFwjBfjDxknV0VWK8YXCX0U%2BsETMlkKZU4%2Foxm5h83gyC3QSHtxSyT2%2Bq2gCYZDJgmB4e5XZRCmFOz%2BjRS%2BKbG7kIXV7Yw87PcygY6pgHZtdak7kqED38uNGblEYlxDcKOCC0aluCaWMmnTuopkwdw38vp2jzw5yz2he2HLLepRQ15qcxCwhC1l657ljK61yGH7yYYhBxjzVWcqheXjwV7Fz%2FXur4wfdNh9p3fyfggld%2BcU22bNUEBqEQDZ8tayH%2F6CHAyqnMNg5kzCQX3mKpS5pRHIkhSKsmNdhLAJjGfj3Nivt9dSVqXOgfssyP7EmrmAjxp&X-Amz-Signature=2697d5f58096e1dc76bdac9ef17ef43a1b8b54f2ffc772c1bdcd7b537886fe42&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
-    isExistingFile: true,
+      "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-bucket-dev/koleksi/6942133cbbee7f09b4f5b646/1765937980719-1.Galeri_Peristiwa.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAYYUPU5VVQS4RABSS%2F20260105%2Fap-southeast-5%2Fs3%2Faws4_request&X-Amz-Date=20260105T053424Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEPH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC01IkgwRgIhAKgVgEMmxd42fieaXezUV4pSANf%2FP6YlAOBzS1hm5EVYAiEA6zOPAOWMSc4ojpx8Y5RkCMk35iunakBnthB5BnB4Vlsq%2BgMIPxAAGgw2MDI2NzA0Mjc0OTkiDDOEDOYagqZMx4kMayrXA4T3MiVGQ3hYdi0ag%2BqYhg66CP2OxddpLA436Dfa4%2B5d%2FDST3k1zIZ9aXkVgCaTgfptGBB2NrXGu9VrpSUkIC4MM3vh5zQqmzQ0Rx4Er1k90%2BwM2Nqs1b3g8ct5EjKV2KPUDmf8Ejf9nJaujV6na8%2FwCjrwXIfZcDjxkLJCz6aLN7ETiFFrCMAXXApwXdHyW2sLm99A9OojxAgGc0EzGWQjKyJBY1P9Z6rVnAcjKzKVTmO6Em0NJnwUSGGDQ4%2F04N8sCL85MQyOgzajd6s1rzgB%2FpjFAjiJZO%2F2QfOhdQxd3RyvvXCyCdYlq76L9%2Boiq8eutNq5cGIiwaiWw3eTe5FdNT13%2B1PHZUzU5AdW%2B7b26SisPHAO9Eno5hjoX%2FzeAbJaTpqkLa99yYd3AY4jPbw68ebMihY3so6DCve0y6juBI%2B7GAHm5Xnp8%2BcLraxCxRTUnJI4ZNXmdPXBDTBOm%2FHmc%2BcxmdrZIH7gqBX5Ri%2F%2F0MHN%2B35W2uIB7fZEG8cKbfH2cb2j6z3jfOsxrDlyjHg04vKTjbh%2FGyK%2B5i19mPYbJx79cuPD%2BQJM5uCHffvX9GrG5P%2BwHaXC6YyELOY3%2Bce4ay6pQUVfUaXmSccAypkZKPW%2B292WoqDCEme3KBjqkAX4Cu5RypNUCV2AAnt7kH0Nw8pR4VyeRKBqVmJTegnL88pCiJx34E8TyK9xb5wa1vP42Ih%2BVr68jvNFyu2mDeOpZRqaasZ7TKhULsU5KPHp1jArBE%2F4d%2B%2B1tsWD2VntGmyUDvlDXHPx3Va1voV9d8HTqsIWqDNFZx3TZQQuOsed5HVex657YF7tWBZSLLB8WQZoj4cCQbN8FbEjez4d1%2B4304rVa&X-Amz-Signature=13f3bf032cf428903ecf923a1ee4c4a53d7c385bfd58ae8d719e21d8c49ff906&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
   },
 ];
 
