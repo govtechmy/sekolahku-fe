@@ -44,7 +44,6 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
-  const jenisList = schoolTypes;
 
   // Handler for MyDS SearchBar onValueChange
   const handleValueChange = (value: string) => {
@@ -200,7 +199,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
               selectedNegeri={selectedNegeri}
               selectedJenis={selectedJenis}
               negeriList={negeriList}
-              jenisList={jenisList}
+              jenisList={schoolTypes}
               setSelectedNegeri={setSelectedNegeri}
               setSelectedJenis={setSelectedJenis}
             />

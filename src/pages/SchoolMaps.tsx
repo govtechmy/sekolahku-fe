@@ -36,12 +36,17 @@ export default function SchoolMaps() {
     zoom,
   });
 
-  // Fetch school types once on mount
   useEffect(() => {
-    getSchoolTypes().then(setSchoolTypes).catch(() => setSchoolTypes([]));
-  }, []);
-
-  useEffect(() => {
+    const fetchSchoolTypes = async () => {
+      try {
+        const types = await getSchoolTypes();
+        setSchoolTypes(types);
+      } catch (error) {
+        console.error("Error fetching school types:", error);
+        setSchoolTypes([]);
+      }
+    };
+    fetchSchoolTypes();
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
       return;
