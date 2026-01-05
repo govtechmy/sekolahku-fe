@@ -10,6 +10,7 @@ import HomeHero from "../components/Hero/HomeHero";
 import { getAllAcara } from "../services/acara.svc";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import type { AcaraItem } from "../types/acara";
+import { useParams } from "react-router-dom";
 
 export default function HomePage() {
   const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
@@ -17,6 +18,7 @@ export default function HomePage() {
   //later add loading for acara
   const [dataItemCalendar, setDataItemCalendar] = useState<AcaraItem[]>();
   const inputRef = useRef<HTMLInputElement>(null!);
+    const { lang } = useParams<{ lang: string }>();
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -89,6 +91,7 @@ export default function HomePage() {
               <SectionItemCalendar
                 dataItemCalendar={dataItemCalendar}
                 mainTitle="Majlis yang bakal disambut tahun ini"
+                lang={lang}
               />
             }
             ButtonLabel="Semua Acara"
