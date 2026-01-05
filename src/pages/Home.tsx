@@ -1,17 +1,12 @@
 import SectionItemNews from "../components/shared/SectionItemNews";
 import SectionHeader from "../components/shared/SectionHeader";
-import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
-//import Statistic from "../components/statistic";
 import { getAnalytics } from "../services/analytics.svc";
 import type { AnalyticsModel } from "../models/response";
 import {
-  //chartBaseData,
-  dataItemCalendar,
   dataItemLinks,
   dataItemNews,
-  //statisticYearlyData,
 } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
@@ -74,7 +69,7 @@ export default function HomePage() {
           }
         />
 
-        <SectionHeader
+        {/* <SectionHeader
           header="KALENDAR"
           children={
             <SectionItemCalendar
@@ -83,7 +78,7 @@ export default function HomePage() {
             />
           }
           ButtonLabel="Semua Acara"
-        />
+        /> */}
 
         <SectionHeader
           header="ANALITIK"
