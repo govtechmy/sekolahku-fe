@@ -21,14 +21,12 @@ export default function FileList({ files, className }: FileListProps) {
   const renderFileIcon = (
     file: Document,
     Icon: React.ElementType,
-    size: string
+    size: string,
   ) => (
     <Icon
       className={`${baseIconClass} ${size}`}
       onClick={(e: React.MouseEvent) => openFile(e, file.fileurl)}
-      {...(Icon === "img"
-        ? { src: file.fileurl, alt: file.name }
-        : {})}
+      {...(Icon === "img" ? { src: file.fileurl, alt: file.name } : {})}
     />
   );
 
@@ -40,7 +38,9 @@ export default function FileList({ files, className }: FileListProps) {
         return renderFileIcon(file, PdfIcon, "size-[30px]");
       case file.type === "application/vnd.ms-excel":
         return renderFileIcon(file, ExcelIcon, "size-[30px]");
-      case file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.type === "application/msword":
+      case file.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+        file.type === "application/msword":
         return renderFileIcon(file, WordIcon, "size-[30px]");
       default:
         return null;
@@ -60,8 +60,8 @@ export default function FileList({ files, className }: FileListProps) {
           <div
             key={index}
             className="border border-otl-gray-200 w-full sm:w-[217px] rounded-lg cursor-pointer flex items-center justify-between p-2 gap-2"
-          // Uncomment this line once download endpoint is ready
-          /* onClick={() => generateDownloadLink(file.name, file.fileurl ?? '')} */
+            // Uncomment this line once download endpoint is ready
+            /* onClick={() => generateDownloadLink(file.name, file.fileurl ?? '')} */
           >
             <div className="flex items-center gap-2 overflow-hidden">
               {getIcon(file)}
