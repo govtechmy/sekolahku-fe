@@ -34,8 +34,8 @@ export default function HomePage() {
       try {
         const data = await getAllAcara();
         setDataItemCalendar(data.items);
-      } catch(error) {
-      console.error("Error fetching Acara:", error);
+      } catch (error) {
+        console.error("Error fetching Acara:", error);
       }
     };
 
@@ -93,7 +93,6 @@ export default function HomePage() {
             ButtonLabel="Semua Acara"
           />
         )}
-
 
         <SectionHeader
           header="ANALITIK"

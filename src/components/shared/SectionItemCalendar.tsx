@@ -3,7 +3,6 @@ import HorizontalCard from "./HorizontalCard";
 import type { AcaraItem } from "../../types/acara";
 import { formatEventDateMonth, formatEventDay } from "../../utils/date";
 
-
 type SectionItemCalendarProps = {
   dataItemCalendar: AcaraItem[];
   mainTitle: string;
@@ -12,7 +11,7 @@ export default function SectionItemCalendar({
   dataItemCalendar,
   mainTitle,
 }: SectionItemCalendarProps) {
-  console.log('testing 123', dataItemCalendar)
+  console.log("testing 123", dataItemCalendar);
   return (
     <div className="w-full">
       <HorizontalCard mainTitle={mainTitle}>
@@ -33,9 +32,9 @@ export default function SectionItemCalendar({
             {/* Foreground content */}
             <div className="relative z-10 flex flex-col justify-end h-full text-white px-3 pb-4 rounded-[6px] ">
               <Tag variant="primary" className="w-fit">
-                    <div>{formatEventDay(item.articleDate)}</div>
-                    <div> | </div>
-                    <div>{formatEventDateMonth(item.articleDate)}</div>
+                <div>{formatEventDay(item.articleDate)}</div>
+                <div> | </div>
+                <div>{formatEventDateMonth(item.articleDate)}</div>
               </Tag>
               <div className="text-txt-white text-body-lg font-semibold">
                 {item.title}
