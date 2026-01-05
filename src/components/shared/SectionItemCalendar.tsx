@@ -11,7 +11,6 @@ export default function SectionItemCalendar({
   dataItemCalendar,
   mainTitle,
 }: SectionItemCalendarProps) {
-  console.log("testing 123", dataItemCalendar);
   return (
     <div className="w-full">
       <HorizontalCard mainTitle={mainTitle}>

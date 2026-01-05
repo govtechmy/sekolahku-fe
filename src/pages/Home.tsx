@@ -9,12 +9,13 @@ import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
 import { getAllAcara } from "../services/acara.svc";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
+import type { AcaraItem } from "../types/acara";
 
 export default function HomePage() {
   const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
   const [loading, setLoading] = useState(true);
   //later add loading for acara
-  const [dataItemCalendar, setDataItemCalendar] = useState();
+  const [dataItemCalendar, setDataItemCalendar] = useState<AcaraItem[]>();
   const inputRef = useRef<HTMLInputElement>(null!);
 
   useEffect(() => {
