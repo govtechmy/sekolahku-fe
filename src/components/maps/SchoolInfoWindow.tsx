@@ -77,7 +77,10 @@ export function SchoolInfoWindow({
         <div className="flex gap-1 flex-col">
           <InfoRow
             label="Lokasi"
-            value={underScoreRemover(school?.data?.infoPentadbiran?.negeri) || "Tiada Maklumat"}
+            value={
+              underScoreRemover(school?.data?.infoPentadbiran?.negeri) ||
+              "Tiada Maklumat"
+            }
           />
           <InfoRow label="Status SKM" value={"Tiada Maklumat"} />
           <InfoRow label="Kategori Pedalaman" value={"Tiada Maklumat"} />

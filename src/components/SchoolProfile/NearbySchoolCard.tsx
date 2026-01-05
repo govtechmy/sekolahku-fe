@@ -36,7 +36,9 @@ export const NearbySchoolCard = ({
       </div>
       <div className="p-4.5">
         <h3 className="text-txt-black-900 font-medium">{school.namaSekolah}</h3>
-        <p className="text-gray-600 text-sm">{underScoreRemover(formatSchoolAddress(school))}</p>
+        <p className="text-gray-600 text-sm">
+          {underScoreRemover(formatSchoolAddress(school))}
+        </p>
       </div>
     </div>
   );
