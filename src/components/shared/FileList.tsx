@@ -8,15 +8,30 @@ interface FileListProps {
 }
 
 export default function FileList({ files, className }: FileListProps) {
-  const baseIconClass =
-    "shrink-0 rounded-[4px] object-cover cursor-pointer hover:opacity-80 transition-opacity";
-
-  const openFile = (e: React.MouseEvent, url?: string) => {
-    e.stopPropagation();
-    if (url) {
-      window.open(url, "_blank");
-    }
+  const getFileExtension = (url: string) => {
+    const parts = url.split('.');
+    return parts.length > 1 ? parts.pop()?.toLowerCase() : '';
   };
+
+  const openFile = (
+    e: React.MouseEvent,
+    url?: string,
+    filename?: string
+  ) => {
+    e.stopPropagation();
+    if (!url) return;
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename || "";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
 
   const renderFileIcon = (
     file: Document,
@@ -24,23 +39,28 @@ export default function FileList({ files, className }: FileListProps) {
     size: string,
   ) => (
     <Icon
-      className={`${baseIconClass} ${size}`}
-      onClick={(e: React.MouseEvent) => openFile(e, file.fileurl)}
+      className={`shrink-0 rounded-[4px] object-cover cursor-pointer hover:opacity-80 transition-opacity ${size}`}
       {...(Icon === "img" ? { src: file.fileurl, alt: file.name } : {})}
     />
   );
 
   const getIcon = (file: Document) => {
-    switch (true) {
-      case file.type.startsWith("image/"):
+    const extension = getFileExtension(file.fileurl || '');
+    switch (extension) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+      case 'webp':
+      case 'svg':
         return renderFileIcon(file, "img", "size-[38px]");
-      case file.type === "application/pdf":
+      case 'pdf':
         return renderFileIcon(file, PdfIcon, "size-[30px]");
-      case file.type === "application/vnd.ms-excel":
+      case 'xls':
+      case 'xlsx':
         return renderFileIcon(file, ExcelIcon, "size-[30px]");
-      case file.type ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-        file.type === "application/msword":
+      case 'doc':
+      case 'docx':
         return renderFileIcon(file, WordIcon, "size-[30px]");
       default:
         return null;
@@ -60,8 +80,7 @@ export default function FileList({ files, className }: FileListProps) {
           <div
             key={index}
             className="border border-otl-gray-200 w-full sm:w-[217px] rounded-lg cursor-pointer flex items-center justify-between p-2 gap-2"
-            // Uncomment this line once download endpoint is ready
-            /* onClick={() => generateDownloadLink(file.name, file.fileurl ?? '')} */
+            onClick={(e) => openFile(e, file.fileurl, file.name)}
           >
             <div className="flex items-center gap-2 overflow-hidden">
               {getIcon(file)}
