@@ -8,12 +8,13 @@ import {
     BreadcrumbSeparator,
     BreadcrumbPage,
 } from "@govtechmy/myds-react/breadcrumb";
-import { ClockIcon, PdfIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
+import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
+import FileList from "../../components/shared/FileList";
 import { siaranSocialLinks } from "../../contentData";
 import DotIcon from "../../icons/DotIcon";
-import { generateDownloadLink } from "../../services/s3.svc";
+import type { SiaranAcaraDocument } from "../../types/files";
 
 export default function SiaranId() {
     const { id } = useParams<{ id: string }>();
@@ -22,13 +23,7 @@ export default function SiaranId() {
 
     // Find the news item by ID
     const newsItem = dataItemNews.find(item => item.id === id);
-    const filesItem = siaranAcaraDummyDocuments;
-
-    const formatFileSize = (size: number) => {
-        if (size < 1024) return `${size} B`
-        if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`
-        return `${(size / 1024 / 1024).toFixed(1)} MB`
-    }
+    const filesItem: SiaranAcaraDocument[] = siaranAcaraDummyDocuments;
 
     // If item not found, show error message
     if (!newsItem) {
@@ -109,106 +104,7 @@ export default function SiaranId() {
                 <p className="md:px-10">{newsItem.content}</p>
 
                 <div className="border-t border-otl-gray-200 md:mx-10">
-                    <div className="mt-6 flex flex-col gap-y-2 sm:flex-row justify-between flex-wrap">
-                        {
-                            filesItem.map((file, index) => {
-                                const parts = file.name.split('.')
-                                const extension = parts.length > 1 ? '.' + parts.pop() : ''
-                                const basename = parts.join('.')
-
-                                return (
-                                    <div
-                                        key={index}
-                                        className="border border-otl-gray-200 w-full sm:w-[217px] rounded-lg cursor-pointer flex items-center justify-between p-2 gap-2 "
-                                        // Uncomment this line once download endpoint is ready
-                                        /* onClick={() => generateDownloadLink(file.name, file.fileurl ?? '')} */
-                                    >
-                                        <div className="flex items-center gap-2 overflow-hidden">
-                                            {file.type.startsWith('image/')
-                                                ? (() => {
-                                                    const extendedFile = file as File & {
-                                                        isExistingFile?: boolean
-                                                        s3Url?: string
-                                                        fileurl?: string
-                                                        thumbnailUrl?: string
-                                                    }
-                                                    if (extendedFile.isExistingFile) {
-                                                        const imageUrl = extendedFile.thumbnailUrl || extendedFile.fileurl || extendedFile.s3Url
-                                                        const fullImageUrl = extendedFile.fileurl || extendedFile.s3Url || extendedFile.thumbnailUrl
-                                                        if (imageUrl) {
-                                                            return (
-                                                                <img
-                                                                    src={imageUrl}
-                                                                    alt={file.name}
-                                                                    className="shrink-0 size-[38px] rounded-[4px] object-cover cursor-pointer hover:opacity-80 transition-opacity"
-                                                                    onClick={e => {
-                                                                        e.stopPropagation()
-                                                                        if (fullImageUrl) {
-                                                                            window.open(fullImageUrl, '_blank')
-                                                                        }
-                                                                    }}
-                                                                />
-                                                            )
-                                                        }
-                                                        return (
-                                                            <div className="shrink-0 size-[30px] rounded-[4px] bg-otl-gray-200 flex items-center justify-center">
-                                                                <span className="text-xs text-otl-gray-500">IMG</span>
-                                                            </div>
-                                                        )
-                                                    }
-                                                    try {
-                                                        return (
-                                                            <img
-                                                                src={URL.createObjectURL(file)}
-                                                                alt={file.name}
-                                                                className="shrink-0 size-[38px] rounded-[4px] object-cover"
-                                                            />
-                                                        )
-                                                    } catch (error) {
-                                                        console.warn('Failed to create object URL:', error)
-                                                        return (
-                                                            <div className="shrink-0 size-[30px] rounded-[4px] bg-otl-gray-200 flex items-center justify-center">
-                                                                <span className="text-xs text-otl-gray-500">IMG</span>
-                                                            </div>
-                                                        )
-                                                    }
-                                                })()
-                                                : file.type === 'application/pdf'
-                                                    ? (() => {
-                                                        const extendedFile = file as File & {
-                                                            isExistingFile?: boolean
-                                                            s3Url?: string
-                                                            fileurl?: string
-                                                            thumbnailUrl?: string
-                                                        }
-                                                        const s3URLRedirect = extendedFile.fileurl || extendedFile.s3Url || extendedFile.thumbnailUrl
-                                                        return (
-                                                            <PdfIcon
-                                                                className="shrink-0 size-[30px] rounded-[4px] object-cover cursor-pointer hover:opacity-80 transition-opacity"
-                                                                onClick={e => {
-                                                                    e.stopPropagation()
-                                                                    if (s3URLRedirect) {
-                                                                        window.open(s3URLRedirect, '_blank')
-                                                                    }
-                                                                }}
-                                                            />
-                                                        )
-                                                    })()
-                                                    : null}
-
-                                            <div className="text-start overflow-hidden">
-                                                <div className="flex items-center">
-                                                    <div className="max-w-[95px] truncate">{basename}</div>
-                                                    <div className="flex-shrink-0">{extension}</div>
-                                                </div>
-                                                <div className="text-[#71717A] text-xs">{formatFileSize(file.size)}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
+                    <FileList files={filesItem} />
                 </div>
             </div>
         </div>
