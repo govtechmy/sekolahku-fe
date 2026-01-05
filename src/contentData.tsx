@@ -73,11 +73,11 @@ export const siaranAcaraDummyDocuments: Document[] = [
       "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-public-dev/email-images/hero.xlsx",
   },
   {
-    name: "file3.word",
-    type: "application/msword",
+    name: "file3.jpg",
+    type: "image/jpeg",
     size: 5000,
     fileurl:
-      "https://s3.ap-southeast-5.amazonaws.com/my.gov.digital.rdm-public-dev/email-images/hero.docx",
+      "",
   },
   {
     name: "SBP-English College.png",
