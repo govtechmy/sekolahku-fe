@@ -1,4 +1,3 @@
-
 export interface AcaraItem {
   _id: string;
   createdAt: string;
@@ -26,7 +25,7 @@ export interface ImageHero {
   height: number;
   focalX: number;
   focalY: number;
-  url:string;
+  url: string;
 }
 
 export interface Attachment {
@@ -49,7 +48,7 @@ export interface RootNode {
 export interface ParagraphNode {
   children: TextNode[];
   direction: string | null;
-  format: string; 
+  format: string;
   indent: number;
   type: "paragraph";
   version: number;

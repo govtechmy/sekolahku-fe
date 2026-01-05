@@ -13,20 +13,19 @@ export default function Acara() {
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
   // later fetch, not functioning yet
-  const [items, setItems] = useState<AcaraItem[]>([])
-  const [pageNumber, setPageNumber] = useState<number>(1)
-  const [pageSize, setPageSize] = useState<number>(12)
-  const [totalRecord, setTotalRecord] = useState<number>(0)
-
+  const [items, setItems] = useState<AcaraItem[]>([]);
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(12);
+  const [totalRecord, setTotalRecord] = useState<number>(0);
 
   useEffect(() => {
     const fetchAcara = async () => {
       try {
-        const response = await getAllAcara(pageNumber)
-        setItems(response.items)
-        setPageNumber(response.pageNumber)
-        setPageSize(response.pageSize)
-        setTotalRecord(response.totalRecords)
+        const response = await getAllAcara(pageNumber);
+        setItems(response.items);
+        setPageNumber(response.pageNumber);
+        setPageSize(response.pageSize);
+        setTotalRecord(response.totalRecords);
       } catch (error) {
         console.error("Error fetching acara:", error);
       }
@@ -53,7 +52,6 @@ export default function Acara() {
         <div className="flex flex-col gap-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {items?.map((item) => (
-
               <div
                 key={item._id}
                 className="relative border border-otl-gray-200 rounded-lg h-[350px] flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
@@ -73,7 +71,6 @@ export default function Acara() {
                 {/* Foreground content */}
                 <div className="relative z-10 flex flex-col justify-end h-full text-white p-4">
                   <Tag variant="primary" className="w-fit mb-3">
-                  
                     <div>{formatEventDay(item.articleDate)}</div>
                     <div> | </div>
                     <div>{formatEventDateMonth(item.articleDate)}</div>
