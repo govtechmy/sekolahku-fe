@@ -1,3 +1,8 @@
+import ErrorPageHero from "../components/Hero/ErrorPageHero";
+
 export default function ErrorPage() {
-  return <div>This is Error Page</div>;
+  return (
+    <div>
+      <ErrorPageHero />
+    </div>)
 }
