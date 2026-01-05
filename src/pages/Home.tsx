@@ -4,10 +4,7 @@ import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
 import { getAnalytics } from "../services/analytics.svc";
 import type { AnalyticsModel } from "../models/response";
-import {
-  dataItemLinks,
-  dataItemNews,
-} from "../contentData";
+import { dataItemLinks, dataItemNews } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
 

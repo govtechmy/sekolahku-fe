@@ -13,9 +13,7 @@ import SocialLinks from "../../components/shared/SocialLinks";
 import { siaranSocialLinks } from "../../contentData";
 
 export default function SiaranId() {
-
   const { lang } = useParams<{ lang: string }>();
-
 
   return (
     <div className=" py-12 px-[18px] md:px-20  md:flex md:justify-center print:py-0">
@@ -67,7 +65,7 @@ export default function SiaranId() {
         </div>
 
         <p className=" text-2xl font-semibold md:px-10">
-           calendarItem.description
+          calendarItem.description
         </p>
 
         <p className="md:px-10"> calendarItem.content</p>
