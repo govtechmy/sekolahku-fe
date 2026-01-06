@@ -1,6 +1,8 @@
 import { ExcelIcon, PdfIcon, WordIcon } from "@govtechmy/myds-react/icon";
 import { type Document } from "../../types/files";
 import { formatFileSize } from "../../utils/formatFileSize";
+import { getFileExtension } from "../../utils/fileExtensions";
+import { downloadFile } from "../../services/download.svc";
 
 interface FileListProps {
   files: Document[];
@@ -8,28 +10,6 @@ interface FileListProps {
 }
 
 export default function FileList({ files, className }: FileListProps) {
-  const getFileExtension = (url: string) => {
-    const parts = url.split(".");
-    return parts.length > 1 ? parts.pop()?.toLowerCase() : "";
-  };
-
-  const downloadFile = async (url: string, filename: string) => {
-    try {
-      const response = await fetch(url);
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      console.error("Download failed:", error);
-    }
-  };
-
   const renderFileIcon = (
     file: Document,
     Icon: React.ElementType,
@@ -91,7 +71,7 @@ export default function FileList({ files, className }: FileListProps) {
                   <div className="max-w-[95px] truncate">{basename}</div>
                   <div className="flex-shrink-0">{extension}</div>
                 </div>
-                <div className="text-[#71717A] text-xs">
+                <div className="text-txt-black-500 text-body-xs font-normal">
                   {formatFileSize(file.size)}
                 </div>
               </div>
