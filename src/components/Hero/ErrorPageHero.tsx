@@ -9,11 +9,13 @@ export default function ErrorPageHero() {
       variant="full"
       fullHeight={true}
       search={
-        <img
-          src="/utama/image-404.png"
-          alt="404 Error"
-          className="mx-auto my-auto align-middle pt-20"
-        />
+        <div className="absolute inset-0 w-full h-full flex justify-center items-center">
+           <img
+            src="/utama/image-404.png"
+            alt="404 Error"
+            className="mx-auto my-auto align-middle pt-20"
+          />
+        </div>
       }
       background={
         <div className="absolute inset-0 w-full h-full z-10 bg-[radial-gradient(101.65%_92.54%_at_50%_0%,#E0EDFF_0%,#FAFCFF_27.57%,#FFF_100%)]">
