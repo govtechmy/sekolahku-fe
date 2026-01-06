@@ -56,12 +56,13 @@ export default function FileList({ files, className }: FileListProps) {
         const parts = file.name.split(".");
         const extension = parts.length > 1 ? "." + parts.pop() : "";
         const basename = parts.join(".");
+        const hasValidUrl = !!file.fileurl;
 
         return (
           <div
             key={index}
-            className="border border-otl-gray-200 w-full sm:w-[217px] rounded-lg cursor-pointer flex items-center justify-between p-2 gap-2"
-            onClick={() => downloadFile(file.fileurl, file.name)}
+            className={`border border-otl-gray-200 w-full sm:w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
+            onClick={hasValidUrl ? () => downloadFile(file.fileurl, file.name) : undefined}
           >
             <div className="flex items-center gap-2 overflow-hidden">
               {getIcon(file)}
