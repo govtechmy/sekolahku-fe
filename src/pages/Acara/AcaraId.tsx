@@ -16,10 +16,10 @@ import { useEffect, useState } from "react";
 import type { AcaraItem } from "../../types/acara";
 import { getAcaraById } from "../../services/acara.svc";
 import { formatFullEventDate, formatEventTime } from "../../utils/date";
-import { downloadFile } from "../../services/download.svc";
-import LexicalRenderer from "../../components/LexicalRenderer";
-import { formatFileSize } from "../../utils/formatFileSize";
+import { RichText } from "@payloadcms/richtext-lexical/react";
 import { getIcon } from "../../utils/getIconLogo";
+import { formatFileSize } from "../../utils/formatFileSize";
+import { downloadFile } from "../../services/download.svc";
 
 export default function AcaraId() {
   const { lang } = useParams<{ lang: string }>();
@@ -56,7 +56,6 @@ export default function AcaraId() {
               <BreadcrumbPage>{contents.title}</BreadcrumbPage>
             </BreadcrumbItem>
           </Breadcrumb>
-
           <div className="flex flex-col gap-3 md:px-10">
             <span className={clx("text-sm font-semibold text-success-700")}>
               Acara
@@ -76,7 +75,6 @@ export default function AcaraId() {
               </div>
             </div>
           </div>
-
           <div className="md:px-10 print:hidden">
             <div className="flex justify-between pb-[18px] border-b-2 border-gray-200">
               <SocialLinks links={siaranSocialLinks} classNameButton="p-2" />
@@ -90,7 +88,6 @@ export default function AcaraId() {
               </div>
             </div>
           </div>
-
           <div className="flex flex-col gap-3">
             <img
               src={contents.imageHero.url}
@@ -102,72 +99,61 @@ export default function AcaraId() {
               <span className="italic">{contents.imageHero.url}</span>
             </span>
           </div>
-
           <div className="text-xl text-justify font-normal md:px-10">
-            <LexicalRenderer
-              editorState={contents.content}
-              className=" flex flex-col gap-10 text-[15px] text-txt-black-700 font-body font-normal"
+            <RichText
+              className="richTextdiv flex flex-col gap-10 text-[15px] text-txt-black-700 font-body font-normal"
+              data={contents.content}
             />
           </div>
-
-          {JSON.stringify(contents.attachments)}
-
-          <div className="md:px-10 pt-6 border-t border-otl-gray-200">
-            {/* <FileList files={contents.attachments} /> */}
+          <div className="md:px-10 pt-6 border-t border-otl-gray-200 flex flex-wrap gap-2">
             {contents.attachments.map((attachment) => {
               const hasValidUrl = !!attachment.url;
               return (
-                <div
-                  key={attachment.id}
-                  className={`border-4 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
-                  onClick={
-                    hasValidUrl
-                      ? () => downloadFile(attachment.url, attachment.filename)
-                      : undefined
-                  }
-                >
-                  <div className="mb-4">
-                    <div>ICON</div>
-                    <div>{"." + attachment.filename.split(".").pop()}</div>
-                    <div>{attachment.url}</div>
-                    <div>{attachment.filename}</div>
-                    <div>{attachment.filesize} </div>
-                  </div>
-                </div>
-              );
-            })}
-            {contents.attachments.map((attachment) => {
-              const hasValidUrl = !!attachment.url;
-              return (
-                <div
-                  key={attachment.id}
-                  className={`border border-otl-gray-200 w-full sm:w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
-                  onClick={
-                    hasValidUrl
-                      ? () => downloadFile(attachment.url, attachment.filename)
-                      : undefined
-                  }
-                >
-                  <div className="flex items-center gap-2 overflow-hidden">
-                    {getIcon("" + attachment.filename.split(".").pop())}
+                <div key={attachment.id}>
+                  {attachment.filename &&
+                    attachment.filesize &&
+                    attachment.url &&
+                    attachment.mimeType && (
+                      <div
+                        key={attachment.id}
+                        className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
+                        onClick={
+                          hasValidUrl
+                            ? () =>
+                                downloadFile(
+                                  attachment.url,
+                                  attachment.filename,
+                                )
+                            : undefined
+                        }
+                      >
+                        <div className="flex items-center gap-2 overflow-hidden">
+                          {getIcon(
+                            attachment.mimeType.split("/")[1],
+                            attachment.url,
+                          )}
 
-                    <div className="text-start overflow-hidden">
-                      <div className="flex items-center">
-                        <div className="max-w-[95px] truncate">
-                          {attachment.filename
-                            .split(".")
-                            .slice(0, -1)
-                            .join(".")}
-                        </div>
-                        <div className="flex-shrink-0">
-                          {"." + attachment.filename.split(".").pop()}
+                          <div className="text-start overflow-hidden">
+                            <div className="flex items-center">
+                              <div className="max-w-[95px] truncate">
+                                {attachment.filename.includes(".")
+                                  ? attachment.filename.slice(
+                                      0,
+                                      attachment.filename.lastIndexOf("."),
+                                    )
+                                  : attachment.filename}
+                              </div>
+                              <div className="flex-shrink-0">
+                                .{attachment.mimeType.slice(6)}
+                              </div>
+                            </div>
+                            <div className="text-txt-black-500 text-body-xs font-normal">
+                              {formatFileSize(attachment.filesize)}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className="text-txt-black-500 text-body-xs font-normal">
-                        {formatFileSize(attachment.filesize)}
-                      </div>
-                    </div>
-                  </div>
+                    )}
                 </div>
               );
             })}

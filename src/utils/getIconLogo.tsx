@@ -6,8 +6,22 @@ const renderFileIcon = (Icon: React.ElementType) => (
   />
 );
 
-export const getIcon = (extension: string) => {
+export const getIcon = (extension: string, url: string) => {
   switch (extension) {
+    case "jpg":
+    case "jpeg":
+    case "gif":
+    case "webp":
+    case "png":
+      return (
+        <div className="shrink-0 rounded-[4px] flex items-center justify-center bg-danger-200">
+          <img
+            src={url}
+            alt="file icon"
+            className=" size-[38px] rounded-[4px]"
+          />
+        </div>
+      );
     case "pdf":
       return renderFileIcon(PdfIcon);
     case "xls":
@@ -28,7 +42,7 @@ export const getIcon = (extension: string) => {
       return (
         <div className="shrink-0 size-[30px] rounded-[4px] bg-otl-gray-200 flex items-center justify-center">
           <span className="text-xs text-otl-gray-500 flex items-center justify-center">
-            {extension.toUpperCase()}
+            DOC
           </span>
         </div>
       );
