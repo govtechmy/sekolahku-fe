@@ -172,7 +172,6 @@ export default function Statistic({
 
   return (
     <div className="flex flex-col pb-16 px-5 lg:px-[50px]">
-      {/* To do afnan */}
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-12">
           {/* Header Section */}
