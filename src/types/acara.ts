@@ -30,6 +30,10 @@ export interface ImageHero {
 
 export interface Attachment {
   id: string;
+  url: string;
+  filename: string;
+  mimeType: string;
+  filesize: number;
 }
 
 export interface ArticleContent {

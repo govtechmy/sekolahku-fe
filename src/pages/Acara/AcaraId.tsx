@@ -16,7 +16,10 @@ import { useEffect, useState } from "react";
 import type { AcaraItem } from "../../types/acara";
 import { getAcaraById } from "../../services/acara.svc";
 import { formatFullEventDate, formatEventTime } from "../../utils/date";
+import { downloadFile } from "../../services/download.svc";
 import LexicalRenderer from "../../components/LexicalRenderer";
+import { formatFileSize } from "../../utils/formatFileSize";
+import { getIcon } from "../../utils/getIconLogo";
 
 export default function AcaraId() {
   const { lang } = useParams<{ lang: string }>();
@@ -29,7 +32,6 @@ export default function AcaraId() {
     const fetchAcaraById = async (id: string) => {
       try {
         const response = await getAcaraById(id);
-        console.log("acara by id:", response);
         setContents(response);
       } catch (error) {
         console.error("Error fetching acara by id:", error);
@@ -112,6 +114,63 @@ export default function AcaraId() {
 
           <div className="md:px-10 pt-6 border-t border-otl-gray-200">
             {/* <FileList files={contents.attachments} /> */}
+            {contents.attachments.map((attachment) => {
+              const hasValidUrl = !!attachment.url;
+              return (
+                <div
+                  key={attachment.id}
+                  className={`border-4 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
+                  onClick={
+                    hasValidUrl
+                      ? () => downloadFile(attachment.url, attachment.filename)
+                      : undefined
+                  }
+                >
+                  <div className="mb-4">
+                    <div>ICON</div>
+                    <div>{"." + attachment.filename.split(".").pop()}</div>
+                    <div>{attachment.url}</div>
+                    <div>{attachment.filename}</div>
+                    <div>{attachment.filesize} </div>
+                  </div>
+                </div>
+              );
+            })}
+            {contents.attachments.map((attachment) => {
+              const hasValidUrl = !!attachment.url;
+              return (
+                <div
+                  key={attachment.id}
+                  className={`border border-otl-gray-200 w-full sm:w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
+                  onClick={
+                    hasValidUrl
+                      ? () => downloadFile(attachment.url, attachment.filename)
+                      : undefined
+                  }
+                >
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    {getIcon("" + attachment.filename.split(".").pop())}
+
+                    <div className="text-start overflow-hidden">
+                      <div className="flex items-center">
+                        <div className="max-w-[95px] truncate">
+                          {attachment.filename
+                            .split(".")
+                            .slice(0, -1)
+                            .join(".")}
+                        </div>
+                        <div className="flex-shrink-0">
+                          {"." + attachment.filename.split(".").pop()}
+                        </div>
+                      </div>
+                      <div className="text-txt-black-500 text-body-xs font-normal">
+                        {formatFileSize(attachment.filesize)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
