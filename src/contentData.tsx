@@ -9,6 +9,7 @@ import {
   PinIcon,
 } from "@govtechmy/myds-react/icon";
 import type { FindNearbyUpdatedEndpoint } from "./types/maps";
+import type { Document } from "./types/files";
 
 export const siaranSocialLinks = [
   {
@@ -53,6 +54,36 @@ export const footerSocialLinks = [
     platform: "youtube",
     href: "#",
     ariaLabel: "Youtube link",
+  },
+];
+
+export const siaranAcaraDummyDocuments: Document[] = [
+  {
+    name: "file1.pdf",
+    type: "application/pdf",
+    size: 5000,
+    fileurl:
+      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.pdf",
+  },
+  {
+    name: "file2.xlsx",
+    type: "application/vnd.ms-excel",
+    size: 50000,
+    fileurl:
+      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.xlsx",
+  },
+  {
+    name: "file3.jpg",
+    type: "image/jpeg",
+    size: 5000,
+    fileurl: "",
+  },
+  {
+    name: "SBP-English College.png",
+    type: "image/png",
+    size: 50000,
+    fileurl:
+      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.png",
   },
 ];
 

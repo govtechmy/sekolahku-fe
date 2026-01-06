@@ -11,6 +11,7 @@ import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
 import { siaranSocialLinks } from "../../contentData";
+import DotIcon from "../../icons/DotIcon";
 import { useEffect, useState } from "react";
 import type { AcaraItem } from "../../types/acara";
 import { getAcaraById } from "../../services/acara.svc";
@@ -19,6 +20,8 @@ import LexicalRenderer from "../../components/LexicalRenderer";
 
 export default function AcaraId() {
   const { lang } = useParams<{ lang: string }>();
+
+  // Find the news item by ID
   const { id } = useParams<{ id: string }>();
   const [contents, setContents] = useState<AcaraItem | null>(null);
 
@@ -62,7 +65,9 @@ export default function AcaraId() {
               <div className=" flex flex-row gap-1 items-center">
                 <ClockIcon /> Bacaan {contents.readTime} min
               </div>
-              .
+              <div className="flex items-center">
+                <DotIcon className="size-0.5" />
+              </div>
               <div>
                 {formatFullEventDate(contents.articleDate)},{" "}
                 {formatEventTime(contents.articleDate)}
@@ -88,7 +93,7 @@ export default function AcaraId() {
             <img
               src={contents.imageHero.url}
               alt={contents.imageHero.alt}
-              className="min-h-[250px] rounded-lg"
+              className="h-[415px] object-contain rounded-lg"
             />
             <span className="text-txt-black-500 text-center font-body font-normal text-sm">
               Image from{" "}
@@ -103,27 +108,10 @@ export default function AcaraId() {
             />
           </div>
 
-          <div className="md:px-10">
-            <div className="flex justify-between border-t-2 border-otl-gray-200 pt-6">
-              {contents.attachments.map((attachment, index) => (
-                <div
-                  key={index}
-                  className="border border-otl-gray-200 max-w-[217px] rounded-lg flex items-center justify-start p-2 gap-2 mt-4"
-                >
-                  <div className="text-start w-full">
-                    <div className="flex gap-1">
-                      <div className="max-w-[85px] truncate">
-                        {attachment.id}
-                      </div>
-                      <div>....</div>
-                    </div>
-                    <div className="text-[#71717A] text-xs">
-                      {/* {selectedFile && selectedFile.body?.fileSize !== undefined ? formatFileSize(Number(selectedFile.body.fileSize)) : ''} */}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          {JSON.stringify(contents.attachments)}
+
+          <div className="md:px-10 pt-6 border-t border-otl-gray-200">
+            {/* <FileList files={contents.attachments} /> */}
           </div>
         </div>
       )}
