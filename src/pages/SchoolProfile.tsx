@@ -18,6 +18,7 @@ import {
   NearbySchoolCard,
 } from "../components/SchoolProfile";
 import { formatSchoolAddress, getSchoolLogoUrl } from "../utils/schoolHelpers";
+import underScoreRemover from "../utils/underscoreRemover";
 
 export default function SchoolProfile() {
   const { id } = useParams();
@@ -111,7 +112,7 @@ export default function SchoolProfile() {
                 />
                 <InfoRow
                   icon={<PinIcon width={24} height={24} />}
-                  text={formatSchoolAddress(school)}
+                  text={underScoreRemover(formatSchoolAddress(school))}
                 />
               </div>
               <div>
@@ -127,7 +128,7 @@ export default function SchoolProfile() {
             <InfoGridItem label="KOD SEKOLAH" value={school.kodSekolah} />
             <InfoGridItem
               label="NEGERI"
-              value={school.data.infoPentadbiran?.negeri}
+              value={underScoreRemover(school.data.infoPentadbiran?.negeri)}
             />
             <InfoGridItem
               label="PPD"
@@ -135,7 +136,7 @@ export default function SchoolProfile() {
             />
             <InfoGridItem
               label="PARLIMEN"
-              value={school.data.infoPentadbiran?.parlimen}
+              value={underScoreRemover(school.data.infoPentadbiran?.parlimen)}
             />
             <InfoGridItem
               label="BANTUAN"

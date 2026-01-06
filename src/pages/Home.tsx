@@ -1,25 +1,24 @@
 import SectionItemNews from "../components/shared/SectionItemNews";
 import SectionHeader from "../components/shared/SectionHeader";
-import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
-//import Statistic from "../components/statistic";
 import { getAnalytics } from "../services/analytics.svc";
 import type { AnalyticsModel } from "../models/response";
-import {
-  //chartBaseData,
-  dataItemCalendar,
-  dataItemLinks,
-  dataItemNews,
-  //statisticYearlyData,
-} from "../contentData";
+import { dataItemLinks, dataItemNews } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
+import { getAllAcara } from "../services/acara.svc";
+import SectionItemCalendar from "../components/shared/SectionItemCalendar";
+import type { AcaraItem } from "../types/acara";
+import { useParams } from "react-router-dom";
 
 export default function HomePage() {
   const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
   const [loading, setLoading] = useState(true);
+  //later add loading for acara
+  const [dataItemCalendar, setDataItemCalendar] = useState<AcaraItem[]>();
   const inputRef = useRef<HTMLInputElement>(null!);
+  const { lang } = useParams<{ lang: string }>();
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -34,7 +33,17 @@ export default function HomePage() {
       }
     };
 
+    const fetchAcara = async () => {
+      try {
+        const data = await getAllAcara();
+        setDataItemCalendar(data.items);
+      } catch (error) {
+        console.error("Error fetching Acara:", error);
+      }
+    };
+
     fetchAnalytics();
+    fetchAcara();
   }, []);
 
   useEffect(() => {
@@ -74,16 +83,20 @@ export default function HomePage() {
           }
         />
 
-        <SectionHeader
-          header="KALENDAR"
-          children={
-            <SectionItemCalendar
-              dataItemCalendar={dataItemCalendar}
-              mainTitle="Majlis yang bakal disambut tahun ini"
-            />
-          }
-          ButtonLabel="Semua Acara"
-        />
+        {/* design loading for this  */}
+        {dataItemCalendar && (
+          <SectionHeader
+            header="KALENDAR"
+            children={
+              <SectionItemCalendar
+                dataItemCalendar={dataItemCalendar}
+                mainTitle="Majlis yang bakal disambut tahun ini"
+                lang={lang}
+              />
+            }
+            ButtonLabel="Semua Acara"
+          />
+        )}
 
         <SectionHeader
           header="ANALITIK"
