@@ -10,7 +10,7 @@ export default function ErrorPageHero() {
       fullHeight={true}
       search={
         <div className="absolute inset-0 w-full h-full flex justify-center items-center">
-           <img
+          <img
             src="/utama/image-404.png"
             alt="404 Error"
             className="mx-auto my-auto align-middle pt-20"
