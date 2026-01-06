@@ -92,7 +92,7 @@ export default function AcaraId() {
             <img
               src={contents.imageHero.url}
               alt={contents.imageHero.alt}
-              className="h-[415px] object-contain rounded-lg"
+              className="w-full max-h-[415px] object-contain rounded-lg"
             />
             <span className="text-txt-black-500 text-center font-body font-normal text-sm">
               Image from{" "}
@@ -115,7 +115,6 @@ export default function AcaraId() {
                     attachment.url &&
                     attachment.mimeType && (
                       <div
-                        key={attachment.id}
                         className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
                         onClick={
                           hasValidUrl

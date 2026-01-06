@@ -14,7 +14,7 @@ export const getIcon = (extension: string, url: string) => {
     case "webp":
     case "png":
       return (
-        <div className="shrink-0 rounded-[4px] flex items-center justify-center bg-danger-200">
+        <div className="shrink-0 rounded-[4px] flex items-center justify-center">
           <img
             src={url}
             alt="file icon"
