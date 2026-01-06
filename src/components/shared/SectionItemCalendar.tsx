@@ -7,14 +7,14 @@ import { useNavigate } from "react-router-dom";
 type SectionItemCalendarProps = {
   dataItemCalendar: AcaraItem[];
   mainTitle: string;
-  lang:string|undefined;
+  lang: string | undefined;
 };
 export default function SectionItemCalendar({
   dataItemCalendar,
   mainTitle,
-  lang
+  lang,
 }: SectionItemCalendarProps) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   return (
     <div className="w-full">
       <HorizontalCard mainTitle={mainTitle}>
@@ -23,7 +23,7 @@ export default function SectionItemCalendar({
             key={index}
             className="relative border border-otl-gray-200 rounded-lg p-3 h-[350px] !w-[248px] flex flex-shrink-0 flex-col gap-4.5 group overflow-hidden cursor-pointer"
             onClick={() => {
-                navigate(`/${lang}/acara/${item._id}`);
+              navigate(`/${lang}/acara/${item._id}`);
             }}
           >
             {/* Background image */}

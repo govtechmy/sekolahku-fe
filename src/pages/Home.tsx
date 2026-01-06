@@ -18,7 +18,7 @@ export default function HomePage() {
   //later add loading for acara
   const [dataItemCalendar, setDataItemCalendar] = useState<AcaraItem[]>();
   const inputRef = useRef<HTMLInputElement>(null!);
-    const { lang } = useParams<{ lang: string }>();
+  const { lang } = useParams<{ lang: string }>();
 
   useEffect(() => {
     const fetchAnalytics = async () => {
