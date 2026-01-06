@@ -15,7 +15,7 @@ export default function SectionHeader({
   ButtonLabel,
 }: SectionHeaderProps) {
   return (
-    <div className="flex flex-col pb-16 px-5 lg:px-[50px]">
+    <div className="flex flex-col pb-16 px-4 lg:px-[50px]">
       <div className="flex flex-col gap-4">
         <div className="text-txt-primary font-body font-semibold text-sm tracking-[2.8px]">
           {header}
