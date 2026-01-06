@@ -133,18 +133,18 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
 
   return (
     <div
-      className={`absolute flex justify-start z-[500] bottom-0 
+      className={`absolute flex z-[500] bottom-0 
           ${
             isExpanded
-              ? "top-0 left-0 gap-4"
-              : "top-[16px] left-3 flex-col gap-2 w-[350px] h-[45px]"
+              ? "top-0 md:top-0 left-0 gap-4 justify-start w-full sm:w-auto"
+              : "top-[16px] left-3 right-3 sm:left-3 sm:right-3 flex-col gap-2 h-[45px] justify-center sm:justify-start"
           }
         `}
     >
       <div
         className={`shadow-md border border-otl-divider bg-white 
             ${
-              isExpanded ? "w-[350px]" : "rounded-full cursor-pointer w-[328px]"
+              isExpanded ? "w-full sm:max-w-[350px]" : "rounded-full cursor-pointer w-full md:max-w-[350px]"
             }
           `}
         onClick={() => {
@@ -174,7 +174,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
             <SearchBar size="large" className="w-full">
               <SearchBarInputContainer
                 className={clx(
-                  isExpanded ? "border-none shadow-[none] !px-0" : "w-[326px]",
+                  isExpanded ? "border-none shadow-[none] !px-0" : "w-full",
                 )}
               >
                 <SearchBarInput
@@ -261,8 +261,8 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
       {viewSchool && (
         <div
           className={clx(
-            "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
-            isExpanded ? "my-10" : "absolute top-[54px] max-h-[78vh]",
+            "bg-transparent flex-1 w-full max-w-[328px] rounded-xl overflow-y-auto",
+            isExpanded ? "my-10 mx-3" : "absolute top-[54px] max-h-[78vh] left-3 right-3",
           )}
         >
           <SchoolInfoWindow
