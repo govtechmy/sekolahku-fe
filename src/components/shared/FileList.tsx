@@ -62,7 +62,11 @@ export default function FileList({ files, className }: FileListProps) {
           <div
             key={index}
             className={`border border-otl-gray-200 w-full sm:w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
-            onClick={hasValidUrl ? () => downloadFile(file.fileurl, file.name) : undefined}
+            onClick={
+              hasValidUrl
+                ? () => downloadFile(file.fileurl, file.name)
+                : undefined
+            }
           >
             <div className="flex items-center gap-2 overflow-hidden">
               {getIcon(file)}
