@@ -11,65 +11,122 @@ import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
 import { siaranSocialLinks } from "../../contentData";
+import { useEffect, useState } from "react";
+import type { AcaraItem } from "../../types/acara";
+import { getAcaraById } from "../../services/acara.svc";
+import { formatFullEventDate, formatEventTime } from "../../utils/date";
+import LexicalRenderer from "../../components/LexicalRenderer";
 
-export default function SiaranId() {
+export default function AcaraId() {
   const { lang } = useParams<{ lang: string }>();
+  const { id } = useParams<{ id: string }>();
+  const [contents, setContents] = useState<AcaraItem | null>(null);
+
+  useEffect(() => {
+    const fetchAcaraById = async (id: string) => {
+      try {
+        const response = await getAcaraById(id);
+        console.log("acara by id:", response);
+        setContents(response);
+      } catch (error) {
+        console.error("Error fetching acara by id:", error);
+      }
+    };
+
+    if (id) {
+      fetchAcaraById(id);
+    }
+  }, [id]);
 
   return (
     <div className=" py-12 px-[18px] md:px-20  md:flex md:justify-center print:py-0">
-      <div className="flex flex-col gap-6 max-w-[825px]">
-        <Breadcrumb className="md:px-10 print:hidden">
-          <BreadcrumbItem>
-            <BreadcrumbLink href={`/${lang}/siaran`}>Siaran</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>calendarItem.title</BreadcrumbPage>
-          </BreadcrumbItem>
-        </Breadcrumb>
+      {contents && (
+        <div className="flex flex-col gap-6 max-w-[825px]">
+          <Breadcrumb className="md:px-10 print:hidden">
+            <BreadcrumbItem>
+              <BreadcrumbLink href={`/${lang}/acara`}>Acara</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{contents.title}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </Breadcrumb>
 
-        <div className="flex flex-col gap-3 md:px-10">
-          <span className={clx("text-sm font-semibold text-success-700")}>
-            Acara
-          </span>
-          <p className=" text-2xl font-semibold">calendarItem.title</p>
+          <div className="flex flex-col gap-3 md:px-10">
+            <span className={clx("text-sm font-semibold text-success-700")}>
+              Acara
+            </span>
+            <p className=" text-2xl font-semibold">{contents.title}</p>
 
-          <div className=" flex flex-row gap-2 text-bg-black-500">
-            <div className=" flex flex-row gap-1 items-center">
-              <ClockIcon /> Bacaan calendarItem.readtime
-            </div>
-            .<div>calendarItem.date, 2:30PM</div>
-          </div>
-        </div>
-
-        <div className="md:px-10 print:hidden">
-          <div className="flex justify-between pb-[18px] border-b-2 border-gray-200">
-            <SocialLinks links={siaranSocialLinks} classNameButton="p-2" />
-            <div className="flex items-center ">
-              <Button variant="default-outline" onClick={() => window.print()}>
-                <PrinterIcon /> Cetak
-              </Button>
+            <div className=" flex flex-row gap-2 text-bg-black-500">
+              <div className=" flex flex-row gap-1 items-center">
+                <ClockIcon /> Bacaan {contents.readTime} min
+              </div>
+              .
+              <div>
+                {formatFullEventDate(contents.articleDate)},{" "}
+                {formatEventTime(contents.articleDate)}
+              </div>
             </div>
           </div>
+
+          <div className="md:px-10 print:hidden">
+            <div className="flex justify-between pb-[18px] border-b-2 border-gray-200">
+              <SocialLinks links={siaranSocialLinks} classNameButton="p-2" />
+              <div className="flex items-center ">
+                <Button
+                  variant="default-outline"
+                  onClick={() => window.print()}
+                >
+                  <PrinterIcon /> Cetak
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <img
+              src={contents.imageHero.url}
+              alt={contents.imageHero.alt}
+              className="min-h-[250px] rounded-lg"
+            />
+            <span className="text-txt-black-500 text-center font-body font-normal text-sm">
+              Image from{" "}
+              <span className="italic">{contents.imageHero.url}</span>
+            </span>
+          </div>
+
+          <div className="text-xl text-justify font-normal md:px-10">
+            <LexicalRenderer
+              editorState={contents.content}
+              className=" flex flex-col gap-10 text-[15px] text-txt-black-700 font-body font-normal"
+            />
+          </div>
+
+          <div className="md:px-10">
+            <div className="flex justify-between border-t-2 border-otl-gray-200 pt-6">
+              {contents.attachments.map((attachment, index) => (
+                <div
+                  key={index}
+                  className="border border-otl-gray-200 max-w-[217px] rounded-lg flex items-center justify-start p-2 gap-2 mt-4"
+                >
+                  <div className="text-start w-full">
+                    <div className="flex gap-1">
+                      <div className="max-w-[85px] truncate">
+                        {attachment.id}
+                      </div>
+                      <div>....</div>
+                    </div>
+                    <div className="text-[#71717A] text-xs">
+                      {/* {selectedFile && selectedFile.body?.fileSize !== undefined ? formatFileSize(Number(selectedFile.body.fileSize)) : ''} */}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-
-        <div className="flex flex-col gap-3">
-          {/* <img
-            src={calendarItem.imageSrc}
-            alt={calendarItem.imageAlt}
-            className="min-h-[250px] rounded-lg"
-          /> */}
-          <span className="text-bg-black-500 text-center">
-            Image from calendarItem.link
-          </span>
-        </div>
-
-        <p className=" text-2xl font-semibold md:px-10">
-          calendarItem.description
-        </p>
-
-        <p className="md:px-10"> calendarItem.content</p>
-      </div>
+      )}
     </div>
   );
 }
