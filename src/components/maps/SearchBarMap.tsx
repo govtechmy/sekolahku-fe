@@ -144,7 +144,9 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
       <div
         className={`shadow-md border border-otl-divider bg-white 
             ${
-              isExpanded ? "w-full sm:max-w-[350px]" : "rounded-full cursor-pointer w-full md:max-w-[350px]"
+              isExpanded
+                ? "w-full sm:max-w-[350px]"
+                : "rounded-full cursor-pointer w-full md:max-w-[350px]"
             }
           `}
         onClick={() => {
@@ -262,7 +264,9 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
         <div
           className={clx(
             "bg-transparent flex-1 w-full max-w-[328px] rounded-xl overflow-y-auto",
-            isExpanded ? "my-10 mx-3" : "absolute top-[54px] max-h-[78vh] left-3 right-3",
+            isExpanded
+              ? "my-10 mx-3"
+              : "absolute top-[54px] max-h-[78vh] left-3 right-3",
           )}
         >
           <SchoolInfoWindow
