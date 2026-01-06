@@ -1,3 +1,4 @@
+import underScoreRemover from "../../utils/underscoreRemover";
 import {
   Select,
   SelectContent,
@@ -45,7 +46,7 @@ export function FilterDropdowns({
               .filter((n): n is string => typeof n === "string")
               .map((n, idx) => (
                 <SelectItem key={idx} value={n}>
-                  {n}
+                  {underScoreRemover(n)}
                 </SelectItem>
               ))}
           </SelectGroup>

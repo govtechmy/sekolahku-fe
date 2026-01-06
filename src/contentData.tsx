@@ -9,6 +9,7 @@ import {
   PinIcon,
 } from "@govtechmy/myds-react/icon";
 import type { FindNearbyUpdatedEndpoint } from "./types/maps";
+import type { Document } from "./types/files";
 
 export const siaranSocialLinks = [
   {
@@ -53,6 +54,36 @@ export const footerSocialLinks = [
     platform: "youtube",
     href: "#",
     ariaLabel: "Youtube link",
+  },
+];
+
+export const siaranAcaraDummyDocuments: Document[] = [
+  {
+    name: "file1.pdf",
+    type: "application/pdf",
+    size: 5000,
+    fileurl:
+      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.pdf",
+  },
+  {
+    name: "file2.xlsx",
+    type: "application/vnd.ms-excel",
+    size: 50000,
+    fileurl:
+      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.xlsx",
+  },
+  {
+    name: "file3.jpg",
+    type: "image/jpeg",
+    size: 5000,
+    fileurl: "",
+  },
+  {
+    name: "SBP-English College.png",
+    type: "image/png",
+    size: 50000,
+    fileurl:
+      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.png",
   },
 ];
 
@@ -412,187 +443,6 @@ export const dataItemNews = [
     link: "https://litipsum.com/",
     content:
       "Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus. Donec rutrum congue leo eget malesuada. Cras ultricies ligula sed magna dictum porta. Vivamus suscipit tortor eget felis porttitor volutpat.",
-  },
-];
-
-export const dataItemCalendar = [
-  {
-    id: 1,
-    day: "SABTU",
-    date: "15 FEB",
-    year: 2025,
-    title: "Hari Kanak-Kanak Sedunia",
-    imageSrc: "/utama/calendaritem/1.png",
-    imageAlt: "xxx",
-    readTime: "2 min",
-    link: "https://litipsum.com/",
-    content:
-      "Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus. Donec rutrum congue leo eget malesuada.",
-    description:
-      "Sambutan khas bagi menghargai kanak-kanak serta meningkatkan kesedaran tentang hak dan kebajikan mereka.",
-  },
-  {
-    id: 2,
-    day: "ISNIN",
-    date: "11 MAC",
-    year: 2025,
-    title: "Hari Sukan Malaysia 2025",
-    imageSrc: "/utama/calendaritem/2.jpg",
-    imageAlt: "xxx",
-    readTime: "3 min",
-    link: "https://litipsum.com/",
-    content:
-      "Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus. Donec rutrum congue leo eget malesuada. Cras ultricies ligula sed magna dictum porta. Vivamus suscipit tortor eget felis porttitor volutpat.",
-    description:
-      "Kursus persediaan SPM percuma untuk semua calon. Daftar sekarang dan tingkatkan peluang kejayaan anda.",
-  },
-  {
-    id: 3,
-    day: "JUMAAT",
-    date: "16 MEI",
-    year: 2025,
-    title: "Hari Guru Malaysia 2025",
-    imageSrc: "/utama/calendaritem/3.jpg",
-    imageAlt: "xxx",
-    readTime: "4 min",
-    link: "https://litipsum.com/",
-    content:
-      "Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Nulla quis lorem ut libero malesuada feugiat.",
-    description:
-      "Penghargaan kepada para pendidik atas jasa dan sumbangan mereka dalam membentuk generasi masa depan.",
-  },
-  {
-    id: 4,
-    day: "ISNIN",
-    date: "11 MAC",
-    year: 2025,
-    title: "Hari Bapa Malaysia 2025",
-    imageSrc: "/utama/calendaritem/4.jpg",
-    imageAlt: "xxx",
-    readTime: "2 min",
-    link: "https://litipsum.com/",
-    content:
-      "Donec sollicitudin molestie malesuada. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.",
-    description:
-      "Hari istimewa untuk menghargai peranan dan pengorbanan seorang bapa dalam institusi keluarga.",
-  },
-  {
-    id: 5,
-    day: "ISNIN",
-    date: "11 MAC",
-    year: 2025,
-    title: "Hari Sukan Malaysia 2025",
-    imageSrc: "/utama/calendaritem/2.jpg",
-    imageAlt: "xxx",
-    readTime: "5 min",
-    link: "https://litipsum.com/",
-    content:
-      "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus.",
-    description:
-      "Program dan aktiviti sukan kebangsaan bagi menggalakkan gaya hidup sihat dalam kalangan rakyat Malaysia.",
-  },
-  {
-    id: 6,
-    day: "JUMAAT",
-    date: "16 MEI",
-    year: 2025,
-    title: "Hari Guru Malaysia 2025",
-    imageSrc: "/utama/calendaritem/3.jpg",
-    imageAlt: "xxx",
-    readTime: "1 min",
-    link: "https://litipsum.com/",
-    content:
-      "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.",
-    description:
-      "Sambutan ringkas tetapi bermakna bagi mengenang jasa dan dedikasi warga pendidik.",
-  },
-  {
-    id: 7,
-    day: "ISNIN",
-    date: "11 MAC",
-    year: 2025,
-    title: "Hari Bapa Malaysia 2025",
-    imageSrc: "/utama/calendaritem/4.jpg",
-    imageAlt: "xxx",
-    readTime: "3 min",
-    link: "https://litipsum.com/",
-    content: "Sed porttitor lectus nibh. Proin eget tortor risus.",
-    description:
-      "Mengiktiraf peranan bapa sebagai tonggak utama dalam pembangunan keluarga dan masyarakat.",
-  },
-  {
-    id: 8,
-    day: "JUMAAT",
-    date: "16 MEI",
-    year: 2025,
-    title: "Hari Guru Malaysia 2025",
-    imageSrc: "/utama/calendaritem/3.jpg",
-    imageAlt: "xxx",
-    readTime: "2 min",
-    link: "https://litipsum.com/",
-    content:
-      "Cras ultricies ligula sed magna dictum porta. Donec sollicitudin molestie malesuada.",
-    description:
-      "Acara tahunan bagi meraikan sumbangan guru dalam sistem pendidikan negara.",
-  },
-  {
-    id: 9,
-    day: "ISNIN",
-    date: "11 MAC",
-    year: 2025,
-    title: "Hari Bapa Malaysia 2025",
-    imageSrc: "/utama/calendaritem/4.jpg",
-    imageAlt: "xxx",
-    readTime: "4 min",
-    link: "https://litipsum.com/",
-    content:
-      "Pellentesque in ipsum id orci porta dapibus. Curabitur arcu erat, accumsan id imperdiet et.",
-    description:
-      "Kesedaran tentang kepentingan peranan seorang bapa dalam pembangunan sahsiah anak-anak.",
-  },
-  {
-    id: 10,
-    day: "ISNIN",
-    date: "11 MAC",
-    year: 2025,
-    title: "Hari Sukan Malaysia 2025",
-    imageSrc: "/utama/calendaritem/2.jpg",
-    imageAlt: "xxx",
-    readTime: "1 min",
-    link: "https://litipsum.com/",
-    content: "Quisque velit nisi, pretium ut lacinia in, elementum id enim.",
-    description:
-      "Aktiviti sukan ringkas dan penyertaan komuniti bagi memupuk budaya aktif.",
-  },
-  {
-    id: 11,
-    day: "JUMAAT",
-    date: "16 MEI",
-    year: 2025,
-    title: "Hari Guru Malaysia 2025",
-    imageSrc: "/utama/calendaritem/3.jpg",
-    imageAlt: "xxx",
-    readTime: "5 min",
-    link: "https://litipsum.com/",
-    content:
-      "Nulla quis lorem ut libero malesuada feugiat. Curabitur non nulla sit amet nisl tempus convallis.",
-    description:
-      "Pengisian program dan aktiviti khas sempena sambutan Hari Guru peringkat kebangsaan.",
-  },
-  {
-    id: 12,
-    day: "ISNIN",
-    date: "11 MAC",
-    year: 2025,
-    title: "Hari Bapa Malaysia 2025",
-    imageSrc: "/utama/calendaritem/4.jpg",
-    imageAlt: "xxx",
-    readTime: "2 min",
-    link: "https://litipsum.com/",
-    content:
-      "Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.",
-    description:
-      "Sambutan untuk menghargai kasih sayang dan pengorbanan seorang ayah.",
   },
 ];
 

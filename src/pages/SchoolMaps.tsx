@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import type { Coordinates } from "../types/maps";
-import { fetchNearbySchools } from "../services/school.svc";
+import { fetchNearbySchools, getSchoolTypes } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
@@ -10,6 +10,7 @@ import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
 
 export default function SchoolMaps() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [schoolTypes, setSchoolTypes] = useState<string[]>([]);
   const {
     center,
     setCenter,
@@ -36,6 +37,16 @@ export default function SchoolMaps() {
   });
 
   useEffect(() => {
+    const fetchSchoolTypes = async () => {
+      try {
+        const types = await getSchoolTypes();
+        setSchoolTypes(types);
+      } catch (error) {
+        console.error("Error fetching school types:", error);
+        setSchoolTypes([]);
+      }
+    };
+    fetchSchoolTypes();
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
       return;
@@ -87,7 +98,7 @@ export default function SchoolMaps() {
 
   return (
     <div className="h-full w-full flex relative">
-      <SearchBarMap />
+      <SearchBarMap schoolTypes={schoolTypes} />
       <MapContainerComponent
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}
