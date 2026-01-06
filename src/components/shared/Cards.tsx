@@ -52,6 +52,7 @@ interface HorizontalCardItemProps {
     imageSrc: string;
     imageAlt: string;
     header: string;
+    headerColor?: string;
     date: string;
     title: string;
     redirectDesc?: string;
@@ -87,6 +88,7 @@ function HorizontalCardItem({
             "text-xs md:text-sm font-semibold flex-shrink-0",
             classNameHeader,
           )}
+          style={item.headerColor ? { color: item.headerColor } : undefined}
         >
           {item.header}
         </p>

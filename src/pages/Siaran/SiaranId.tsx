@@ -1,5 +1,4 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { dataItemNews } from "../../contentData";
 import { Button } from "@govtechmy/myds-react/button";
 import {
   Breadcrumb,
@@ -9,17 +8,50 @@ import {
   BreadcrumbPage,
 } from "@govtechmy/myds-react/breadcrumb";
 import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
-import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
 import { siaranSocialLinks } from "../../contentData";
+import { useEffect, useState } from "react";
+import { getSiaranById } from "../../services/siaran.svc";
+import type { SiaranItem } from "../../models/response";
+import { formatDate } from "../../utils/dateFormatter";
+
 
 export default function SiaranId() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
+  const [newsItem, setNewsItem] = useState<SiaranItem | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Find the news item by ID
-  const newsItem = dataItemNews.find((item) => item.id === id);
+  useEffect(() => {
+    const fetchSiaran = async () => {
+      if (!id) return;
+      
+      try {
+        setLoading(true);
+        const response = await getSiaranById(id);
+        setNewsItem(response);
+      } catch (error) {
+        console.error("Error fetching siaran detail:", error);
+        setNewsItem(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSiaran();
+  }, [id]);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="px-4 md:px-20 py-12">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-gray-600">Memuatkan...</p>
+        </div>
+      </div>
+    );
+  }
 
   // If item not found, show error message
   if (!newsItem) {
@@ -53,22 +85,18 @@ export default function SiaranId() {
 
         <div className="flex flex-col gap-3 md:px-10">
           <span
-            className={clx(
-              "text-sm font-semibold",
-              newsItem.header === "Berita"
-                ? "text-txt-primary"
-                : "text-success-700",
-            )}
+            className="text-sm font-semibold"
+            style={{ color: newsItem.categoryDetails?.colors }}
           >
-            {newsItem.header}
+            {newsItem.categoryDetails?.name}
           </span>
           <p className=" text-2xl font-semibold">{newsItem.title}</p>
 
           <div className=" flex flex-row gap-2 text-bg-black-500">
             <div className=" flex flex-row gap-1 items-center">
-              <ClockIcon /> Bacaan {newsItem.readTime}
+              <ClockIcon /> Bacaan {newsItem.readTime} min
             </div>
-            .<div>{newsItem.date}, 2:30PM</div>
+            .<div>{formatDate(newsItem.articleDate)}</div>
           </div>
         </div>
 
@@ -85,20 +113,18 @@ export default function SiaranId() {
 
         <div className="flex flex-col gap-3">
           <img
-            src={newsItem.imageSrc}
-            alt={newsItem.imageAlt}
-            className="min-h-[250px] rounded-lg"
+            src={newsItem.imageHero?.url}
+            alt={newsItem.imageHero?.alt}
+            className="min-h-[250px] rounded-lg object-cover"
           />
-          <span className="text-bg-black-500 text-center">
-            Image from {newsItem.link}
-          </span>
         </div>
 
-        <p className=" text-2xl font-semibold md:px-10">
-          {newsItem.description}
-        </p>
-
-        <p className="md:px-10">{newsItem.content}</p>
+        <div className="md:px-10 prose max-w-none">
+          {/* TODO: Implement proper content rendering based on newsItem.content structure */}
+          <div className="whitespace-pre-wrap">
+            {JSON.stringify(newsItem.content, null, 2)}
+          </div>
+        </div>
       </div>
     </div>
   );

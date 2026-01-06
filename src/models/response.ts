@@ -152,3 +152,68 @@ export interface AnalyticsModel {
   jumlahPelajar: number;
   data: AnalyticsData;
 }
+
+export interface SiaranContentNode {
+  detail?: number;
+  format?: number | string;
+  mode?: string;
+  style?: string;
+  text?: string;
+  type: string;
+  version: number;
+  children?: SiaranContentNode[];
+  direction?: string | null;
+  indent?: number;
+  textFormat?: number;
+  textStyle?: string;
+}
+
+export interface SiaranContent {
+  root: SiaranContentNode;
+}
+
+export interface SiaranImageHero {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  alt: string;
+  filename: string;
+  mimeType: string;
+  filesize: number;
+  width: number;
+  height: number;
+  focalX: number;
+  focalY: number;
+  __v: number;
+  url: string;
+}
+
+export interface SiaranCategory {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  value: string;
+  __v: number;
+  colors: string;
+}
+
+export interface SiaranItem {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  title: string;
+  image: string;
+  readTime: number;
+  articleDate: string;
+  attachments: string[];
+  content: SiaranContent;
+  category: string;
+  __v: number;
+  imageHero: SiaranImageHero;
+  categoryDetails: SiaranCategory;
+}
+
+export interface SiaranList extends BaseListModel {
+  items: SiaranItem[];
+}

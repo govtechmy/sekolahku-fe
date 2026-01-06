@@ -17,6 +17,7 @@ interface SearchBarHomeProps<T> {
   query?: string;
   setQuery?: (value: string) => void;
   handleValueChange?: (value: string) => void;
+  handleSearchEnter?: React.KeyboardEventHandler<HTMLInputElement>;
   suggestions?: T[];
   getKey?: (item: T) => string;
   getLabel?: (item: T) => string;
@@ -27,6 +28,7 @@ export default function SearchBarHome<T>({
   query,
   setQuery,
   handleValueChange,
+  handleSearchEnter,
   suggestions = [],
   getKey,
   getLabel,
@@ -62,6 +64,7 @@ export default function SearchBarHome<T>({
           placeholder="Carian sekolah"
           value={query}
           onValueChange={handleValueChange}
+          onKeyDown={handleSearchEnter}
           onFocus={() => setHasFocus(true)}
         />
         {query && <SearchBarClearButton onClick={() => setQuery?.("")} />}
