@@ -10,7 +10,7 @@ import {
 import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import SocialLinks from "../../components/shared/SocialLinks";
 import FileList from "../../components/shared/FileList";
-import { siaranSocialLinks } from "../../contentData";
+import { siaranAcaraDummyDocuments, siaranSocialLinks } from "../../contentData";
 import DotIcon from "../../icons/DotIcon";
 import type { Document } from "../../types/files";
 import { useEffect, useState } from "react";
