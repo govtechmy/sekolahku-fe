@@ -9,7 +9,10 @@ import {
 } from "@govtechmy/myds-react/breadcrumb";
 import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import SocialLinks from "../../components/shared/SocialLinks";
+import FileList from "../../components/shared/FileList";
 import { siaranSocialLinks } from "../../contentData";
+import DotIcon from "../../icons/DotIcon";
+import type { Document } from "../../types/files";
 import { useEffect, useState } from "react";
 import { getSiaranById } from "../../services/siaran.svc";
 import type { SiaranItem } from "../../models/response";
@@ -52,6 +55,7 @@ export default function SiaranId() {
       </div>
     );
   }
+  const filesItem: Document[] = siaranAcaraDummyDocuments;
 
   // If item not found, show error message
   if (!newsItem) {
@@ -92,11 +96,12 @@ export default function SiaranId() {
           </span>
           <p className=" text-2xl font-semibold">{newsItem.title}</p>
 
-          <div className=" flex flex-row gap-2 text-bg-black-500">
+          <div className=" flex flex-row gap-2 text-bg-black-500 items-center">
             <div className=" flex flex-row gap-1 items-center">
               <ClockIcon /> Bacaan {newsItem.readTime} min
             </div>
-            .<div>{formatDate(newsItem.articleDate)}</div>
+            <DotIcon />
+            <div>{formatDate(newsItem.articleDate)}</div>
           </div>
         </div>
 
@@ -124,6 +129,10 @@ export default function SiaranId() {
           <div className="whitespace-pre-wrap">
             {JSON.stringify(newsItem.content, null, 2)}
           </div>
+        </div>
+
+        <div className="border-t border-otl-gray-200 md:mx-10">
+          <FileList files={filesItem} />
         </div>
       </div>
     </div>

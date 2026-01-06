@@ -10,10 +10,19 @@ import {
 import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
-import { siaranSocialLinks } from "../../contentData";
+import {
+  siaranAcaraDummyDocuments,
+  siaranSocialLinks,
+} from "../../contentData";
+import DotIcon from "../../icons/DotIcon";
+import type { Document } from "../../types/files";
+import FileList from "../../components/shared/FileList";
 
-export default function SiaranId() {
+export default function AcaraId() {
   const { lang } = useParams<{ lang: string }>();
+
+  // Find the news item by ID
+  const filesItem: Document[] = siaranAcaraDummyDocuments;
 
   return (
     <div className=" py-12 px-[18px] md:px-20  md:flex md:justify-center print:py-0">
@@ -34,11 +43,11 @@ export default function SiaranId() {
           </span>
           <p className=" text-2xl font-semibold">calendarItem.title</p>
 
-          <div className=" flex flex-row gap-2 text-bg-black-500">
+          <div className=" flex flex-row gap-2 text-bg-black-500 items-center">
             <div className=" flex flex-row gap-1 items-center">
               <ClockIcon /> Bacaan calendarItem.readtime
             </div>
-            .<div>calendarItem.date, 2:30PM</div>
+            <DotIcon />
           </div>
         </div>
 
@@ -68,7 +77,9 @@ export default function SiaranId() {
           calendarItem.description
         </p>
 
-        <p className="md:px-10"> calendarItem.content</p>
+        <div className="border-t border-otl-gray-200 md:mx-10">
+          <FileList files={filesItem} />
+        </div>
       </div>
     </div>
   );
