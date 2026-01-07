@@ -67,8 +67,8 @@ export default function Acara() {
                     item={{
                       imageSrc: item.imageHero?.url,
                       imageAlt: item.imageHero?.alt,
-                      header: item.categoryDetails?.name,
-                      headerColor: item.categoryDetails?.colors,
+                      header: item.categoryInfo?.name,
+                      headerColor: item.categoryInfo?.colors,
                       date: formatDate(item.articleDate),
                       title: item.title,
                       redirectDesc: "Baca",

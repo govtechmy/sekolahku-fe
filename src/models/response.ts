@@ -1,4 +1,6 @@
+import type { SerializedEditorState, SerializedLexicalNode } from "lexical";
 import type { MarkerType } from "../types/maps";
+import type { Attachment } from "../types/acara";
 
 interface BaseListModel {
   totalRecords: number;
@@ -168,9 +170,11 @@ export interface SiaranContentNode {
   textStyle?: string;
 }
 
-export interface SiaranContent {
-  root: SiaranContentNode;
-}
+// export interface SiaranContent {
+//   root: SiaranContentNode;
+// }
+
+export type SiaranContent = SerializedEditorState<SerializedLexicalNode>;
 
 export interface SiaranImageHero {
   _id: string;
@@ -206,12 +210,12 @@ export interface SiaranItem {
   image: string;
   readTime: number;
   articleDate: string;
-  attachments: string[];
+  attachments: Attachment[];
   content: SiaranContent;
   category: string;
   __v: number;
   imageHero: SiaranImageHero;
-  categoryDetails: SiaranCategory;
+  categoryInfo: SiaranCategory;
 }
 
 export interface SiaranList extends BaseListModel {

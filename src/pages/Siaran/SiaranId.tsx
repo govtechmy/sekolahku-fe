@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Button } from "@govtechmy/myds-react/button";
 import {
   Breadcrumb,
@@ -8,129 +8,172 @@ import {
   BreadcrumbPage,
 } from "@govtechmy/myds-react/breadcrumb";
 import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
+import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
 import { siaranSocialLinks } from "../../contentData";
 import DotIcon from "../../icons/DotIcon";
 import { useEffect, useState } from "react";
-import { getSiaranById } from "../../services/siaran.svc";
+import { formatFullEventDate, formatEventTime } from "../../utils/date";
+import { RichText } from "@payloadcms/richtext-lexical/react";
+import { getIcon } from "../../utils/getIconLogo";
+import { formatFileSize } from "../../utils/formatFileSize";
+import { downloadFile } from "../../services/download.svc";
 import type { SiaranItem } from "../../models/response";
-import { formatDate } from "../../utils/dateFormatter";
+import { getSiaranById } from "../../services/siaran.svc";
 
 export default function SiaranId() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
-  const [newsItem, setNewsItem] = useState<SiaranItem | null>(null);
-  const [loading, setLoading] = useState(true);
+
+  // Find the news item by ID
+  const { id } = useParams<{ id: string }>();
+  const [contents, setContents] = useState<SiaranItem | null>(null);
 
   useEffect(() => {
-    const fetchSiaran = async () => {
-      if (!id) return;
-
+    const fetchSiaranById = async (id: string) => {
       try {
-        setLoading(true);
         const response = await getSiaranById(id);
-        setNewsItem(response);
+        setContents(response);
       } catch (error) {
-        console.error("Error fetching siaran detail:", error);
-        setNewsItem(null);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching siaran by id:", error);
       }
     };
 
-    fetchSiaran();
+    if (id) {
+      fetchSiaranById(id);
+    }
   }, [id]);
 
-  // Show loading state
-  if (loading) {
-    return (
-      <div className="px-4 md:px-20 py-12">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-gray-600">Memuatkan...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // If item not found, show error message
-  if (!newsItem) {
-    return (
-      <div className="px-4 md:px-20 py-12">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-3xl font-bold mb-4">Siaran Tidak Dijumpai</h1>
-          <p className="text-gray-600 mb-6">
-            Maaf, siaran yang anda cari tak wujud.
-          </p>
-          <Button onClick={() => navigate(`/${lang}/siaran`)}>
-            Kembali ke Siaran
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className=" py-12 px-[18px] md:px-20  md:flex md:justify-center print:py-0">
-      <div className="flex flex-col gap-6 max-w-[825px]">
-        <Breadcrumb className="md:px-10 print:hidden">
-          <BreadcrumbItem>
-            <BreadcrumbLink href={`/${lang}/siaran`}>Siaran</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{newsItem.title}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </Breadcrumb>
+    <div className=" py-12 px-[18px] md:px-20 md:flex md:justify-center print:py-0">
+      {contents && (
+        <div className="flex flex-col gap-6 max-w-[825px]">
+          <Breadcrumb className="md:px-10 print:hidden">
+            <BreadcrumbItem>
+              <BreadcrumbLink href={`/${lang}/siaran`}>Siaran</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{contents.title}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </Breadcrumb>
+          <div className="flex flex-col gap-3 md:px-10">
+            {contents.categoryInfo?.name && contents.categoryInfo?.colors && (
+              <span
+                className={clx("text-body-sm font-body font-semibold")}
+                style={
+                  contents.categoryInfo.colors
+                    ? { color: contents.categoryInfo.colors }
+                    : undefined
+                }
+              >
+                {contents.categoryInfo.name}
+              </span>
+            )}
+            <p className=" text-2xl font-semibold font-body">
+              {contents.title}
+            </p>
 
-        <div className="flex flex-col gap-3 md:px-10">
-          <span
-            className="text-sm font-semibold"
-            style={{ color: newsItem.categoryDetails?.colors }}
-          >
-            {newsItem.categoryDetails?.name}
-          </span>
-          <p className=" text-2xl font-semibold">{newsItem.title}</p>
-
-          <div className=" flex flex-row gap-2 text-bg-black-500 items-center">
-            <div className=" flex flex-row gap-1 items-center">
-              <ClockIcon /> Bacaan {newsItem.readTime} min
+            <div className=" flex flex-row gap-2 text-bg-black-500">
+              <div className=" flex flex-row gap-1 items-center text-body-sm font-body font-normal">
+                <ClockIcon /> Bacaan {contents.readTime} min
+              </div>
+              <div className="flex items-center">
+                <DotIcon className="size-0.5" />
+              </div>
+              <div className="text-body-sm font-body font-normal">
+                {formatFullEventDate(contents.articleDate)},{" "}
+                {formatEventTime(contents.articleDate)}
+              </div>
             </div>
-            <DotIcon />
-            <div>{formatDate(newsItem.articleDate)}</div>
           </div>
-        </div>
-
-        <div className="md:px-10 print:hidden">
-          <div className="flex justify-between pb-[18px] border-b-2 border-gray-200">
-            <SocialLinks links={siaranSocialLinks} classNameButton="p-2" />
-            <div className="flex items-center ">
-              <Button variant="default-outline" onClick={() => window.print()}>
-                <PrinterIcon /> Cetak
-              </Button>
+          <div className="md:px-10 print:hidden">
+            <div className="flex justify-between pb-[18px] border-b border-gray-200">
+              <SocialLinks links={siaranSocialLinks} classNameButton="p-2" />
+              <div className="flex items-center ">
+                <Button
+                  variant="default-outline"
+                  onClick={() => window.print()}
+                >
+                  <PrinterIcon /> Cetak
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="flex flex-col gap-3">
-          <img
-            src={newsItem.imageHero?.url}
-            alt={newsItem.imageHero?.alt}
-            className="min-h-[250px] rounded-lg object-cover"
-          />
-        </div>
-
-        <div className="md:px-10 prose max-w-none">
-          {/* TODO: Implement proper content rendering based on newsItem.content structure */}
-          <div className="whitespace-pre-wrap">
-            {JSON.stringify(newsItem.content, null, 2)}
+          <div className="flex flex-col gap-3 ">
+            <img
+              src={contents.imageHero.url}
+              alt={contents.imageHero.alt}
+              className="w-full max-h-[415px] object-contain rounded-lg"
+            />
+            <span className="text-txt-black-500 text-center font-body font-normal text-body-sm md:px-10">
+              Image from{" "}
+              <span className="italic">{contents.imageHero.url}</span>
+            </span>
           </div>
-        </div>
+          <div className="text-xl text-justify font-normal md:px-10">
+            <RichText
+              className="flex flex-col gap-10 text-[15px] text-txt-black-700 font-body font-normal"
+              data={contents.content}
+            />
+          </div>
+          {contents.attachments.length > 0 && (
+            <div className="md:px-10">
+              <div className="flex flex-wrap pt-6 border-t border-gray-200 gap-2">
+                {contents.attachments.map((attachment) => {
+                  const hasValidUrl = !!attachment.url;
+                  return (
+                    <div key={attachment.id}>
+                      {attachment.filename &&
+                        attachment.filesize &&
+                        attachment.url &&
+                        attachment.mimeType && (
+                          <div
+                            className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
+                            onClick={
+                              hasValidUrl
+                                ? () =>
+                                    downloadFile(
+                                      attachment.url,
+                                      attachment.filename,
+                                    )
+                                : undefined
+                            }
+                          >
+                            <div className="flex items-center gap-2 overflow-hidden">
+                              {getIcon(
+                                attachment.mimeType.split("/")[1],
+                                attachment.url,
+                              )}
 
-        <div className="border-t border-otl-gray-200 md:mx-10">
-          {/* <FileList files={filesItem} /> */}
+                              <div className="text-start overflow-hidden">
+                                <div className="flex items-center">
+                                  <div className="max-w-[95px] truncate">
+                                    {attachment.filename.includes(".")
+                                      ? attachment.filename.slice(
+                                          0,
+                                          attachment.filename.lastIndexOf("."),
+                                        )
+                                      : attachment.filename}
+                                  </div>
+                                  <div className="flex-shrink-0">
+                                    .{attachment.mimeType.split("/")[1]}
+                                  </div>
+                                </div>
+                                <div className="text-txt-black-500 text-body-xs font-normal">
+                                  {formatFileSize(attachment.filesize)}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
-      </div>
+      )}
     </div>
   );
 }
