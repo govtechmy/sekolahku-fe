@@ -15,7 +15,6 @@ import {
   formatEventDateMonth,
   formatDateToISO,
 } from "../../utils/date";
-import React from "react";
 
 export default function Acara() {
   const navigate = useNavigate();
@@ -26,7 +25,7 @@ export default function Acara() {
   const [totalRecord, setTotalRecord] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchSuggestions, setSearchSuggestions] = useState<AcaraItem[]>([]);
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,
   });
@@ -36,13 +35,8 @@ export default function Acara() {
       try {
         const response =
           searchQuery ||
-          (dateRange?.from != undefined && dateRange?.to != undefined)
-            ? await getSearchAcara(
-                pageNumber,
-                searchQuery,
-                formatDateToISO(dateRange?.from),
-                formatDateToISO(dateRange?.to),
-              )
+            (dateRange?.from != undefined && dateRange?.to != undefined)
+            ? await getSearchAcara(pageNumber, searchQuery, formatDateToISO(dateRange?.from), formatDateToISO(dateRange?.to))
             : await getAllAcara(pageNumber);
         setItems(response.items);
         setPageNumber(response.pageNumber);
