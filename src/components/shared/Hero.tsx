@@ -36,6 +36,7 @@ export default function Hero({
   heroBanner,
   variant = "side",
   HeroclassName,
+  fullHeight = false,
 }: {
   title: string;
   search?: React.ReactNode;
@@ -45,11 +46,13 @@ export default function Hero({
   heroBanner?: HeroBanner;
   variant?: "side" | "full";
   HeroclassName?: string;
+  fullHeight?: boolean;
 }) {
   return (
     <section
       className={clx(
-        "relative border-b border-outline-200 h-[515px]",
+        "relative border-b border-outline-200",
+        fullHeight ? "min-h-[calc(100vh-450px)]" : "h-[515px]",
         variant === "side" ? "" : "",
       )}
     >
