@@ -143,7 +143,7 @@ export default function AcaraId() {
                                   : attachment.filename}
                               </div>
                               <div className="flex-shrink-0">
-                                .{attachment.mimeType.slice(6)}
+                                .{attachment.mimeType.split("/")[1]}
                               </div>
                             </div>
                             <div className="text-txt-black-500 text-body-xs font-normal">
