@@ -13,7 +13,6 @@ import type { AcaraItem } from "../../types/acara";
 import {
   formatEventDay,
   formatEventDateMonth,
-  formatDateToISO,
 } from "../../utils/date";
 
 export default function Acara() {
@@ -39,8 +38,8 @@ export default function Acara() {
             ? await getSearchAcara(
                 pageNumber,
                 searchQuery,
-                formatDateToISO(dateRange?.from),
-                formatDateToISO(dateRange?.to),
+                dateRange?.from ? dateRange.from.toISOString() : undefined,
+                dateRange?.to ? dateRange.to.toISOString() : undefined,
               )
             : await getAllAcara(pageNumber);
         setItems(response.items);
