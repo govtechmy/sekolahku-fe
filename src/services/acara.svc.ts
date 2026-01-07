@@ -22,15 +22,16 @@ export const getSearchAcara = async (
   endDate?: string,
 ) => {
   try {
-    let url = `${BASE_URL}/acara?page=${pageNumber}&pageSize=12&search=${search}`;
-
+    let url = `${BASE_URL}/acara?page=${pageNumber}&pageSize=12`;
+    if (search) {
+      url += `&search=${search}`;
+    }
     if (startDate) {
       url += `&startDate=${startDate}`;
     }
     if (endDate) {
       url += `&endDate=${endDate}`;
     }
-
     const response = await authAxios.get(url);
     return response.data.data;
   } catch (error) {
