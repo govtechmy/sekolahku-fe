@@ -19,10 +19,10 @@ import { Button } from "@govtechmy/myds-react/button";
 import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import { useMapViewStore } from "../../store/mapView";
-import { JENIS_LIST, NEGERI_LIST } from "../../contentData";
+import { NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
 
-export function SearchBarMap() {
+export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const {
     initialLocationSet,
     viewSchool,
@@ -34,6 +34,7 @@ export function SearchBarMap() {
     handleSearch,
   } = useMapViewStore();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
   const debounceTimerRef = useRef<number | null>(null);
@@ -44,7 +45,6 @@ export function SearchBarMap() {
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
-  const jenisList = JENIS_LIST;
 
   // Handler for MyDS SearchBar onValueChange
   const handleValueChange = (value: string) => {
@@ -126,6 +126,11 @@ export function SearchBarMap() {
         setTimeout(() => {
           setZoom(15);
         }, 0);
+
+        // Close the expanded search panel on mobile/tablet (md and smaller)
+        if (window.innerWidth < 768) {
+          setIsExpanded(false);
+        }
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
@@ -134,22 +139,30 @@ export function SearchBarMap() {
 
   return (
     <div
-      className={`absolute flex justify-start z-[500] bottom-0 
+      className={`absolute flex z-[500] bottom-0 
           ${
             isExpanded
-              ? "top-0 left-0 gap-4"
-              : "top-[16px] left-3 flex-col gap-2 w-[350px] h-[45px]"
+              ? "top-0 md:top-0 left-0 gap-4 justify-start w-full md:w-auto"
+              : "top-[16px] left-3 right-3 sm:left-3 sm:right-3 flex-col gap-2 h-[45px] justify-center sm:justify-start"
           }
         `}
     >
       <div
         className={`shadow-md border border-otl-divider bg-white 
             ${
-              isExpanded ? "w-[350px]" : "rounded-full cursor-pointer w-[328px]"
+              isExpanded
+                ? "w-full md:max-w-[350px]"
+                : "rounded-full cursor-pointer w-full md:max-w-[350px]"
             }
           `}
         onClick={() => {
-          if (!isExpanded) setIsExpanded(true);
+          if (!isExpanded) {
+            setIsExpanded(true);
+            // Close school info window on mobile when expanding search
+            if (window.innerWidth < 768 && viewSchool) {
+              setViewSchool(null);
+            }
+          }
         }}
       >
         <div className={clx("h-full w-full flex flex-col")}>
@@ -175,7 +188,7 @@ export function SearchBarMap() {
             <SearchBar size="large" className="w-full">
               <SearchBarInputContainer
                 className={clx(
-                  isExpanded ? "border-none shadow-[none] !px-0" : "w-[326px]",
+                  isExpanded ? "border-none shadow-[none] !px-0" : "w-full",
                 )}
               >
                 <SearchBarInput
@@ -200,7 +213,7 @@ export function SearchBarMap() {
               selectedNegeri={selectedNegeri}
               selectedJenis={selectedJenis}
               negeriList={negeriList}
-              jenisList={jenisList}
+              jenisList={schoolTypes}
               setSelectedNegeri={setSelectedNegeri}
               setSelectedJenis={setSelectedJenis}
             />
@@ -260,17 +273,44 @@ export function SearchBarMap() {
         </div>
       </div>
       {viewSchool && (
-        <div
-          className={clx(
-            "bg-transparent flex-1 w-[328px] rounded-xl overflow-y-auto",
-            isExpanded ? "my-10" : "absolute top-[54px] max-h-[78vh]",
-          )}
-        >
-          <SchoolInfoWindow
-            school={viewSchool}
-            setSelected={() => setViewSchool(null)}
-          />
-        </div>
+        <>
+          {/* Desktop view - side panel */}
+          <div
+            className={clx(
+              "hidden md:block bg-transparent rounded-xl overflow-y-auto",
+              isExpanded
+                ? "my-10 mx-3 max-w-[328px]"
+                : "absolute top-[53px] max-h-[78vh] w-full max-w-[350px]",
+            )}
+          >
+            <SchoolInfoWindow
+              school={viewSchool}
+              setSelected={() => setViewSchool(null)}
+              mobile={false}
+            />
+          </div>
+
+          {/* Mobile view - bottom sheet */}
+          <div
+            className={clx(
+              "md:hidden fixed inset-x-0 bottom-0 z-[60] flex flex-col",
+              isFullScreen ? "top-[30vh] max-h-screen" : "max-h-[40vh]",
+            )}
+          >
+            <div className="overflow-y-auto flex-1">
+              <SchoolInfoWindow
+                school={viewSchool}
+                setSelected={() => {
+                  setViewSchool(null);
+                  setIsFullScreen(false);
+                }}
+                mobile={true}
+                isFullScreen={isFullScreen}
+                onToggleFullScreen={() => setIsFullScreen(!isFullScreen)}
+              />
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

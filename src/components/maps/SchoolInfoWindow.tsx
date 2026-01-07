@@ -12,19 +12,35 @@ import { InfoIconRow, InfoRow } from "../shared/CardInfo";
 import type { ItemSekolahModel } from "../../models/response";
 import type { SearchBarMapProps } from "../../types/maps";
 import { useNavigate } from "react-router-dom";
-import { formatSchoolAddress } from "../../utils/schoolHelpers";
+import {
+  formatSchoolAddress,
+  getSchoolLogoUrl,
+} from "../../utils/schoolHelpers";
+import underScoreRemover from "../../utils/underscoreRemover";
 
 type SchoolInfoWindowProps = {
   school: ItemSekolahModel;
   setSelected: (marker: SearchBarMapProps | null) => void;
+  mobile?: boolean;
+  isFullScreen?: boolean;
+  onToggleFullScreen?: () => void;
 };
 
 export function SchoolInfoWindow({
   school,
   setSelected,
+  mobile,
+  onToggleFullScreen,
 }: SchoolInfoWindowProps) {
   const navigate = useNavigate();
   const lang = localStorage.getItem("lang") || "ms";
+
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+  ) => {
+    e.currentTarget.src = "/utama/info-school-default.svg";
+    e.currentTarget.className = "h-full w-full object-cover";
+  };
 
   return (
     <div className="relative bg-white rounded-b-xl">
@@ -37,12 +53,30 @@ export function SchoolInfoWindow({
           <CrossIcon className="size-4" />
         </Button>
       </div>
-      <img
-        src="/images/sekDefault.png"
-        alt={school?.namaSekolah || "Sekolah"}
-        className="w-full h-full object-cover rounded-t-xl"
-      />
-
+      {mobile && (
+        <div
+          className="sticky top-0 -mt-12 flex justify-center p-2 bg-transparent"
+          onClick={() => {
+            if (onToggleFullScreen) {
+              onToggleFullScreen();
+            }
+          }}
+        >
+          <div className="w-10 h-1 bg-gray-500 rounded-full cursor-pointer"></div>
+        </div>
+      )}
+      <div className="flex justify-center items-center h-48 bg-white rounded-t-xl">
+        <img
+          src={getSchoolLogoUrl(
+            school.data.infoPentadbiran.negeri,
+            school.data.infoPentadbiran.parlimen,
+            school.kodSekolah,
+          )}
+          alt={school?.namaSekolah || "Sekolah"}
+          className="max-h-32 w-auto object-contain"
+          onError={handleImageError}
+        />
+      </div>
       <div className="p-3 flex flex-col gap-3 justify-start">
         <div>
           <Tag mode="pill" variant="success" className="font-normal">
@@ -76,7 +110,10 @@ export function SchoolInfoWindow({
         <div className="flex gap-1 flex-col">
           <InfoRow
             label="Lokasi"
-            value={school?.data?.infoPentadbiran?.negeri || "Tiada Maklumat"}
+            value={
+              underScoreRemover(school?.data?.infoPentadbiran?.negeri) ||
+              "Tiada Maklumat"
+            }
           />
           <InfoRow label="Status SKM" value={"Tiada Maklumat"} />
           <InfoRow label="Kategori Pedalaman" value={"Tiada Maklumat"} />

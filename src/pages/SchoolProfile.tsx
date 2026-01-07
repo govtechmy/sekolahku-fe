@@ -18,6 +18,7 @@ import {
   NearbySchoolCard,
 } from "../components/SchoolProfile";
 import { formatSchoolAddress, getSchoolLogoUrl } from "../utils/schoolHelpers";
+import underScoreRemover from "../utils/underscoreRemover";
 
 export default function SchoolProfile() {
   const { id } = useParams();
@@ -70,7 +71,7 @@ export default function SchoolProfile() {
             school.kodSekolah,
           )}
         />
-        <div className="mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
+        <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 border border-otl-gray-200 overflow-hidden">
             {/* <div className="grid grid-cols-2 md:grid-cols-2 mt-0 md:px-12 max-md:px-0"> */}
             <StatCard
@@ -111,7 +112,7 @@ export default function SchoolProfile() {
                 />
                 <InfoRow
                   icon={<PinIcon width={24} height={24} />}
-                  text={formatSchoolAddress(school)}
+                  text={underScoreRemover(formatSchoolAddress(school))}
                 />
               </div>
               <div>
@@ -127,7 +128,7 @@ export default function SchoolProfile() {
             <InfoGridItem label="KOD SEKOLAH" value={school.kodSekolah} />
             <InfoGridItem
               label="NEGERI"
-              value={school.data.infoPentadbiran?.negeri}
+              value={underScoreRemover(school.data.infoPentadbiran?.negeri)}
             />
             <InfoGridItem
               label="PPD"
@@ -135,7 +136,7 @@ export default function SchoolProfile() {
             />
             <InfoGridItem
               label="PARLIMEN"
-              value={school.data.infoPentadbiran?.parlimen}
+              value={underScoreRemover(school.data.infoPentadbiran?.parlimen)}
             />
             <InfoGridItem
               label="BANTUAN"
