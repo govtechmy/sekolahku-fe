@@ -1,7 +1,10 @@
 import Hero from "../../components/shared/Hero";
 import SearchBarMain from "../../components/shared/SearchBar";
 import { Tag } from "@govtechmy/myds-react/tag";
-import { DateRangePicker, type DateRange } from "@govtechmy/myds-react/daterange-picker";
+import {
+  DateRangePicker,
+  type DateRange,
+} from "@govtechmy/myds-react/daterange-picker";
 import { useNavigate, useParams } from "react-router-dom";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useEffect, useState } from "react";
@@ -20,15 +23,15 @@ export default function Acara() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchSuggestions, setSearchSuggestions] = useState<AcaraItem[]>([]);
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
-       from: undefined,
-       to: undefined,
-   });
+    from: undefined,
+    to: undefined,
+  });
 
   const formatDateToISO = (date: Date | undefined): string | undefined => {
     if (!date) return undefined;
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
@@ -36,7 +39,12 @@ export default function Acara() {
     const fetchAcara = async () => {
       try {
         const response = searchQuery
-          ? await getSearchAcara(pageNumber, searchQuery, formatDateToISO(dateRange?.from), formatDateToISO(dateRange?.to))
+          ? await getSearchAcara(
+              pageNumber,
+              searchQuery,
+              formatDateToISO(dateRange?.from),
+              formatDateToISO(dateRange?.to),
+            )
           : await getAllAcara(pageNumber);
         setItems(response.items);
         setPageNumber(response.pageNumber);
@@ -52,7 +60,7 @@ export default function Acara() {
 
   const handleSearchChange = async (value: string) => {
     setSearchQuery(value);
-    
+
     if (value.trim().length > 0) {
       try {
         const response = await getSearchAcara(1, value);
@@ -63,7 +71,7 @@ export default function Acara() {
       }
     } else {
       setSearchSuggestions([]);
-      setPageNumber(1); 
+      setPageNumber(1);
     }
   };
 
@@ -80,7 +88,9 @@ export default function Acara() {
             suggestions={searchSuggestions}
             getKey={(item) => item._id}
             getLabel={(item) => item.title}
-            onSelect={(item: AcaraItem) => {navigate(`/${lang}/acara/${item._id}`)}}
+            onSelect={(item: AcaraItem) => {
+              navigate(`/${lang}/acara/${item._id}`);
+            }}
           />
         }
         background={
@@ -89,7 +99,9 @@ export default function Acara() {
             <div className="hidden lg:block h-full w-full bg-[url('/utama/siaran/hero-banner/large-sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
           </>
         }
-        filters={<DateRangePicker value={dateRange} onValueChange={setDateRange} />}
+        filters={
+          <DateRangePicker value={dateRange} onValueChange={setDateRange} />
+        }
       />
       <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
         <div className="flex flex-col gap-8">

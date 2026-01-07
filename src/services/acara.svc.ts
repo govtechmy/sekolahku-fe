@@ -15,18 +15,6 @@ export const getAllAcara = async (pageNumber: number = 1) => {
   }
 };
 
-export const getSearchAcaraOnly = async (pageNumber: number,search: string) => {
-  try {
-    const response = await authAxios.get(
-      `${BASE_URL}/acara?page=${pageNumber}&pageSize=12&search=${search}`,
-    );
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching all acara", error);
-    throw error;
-  }
-};
-
 export const getSearchAcara = async (
   pageNumber: number,
   search: string,
