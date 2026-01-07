@@ -19,18 +19,18 @@ export const getSearchAcara = async (
   pageNumber: number,
   search: string,
   startDate?: string,
-  endDate?: string
+  endDate?: string,
 ) => {
   try {
     let url = `${BASE_URL}/acara?page=${pageNumber}&pageSize=12&search=${search}`;
-    
+
     if (startDate) {
       url += `&startDate=${startDate}`;
     }
     if (endDate) {
       url += `&endDate=${endDate}`;
     }
-    
+
     const response = await authAxios.get(url);
     return response.data.data;
   } catch (error) {
