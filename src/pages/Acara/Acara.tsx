@@ -38,9 +38,16 @@ export default function Acara() {
   useEffect(() => {
     const fetchAcara = async () => {
       try {
-        const response = (searchQuery||(dateRange?.from != undefined && dateRange?.to != undefined))
-          ? await getSearchAcara(pageNumber,searchQuery,formatDateToISO(dateRange?.from),formatDateToISO(dateRange?.to))
-          : await getAllAcara(pageNumber);
+        const response =
+          searchQuery ||
+          (dateRange?.from != undefined && dateRange?.to != undefined)
+            ? await getSearchAcara(
+                pageNumber,
+                searchQuery,
+                formatDateToISO(dateRange?.from),
+                formatDateToISO(dateRange?.to),
+              )
+            : await getAllAcara(pageNumber);
         setItems(response.items);
         setPageNumber(response.pageNumber);
         setPageSize(response.pageSize);
