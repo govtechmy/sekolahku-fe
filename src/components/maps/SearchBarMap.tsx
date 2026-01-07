@@ -125,6 +125,11 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
         setTimeout(() => {
           setZoom(15);
         }, 0);
+        
+        // Close the expanded search panel on mobile/tablet (md and smaller)
+        if (window.innerWidth < 768) {
+          setIsExpanded(false);
+        }
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
@@ -136,7 +141,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
       className={`absolute flex z-[500] bottom-0 
           ${
             isExpanded
-              ? "top-0 md:top-0 left-0 gap-4 justify-start w-full sm:w-auto"
+              ? "top-0 md:top-0 left-0 gap-4 justify-start w-full md:w-auto"
               : "top-[16px] left-3 right-3 sm:left-3 sm:right-3 flex-col gap-2 h-[45px] justify-center sm:justify-start"
           }
         `}
@@ -145,7 +150,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
         className={`shadow-md border border-otl-divider bg-white 
             ${
               isExpanded
-                ? "w-full sm:max-w-[350px]"
+                ? "w-full md:max-w-[350px]"
                 : "rounded-full cursor-pointer w-full md:max-w-[350px]"
             }
           `}
@@ -261,19 +266,38 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
         </div>
       </div>
       {viewSchool && (
-        <div
-          className={clx(
-            "bg-transparent flex-1 w-full max-w-[328px] rounded-xl overflow-y-auto",
-            isExpanded
-              ? "my-10 mx-3"
-              : "absolute top-[54px] max-h-[78vh] left-3 right-3",
-          )}
-        >
-          <SchoolInfoWindow
-            school={viewSchool}
-            setSelected={() => setViewSchool(null)}
-          />
-        </div>
+        <>
+          {/* Desktop view - side panel */}
+          <div
+            className={clx(
+              "hidden md:block bg-transparent rounded-xl overflow-y-auto",
+              isExpanded
+                ? "my-10 mx-3 max-w-[328px]"
+                : "absolute top-[53px] max-h-[78vh] w-full max-w-[350px]",
+            )}
+          >
+            <SchoolInfoWindow
+              school={viewSchool}
+              setSelected={() => setViewSchool(null)}
+              mobile={false}
+            />
+          </div>
+
+          {/* Mobile view - bottom sheet */}
+          <div
+            className={clx(
+              "md:hidden fixed inset-x-0 bottom-0 z-[60] max-h-[40vh] flex flex-col"
+            )}
+          >
+            <div className="overflow-y-auto flex-1">
+              <SchoolInfoWindow
+                school={viewSchool}
+                setSelected={() => setViewSchool(null)}
+                mobile={true}
+              />
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
