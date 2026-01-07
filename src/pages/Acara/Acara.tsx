@@ -10,7 +10,7 @@ import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useEffect, useState } from "react";
 import { getAllAcara, getSearchAcara } from "../../services/acara.svc";
 import type { AcaraItem } from "../../types/acara";
-import { formatEventDay, formatEventDateMonth } from "../../utils/date";
+import { formatEventDay, formatEventDateMonth, formatDateToISO } from "../../utils/date";
 import React from "react";
 
 export default function Acara() {
@@ -27,26 +27,13 @@ export default function Acara() {
     to: undefined,
   });
 
-  const formatDateToISO = (date: Date | undefined): string | undefined => {
-    if (!date) return undefined;
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
   useEffect(() => {
     const fetchAcara = async () => {
       try {
         const response =
           searchQuery ||
           (dateRange?.from != undefined && dateRange?.to != undefined)
-            ? await getSearchAcara(
-                pageNumber,
-                searchQuery,
-                formatDateToISO(dateRange?.from),
-                formatDateToISO(dateRange?.to),
-              )
+            ? await getSearchAcara( pageNumber, searchQuery, formatDateToISO(dateRange?.from), formatDateToISO(dateRange?.to))
             : await getAllAcara(pageNumber);
         setItems(response.items);
         setPageNumber(response.pageNumber);
