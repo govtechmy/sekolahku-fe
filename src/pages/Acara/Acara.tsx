@@ -10,10 +10,7 @@ import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useEffect, useState } from "react";
 import { getAllAcara, getSearchAcara } from "../../services/acara.svc";
 import type { AcaraItem } from "../../types/acara";
-import {
-  formatEventDay,
-  formatEventDateMonth,
-} from "../../utils/date";
+import { formatEventDay, formatEventDateMonth } from "../../utils/date";
 
 export default function Acara() {
   const navigate = useNavigate();
