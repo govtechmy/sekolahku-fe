@@ -1,3 +1,5 @@
+import type { SerializedEditorState, SerializedLexicalNode } from "lexical";
+
 export interface AcaraItem {
   _id: string;
   createdAt: string;
@@ -30,11 +32,13 @@ export interface ImageHero {
 
 export interface Attachment {
   id: string;
+  url: string;
+  filename: string;
+  mimeType: string;
+  filesize: number;
 }
 
-export interface ArticleContent {
-  root: RootNode;
-}
+export type ArticleContent = SerializedEditorState<SerializedLexicalNode>;
 
 export interface RootNode {
   children: ParagraphNode[];

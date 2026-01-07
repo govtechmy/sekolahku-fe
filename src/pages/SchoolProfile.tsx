@@ -71,7 +71,7 @@ export default function SchoolProfile() {
             school.kodSekolah,
           )}
         />
-        <div className="mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
+        <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 border border-otl-gray-200 overflow-hidden">
             {/* <div className="grid grid-cols-2 md:grid-cols-2 mt-0 md:px-12 max-md:px-0"> */}
             <StatCard

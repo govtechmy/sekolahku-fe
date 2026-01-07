@@ -49,54 +49,50 @@ export default function Acara() {
         filters={<DateRangePicker />}
       />
       <div className=" mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
-<Card
-  totalPages={totalRecord}
->
-  <div className="flex flex-col justify-center gap-8">
-    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-      {items?.map((item, index) => {
-        if (!item) {
-          return (
-            <div
-              key={`placeholder-${index}`}
-              className="h-[260px] sm:h-[300px] md:h-[354px]"
-            />
-          );
-        }
-        return (
-          <Card.Item
-            key={item._id}
-            item={{
-              imageSrc: item.imageHero?.url,
-              imageAlt: item.imageHero?.alt,
-              header: item.categoryDetails?.name,
-              headerColor: item.categoryDetails?.colors,
-              date: formatDate(item.articleDate),
-              title: item.title,
-              redirectDesc: "Baca",
-            }}
-            onClick={() => {
-              navigate(`/${lang}/siaran/${item._id}`);
-            }}
-          />
-        );
-      })}
-    </div>
-    <div className="flex justify-center">
-     <AutoPagination
-        page={pageNumber}
-        limit={pageSize}
-        count={totalRecord}
-        maxDisplay={4}
-        onPageChange={(page) => setPageNumber(page)}
-        type="default"
-      />
-    </div>
-  </div>
-</Card>
-</div>
-
+        <Card totalPages={totalRecord}>
+          <div className="flex flex-col justify-center gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+              {items?.map((item, index) => {
+                if (!item) {
+                  return (
+                    <div
+                      key={`placeholder-${index}`}
+                      className="h-[260px] sm:h-[300px] md:h-[354px]"
+                    />
+                  );
+                }
+                return (
+                  <Card.Item
+                    key={item._id}
+                    item={{
+                      imageSrc: item.imageHero?.url,
+                      imageAlt: item.imageHero?.alt,
+                      header: item.categoryDetails?.name,
+                      headerColor: item.categoryDetails?.colors,
+                      date: formatDate(item.articleDate),
+                      title: item.title,
+                      redirectDesc: "Baca",
+                    }}
+                    onClick={() => {
+                      navigate(`/${lang}/siaran/${item._id}`);
+                    }}
+                  />
+                );
+              })}
+            </div>
+            <div className="flex justify-center">
+              <AutoPagination
+                page={pageNumber}
+                limit={pageSize}
+                count={totalRecord}
+                maxDisplay={4}
+                onPageChange={(page) => setPageNumber(page)}
+                type="default"
+              />
+            </div>
+          </div>
+        </Card>
+      </div>
     </>
   );
 }
-

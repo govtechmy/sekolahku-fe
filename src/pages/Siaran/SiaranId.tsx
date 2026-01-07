@@ -10,14 +10,16 @@ import {
 import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import SocialLinks from "../../components/shared/SocialLinks";
 import FileList from "../../components/shared/FileList";
-import { siaranAcaraDummyDocuments, siaranSocialLinks } from "../../contentData";
+import {
+  siaranAcaraDummyDocuments,
+  siaranSocialLinks,
+} from "../../contentData";
 import DotIcon from "../../icons/DotIcon";
 import type { Document } from "../../types/files";
 import { useEffect, useState } from "react";
 import { getSiaranById } from "../../services/siaran.svc";
 import type { SiaranItem } from "../../models/response";
 import { formatDate } from "../../utils/dateFormatter";
-
 
 export default function SiaranId() {
   const { id } = useParams<{ id: string }>();
@@ -29,7 +31,7 @@ export default function SiaranId() {
   useEffect(() => {
     const fetchSiaran = async () => {
       if (!id) return;
-      
+
       try {
         setLoading(true);
         const response = await getSiaranById(id);
@@ -132,7 +134,7 @@ export default function SiaranId() {
         </div>
 
         <div className="border-t border-otl-gray-200 md:mx-10">
-          <FileList files={filesItem} />
+          {/* <FileList files={filesItem} /> */}
         </div>
       </div>
     </div>
