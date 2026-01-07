@@ -52,7 +52,7 @@ export default function NavbarMyds() {
   // };
 
   return (
-    <Navbar className="z-[1001]">
+    <Navbar className="z-[800]">
       <Link to={`/${currentLang}/home`} className="flex items-center gap-2.5">
         <img src="/JataNegara.svg" />
         <div className="font-heading text-txt-black-900 text-body-lg font-semibold">
@@ -61,7 +61,7 @@ export default function NavbarMyds() {
       </Link>
       <NavbarMenu
         classNameNavDesktop=""
-        classNameNavMobile={`z-[1001] ${isHidden ? "block" : "hidden"}`}
+        classNameNavMobile={`z-[800] ${isHidden ? "block" : "hidden"}`}
       >
         <NavbarMenuItem
           asChild
