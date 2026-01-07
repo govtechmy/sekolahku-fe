@@ -13,3 +13,14 @@ export const getAllAcara = async (pageNumber: number = 1) => {
     throw error;
   }
 };
+
+export const getAcaraById = async (id: string) => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  try {
+    const response = await authAxios.get(`${BASE_URL}/acara/${id}`);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching acara by id", error);
+    throw error;
+  }
+};

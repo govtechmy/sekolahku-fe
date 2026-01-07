@@ -17,3 +17,24 @@ export function formatEventDay(eventDate: string) {
 export function formatEventDateMonth(eventDate: string) {
   return getDayAndDateMonth(eventDate).dateMonth;
 }
+
+// get time in HH:MM format in 12-hour clock
+export function formatEventTime(eventDate: string) {
+  const d = new Date(eventDate);
+  return d
+    .toLocaleTimeString("en-MY", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+    .toUpperCase();
+}
+
+export function formatFullEventDate(eventDate: string) {
+  const d = new Date(eventDate);
+  return d.toLocaleDateString("en-MY", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
