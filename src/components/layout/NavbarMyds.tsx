@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 // import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 // import { GlobeIcon } from "@govtechmy/myds-react/icon";
@@ -22,7 +21,6 @@ import {
 export default function NavbarMyds() {
   // const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
-  const [isHidden, setIsHidden] = useState(false);
   const location = useLocation();
   // const [selectedLang, setSelectedLang] = useState(
   //   localStorage.getItem("lang") || "ms"
@@ -32,6 +30,14 @@ export default function NavbarMyds() {
   const activeItem =
     pathSegments.length > 1 ? pathSegments[1] : pathSegments[0] || "home";
   const currentLang = lang || localStorage.getItem("lang") || "ms";
+
+  const handleNavItemClick = () => {
+    const closeButton = document.querySelector<HTMLButtonElement>(
+      '[aria-label="Close navigation menu"]',
+    );
+    closeButton?.click();
+    console.log("hehehe");
+  };
 
   // Sync state when URL param changes (for manual URL changes or navigation)
   // useEffect(() => {
@@ -52,24 +58,23 @@ export default function NavbarMyds() {
   // };
 
   return (
-    <Navbar className="z-[1001]">
+    <Navbar>
       <Link to={`/${currentLang}/home`} className="flex items-center gap-2.5">
         <img src="/JataNegara.svg" />
         <div className="font-heading text-txt-black-900 text-body-lg font-semibold">
           Sekolahku
         </div>
       </Link>
-      <NavbarMenu
-        classNameNavDesktop=""
-        classNameNavMobile={`z-[1001] ${isHidden ? "block" : "hidden"}`}
-      >
+      <NavbarMenu classNameNavDesktop="" classNameNavMobile="z-[1200]">
         <NavbarMenuItem
           asChild
           href={`/${currentLang}/home`}
           aria-current={activeItem === "home" ? "page" : undefined}
           className={activeItem === "home" ? "bg-bg-washed" : ""}
         >
-          <Link to={`/${currentLang}/home`}>Utama</Link>
+          <Link to={`/${currentLang}/home`} onClick={handleNavItemClick}>
+            Utama
+          </Link>
         </NavbarMenuItem>
         <NavbarMenuItem
           asChild
@@ -77,7 +82,12 @@ export default function NavbarMyds() {
           aria-current={activeItem === "carian-sekolah" ? "page" : undefined}
           className={activeItem === "carian-sekolah" ? "bg-bg-washed" : ""}
         >
-          <Link to={`/${currentLang}/carian-sekolah`}>Carian Sekolah</Link>
+          <Link
+            to={`/${currentLang}/carian-sekolah`}
+            onClick={handleNavItemClick}
+          >
+            Carian Sekolah
+          </Link>
         </NavbarMenuItem>
         <NavbarMenuItem
           asChild
@@ -85,7 +95,9 @@ export default function NavbarMyds() {
           aria-current={activeItem === "siaran" ? "page" : undefined}
           className={activeItem === "siaran" ? "bg-bg-washed" : ""}
         >
-          <Link to={`/${currentLang}/siaran`}>Siaran</Link>
+          <Link to={`/${currentLang}/siaran`} onClick={handleNavItemClick}>
+            Siaran
+          </Link>
         </NavbarMenuItem>
         <NavbarMenuItem
           asChild
@@ -93,11 +105,13 @@ export default function NavbarMyds() {
           aria-current={activeItem === "acara" ? "page" : undefined}
           className={activeItem === "acara" ? "bg-bg-washed" : ""}
         >
-          <Link to={`/${currentLang}/acara`}>Acara</Link>
+          <Link to={`/${currentLang}/acara`} onClick={handleNavItemClick}>
+            Acara
+          </Link>
         </NavbarMenuItem>
       </NavbarMenu>
 
-      <NavbarAction onClick={() => setIsHidden((prev) => !prev)}>
+      <NavbarAction>
         {/* Search Button */}
         {/* <Button
           variant="default-ghost"
