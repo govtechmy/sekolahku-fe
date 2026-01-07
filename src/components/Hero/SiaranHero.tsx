@@ -6,6 +6,7 @@ interface SiaranHeroProps {
   query: string;
   setQuery: (value: string) => void;
   handleValueChange: (value: string) => void;
+  handleSearchEnter?: React.KeyboardEventHandler<HTMLInputElement>;
   suggestions: Array<{ id: string; title: string }>;
 }
 
@@ -13,6 +14,7 @@ export default function SiaranHero({
   query,
   setQuery,
   handleValueChange,
+  handleSearchEnter,
   suggestions,
 }: SiaranHeroProps) {
   return (
@@ -24,6 +26,7 @@ export default function SiaranHero({
           query={query}
           setQuery={setQuery}
           handleValueChange={handleValueChange}
+          handleSearchEnter={handleSearchEnter}
           suggestions={suggestions}
           getKey={(item) => item.id}
           getLabel={(item) => item.title}

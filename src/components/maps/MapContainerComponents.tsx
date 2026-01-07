@@ -80,6 +80,7 @@ export function MapContainerComponent({
     initialLocationSet,
     setViewSchool,
     statePolygons,
+    userMarkers,
   } = useMapViewStore();
 
   useStatePolygons(schoolMarkers);
@@ -156,6 +157,23 @@ export function MapContainerComponent({
         />
       ))}
 
+      {Array.from(userMarkers.entries()).map(([id, coords]) => (
+        <SchoolMapMarker
+          key={`user-${id}`}
+          school={{
+            markerType: coords.markerType,
+            radiusInMeter: 0,
+            koordinatXX: coords.koordinatXX,
+            koordinatYY: coords.koordinatYY,
+            id,
+            total: coords.total,
+          }}
+          onClick={() => {
+            setCenter([coords.koordinatXX, coords.koordinatYY]);
+            setZoom(17);
+          }}
+        />
+      ))}
       {Array.from(schoolMarkers.entries()).map(([kodSekolah, coords]) => (
         <SchoolMapMarker
           key={kodSekolah}

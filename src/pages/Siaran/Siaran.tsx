@@ -1,75 +1,58 @@
-import Card from "../../components/shared/Cards";
-import { dataItemNews } from "../../contentData";
+import Hero from "../../components/shared/Hero";
+import SearchBarMain from "../../components/shared/SearchBar";
+import { DateRangePicker } from "@govtechmy/myds-react/daterange-picker";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useRef, useState, useMemo } from "react";
-import { clx } from "@govtechmy/myds-react/utils";
-import SiaranHero from "../../components/Hero/SiaranHero";
+import { AutoPagination } from "@govtechmy/myds-react/pagination";
+import { useEffect, useState } from "react";
+import { getSiaranList } from "../../services/siaran.svc";
+import type { SiaranItem } from "../../models/response";
+import Card from "../../components/shared/Cards";
+import { formatDate } from "../../utils/dateFormatter";
 
 export default function Siaran() {
-  const [currentPage, setCurrentPage] = useState(0);
-  const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
-  const inputRef = useRef<HTMLInputElement>(null!);
+  // later fetch, not functioning yet
+  const [items, setItems] = useState<SiaranItem[]>([]);
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(12);
+  const [totalRecord, setTotalRecord] = useState<number>(0);
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      // Avoid triggering when typing in inputs
-      const target = e.target as HTMLElement;
-      const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
-
-      if (isTyping) return;
-
-      if (e.key === "/") {
-        e.preventDefault(); // stop browser quick-find
-        inputRef.current?.focus();
+    const fetchSiaran = async () => {
+      try {
+        const response = await getSiaranList({ pageNumber });
+        setItems(response.items);
+        setPageNumber(response.pageNumber);
+        setPageSize(response.pageSize);
+        setTotalRecord(response.totalRecords);
+      } catch (error) {
+        console.error("Error fetching siaran:", error);
       }
     };
 
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, []);
-
-  const filteredResult = useMemo(() => {
-    if (!query) return dataItemNews;
-    return dataItemNews.filter((item) =>
-      item.title.toLowerCase().includes(query.toLowerCase()),
-    );
-  }, [query]);
-
-  const handleValueChange = (value: string) => {
-    setQuery(value);
-    setCurrentPage(0);
-  };
-
-  const PAGE_SIZE = 12;
-  const totalPages = Math.ceil(filteredResult.length / PAGE_SIZE);
-
-  const startIndex = currentPage * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-  const currentCards = filteredResult.slice(startIndex, endIndex);
+    fetchSiaran();
+  }, [pageNumber]);
 
   return (
     <>
-      <SiaranHero
-        query={query}
-        setQuery={setQuery}
-        handleValueChange={handleValueChange}
-        suggestions={filteredResult.slice(0, 10)}
+      <Hero
+        title="Siaran Sekolahku"
+        variant="full"
+        search={<SearchBarMain />}
+        background={
+          <>
+            <div className="block lg:hidden h-full w-full bg-[url('/utama/siaran/hero-banner/mobile-sekolahku.svg')] bg-contain bg-center bg-no-repeat" />
+            <div className="hidden lg:block h-full w-full bg-[url('/utama/siaran/hero-banner/large-sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
+          </>
+        }
+        filters={<DateRangePicker />}
       />
-      <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
-        <Card
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-        >
+      <div className=" mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
+        <Card totalPages={totalRecord}>
           <div className="flex flex-col justify-center gap-8">
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-              {Array.from({ length: PAGE_SIZE }).map((_, index) => {
-                const item = currentCards[index];
+              {items?.map((item, index) => {
                 if (!item) {
                   return (
                     <div
@@ -80,33 +63,31 @@ export default function Siaran() {
                 }
                 return (
                   <Card.Item
-                    classNameHeader={clx(
-                      item.header === "Berita" && "text-txt-primary",
-                      item.header === "Pengumuman" && "text-success-700",
-                    )}
-                    key={startIndex + index}
+                    key={item._id}
                     item={{
-                      imageSrc: item.imageSrc,
-                      imageAlt: item.imageAlt,
-                      header: item.header,
-                      date: item.date,
+                      imageSrc: item.imageHero?.url,
+                      imageAlt: item.imageHero?.alt,
+                      header: item.categoryInfo?.name,
+                      headerColor: item.categoryInfo?.colors,
+                      date: formatDate(item.articleDate),
                       title: item.title,
                       redirectDesc: "Baca",
                     }}
                     onClick={() => {
-                      navigate(`/${lang}/siaran/${item.id}`);
+                      navigate(`/${lang}/siaran/${item._id}`);
                     }}
                   />
                 );
               })}
             </div>
             <div className="flex justify-center">
-              <Card.Pagination
-                pageNumber={currentPage + 1}
-                pageSize={PAGE_SIZE}
-                totalRecords={filteredResult.length}
+              <AutoPagination
+                page={pageNumber}
+                limit={pageSize}
+                count={totalRecord}
+                maxDisplay={4}
+                onPageChange={(page) => setPageNumber(page)}
                 type="default"
-                handlePageChange={(page) => setCurrentPage(page - 1)}
               />
             </div>
           </div>

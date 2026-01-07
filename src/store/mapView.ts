@@ -14,6 +14,7 @@ interface MapViewState {
   initialLocationSet: boolean;
   radius: number;
   schoolMarkers: MarkerMap;
+  userMarkers: MarkerMap;
   localSuggestions: SearchBarMapProps[];
   viewSchool: ItemSekolahModel | null;
   query: string;
@@ -24,6 +25,9 @@ interface MapViewState {
   setZoom: (z: number) => void;
   setInitialLocationSet: (v: boolean) => void;
   setSchoolMarkers: (
+    markers: MarkerMap | ((prev: MarkerMap) => MarkerMap),
+  ) => void;
+  setUserMarkers: (
     markers: MarkerMap | ((prev: MarkerMap) => MarkerMap),
   ) => void;
   setLocalSuggestions: (suggestions: SearchBarMapProps[]) => void;
@@ -46,6 +50,7 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   radius: 3000,
   initialLocationSet: false,
   schoolMarkers: new Map() as MarkerMap,
+  userMarkers: new Map() as MarkerMap,
   localSuggestions: [],
   viewSchool: null,
   query: "",
@@ -80,6 +85,13 @@ export const useMapViewStore = create<MapViewState>((set) => ({
       const next =
         typeof markers === "function" ? markers(state.schoolMarkers) : markers;
       return { schoolMarkers: next };
+    });
+  },
+  setUserMarkers: (markers) => {
+    set((state) => {
+      const next =
+        typeof markers === "function" ? markers(state.userMarkers) : markers;
+      return { userMarkers: next };
     });
   },
   setLocalSuggestions: (suggestions) => {
