@@ -1,9 +1,10 @@
 export const formatFileSize = (size: number | string) => {
-  if (typeof size !== "number" || isNaN(size)) {
+  const parsedSize = Number(size);
+  if (typeof parsedSize !== "number" || isNaN(parsedSize)) {
     return "0 B";
   }
 
-  if (size < 1024) return `${size} B`;
-  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
-  return `${(size / 1024 / 1024).toFixed(1)} MB`;
+  if (parsedSize < 1024) return `${parsedSize} B`;
+  if (parsedSize < 1024 * 1024) return `${(parsedSize / 1024).toFixed(1)} KB`;
+  return `${(parsedSize / 1024 / 1024).toFixed(1)} MB`;
 };
