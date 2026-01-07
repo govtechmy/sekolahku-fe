@@ -44,9 +44,7 @@ export const getStatePolygon = async (
 
     if ("pageProps" in data && data.pageProps?.geojson) {
       geoJsonData = data.pageProps.geojson;
-    }
-
-    else if ("negeri" in data && "geometry" in data && "updatedAt" in data) {
+    } else if ("negeri" in data && "geometry" in data && "updatedAt" in data) {
       geoJsonData = {
         type: "Feature",
         properties: {
@@ -55,9 +53,7 @@ export const getStatePolygon = async (
         },
         geometry: data.geometry,
       };
-    }
-
-    else {
+    } else {
       geoJsonData = data as GeoJSONFeature;
     }
 
@@ -71,7 +67,6 @@ export const getStatePolygon = async (
     throw error;
   }
 };
-
 
 export const fetchMultipleStatePolygons = async (
   stateNames: string[],
