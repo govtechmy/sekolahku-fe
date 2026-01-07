@@ -3,7 +3,6 @@ import { useMapViewStore } from "../store/mapView";
 import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import type { MarkerMap } from "../utils/markerProcessors";
 
-
 export function useStatePolygons(schoolMarkers: MarkerMap) {
   const { setStatePolygons, clearStatePolygons } = useMapViewStore();
   const prevMarkerTypeRef = useRef<string | null>(null);
@@ -28,7 +27,6 @@ export function useStatePolygons(schoolMarkers: MarkerMap) {
     }
 
     prevMarkerTypeRef.current = currentMarkerType;
-
 
     if (currentMarkerType !== "NEGERI") {
       return;

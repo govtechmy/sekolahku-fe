@@ -9,9 +9,9 @@ export type MarkerMap = Map<
     dataUrl: string;
     markerType: MarkerType;
     total?: number;
-    negeri?: string; // State name for NEGERI markers
-    parlimen?: string; // Parliament name for PARLIMEN markers
-    region?: string; // Region name for WEST_EAST_MALAYSIA markers
+    negeri?: string;
+    parlimen?: string;
+    region?: string;
   }
 >;
 export type SchoolMarker = {
@@ -94,7 +94,7 @@ const processNegeriMarker = (marker: MarkerGroup, map: MarkerMap): number => {
     dataUrl: marker.total?.toString() ?? "",
     markerType: marker.markerType,
     total: marker.total,
-    negeri: marker.negeri, // Store negeri name
+    negeri: marker.negeri,
   })
     ? 1
     : 0;

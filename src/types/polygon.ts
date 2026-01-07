@@ -2,7 +2,7 @@ export type Position = [number, number];
 
 export interface MultiPolygonGeometry {
   type: "MultiPolygon";
-  coordinates: Position[][][]; 
+  coordinates: Position[][][];
 }
 
 export interface NegeriBoundary {

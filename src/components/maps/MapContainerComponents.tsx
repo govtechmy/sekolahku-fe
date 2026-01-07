@@ -82,7 +82,6 @@ export function MapContainerComponent({
     statePolygons,
   } = useMapViewStore();
 
-  // Hook to fetch and manage state polygons when NEGERI markers are displayed
   useStatePolygons(schoolMarkers);
 
   const appendNewMarkers = useAppendNewMarkers({
