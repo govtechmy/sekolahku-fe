@@ -9,13 +9,8 @@ import {
 } from "@govtechmy/myds-react/breadcrumb";
 import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import SocialLinks from "../../components/shared/SocialLinks";
-import FileList from "../../components/shared/FileList";
-import {
-  siaranAcaraDummyDocuments,
-  siaranSocialLinks,
-} from "../../contentData";
+import { siaranSocialLinks } from "../../contentData";
 import DotIcon from "../../icons/DotIcon";
-import type { Document } from "../../types/files";
 import { useEffect, useState } from "react";
 import { getSiaranById } from "../../services/siaran.svc";
 import type { SiaranItem } from "../../models/response";
@@ -57,7 +52,6 @@ export default function SiaranId() {
       </div>
     );
   }
-  const filesItem: Document[] = siaranAcaraDummyDocuments;
 
   // If item not found, show error message
   if (!newsItem) {
