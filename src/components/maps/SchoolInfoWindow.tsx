@@ -54,16 +54,15 @@ export function SchoolInfoWindow({
         </Button>
       </div>
       {mobile && (
-        <div className="sticky top-0 -mt-12 flex justify-center p-2 bg-transparent"
+        <div
+          className="sticky top-0 -mt-12 flex justify-center p-2 bg-transparent"
           onClick={() => {
             if (onToggleFullScreen) {
               onToggleFullScreen();
             }
           }}
         >
-          <div
-            className="w-10 h-1 bg-gray-500 rounded-full cursor-pointer">
-          </div>
+          <div className="w-10 h-1 bg-gray-500 rounded-full cursor-pointer"></div>
         </div>
       )}
       <div className="flex justify-center items-center h-48 bg-white rounded-t-xl">

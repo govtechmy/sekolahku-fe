@@ -294,7 +294,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
           <div
             className={clx(
               "md:hidden fixed inset-x-0 bottom-0 z-[60] flex flex-col",
-              isFullScreen ? "top-[30vh] max-h-screen" : "max-h-[40vh]"
+              isFullScreen ? "top-[30vh] max-h-screen" : "max-h-[40vh]",
             )}
           >
             <div className="overflow-y-auto flex-1">
