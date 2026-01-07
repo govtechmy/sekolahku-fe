@@ -9,7 +9,7 @@ import type { SiaranItem } from "../../models/response";
 import Card from "../../components/shared/Cards";
 import { formatDate } from "../../utils/dateFormatter";
 
-export default function Acara() {
+export default function Siaran() {
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
   // later fetch, not functioning yet
@@ -19,7 +19,7 @@ export default function Acara() {
   const [totalRecord, setTotalRecord] = useState<number>(0);
 
   useEffect(() => {
-    const fetchAcara = async () => {
+    const fetchSiaran = async () => {
       try {
         const response = await getSiaranList({ pageNumber });
         setItems(response.items);
@@ -27,11 +27,11 @@ export default function Acara() {
         setPageSize(response.pageSize);
         setTotalRecord(response.totalRecords);
       } catch (error) {
-        console.error("Error fetching acara:", error);
+        console.error("Error fetching siaran:", error);
       }
     };
 
-    fetchAcara();
+    fetchSiaran();
   }, [pageNumber]);
 
   return (
