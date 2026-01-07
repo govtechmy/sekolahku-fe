@@ -1,27 +1,43 @@
 import Hero from "../../components/shared/Hero";
 import SearchBarMain from "../../components/shared/SearchBar";
 import { Tag } from "@govtechmy/myds-react/tag";
-import { DateRangePicker } from "@govtechmy/myds-react/daterange-picker";
+import { DateRangePicker, type DateRange } from "@govtechmy/myds-react/daterange-picker";
 import { useNavigate, useParams } from "react-router-dom";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useEffect, useState } from "react";
-import { getAllAcara } from "../../services/acara.svc";
+import { getAllAcara, getSearchAcara } from "../../services/acara.svc";
 import type { AcaraItem } from "../../types/acara";
 import { formatEventDay, formatEventDateMonth } from "../../utils/date";
+import React from "react";
 
 export default function Acara() {
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
-  // later fetch, not functioning yet
   const [items, setItems] = useState<AcaraItem[]>([]);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(12);
   const [totalRecord, setTotalRecord] = useState<number>(0);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchSuggestions, setSearchSuggestions] = useState<AcaraItem[]>([]);
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+       from: undefined,
+       to: undefined,
+   });
+
+  const formatDateToISO = (date: Date | undefined): string | undefined => {
+    if (!date) return undefined;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   useEffect(() => {
     const fetchAcara = async () => {
       try {
-        const response = await getAllAcara(pageNumber);
+        const response = searchQuery
+          ? await getSearchAcara(pageNumber, searchQuery, formatDateToISO(dateRange?.from), formatDateToISO(dateRange?.to))
+          : await getAllAcara(pageNumber);
         setItems(response.items);
         setPageNumber(response.pageNumber);
         setPageSize(response.pageSize);
@@ -32,21 +48,48 @@ export default function Acara() {
     };
 
     fetchAcara();
-  }, [pageNumber]);
+  }, [pageNumber, searchQuery, dateRange]);
+
+  const handleSearchChange = async (value: string) => {
+    setSearchQuery(value);
+    
+    if (value.trim().length > 0) {
+      try {
+        const response = await getSearchAcara(1, value);
+        setSearchSuggestions(response.items.slice(0, 5));
+      } catch (error) {
+        console.error("Error fetching search suggestions:", error);
+        setSearchSuggestions([]);
+      }
+    } else {
+      setSearchSuggestions([]);
+      setPageNumber(1); 
+    }
+  };
 
   return (
     <>
       <Hero
         title="Acara Sekolahku"
         variant="full"
-        search={<SearchBarMain />}
+        search={
+          <SearchBarMain
+            query={searchQuery}
+            setQuery={setSearchQuery}
+            handleValueChange={handleSearchChange}
+            suggestions={searchSuggestions}
+            getKey={(item) => item._id}
+            getLabel={(item) => item.title}
+            onSelect={(item: AcaraItem) => {navigate(`/${lang}/acara/${item._id}`)}}
+          />
+        }
         background={
           <>
             <div className="block lg:hidden h-full w-full bg-[url('/utama/siaran/hero-banner/mobile-sekolahku.svg')] bg-contain bg-center bg-no-repeat" />
             <div className="hidden lg:block h-full w-full bg-[url('/utama/siaran/hero-banner/large-sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
           </>
         }
-        filters={<DateRangePicker />}
+        filters={<DateRangePicker value={dateRange} onValueChange={setDateRange} />}
       />
       <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
         <div className="flex flex-col gap-8">
