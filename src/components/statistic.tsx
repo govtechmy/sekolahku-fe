@@ -171,7 +171,7 @@ export default function Statistic({
   const endPosition = ((selectedYearRange.end - 2020) / (2023 - 2020)) * 100;
 
   return (
-    <div className="flex flex-col py-16 max-lg:px-10 px-[109px]">
+    <div className="flex flex-col pb-16 px-4 lg:px-[50px]">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-12">
           {/* Header Section */}

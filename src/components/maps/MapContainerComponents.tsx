@@ -2,7 +2,6 @@ import {
   MapContainer as LeafletMapContainer,
   TileLayer,
   useMapEvents,
-  Circle,
 } from "react-leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
 import type { Dispatch, SetStateAction } from "react";
@@ -122,7 +121,7 @@ export function MapContainerComponent({
           setDragStartPos(null);
         }}
       />
-      <Circle
+      {/* <Circle
         center={center}
         radius={radius}
         pathOptions={{
@@ -131,7 +130,7 @@ export function MapContainerComponent({
           fillOpacity: 0.1,
           weight: 2,
         }}
-      />
+      /> */}
       {Array.from(schoolMarkers.entries()).map(([kodSekolah, coords]) => (
         <SchoolMapMarker
           key={kodSekolah}
