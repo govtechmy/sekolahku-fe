@@ -24,7 +24,7 @@ export default function SchoolMaps() {
     setSchoolMarkers,
     schoolMarkers,
     query,
-    setUserMarkers
+    setUserMarkers,
   } = useMapViewStore();
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);

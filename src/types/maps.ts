@@ -25,7 +25,7 @@ export type SearchBarMapProps = {
 };
 
 export type MarkerType =
-| "USER"
+  | "USER"
   | "INDIVIDUAL"
   | "GROUP"
   | "NEGERI"

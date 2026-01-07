@@ -96,7 +96,7 @@ export interface MarkerItem {
 
 export interface MarkerGroup extends MarkerItem {
   markerType:
-    |"USER"
+    | "USER"
     | "GROUP"
     | "INDIVIDUAL"
     | "NEGERI"

@@ -30,14 +30,10 @@ export const sekolahMarkerIcon = createDivIcon(
   "sekolah-marker-icon",
 );
 
-export const userMarkerIcon = createDivIcon(
-  userMarkerHtml,
-  "user-marker-icon",
-);
+export const userMarkerIcon = createDivIcon(userMarkerHtml, "user-marker-icon");
 
 export const parlimenMarkerIcon = (total?: number | string) =>
   createDivIcon(parlimenMarkerHtml(total), "parlimen-marker-icon");
 
 export const negeriMarkerIcon = (total?: number | string) =>
   createDivIcon(negeriMarkerHtml(total), "negeri-marker-icon");
-
