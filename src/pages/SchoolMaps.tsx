@@ -24,6 +24,7 @@ export default function SchoolMaps() {
     setSchoolMarkers,
     schoolMarkers,
     query,
+    setUserMarkers,
   } = useMapViewStore();
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
@@ -66,6 +67,17 @@ export default function SchoolMaps() {
         setCenter([latitude, longitude]);
         setInitialLocationUser([latitude, longitude]);
         setZoom(17);
+        setUserMarkers((prev) => {
+          const next = new Map(prev);
+          next.clear();
+          next.set("user", {
+            koordinatXX: latitude,
+            koordinatYY: longitude,
+            dataUrl: "",
+            markerType: "USER",
+          });
+          return next;
+        });
         setInitialLocationSet(true);
       },
       (error) => {
