@@ -34,6 +34,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     handleSearch,
   } = useMapViewStore();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
   const debounceTimerRef = useRef<number | null>(null);
@@ -125,7 +126,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
         setTimeout(() => {
           setZoom(15);
         }, 0);
-        
+
         // Close the expanded search panel on mobile/tablet (md and smaller)
         if (window.innerWidth < 768) {
           setIsExpanded(false);
@@ -155,7 +156,13 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
             }
           `}
         onClick={() => {
-          if (!isExpanded) setIsExpanded(true);
+          if (!isExpanded) {
+            setIsExpanded(true);
+            // Close school info window on mobile when expanding search
+            if (window.innerWidth < 768 && viewSchool) {
+              setViewSchool(null);
+            }
+          }
         }}
       >
         <div className={clx("h-full w-full flex flex-col")}>
@@ -286,14 +293,20 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
           {/* Mobile view - bottom sheet */}
           <div
             className={clx(
-              "md:hidden fixed inset-x-0 bottom-0 z-[60] max-h-[40vh] flex flex-col"
+              "md:hidden fixed inset-x-0 bottom-0 z-[60] flex flex-col",
+              isFullScreen ? "top-[30vh] max-h-screen" : "max-h-[40vh]"
             )}
           >
             <div className="overflow-y-auto flex-1">
               <SchoolInfoWindow
                 school={viewSchool}
-                setSelected={() => setViewSchool(null)}
+                setSelected={() => {
+                  setViewSchool(null);
+                  setIsFullScreen(false);
+                }}
                 mobile={true}
+                isFullScreen={isFullScreen}
+                onToggleFullScreen={() => setIsFullScreen(!isFullScreen)}
               />
             </div>
           </div>
