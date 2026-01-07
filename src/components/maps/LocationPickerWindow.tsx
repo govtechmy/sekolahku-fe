@@ -32,7 +32,7 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
   const negeriDistrictCache = useRef<{
     [state: string]: ParlimenCenteroidProps[];
   }>({});
-  const { setCenter, setZoom, setInitialLocationSet, setInitialLocationUser } =
+  const { setCenter, setZoom, setInitialLocationSet, setInitialLocationUser,setUserMarkers } =
     useMapViewStore();
   const [currentView, setCurrentView] = useState<"states" | "districts">(
     "states",
@@ -83,7 +83,19 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
     if (coords) {
       setCenter(coords);
       setInitialLocationUser(coords);
+              setUserMarkers((prev) => {
+          const next = new Map(prev);
+          next.clear();
+          next.set("user", {
+            koordinatXX: coords[0],
+            koordinatYY: coords[1],
+            dataUrl: "",
+            markerType: "USER",
+          });
+          return next;
+        });
       setZoom(14);
+      
       onClose();
       setInitialLocationSet(true);
     }
