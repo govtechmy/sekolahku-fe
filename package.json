@@ -18,8 +18,6 @@
   "dependencies": {
     "@govtechmy/myds-react": "^1.0.0",
     "@govtechmy/myds-style": "^1.0.0",
-    "@lexical/react": "^0.39.0",
-    "@lexical/utils": "^0.39.0",
     "@payloadcms/richtext-lexical": "^3.70.0",
     "@radix-ui/react-select": "^2.2.6",
     "axios": "^1.13.2",

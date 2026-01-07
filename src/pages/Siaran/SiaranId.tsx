@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { dataItemNews, siaranAcaraDummyDocuments } from "../../contentData";
+import { dataItemNews } from "../../contentData";
 import { Button } from "@govtechmy/myds-react/button";
 import {
   Breadcrumb,
@@ -11,10 +11,8 @@ import {
 import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
-import FileList from "../../components/shared/FileList";
 import { siaranSocialLinks } from "../../contentData";
 import DotIcon from "../../icons/DotIcon";
-import type { Document } from "../../types/files";
 
 export default function SiaranId() {
   const { id } = useParams<{ id: string }>();
@@ -23,7 +21,6 @@ export default function SiaranId() {
 
   // Find the news item by ID
   const newsItem = dataItemNews.find((item) => item.id === id);
-  const filesItem: Document[] = siaranAcaraDummyDocuments;
 
   // If item not found, show error message
   if (!newsItem) {
@@ -106,7 +103,7 @@ export default function SiaranId() {
         <p className="md:px-10">{newsItem.content}</p>
 
         <div className="border-t border-otl-gray-200 md:mx-10">
-          <FileList files={filesItem} />
+          {/* <FileList files={filesItem} /> */}
         </div>
       </div>
     </div>
