@@ -52,6 +52,7 @@ interface HorizontalCardItemProps {
     imageSrc: string;
     imageAlt: string;
     header: string;
+    headerColor?: string;
     date: string;
     title: string;
     redirectDesc?: string;
@@ -70,7 +71,7 @@ function HorizontalCardItem({
   return (
     <div
       tabIndex={0}
-      className={`group border border-otl-gray-200 rounded-lg p-2 md:p-3
+      className={`group border border-otl-gray-200 gap-[18px] rounded-lg p-2 md:p-3
           w-full flex flex-col cursor-pointer
           transition-shadow hover:shadow-lg ${className}`}
       onClick={onClick}
@@ -81,12 +82,13 @@ function HorizontalCardItem({
         className="w-full aspect-[16/9] rounded-[6px] object-cover flex-shrink-0"
       />
 
-      <div className="flex flex-col gap-1.5 md:gap-2 px-2 md:px-3 pt-2 md:pt-3 pb-2 min-h-[120px] md:min-h-[140px]">
+      <div className="flex flex-col gap-1.5 md:gap-2 px-2 md:px-3 min-h-[116px]">
         <p
           className={clx(
             "text-xs md:text-sm font-semibold flex-shrink-0",
             classNameHeader,
           )}
+          style={item.headerColor ? { color: item.headerColor } : undefined}
         >
           {item.header}
         </p>
@@ -97,7 +99,7 @@ function HorizontalCardItem({
       </div>
 
       <div className="flex flex-row justify-between items-center flex-shrink-0">
-        <p className="text-xs md:text-sm text-txt-black-500 px-2 md:px-3 pb-2 md:pb-0 flex-shrink-0">
+        <p className="text-xs md:text-body-sm text-txt-black-500 px-2 md:px-3 pb-2 md:pb-0 flex-shrink-0 font-body font-normal">
           {item.date}
         </p>
         {item.redirectDesc && (

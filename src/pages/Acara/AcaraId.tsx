@@ -57,26 +57,30 @@ export default function AcaraId() {
             </BreadcrumbItem>
           </Breadcrumb>
           <div className="flex flex-col gap-3 md:px-10">
-            <span className={clx("text-sm font-semibold text-success-700")}>
+            <span
+              className={clx(
+                "text-body-sm font-body font-semibold text-success-700",
+              )}
+            >
               Acara
             </span>
-            <p className=" text-2xl font-semibold">{contents.title}</p>
+            <p className="text-2xl font-semibold font-body">{contents.title}</p>
 
             <div className=" flex flex-row gap-2 text-bg-black-500">
-              <div className=" flex flex-row gap-1 items-center">
+              <div className=" flex flex-row gap-1 items-center text-body-sm font-body font-normal">
                 <ClockIcon /> Bacaan {contents.readTime} min
               </div>
               <div className="flex items-center">
                 <DotIcon className="size-0.5" />
               </div>
-              <div>
+              <div className="text-body-sm font-body font-normal">
                 {formatFullEventDate(contents.articleDate)},{" "}
                 {formatEventTime(contents.articleDate)}
               </div>
             </div>
           </div>
           <div className="md:px-10 print:hidden">
-            <div className="flex justify-between pb-[18px] border-b-2 border-gray-200">
+            <div className="flex justify-between pb-[18px] border-b border-gray-200">
               <SocialLinks links={siaranSocialLinks} classNameButton="p-2" />
               <div className="flex items-center ">
                 <Button
@@ -105,58 +109,62 @@ export default function AcaraId() {
               data={contents.content}
             />
           </div>
-          <div className="md:px-10 pt-6 border-t border-otl-gray-200 flex flex-wrap gap-2">
-            {contents.attachments.map((attachment) => {
-              const hasValidUrl = !!attachment.url;
-              return (
-                <div key={attachment.id}>
-                  {attachment.filename &&
-                    attachment.filesize &&
-                    attachment.url &&
-                    attachment.mimeType && (
-                      <div
-                        className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
-                        onClick={
-                          hasValidUrl
-                            ? () =>
-                                downloadFile(
-                                  attachment.url,
-                                  attachment.filename,
-                                )
-                            : undefined
-                        }
-                      >
-                        <div className="flex items-center gap-2 overflow-hidden">
-                          {getIcon(
-                            attachment.mimeType.split("/")[1],
-                            attachment.url,
-                          )}
-
-                          <div className="text-start overflow-hidden">
-                            <div className="flex items-center">
-                              <div className="max-w-[95px] truncate">
-                                {attachment.filename.includes(".")
-                                  ? attachment.filename.slice(
-                                      0,
-                                      attachment.filename.lastIndexOf("."),
+          {contents.attachments.length > 0 && (
+            <div className="md:px-10">
+              <div className="flex flex-wrap pt-6 border-t border-gray-200 gap-2">
+                {contents.attachments.map((attachment) => {
+                  const hasValidUrl = !!attachment.url;
+                  return (
+                    <div key={attachment.id}>
+                      {attachment.filename &&
+                        attachment.filesize &&
+                        attachment.url &&
+                        attachment.mimeType && (
+                          <div
+                            className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
+                            onClick={
+                              hasValidUrl
+                                ? () =>
+                                    downloadFile(
+                                      attachment.url,
+                                      attachment.filename,
                                     )
-                                  : attachment.filename}
+                                : undefined
+                            }
+                          >
+                            <div className="flex items-center gap-2 overflow-hidden">
+                              {getIcon(
+                                attachment.mimeType.split("/")[1],
+                                attachment.url,
+                              )}
+
+                              <div className="text-start overflow-hidden">
+                                <div className="flex items-center">
+                                  <div className="max-w-[95px] truncate">
+                                    {attachment.filename.includes(".")
+                                      ? attachment.filename.slice(
+                                          0,
+                                          attachment.filename.lastIndexOf("."),
+                                        )
+                                      : attachment.filename}
+                                  </div>
+                                  <div className="flex-shrink-0">
+                                    .{attachment.mimeType.split("/")[1]}
+                                  </div>
+                                </div>
+                                <div className="text-txt-black-500 text-body-xs font-normal">
+                                  {formatFileSize(attachment.filesize)}
+                                </div>
                               </div>
-                              <div className="flex-shrink-0">
-                                .{attachment.mimeType.split("/")[1]}
-                              </div>
-                            </div>
-                            <div className="text-txt-black-500 text-body-xs font-normal">
-                              {formatFileSize(attachment.filesize)}
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    )}
-                </div>
-              );
-            })}
-          </div>
+                        )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
