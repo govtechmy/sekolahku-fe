@@ -12,6 +12,15 @@ import type { MarkerGroup } from "../../models/response";
 import { getSchoolS3Json } from "../../services/school.svc";
 import { useAppendNewMarkers } from "../../hooks/useAppendNewMarkers";
 import { MapViewController } from "./MapViewController";
+import { useStatePolygons } from "../../hooks/useStatePolygons";
+import { StatePolygon } from "./StatePolygon";
+import { usePolygonPanes } from "../../hooks/usePolygonPanes";
+
+// Component to initialize polygon panes with z-index layering
+function PolygonPaneInitializer() {
+  usePolygonPanes();
+  return null;
+}
 
 // Use the shared MarkerMap shape used by marker processors (lat/lng)
 
@@ -70,7 +79,12 @@ export function MapContainerComponent({
     setSchoolMarkers,
     initialLocationSet,
     setViewSchool,
+    statePolygons,
   } = useMapViewStore();
+
+  // Hook to fetch and manage state polygons when NEGERI markers are displayed
+  useStatePolygons(schoolMarkers);
+
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
     schoolMarkers,
@@ -87,6 +101,7 @@ export function MapContainerComponent({
       className="h-full w-full"
       zoomControl={false}
     >
+      <PolygonPaneInitializer />
       <MapViewController />
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -130,7 +145,18 @@ export function MapContainerComponent({
           fillOpacity: 0.1,
           weight: 2,
         }}
-      /> */}
+      />
+    */}
+
+      {/* Render state polygons when NEGERI markers are displayed */}
+      {Array.from(statePolygons.entries()).map(([stateName, geoJsonData]) => (
+        <StatePolygon
+          key={stateName}
+          stateName={stateName}
+          geoJsonData={geoJsonData}
+        />
+      ))}
+
       {Array.from(schoolMarkers.entries()).map(([kodSekolah, coords]) => (
         <SchoolMapMarker
           key={kodSekolah}
