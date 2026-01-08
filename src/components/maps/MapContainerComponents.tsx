@@ -92,7 +92,7 @@ export function MapContainerComponent({
   });
 
   // Determine if we should show polygons based on marker type
-  const firstMarker = Array.from(schoolMarkers.values())[0];
+  const firstMarker = schoolMarkers.values().next().value;
   const currentMarkerType = firstMarker?.markerType;
   const shouldShowPolygons = currentMarkerType === "NEGERI";
 
