@@ -1,18 +1,12 @@
 import HorizontalCard from "./HorizontalCard";
 import { Link, useParams } from "react-router-dom";
 import { ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
-
-type NewsItem = {
-  imageSrc: string;
-  imageAlt: string;
-  header: string;
-  title: string;
-  date: string;
-  id: string;
-};
+import type { SiaranItem } from "../../models/response";
+import CategoryLabel from "./CategoryLabel";
+import { formatDate } from "../../utils/dateFormatter";
 
 type SectionItemNewsProps = {
-  dataItemNews: NewsItem[];
+  dataItemNews: SiaranItem[];
   mainTitle: string;
   redirectDesc?: string;
 };
@@ -31,29 +25,20 @@ export default function SectionItemNews({
         showNavigation={false}
         mobileVariant="grid"
       >
-        {dataItemNews.slice(0, 4).map((item: NewsItem, index: number) => (
+        {dataItemNews.slice(0, 4).map((item: SiaranItem, index: number) => (
           <Link
             key={index}
-            to={`/${lang}/siaran/${item.id}`}
+            to={`/${lang}/siaran/${item._id}`}
             className="group border border-otl-gray-200 rounded-lg p-3 h-[354px] !max-w-[247px] flex-shrink-0 flex flex-col gap-4.5 transition-shadow hover:shadow-lg cursor-pointer"
           >
             <img
-              src={item.imageSrc}
-              alt={item.imageAlt}
+              src={item.imageHero.url}
+              alt={item.imageHero.alt}
               className="h-[150px] rounded-[6px] overflow-hidden"
             />
 
             <div className="flex flex-col gap-2 px-3 flex-grow">
-              {item.header === "Berita" && (
-                <div className="text-txt-primary font-body text-sm font-semibold">
-                  {item.header}
-                </div>
-              )}
-              {item.header === "Pengumuman" && (
-                <div className="text-txt-success font-body text-sm font-semibold">
-                  {item.header}
-                </div>
-              )}
+              <CategoryLabel categoryName={item.categoryInfo.name} />
 
               <div className="font-heading text-body-lg font-semibold">
                 {item.title}
@@ -62,7 +47,7 @@ export default function SectionItemNews({
 
             <div className="flex flex-row justify-between items-center">
               <div className="px-3 pb-2 text-sm font-normal text-txt-black-500">
-                {item.date}
+                {formatDate(item.articleDate).toUpperCase()}
               </div>
               <div
                 className="px-2 md:px-3 pb-2 md:pb-0 flex items-center gap-1 text-txt-primary font-semibold
