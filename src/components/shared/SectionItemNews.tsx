@@ -1,17 +1,11 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
-
-type NewsItem = {
-  imageSrc: string;
-  imageAlt: string;
-  header: string;
-  title: string;
-  date: string;
-  id: string;
-};
+import type { SiaranItem } from "../../models/response";
+import CategoryLabel from "./CategoryLabel";
+import { formatDate } from "../../utils/dateFormatter";
 
 type SectionItemNewsProps = {
-  dataItemNews: NewsItem[];
+  dataItemNews: SiaranItem[];
   mainTitle: string;
   redirectDesc?: string;
 };
@@ -33,30 +27,21 @@ export default function SectionItemNews({
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-          {dataItemNews.slice(0, 4).map((item: NewsItem, index: number) => (
+          {dataItemNews.slice(0, 4).map((item: SiaranItem, index: number) => (
             <Link
               key={index}
-              to={`/${lang}/siaran/${item.id}`}
+              to={`/${lang}/siaran/${item._id}`}
               tabIndex={0}
               className="group border border-otl-gray-200 gap-[18px] rounded-lg p-2 md:p-3 w-full h-full flex flex-col cursor-pointer transition-shadow hover:shadow-lg"
             >
               <img
-                src={item.imageSrc}
-                alt={item.imageAlt}
+                src={item.imageHero.url}
+                alt={item.imageHero.alt}
                 className="w-full aspect-[16/9] rounded-[6px] object-cover flex-shrink-0"
               />
 
-              <div className="flex flex-col gap-1.5 md:gap-2 px-2 md:px-3">
-                {item.header === "Berita" && (
-                  <div className="text-txt-primary font-body text-sm font-semibold">
-                    {item.header}
-                  </div>
-                )}
-                {item.header === "Pengumuman" && (
-                  <div className="text-txt-success font-body text-sm font-semibold">
-                    {item.header}
-                  </div>
-                )}
+              <div className="flex flex-col gap-2 px-3 flex-grow">
+                <CategoryLabel categoryName={item.categoryInfo.name} />
 
                 <div className="font-heading text-body-lg font-semibold">
                   {item.title}
@@ -65,7 +50,7 @@ export default function SectionItemNews({
 
               <div className="flex flex-row justify-between items-center flex-shrink-0 mt-auto">
                 <div className="text-xs md:text-body-sm text-txt-black-500 px-2 md:px-3 flex-shrink-0 font-body font-normal">
-                  {item.date}
+                  {formatDate(item.articleDate).toUpperCase()}
                 </div>
                 <div
                   className="px-2 md:px-3 pb-2 md:pb-0 flex items-center gap-1 text-txt-primary font-semibold
