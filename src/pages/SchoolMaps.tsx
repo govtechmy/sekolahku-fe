@@ -169,7 +169,6 @@ export default function SchoolMaps() {
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
-        // new props for Polygon
       />
       {showLocationPicker && (
         <LocationPickerWindow onClose={() => setShowLocationPicker(false)} />
