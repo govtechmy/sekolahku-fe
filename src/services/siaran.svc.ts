@@ -34,6 +34,31 @@ export const getSiaranList = async (
   }
 };
 
+export const getSearchSiaran = async (
+  pageNumber: number,
+  search: string,
+  startDate?: string,
+  endDate?: string,
+) => {
+  try {
+    let url = `${BASE_URL}${SIARAN_ENDPOINT}?page=${pageNumber}&pageSize=12`;
+    if (search) {
+      url += `&search=${encodeURI(search)}`;
+    }
+    if (startDate) {
+      url += `&startDate=${startDate}`;
+    }
+    if (endDate) {
+      url += `&endDate=${endDate}`;
+    }
+    const response = await authAxios.get(url);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error searching siaran", error);
+    throw error;
+  }
+};
+
 export const getSiaranById = async (id: string): Promise<SiaranItem> => {
   try {
     const response = await authAxios.get<APIResponse<SiaranItem>>(
