@@ -1,51 +1,49 @@
-import {
-  UserGroupIcon,
-  JataNegaraIcon,
-  UserIcon,
-} from "@govtechmy/myds-react/icon";
+import { JataNegaraIcon } from "@govtechmy/myds-react/icon";
 
+//fetch backend when available later
 export const siaranSocialLinks = [
   {
     platform: "hyperlink",
-    href: "#",
-    ariaLabel: "Siaran link",
+    href: "",
+    ariaLabel: "Share hyperlink",
   },
   {
     platform: "email",
-    href: "#",
+    href: "mailto:test@test.com",
     ariaLabel: "Email link",
   },
   {
     platform: "facebook",
-    href: "#",
+    href: "www.facebook.com",
     ariaLabel: "Facebook link",
   },
   {
     platform: "twitter",
-    href: "#",
+    href: "www.twitter.com",
     ariaLabel: "Twitter link",
   },
 ];
 
+// fetch backend when available later
 export const footerSocialLinks = [
   {
     platform: "facebook",
-    href: "#",
+    href: "www.facebook.com",
     ariaLabel: "Facebook link",
   },
   {
     platform: "twitter",
-    href: "#",
+    href: "www.twitter.com",
     ariaLabel: "Twitter link",
   },
   {
     platform: "instagram",
-    href: "#",
+    href: "www.instagram.com",
     ariaLabel: "Instagram link",
   },
   {
     platform: "youtube",
-    href: "#",
+    href: "www.youtube.com",
     ariaLabel: "Youtube link",
   },
 ];
@@ -69,32 +67,7 @@ export const NEGERI_LIST = [
   "WILAYAH_PERSEKUTUAN_PUTRAJAYA",
 ];
 
-export const JENIS_LIST = ["SK", "K9"];
-
-// Statistics data for different years
-export const statisticYearlyData = {
-  2020: {
-    spm: { daily: 500, total: "250,000" },
-    stem: { daily: 150, total: "60,000" },
-    koku: { daily: 8, total: "280,000" },
-  },
-  2021: {
-    spm: { daily: 600, total: "275,000" },
-    stem: { daily: 180, total: "65,000" },
-    koku: { daily: 9, total: "295,000" },
-  },
-  2022: {
-    spm: { daily: 680, total: "295,000" },
-    stem: { daily: 210, total: "72,000" },
-    koku: { daily: 10, total: "305,000" },
-  },
-  2023: {
-    spm: { daily: 733, total: "313,352" },
-    stem: { daily: 231, total: "78,828" },
-    koku: { daily: 11, total: "313,352" },
-  },
-};
-
+//fetch backend when available later
 export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
@@ -130,30 +103,5 @@ export const dataItemLinks = [
     icon: <JataNegaraIcon />,
     name: "DELIMa",
     link: "https://delima.moe-dl.edu.my/",
-  },
-];
-
-// SekolahDetails-Data to Fetch
-export const dataSekolahJumlah = [
-  { label: "PELAJAR", value: "1", amount: "4,065", icon: <UserGroupIcon /> },
-  { label: "GURU", value: "2", amount: "4,065", icon: <UserIcon /> },
-];
-
-export const notableMalaysians = [
-  // Arts
-  {
-    name: "Michelle Yeoh",
-    field: "Arts",
-    note: "Internationally acclaimed actress",
-  },
-  {
-    name: "P. Ramlee",
-    field: "Arts",
-    note: "Iconic actor, director, and musician",
-  },
-  {
-    name: "Siti Nurhaliza",
-    field: "Arts",
-    note: "Award-winning singer and songwriter",
   },
 ];
