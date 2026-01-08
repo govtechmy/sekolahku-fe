@@ -6,7 +6,7 @@ import {
 } from "@govtechmy/myds-react/daterange-picker";
 import { useNavigate, useParams } from "react-router-dom";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getSiaranList, getSearchSiaran } from "../../services/siaran.svc";
 import type { SiaranItem } from "../../models/response";
 import Card from "../../components/shared/Cards";
@@ -20,21 +20,31 @@ export default function Siaran() {
   const [pageSize, setPageSize] = useState<number>(12);
   const [totalRecord, setTotalRecord] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
   const [searchSuggestions, setSearchSuggestions] = useState<SiaranItem[]>([]);
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,
   });
+  const debounceTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const fetchSiaran = async () => {
       try {
         const response =
-          searchQuery ||
+          debouncedSearchQuery ||
           (dateRange?.from != undefined && dateRange?.to != undefined)
             ? await getSearchSiaran(
                 pageNumber,
-                searchQuery,
+                debouncedSearchQuery,
                 dateRange?.from ? dateRange.from.toISOString() : undefined,
                 dateRange?.to ? dateRange.to.toISOString() : undefined,
               )
@@ -49,12 +59,21 @@ export default function Siaran() {
     };
 
     fetchSiaran();
-  }, [pageNumber, searchQuery, dateRange]);
+  }, [pageNumber, debouncedSearchQuery, dateRange]);
 
   const handleSearchChange = async (value: string) => {
     setSearchQuery(value);
 
-    if (value.trim().length > 0) {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    const trimmedValue = value.trim();
+    if (trimmedValue.length > 0) {
+      debounceTimerRef.current = window.setTimeout(() => {
+        setDebouncedSearchQuery(value);
+      }, 500);
+
       try {
         const response = await getSearchSiaran(1, value);
         setSearchSuggestions(response.items.slice(0, 5));
@@ -64,6 +83,7 @@ export default function Siaran() {
       }
     } else {
       setSearchSuggestions([]);
+      setDebouncedSearchQuery("");
       setPageNumber(1);
     }
   };
