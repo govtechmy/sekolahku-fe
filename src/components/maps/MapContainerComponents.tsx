@@ -199,7 +199,7 @@ export function MapContainerComponent({
           }}
           onClick={async () => {
             const { koordinatXX, koordinatYY, markerType } = coords;
-            
+
             setCenter([koordinatXX, koordinatYY]);
 
             if (markerType === "WEST_EAST_MALAYSIA") {
