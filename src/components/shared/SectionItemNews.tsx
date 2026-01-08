@@ -21,7 +21,7 @@ export default function SectionItemNews({
     <div className="w-full flex flex-col justify-center gap-8">
       <div className="flex flex-col gap-2">
         {/* Header */}
-        <div className="flex justify-between mb-12 mt-4 items-center">
+        <div className="flex mb-12 mt-4 items-center">
           <div className="text-txt-black-900 font-heading font-semibold text-heading-sm">
             {mainTitle}
           </div>
