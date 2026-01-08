@@ -15,6 +15,15 @@ import { useAppendNewMarkers } from "../../hooks/useAppendNewMarkers";
 import { MapViewController } from "./MapViewController";
 import { StatePolygon } from "./StatePolygon";
 
+// Constants for zoom levels
+const ZOOM_LEVELS = {
+  WEST_EAST_MALAYSIA: 8,
+  NEGERI: 12,
+  PARLIMEN: 14,
+  USER: 17,
+  INDIVIDUAL: 18,
+} as const;
+
 // Component to initialize polygon panes with z-index layering
 function PolygonPaneInitializer() {
   const map = useMap();
@@ -173,7 +182,7 @@ export function MapContainerComponent({
           }}
           onClick={() => {
             setCenter([coords.koordinatXX, coords.koordinatYY]);
-            setZoom(17);
+            setZoom(ZOOM_LEVELS.USER);
           }}
         />
       ))}
@@ -189,23 +198,22 @@ export function MapContainerComponent({
             total: coords.total,
           }}
           onClick={async () => {
-            if (coords.markerType === "WEST_EAST_MALAYSIA") {
-              setCenter([coords.koordinatXX, coords.koordinatYY]);
-              setZoom(8);
-            }
-            if (coords.markerType === "NEGERI") {
-              setCenter([coords.koordinatXX, coords.koordinatYY]);
-              setZoom(12);
-            }
-            if (coords.markerType === "PARLIMEN") {
-              setCenter([coords.koordinatXX, coords.koordinatYY]);
-              setZoom(14);
-            }
-            if (coords.markerType === "INDIVIDUAL") {
-              setViewSchool(null); // Reset before setting new school
-              setViewSchool(await getSchoolS3Json(coords.dataUrl));
-              setCenter([coords.koordinatXX, coords.koordinatYY]);
-              setZoom(18);
+            const { koordinatXX, koordinatYY, markerType } = coords;
+            
+            setCenter([koordinatXX, koordinatYY]);
+
+            if (markerType === "WEST_EAST_MALAYSIA") {
+              setZoom(ZOOM_LEVELS.WEST_EAST_MALAYSIA);
+            } else if (markerType === "NEGERI") {
+              setZoom(ZOOM_LEVELS.NEGERI);
+            } else if (markerType === "PARLIMEN") {
+              setZoom(ZOOM_LEVELS.PARLIMEN);
+            } else if (markerType === "INDIVIDUAL") {
+              setViewSchool(null);
+              if (coords.dataUrl) {
+                setViewSchool(await getSchoolS3Json(coords.dataUrl));
+              }
+              setZoom(ZOOM_LEVELS.INDIVIDUAL);
             }
           }}
         />
