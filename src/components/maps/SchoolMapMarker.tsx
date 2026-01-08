@@ -1,8 +1,11 @@
 import { Marker } from "react-leaflet";
 import type { SchoolMarkerInfo } from "../../types/maps";
-import { sekolahMarkerIcon } from "../../icons/MapMarker";
-import { parlimenMarkerIcon } from "../../icons/MapMarker";
-import { negeriMarkerIcon } from "../../icons/MapMarker";
+import {
+  sekolahMarkerIcon,
+  parlimenMarkerIcon,
+  negeriMarkerIcon,
+  userMarkerIcon,
+} from "../../icons/MapMarker";
 
 type SchoolMapMarkerProps = {
   school: SchoolMarkerInfo;
@@ -13,6 +16,9 @@ export function SchoolMapMarker({ school, onClick }: SchoolMapMarkerProps) {
   let icon;
 
   switch (school.markerType) {
+    case "USER":
+      icon = userMarkerIcon;
+      break;
     case "INDIVIDUAL":
       icon = sekolahMarkerIcon;
       break;
