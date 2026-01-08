@@ -28,7 +28,7 @@ export const siaranSocialLinks = [
 export const footerSocialLinks = [
   {
     platform: "facebook",
-    href: "www.google.com",
+    href: "www.facebook.com",
     ariaLabel: "Facebook link",
   },
   {
