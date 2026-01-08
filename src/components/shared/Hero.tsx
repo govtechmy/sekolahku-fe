@@ -138,6 +138,22 @@ export default function Hero({
                       variant="default-outline"
                       className="rounded-full text-xs text-txt-black-900"
                       size="medium"
+                      onClick={() => {
+                        if (item.link.startsWith("#")) {
+                          const targetId = item.link.slice(1);
+                          const targetElement =
+                            document.getElementById(targetId);
+
+                          if (targetElement) {
+                            targetElement.scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                            });
+                          }
+                        } else if (item.link) {
+                          window.location.href = item.link;
+                        }
+                      }}
                     >
                       <div className="rounded-full bg-primary-50 text-txt-primary size-8 items-center justify-center flex">
                         <FilterAscIcon className="!size-5" />
