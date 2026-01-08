@@ -2,17 +2,11 @@ import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
 import { useMapViewStore } from "../../store/mapView";
 
-/**
- * Syncs the Leaflet map view with values from `useMapViewStore`.
- * Also initializes polygon panes once to prevent React lifecycle errors.
- * Must be used within a child of `MapContainer` to access Leaflet context.
- */
 export function MapViewController() {
   const map = useMap();
   const { center, zoom } = useMapViewStore();
   const panesInitialized = useRef(false);
 
-  // Initialize polygon panes once to prevent removal errors
   useEffect(() => {
     if (!map || panesInitialized.current) return;
     const panes = [
