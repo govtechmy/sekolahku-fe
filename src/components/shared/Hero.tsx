@@ -89,7 +89,7 @@ export default function Hero({
         className={clx(
           "w-full h-[520px] flex p-6 justify-center items-center ",
           variant === "side"
-            ? "md:max-w-[1328px] lg:px-[109px] mx-auto flex-1 lg:justify-start"
+            ? "md:max-w-[1328px] lg:px-[74px] mx-auto flex-1 lg:justify-start"
             : "",
         )}
       >
