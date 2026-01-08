@@ -9,8 +9,10 @@ import {
 } from "@govtechmy/myds-react/icon";
 import HelmetMeta from "../seo/HelmetMeta";
 import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import SchoolProfileHero from "../components/Hero/SchoolProfileHero";
-import { useSchoolProfile } from "../hooks/useSchoolProfile";
+import { getSchoolProfile } from "../services/school.svc";
+import type { ItemSekolahModel } from "../models/response";
 import {
   StatCard,
   InfoRow,
@@ -23,10 +25,44 @@ import underScoreRemover from "../utils/underscoreRemover";
 export default function SchoolProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { school, nearbySchools, loading, error } = useSchoolProfile(id);
+  const [school, setSchool] = useState<ItemSekolahModel | null>(null);
+  const [nearbySchools, setNearbySchools] = useState<ItemSekolahModel[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
   const domain = import.meta.env.VITE_DOMAIN_NAME;
   const schoolProfile = "/halaman-sekolah";
   const lang = localStorage.getItem("lang") || "ms";
+
+  useEffect(() => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchSchoolData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const { school: schoolData, nearbySchools: nearby } =
+          await getSchoolProfile(id);
+
+        setSchool(schoolData);
+        setNearbySchools(nearby);
+      } catch (err) {
+        console.error("Failed to fetch school profile:", err);
+        setError(
+          err instanceof Error ? err : new Error("Unknown error occurred"),
+        );
+        setSchool(null);
+        setNearbySchools([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSchoolData();
+  }, [id]);
 
   const handleNearbySchoolClick = (schoolId: string) => {
     navigate(`/${lang}/halaman-sekolah/${schoolId}`);
