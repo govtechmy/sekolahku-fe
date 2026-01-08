@@ -8,9 +8,6 @@ export interface PolygonStyle {
   fillOpacity?: number;
 }
 
-// In-memory cache for polygon data
-const polygonCache = new Map<string, GeoJSONFeature>();
-
 const normalizeStateName = (stateName: string): string => {
   return stateName.toUpperCase().replace(/\s+/g, "_");
 };
@@ -19,17 +16,9 @@ export const getStatePolygon = async (
   stateName: string,
 ): Promise<GeoJSONFeature> => {
   const state = normalizeStateName(stateName);
-
-  // Check cache first
-  if (polygonCache.has(state)) {
-    console.log(`[Polygon Cache] Using cached polygon for ${state}`);
-    return polygonCache.get(state)!;
-  }
-
   const url = `${S3_BASE_URL}/${state}/${state}.json`;
 
   try {
-    console.log(`[Polygon Fetch] Fetching polygon for ${state} from ${url}`);
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -57,9 +46,6 @@ export const getStatePolygon = async (
       geoJsonData = data as GeoJSONFeature;
     }
 
-    polygonCache.set(state, geoJsonData);
-    console.log(`[Polygon Cache] Cached polygon for ${state}`);
-
     return geoJsonData;
   } catch (error) {
     console.error(`Error fetching polygon for ${stateName}:`, error);
@@ -74,25 +60,7 @@ export const fetchMultipleStatePolygons = async (
   const uniqueStates = [...new Set(stateNames.map(normalizeStateName))];
   const result = new Map<string, GeoJSONFeature>();
 
-  // Separate cached and uncached states
-  const uncachedStates = uniqueStates.filter(
-    (state) => !polygonCache.has(state),
-  );
-  const cachedStates = uniqueStates.filter((state) => polygonCache.has(state));
-
-  // Add cached states to result
-  cachedStates.forEach((state) => {
-    const cached = polygonCache.get(state);
-    if (cached) {
-      result.set(state, cached);
-    }
-  });
-
-  if (uncachedStates.length === 0) {
-    return result;
-  }
-
-  const fetchPromises = uncachedStates.map(async (state) => {
+  const fetchPromises = uniqueStates.map(async (state) => {
     try {
       const data = await getStatePolygon(state);
       result.set(state, data);
