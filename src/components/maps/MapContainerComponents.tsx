@@ -4,7 +4,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
-import { useRef, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { Coordinates } from "../../types/maps";
 import { useMapViewStore } from "../../store/mapView";
@@ -91,16 +91,10 @@ export function MapContainerComponent({
     zoom,
   });
 
-  // Track previous marker type to determine if we should show polygons
-  const prevMarkerTypeRef = useRef<string | null>(null);
-
   // Determine if we should show polygons based on marker type
   const firstMarker = Array.from(schoolMarkers.values())[0];
   const currentMarkerType = firstMarker?.markerType;
   const shouldShowPolygons = currentMarkerType === "NEGERI";
-
-  // Update ref for potential future use
-  prevMarkerTypeRef.current = currentMarkerType || null;
 
   return (
     <LeafletMapContainer
