@@ -1,6 +1,4 @@
-import {
-  JataNegaraIcon,
-} from "@govtechmy/myds-react/icon";
+import { JataNegaraIcon } from "@govtechmy/myds-react/icon";
 
 //fetch backend when available later
 export const siaranSocialLinks = [
@@ -107,5 +105,3 @@ export const dataItemLinks = [
     link: "https://delima.moe-dl.edu.my/",
   },
 ];
-
-
