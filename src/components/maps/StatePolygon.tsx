@@ -10,6 +10,7 @@ interface StatePolygonProps {
 
 export function StatePolygon({ stateName, geoJsonData }: StatePolygonProps) {
   const color = getStateColor(stateName);
+  const paneName = `polygon-layer-${color.zIndex}`;
 
   const pathOptions: PathOptions = {
     color: color.borderColor,
@@ -41,7 +42,7 @@ export function StatePolygon({ stateName, geoJsonData }: StatePolygonProps) {
         data={geoJsonData}
         pathOptions={pathOptions}
         style={pathOptions}
-        pane={`polygon-layer-${color.zIndex}`}
+        pane={paneName}
       />
     );
   } catch (error) {

@@ -56,15 +56,22 @@ export default function SchoolMaps() {
     // Fetch all state polygons on mount
     const fetchAllStatePolygons = async () => {
       if (polygonsFetchedRef.current) return;
-      
+
       try {
         console.log("[SchoolMaps] Fetching all state polygons on mount...");
         polygonsFetchedRef.current = true;
         const polygonMap = await fetchMultipleStatePolygons(NEGERI_LIST);
         setStatePolygons(polygonMap);
-        console.log("[SchoolMaps] Successfully fetched polygons for", polygonMap.size, "states");
+        console.log(
+          "[SchoolMaps] Successfully fetched polygons for",
+          polygonMap.size,
+          "states",
+        );
       } catch (error) {
-        console.error("[SchoolMaps] Error fetching state polygons on mount:", error);
+        console.error(
+          "[SchoolMaps] Error fetching state polygons on mount:",
+          error,
+        );
         polygonsFetchedRef.current = false;
       }
     };
