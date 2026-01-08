@@ -26,7 +26,7 @@ export default function SectionItemNews({
             {mainTitle}
           </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {dataItemNews.slice(0, 4).map((item: SiaranItem, index: number) => (
             <Link
               key={index}
