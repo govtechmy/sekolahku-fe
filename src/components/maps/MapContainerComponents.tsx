@@ -1,11 +1,10 @@
 import {
   MapContainer as LeafletMapContainer,
   TileLayer,
-  useMap,
   useMapEvents,
 } from "react-leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
-import { useEffect, type Dispatch, type SetStateAction } from "react";
+import { useRef, type Dispatch, type SetStateAction } from "react";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { Coordinates } from "../../types/maps";
 import { useMapViewStore } from "../../store/mapView";
@@ -23,31 +22,6 @@ const ZOOM_LEVELS = {
   USER: 17,
   INDIVIDUAL: 18,
 } as const;
-
-// Component to initialize polygon panes with z-index layering
-function PolygonPaneInitializer() {
-  const map = useMap();
-
-  useEffect(() => {
-    if (!map) return;
-
-    const panes = [
-      { name: "polygon-layer-500", zIndex: 400 }, // Gray/Black (Perak, Terengganu, WP KL, WP Putrajaya)
-      { name: "polygon-layer-400", zIndex: 300 }, // Red (Kelantan, Kedah, Selangor)
-      { name: "polygon-layer-300", zIndex: 500 }, // Green (Pahang, Melaka) - Highest
-      { name: "polygon-layer-200", zIndex: 200 }, // Blue (Johor, Penang, Sabah, WP Labuan)
-      { name: "polygon-layer-100", zIndex: 100 }, // Yellow (Sarawak, Negeri Sembilan, Perlis)
-    ];
-
-    panes.forEach(({ name, zIndex }) => {
-      if (!map.getPane(name)) {
-        const pane = map.createPane(name);
-        pane.style.zIndex = String(zIndex);
-      }
-    });
-  }, [map]);
-  return null;
-}
 
 function MapEvents({
   onZoomChange,
@@ -117,6 +91,17 @@ export function MapContainerComponent({
     zoom,
   });
 
+  // Track previous marker type to determine if we should show polygons
+  const prevMarkerTypeRef = useRef<string | null>(null);
+
+  // Determine if we should show polygons based on marker type
+  const firstMarker = Array.from(schoolMarkers.values())[0];
+  const currentMarkerType = firstMarker?.markerType;
+  const shouldShowPolygons = currentMarkerType === "NEGERI";
+
+  // Update ref for potential future use
+  prevMarkerTypeRef.current = currentMarkerType || null;
+
   return (
     <LeafletMapContainer
       center={[3.760115447396889, 108.46252441406251]}
@@ -124,7 +109,6 @@ export function MapContainerComponent({
       className="h-full w-full"
       zoomControl={false}
     >
-      <PolygonPaneInitializer />
       <MapViewController />
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -160,14 +144,15 @@ export function MapContainerComponent({
         }}
       />
 
-      {/* Render state polygons when NEGERI markers are displayed */}
-      {Array.from(statePolygons.entries()).map(([stateName, geoJsonData]) => (
-        <StatePolygon
-          key={stateName}
-          stateName={stateName}
-          geoJsonData={geoJsonData}
-        />
-      ))}
+      {/* Render all state polygons when NEGERI markers are displayed */}
+      {shouldShowPolygons &&
+        Array.from(statePolygons.entries()).map(([stateName, geoJsonData]) => (
+          <StatePolygon
+            key={stateName}
+            stateName={stateName}
+            geoJsonData={geoJsonData}
+          />
+        ))}
 
       {Array.from(userMarkers.entries()).map(([id, coords]) => (
         <SchoolMapMarker
