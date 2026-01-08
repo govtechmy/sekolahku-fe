@@ -7,6 +7,8 @@ import { LocationPickerWindow } from "../components/maps";
 import { useMapViewStore } from "../store/mapView";
 import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
+import { fetchMultipleStatePolygons } from "../services/polygon.svc";
+import { NEGERI_LIST } from "../contentData";
 
 export default function SchoolMaps() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
@@ -25,9 +27,11 @@ export default function SchoolMaps() {
     schoolMarkers,
     query,
     setUserMarkers,
+    setStatePolygons,
   } = useMapViewStore();
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
+  const polygonsFetchedRef = useRef(false);
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
     schoolMarkers,
@@ -48,6 +52,31 @@ export default function SchoolMaps() {
       }
     };
     fetchSchoolTypes();
+
+    // Fetch all state polygons on mount
+    const fetchAllStatePolygons = async () => {
+      if (polygonsFetchedRef.current) return;
+
+      try {
+        console.log("[SchoolMaps] Fetching all state polygons on mount...");
+        polygonsFetchedRef.current = true;
+        const polygonMap = await fetchMultipleStatePolygons(NEGERI_LIST);
+        setStatePolygons(polygonMap);
+        console.log(
+          "[SchoolMaps] Successfully fetched polygons for",
+          polygonMap.size,
+          "states",
+        );
+      } catch (error) {
+        console.error(
+          "[SchoolMaps] Error fetching state polygons on mount:",
+          error,
+        );
+        polygonsFetchedRef.current = false;
+      }
+    };
+    fetchAllStatePolygons();
+
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
       return;

@@ -4,7 +4,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
-import type { Dispatch, SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { Coordinates } from "../../types/maps";
 import { useMapViewStore } from "../../store/mapView";
@@ -12,8 +12,16 @@ import type { MarkerGroup } from "../../models/response";
 import { getSchoolS3Json } from "../../services/school.svc";
 import { useAppendNewMarkers } from "../../hooks/useAppendNewMarkers";
 import { MapViewController } from "./MapViewController";
+import { StatePolygon } from "./StatePolygon";
 
-// Use the shared MarkerMap shape used by marker processors (lat/lng)
+// Constants for zoom levels
+const ZOOM_LEVELS = {
+  WEST_EAST_MALAYSIA: 8,
+  NEGERI: 12,
+  PARLIMEN: 14,
+  USER: 17,
+  INDIVIDUAL: 18,
+} as const;
 
 function MapEvents({
   onZoomChange,
@@ -70,8 +78,10 @@ export function MapContainerComponent({
     setSchoolMarkers,
     initialLocationSet,
     setViewSchool,
+    statePolygons,
     userMarkers,
   } = useMapViewStore();
+
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
     schoolMarkers,
@@ -80,6 +90,11 @@ export function MapContainerComponent({
     initialLocationSet,
     zoom,
   });
+
+  // Determine if we should show polygons based on marker type
+  const firstMarker = schoolMarkers.values().next().value;
+  const currentMarkerType = firstMarker?.markerType;
+  const shouldShowPolygons = currentMarkerType === "NEGERI";
 
   return (
     <LeafletMapContainer
@@ -122,16 +137,17 @@ export function MapContainerComponent({
           setDragStartPos(null);
         }}
       />
-      {/* <Circle
-        center={center}
-        radius={radius}
-        pathOptions={{
-          color: "#3b82f6",
-          fillColor: "#3b82f6",
-          fillOpacity: 0.1,
-          weight: 2,
-        }}
-      /> */}
+
+      {/* Render all state polygons when NEGERI markers are displayed */}
+      {shouldShowPolygons &&
+        Array.from(statePolygons.entries()).map(([stateName, geoJsonData]) => (
+          <StatePolygon
+            key={stateName}
+            stateName={stateName}
+            geoJsonData={geoJsonData}
+          />
+        ))}
+
       {Array.from(userMarkers.entries()).map(([id, coords]) => (
         <SchoolMapMarker
           key={`user-${id}`}
@@ -145,7 +161,7 @@ export function MapContainerComponent({
           }}
           onClick={() => {
             setCenter([coords.koordinatXX, coords.koordinatYY]);
-            setZoom(17);
+            setZoom(ZOOM_LEVELS.USER);
           }}
         />
       ))}
@@ -161,23 +177,22 @@ export function MapContainerComponent({
             total: coords.total,
           }}
           onClick={async () => {
-            if (coords.markerType === "WEST_EAST_MALAYSIA") {
-              setCenter([coords.koordinatXX, coords.koordinatYY]);
-              setZoom(8);
-            }
-            if (coords.markerType === "NEGERI") {
-              setCenter([coords.koordinatXX, coords.koordinatYY]);
-              setZoom(12);
-            }
-            if (coords.markerType === "PARLIMEN") {
-              setCenter([coords.koordinatXX, coords.koordinatYY]);
-              setZoom(14);
-            }
-            if (coords.markerType === "INDIVIDUAL") {
-              setViewSchool(null); // Reset before setting new school
-              setViewSchool(await getSchoolS3Json(coords.dataUrl));
-              setCenter([coords.koordinatXX, coords.koordinatYY]);
-              setZoom(18);
+            const { koordinatXX, koordinatYY, markerType } = coords;
+
+            setCenter([koordinatXX, koordinatYY]);
+
+            if (markerType === "WEST_EAST_MALAYSIA") {
+              setZoom(ZOOM_LEVELS.WEST_EAST_MALAYSIA);
+            } else if (markerType === "NEGERI") {
+              setZoom(ZOOM_LEVELS.NEGERI);
+            } else if (markerType === "PARLIMEN") {
+              setZoom(ZOOM_LEVELS.PARLIMEN);
+            } else if (markerType === "INDIVIDUAL") {
+              setViewSchool(null);
+              if (coords.dataUrl) {
+                setViewSchool(await getSchoolS3Json(coords.dataUrl));
+              }
+              setZoom(ZOOM_LEVELS.INDIVIDUAL);
             }
           }}
         />

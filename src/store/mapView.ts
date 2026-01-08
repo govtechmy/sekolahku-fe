@@ -3,6 +3,7 @@ import type { MarkerMap } from "../utils/markerProcessors";
 import type { SearchBarMapProps } from "../types/maps";
 import type { ItemSekolahModel } from "../models/response";
 import { getSchoolSuggestion } from "../services/school.svc";
+import type { GeoJSONFeature } from "../types/polygon";
 
 type Center = [number, number];
 
@@ -17,6 +18,7 @@ interface MapViewState {
   localSuggestions: SearchBarMapProps[];
   viewSchool: ItemSekolahModel | null;
   query: string;
+  statePolygons: Map<string, GeoJSONFeature>;
   setCenter: (c: Center) => void;
   setInitialLocationUser: (c: Center) => void;
   setRadius: (r: number) => void;
@@ -36,6 +38,9 @@ interface MapViewState {
     jenis?: string;
   }) => Promise<void>;
   setQuery: (q: string) => void;
+  // Polygon actions
+  setStatePolygons: (polygons: Map<string, GeoJSONFeature>) => void;
+  clearStatePolygons: () => void;
 }
 
 export const useMapViewStore = create<MapViewState>((set) => ({
@@ -49,6 +54,7 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   localSuggestions: [],
   viewSchool: null,
   query: "",
+  statePolygons: new Map<string, GeoJSONFeature>(),
   setCenter: (c) => {
     set(() => {
       return { center: c };
@@ -130,5 +136,11 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   },
   setQuery: (q) => {
     set({ query: q });
+  },
+  setStatePolygons: (polygons) => {
+    set({ statePolygons: polygons });
+  },
+  clearStatePolygons: () => {
+    set({ statePolygons: new Map() });
   },
 }));
