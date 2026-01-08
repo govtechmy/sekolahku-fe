@@ -1,10 +1,11 @@
 import {
   MapContainer as LeafletMapContainer,
   TileLayer,
+  useMap,
   useMapEvents,
 } from "react-leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
-import type { Dispatch, SetStateAction } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { Coordinates } from "../../types/maps";
 import { useMapViewStore } from "../../store/mapView";
@@ -13,15 +14,31 @@ import { getSchoolS3Json } from "../../services/school.svc";
 import { useAppendNewMarkers } from "../../hooks/useAppendNewMarkers";
 import { MapViewController } from "./MapViewController";
 import { StatePolygon } from "./StatePolygon";
-import { usePolygonPanes } from "../../hooks/usePolygonPanes";
 
 // Component to initialize polygon panes with z-index layering
 function PolygonPaneInitializer() {
-  usePolygonPanes();
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map) return;
+
+    const panes = [
+      { name: "polygon-layer-500", zIndex: 400 }, // Gray/Black (Perak, Terengganu, WP KL, WP Putrajaya)
+      { name: "polygon-layer-400", zIndex: 300 }, // Red (Kelantan, Kedah, Selangor)
+      { name: "polygon-layer-300", zIndex: 500 }, // Green (Pahang, Melaka) - Highest
+      { name: "polygon-layer-200", zIndex: 200 }, // Blue (Johor, Penang, Sabah, WP Labuan)
+      { name: "polygon-layer-100", zIndex: 100 }, // Yellow (Sarawak, Negeri Sembilan, Perlis)
+    ];
+
+    panes.forEach(({ name, zIndex }) => {
+      if (!map.getPane(name)) {
+        const pane = map.createPane(name);
+        pane.style.zIndex = String(zIndex);
+      }
+    });
+  }, [map]);
   return null;
 }
-
-// Use the shared MarkerMap shape used by marker processors (lat/lng)
 
 function MapEvents({
   onZoomChange,
@@ -133,17 +150,6 @@ export function MapContainerComponent({
           setDragStartPos(null);
         }}
       />
-      {/* <Circle
-        center={center}
-        radius={radius}
-        pathOptions={{
-          color: "#3b82f6",
-          fillColor: "#3b82f6",
-          fillOpacity: 0.1,
-          weight: 2,
-        }}
-      />
-    */}
 
       {/* Render state polygons when NEGERI markers are displayed */}
       {Array.from(statePolygons.entries()).map(([stateName, geoJsonData]) => (
