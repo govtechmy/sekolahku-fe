@@ -44,7 +44,6 @@ export default function HomePage() {
       try {
         const data = await getSiaranList();
         setDataItemNews(data.items);
-        console.log(data.items);
       } catch (error) {
         console.error("Error fetching Acara:", error);
       }
