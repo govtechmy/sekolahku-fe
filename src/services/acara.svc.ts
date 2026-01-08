@@ -24,7 +24,7 @@ export const getSearchAcara = async (
   try {
     let url = `${BASE_URL}/acara?page=${pageNumber}&pageSize=12`;
     if (search) {
-      url += `&search=${search}`;
+      url += `&search=${encodeURI(search)}`;
     }
     if (startDate) {
       url += `&startDate=${startDate}`;
