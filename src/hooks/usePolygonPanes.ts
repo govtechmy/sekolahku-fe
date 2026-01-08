@@ -10,7 +10,7 @@ export function usePolygonPanes() {
     const panes = [
       { name: "polygon-layer-500", zIndex: 450 }, // Gray/Black (Perak, Terengganu, WP KL, WP Putrajaya) - Top
       { name: "polygon-layer-400", zIndex: 440 }, // Red (Kelantan, Kedah, Selangor) - Second from top
-      { name: "polygon-layer-300", zIndex: 430 }, // Green (Pahang, Melaka)
+      { name: "polygon-layer-300", zIndex: 451 }, // Green (Pahang, Melaka)
       { name: "polygon-layer-200", zIndex: 420 }, // Blue (Johor, Penang, Sabah, WP Labuan)
       { name: "polygon-layer-100", zIndex: 410 }, // Yellow (Sarawak, Negeri Sembilan, Perlis) - Bottom
     ];

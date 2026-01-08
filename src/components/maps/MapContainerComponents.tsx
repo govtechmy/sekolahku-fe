@@ -12,7 +12,6 @@ import type { MarkerGroup } from "../../models/response";
 import { getSchoolS3Json } from "../../services/school.svc";
 import { useAppendNewMarkers } from "../../hooks/useAppendNewMarkers";
 import { MapViewController } from "./MapViewController";
-import { useStatePolygons } from "../../hooks/useStatePolygons";
 import { StatePolygon } from "./StatePolygon";
 import { usePolygonPanes } from "../../hooks/usePolygonPanes";
 
@@ -82,8 +81,6 @@ export function MapContainerComponent({
     statePolygons,
     userMarkers,
   } = useMapViewStore();
-
-  useStatePolygons(schoolMarkers);
 
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,

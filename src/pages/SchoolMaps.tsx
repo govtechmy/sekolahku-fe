@@ -7,6 +7,7 @@ import { LocationPickerWindow } from "../components/maps";
 import { useMapViewStore } from "../store/mapView";
 import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
+import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 
 export default function SchoolMaps() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
@@ -25,9 +26,12 @@ export default function SchoolMaps() {
     schoolMarkers,
     query,
     setUserMarkers,
+    setStatePolygons,
+    clearStatePolygons,
   } = useMapViewStore();
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
+  const prevMarkerTypeRef = useRef<string | null>(null);
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
     schoolMarkers,
@@ -107,6 +111,56 @@ export default function SchoolMaps() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, initialLocationSet]);
+
+  // Polygon management effect - moved from useStatePolygons hook
+  useEffect(() => {
+    if (schoolMarkers.size === 0) {
+      clearStatePolygons();
+      prevMarkerTypeRef.current = null;
+      return;
+    }
+
+    const firstMarker = Array.from(schoolMarkers.values())[0];
+    const currentMarkerType = firstMarker?.markerType;
+
+    if (
+      prevMarkerTypeRef.current === "NEGERI" &&
+      currentMarkerType !== "NEGERI"
+    ) {
+      clearStatePolygons();
+      prevMarkerTypeRef.current = currentMarkerType;
+      return;
+    }
+
+    prevMarkerTypeRef.current = currentMarkerType;
+
+    if (currentMarkerType !== "NEGERI") {
+      return;
+    }
+
+    const stateNames = Array.from(schoolMarkers.values())
+      .filter((marker) => marker.markerType === "NEGERI")
+      .map((marker) => marker.negeri)
+      .filter((negeri): negeri is string => Boolean(negeri));
+
+    const uniqueStateNames = [...new Set(stateNames)];
+
+    if (uniqueStateNames.length === 0) {
+      console.warn("[Polygon Hook] Found NEGERI markers but no state names");
+      return;
+    }
+
+    const fetchPolygons = async () => {
+      try {
+        const polygonMap = await fetchMultipleStatePolygons(uniqueStateNames);
+        setStatePolygons(polygonMap);
+      } catch (error) {
+        console.error("[Polygon Hook] Error fetching state polygons:", error);
+      }
+    };
+
+    fetchPolygons();
+  }, [schoolMarkers, setStatePolygons, clearStatePolygons]);
 
   return (
     <div className="h-full w-full flex relative">
