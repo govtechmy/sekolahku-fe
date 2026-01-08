@@ -151,7 +151,7 @@ export default function Hero({
                             });
                           }
                         } else if (item.link) {
-                          window.location.href = item.link;
+                          window.history.pushState(null, "", item.link);
                         }
                       }}
                     >
