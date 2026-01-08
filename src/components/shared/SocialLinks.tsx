@@ -74,7 +74,7 @@ export default function SocialLinks({
           url: window.location.href,
         })
         .catch((error) => {
-          console.log(error);
+          console.error("Failed to share content using the Web Share API:", error);
         });
       return;
     }
