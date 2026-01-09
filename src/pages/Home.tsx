@@ -85,7 +85,7 @@ export default function HomePage() {
           <SectionHeader
             header="SIARAN"
             ButtonLabel="Semua Berita"
-            ButtonClickHandler={()=>navigate(`/${lang}/siaran`)}
+            ButtonClickHandler={() => navigate(`/${lang}/siaran`)}
             children={
               <SectionItemNews
                 dataItemNews={dataItemNews}
@@ -101,7 +101,7 @@ export default function HomePage() {
           <SectionHeader
             header="KALENDAR"
             ButtonLabel="Semua Acara"
-            ButtonClickHandler={()=>navigate(`/${lang}/acara`)}
+            ButtonClickHandler={() => navigate(`/${lang}/acara`)}
             children={
               <SectionItemCalendar
                 dataItemCalendar={dataItemCalendar}
@@ -109,7 +109,6 @@ export default function HomePage() {
                 lang={lang}
               />
             }
-       
           />
         )}
 

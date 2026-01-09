@@ -14,7 +14,7 @@ export default function SectionHeader({
   title,
   children,
   ButtonLabel,
-  ButtonClickHandler
+  ButtonClickHandler,
 }: SectionHeaderProps) {
   return (
     <div className="flex flex-col pb-16 px-4 lg:px-[50px]">
