@@ -102,6 +102,9 @@ export default function Siaran() {
             getKey={(item) => item._id}
             getLabel={(item) => item.title}
             onSelect={(item: SiaranItem) => {
+              setSearchQuery("");
+              setSearchSuggestions([]);
+              setDebouncedSearchQuery("");
               navigate(`/${lang}/siaran/${item._id}`);
             }}
           />
