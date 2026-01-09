@@ -3,6 +3,7 @@ import BgSchoolProfile from "../../asset/BgSchoolProfile";
 import BgSchoolProfileNoLogo from "../../asset/BgSchoolProfileNoLogo";
 import type { ItemSekolahModel } from "../../models/response";
 import { useState } from "react";
+import caseConverter from "../../utils/caseConverter";
 
 interface SchoolProfileHeroProps {
   school: ItemSekolahModel;
@@ -24,6 +25,7 @@ export default function SchoolProfileHero({
     <Hero
       title=""
       variant="full"
+      className="border-b-0 max-md:h-[650px]"
       background={
         <div className="absolute inset-0 w-full h-full">
           {hasLogo ? (
@@ -40,8 +42,8 @@ export default function SchoolProfileHero({
                   </div>
                   <div className="text-txt-black-900 text-heading-md max-md:text-heading-sm font-semibold gap-7 pb-7 max-w-[495px]">
                     {school?.namaSekolah
-                      ? school.namaSekolah
-                      : "Maktab Sultan Abu Bakar (English College)"}
+                      ? caseConverter(school.namaSekolah)
+                      : ""}
                   </div>
                   <div className="text-txt-primary font-semibold">
                     JENIS SEKOLAH

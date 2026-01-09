@@ -1,4 +1,5 @@
 import type { ItemSekolahModel } from "../../models/response";
+import caseConverter from "../../utils/caseConverter";
 import { formatSchoolAddress } from "../../utils/schoolHelpers";
 import underScoreRemover from "../../utils/underscoreRemover";
 
@@ -23,10 +24,10 @@ export const NearbySchoolCard = ({
   return (
     <div
       key={school.kodSekolah}
-      className="bg-bg-white rounded-2xl shadow overflow-hidden border-[1px] outline-otl-gray-200 cursor-pointer hover:shadow-lg transition-shadow"
+      className="bg-bg-white rounded-2xl shadow overflow-hidden border outline-otl-divider cursor-pointer hover:shadow-lg transition-shadow"
       onClick={() => handleNearbySchoolClick(school.kodSekolah)}
     >
-      <div className="flex justify-center items-center h-40">
+      <div className="flex justify-center items-center h-40 border-b border-otl-gray-200">
         <img
           src={url || "/utama/nearby-school-default.png"}
           alt={`${school.namaSekolah}`}
@@ -34,10 +35,12 @@ export const NearbySchoolCard = ({
           onError={handleImageError}
         />
       </div>
-      <div className="p-4.5">
-        <h3 className="text-txt-black-900 font-medium">{school.namaSekolah}</h3>
-        <p className="text-gray-600 text-sm">
-          {underScoreRemover(formatSchoolAddress(school))}
+      <div className="p-4.5 flex flex-col gap-2">
+        <h3 className="text-txt-black-900 font-medium">
+          {caseConverter(school.namaSekolah)}
+        </h3>
+        <p className="text-txt-black-500 text-sm h-12">
+          {caseConverter(underScoreRemover(formatSchoolAddress(school)))}
         </p>
       </div>
     </div>
