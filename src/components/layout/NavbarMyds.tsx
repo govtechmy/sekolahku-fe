@@ -1,12 +1,13 @@
 import { Link, useLocation, useParams } from "react-router-dom";
-// import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
-// import { GlobeIcon } from "@govtechmy/myds-react/icon";
 import {
   Navbar,
+  NavbarAction,
   NavbarMenu,
   NavbarMenuItem,
-  NavbarAction,
-} from "@govtechmy/myds-react/navbar";
+} from "../shared/mydsNavbar";
+// import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
+// import { GlobeIcon } from "@govtechmy/myds-react/icon";
+
 // import {
 //   Select,
 //   SelectTrigger,
@@ -59,7 +60,10 @@ export default function NavbarMyds() {
 
   return (
     <Navbar>
-      <Link to={`/${currentLang}/home`} className="flex items-center gap-2.5">
+      <Link
+        to={`/${currentLang}/home`}
+        className="flex items-center gap-2.5 focus:outline-otl-primary-200 rounded-sm"
+      >
         <img src="/JataNegara.svg" />
         <div className="font-heading text-txt-black-900 text-body-lg font-semibold">
           Sekolahku
@@ -72,7 +76,11 @@ export default function NavbarMyds() {
           aria-current={activeItem === "home" ? "page" : undefined}
           className={activeItem === "home" ? "bg-bg-washed" : ""}
         >
-          <Link to={`/${currentLang}/home`} onClick={handleNavItemClick}>
+          <Link
+            to={`/${currentLang}/home`}
+            onClick={handleNavItemClick}
+            className="focus:outline-otl-primary-200"
+          >
             Utama
           </Link>
         </NavbarMenuItem>
@@ -85,6 +93,7 @@ export default function NavbarMyds() {
           <Link
             to={`/${currentLang}/carian-sekolah`}
             onClick={handleNavItemClick}
+            className="focus:outline-otl-primary-200"
           >
             Carian Sekolah
           </Link>
@@ -95,7 +104,11 @@ export default function NavbarMyds() {
           aria-current={activeItem === "siaran" ? "page" : undefined}
           className={activeItem === "siaran" ? "bg-bg-washed" : ""}
         >
-          <Link to={`/${currentLang}/siaran`} onClick={handleNavItemClick}>
+          <Link
+            to={`/${currentLang}/siaran`}
+            onClick={handleNavItemClick}
+            className="focus:outline-otl-primary-200"
+          >
             Siaran
           </Link>
         </NavbarMenuItem>
@@ -105,7 +118,11 @@ export default function NavbarMyds() {
           aria-current={activeItem === "acara" ? "page" : undefined}
           className={activeItem === "acara" ? "bg-bg-washed" : ""}
         >
-          <Link to={`/${currentLang}/acara`} onClick={handleNavItemClick}>
+          <Link
+            to={`/${currentLang}/acara`}
+            onClick={handleNavItemClick}
+            className="focus:outline-otl-primary-200"
+          >
             Acara
           </Link>
         </NavbarMenuItem>
