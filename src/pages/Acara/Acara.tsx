@@ -42,13 +42,13 @@ export default function Acara() {
       try {
         const response =
           debouncedSearchQuery ||
-          (dateRange?.from != undefined && dateRange?.to != undefined)
+            (dateRange?.from != undefined && dateRange?.to != undefined)
             ? await getSearchAcara(
-                pageNumber,
-                debouncedSearchQuery,
-                dateRange?.from ? dateRange.from.toISOString() : undefined,
-                dateRange?.to ? dateRange.to.toISOString() : undefined,
-              )
+              pageNumber,
+              debouncedSearchQuery,
+              dateRange?.from ? dateRange.from.toISOString() : undefined,
+              dateRange?.to ? dateRange.to.toISOString() : undefined,
+            )
             : await getAllAcara(pageNumber);
         setItems(response.items);
         setPageNumber(response.pageNumber);
@@ -109,7 +109,7 @@ export default function Acara() {
         }
         background={
           <>
-            <div className="block lg:hidden h-full w-full bg-[url('/utama/siaran/hero-banner/mobile-sekolahku.svg')] bg-contain bg-center bg-no-repeat" />
+            <div className="block lg:hidden h-full w-full bg-[url('/utama/siaran/hero-banner/mobile-sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
             <div className="hidden lg:block h-full w-full bg-[url('/utama/siaran/hero-banner/large-sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
           </>
         }
@@ -117,13 +117,14 @@ export default function Acara() {
           <DateRangePicker value={dateRange} onValueChange={setDateRange} />
         }
       />
-      <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
+      <div className="mx-auto flex-1 px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
         <div className="flex flex-col gap-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 max-[400px]:grid-cols-1 max-sm:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {items?.map((item) => (
               <div
                 key={item._id}
-                className="relative border border-otl-gray-200 rounded-lg h-[350px] flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-fr-primary"
+                className="relative border border-otl-gray-200 rounded-lg h-[350px] flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow focus:outline-none focus:ring-[6px] focus:ring-fr-primary"
+                aria-label={item.title}
                 tabIndex={0}
                 onClick={() => {
                   navigate(`/${lang}/acara/${item._id}`);

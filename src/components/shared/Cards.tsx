@@ -60,7 +60,6 @@ interface HorizontalCardItemProps {
   className?: string;
   classNameHeader?: string;
   onClick: () => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 function HorizontalCardItem({
@@ -68,16 +67,25 @@ function HorizontalCardItem({
   className = "",
   classNameHeader = "",
   onClick,
-  onKeyDown,
 }: HorizontalCardItemProps) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <div
       tabIndex={0}
+      role="button"
+      aria-label={item.title}
       className={`group border border-otl-gray-200 gap-[18px] rounded-lg p-2 md:p-3
           w-full flex flex-col cursor-pointer
-          transition-shadow hover:shadow-lg ${className}`}
+          transition-shadow hover:shadow-lg 
+          focus:outline focus:outline-2 focus:outline-primary-200 ${className}`}
       onClick={onClick}
-      onKeyDown={onKeyDown}
+      onKeyDown={handleKeyDown}
     >
       <img
         src={item.imageSrc}

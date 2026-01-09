@@ -144,12 +144,6 @@ export default function Siaran() {
                     onClick={() => {
                       navigate(`/${lang}/siaran/${item._id}`);
                     }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        navigate(`/${lang}/siaran/${item._id}`);
-                      }
-                    }}
                   />
                 );
               })}
