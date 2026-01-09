@@ -12,6 +12,7 @@ import {
 import { Pill } from "@govtechmy/myds-react/pill";
 import { ChevronRightIcon } from "@govtechmy/myds-react/icon";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 interface SearchBarHomeProps<T> {
   query?: string;
@@ -37,6 +38,9 @@ export default function SearchBarHome<T>({
   const [hasFocus, setHasFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const hasQuery = (query?.length || 0) > 0;
+  const navigate = useNavigate();
+  const { lang } = useParams<{ lang: string }>();
+  const location = useLocation();
 
   useEffect(() => {
     const handleSlashFocus = (e: KeyboardEvent) => {
@@ -67,25 +71,55 @@ export default function SearchBarHome<T>({
           onKeyDown={handleSearchEnter}
           onFocus={() => setHasFocus(true)}
         />
-        {query && <SearchBarClearButton onClick={() => setQuery?.("")} />}
+        {query && (
+          <SearchBarClearButton
+            onClick={() => setQuery?.("")}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setQuery?.("");
+              }
+            }}
+          />
+        )}
         {(!query || query.trim().length === 0) && (
           <SearchBarHint className="">
             Tekan <Pill size="small">/</Pill> untuk cari
           </SearchBarHint>
         )}
-        <SearchBarSearchButton />
+        <SearchBarSearchButton
+          tabIndex={0}
+          {...(location.pathname === `/${lang || "en"}/home` && {
+            onClick: () => navigate(`/${lang || "en"}/carian-sekolah`),
+            onKeyDown: (e) => {
+              if (e.key === "Enter") {
+                navigate(`/${lang || "en"}/carian-sekolah`);
+              }
+            },
+          })}
+        />
       </SearchBarInputContainer>
       <SearchBarResults open={hasQuery && hasFocus}>
         {hasQuery && !(suggestions && suggestions.length) && (
           <p className="text-txt-black-900 text-center">No results found</p>
         )}
         {hasQuery && suggestions && suggestions.length > 0 && (
-          <SearchBarResultsList className="max-h-[400px] overflow-y-auto focus-visible:outline-none">
+          <SearchBarResultsList className="max-h-[400px] overflow-y-auto focus-visible:outline-none p-1">
             {suggestions.map((item) => (
               <SearchBarResultsItem
+                tabIndex={0}
                 key={getKey?.(item)}
                 value={getLabel?.(item)}
                 onMouseDown={(e) => e.preventDefault()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    if (onSelect) {
+                      onSelect(item);
+                      setHasFocus(false);
+                    } else {
+                      setHasFocus(false);
+                    }
+                  }
+                }}
                 onSelect={() => {
                   if (onSelect) {
                     onSelect(item);
