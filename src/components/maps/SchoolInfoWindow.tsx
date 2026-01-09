@@ -62,6 +62,14 @@ export function SchoolInfoWindow({
                 onToggleFullScreen();
               }
             }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                if (onToggleFullScreen) {
+                  onToggleFullScreen();
+                }
+              }
+            }}
             role="button"
             aria-label="Toggle fullscreen school info window"
             tabIndex={0}
