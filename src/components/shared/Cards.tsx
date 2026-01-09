@@ -60,6 +60,7 @@ interface HorizontalCardItemProps {
   className?: string;
   classNameHeader?: string;
   onClick: () => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 function HorizontalCardItem({
@@ -67,6 +68,7 @@ function HorizontalCardItem({
   className = "",
   classNameHeader = "",
   onClick,
+  onKeyDown,
 }: HorizontalCardItemProps) {
   return (
     <div
@@ -74,7 +76,7 @@ function HorizontalCardItem({
       className={`group border border-otl-gray-200 gap-[18px] rounded-lg p-2 md:p-3
           w-full flex flex-col cursor-pointer
           transition-shadow hover:shadow-lg ${className}`}
-      onClick={onClick}
+      onClick={onClick} onKeyDown={onKeyDown}
     >
       <img
         src={item.imageSrc}
