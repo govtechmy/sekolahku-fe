@@ -12,7 +12,7 @@ import {
 import { Pill } from "@govtechmy/myds-react/pill";
 import { ChevronRightIcon } from "@govtechmy/myds-react/icon";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 interface SearchBarHomeProps<T> {
   query?: string;
@@ -40,6 +40,7 @@ export default function SearchBarHome<T>({
   const hasQuery = (query?.length || 0) > 0;
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
+  const location = useLocation();
 
   useEffect(() => {
     const handleSlashFocus = (e: KeyboardEvent) => {
@@ -87,7 +88,7 @@ export default function SearchBarHome<T>({
         )}
         <SearchBarSearchButton
           tabIndex={0}
-          {...(window.location.pathname === `/${lang || "en"}/home` && {
+          {...(location.pathname === `/${lang || "en"}/home` && {
             onClick: () => navigate(`/${lang || "en"}/carian-sekolah`),
             onKeyDown: (e) => {
               if (e.key === "Enter") {
