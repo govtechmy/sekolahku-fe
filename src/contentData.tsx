@@ -9,17 +9,17 @@ export const siaranSocialLinks = [
   },
   {
     platform: "email",
-    href: "mailto:test@test.com",
+    href: "mailto:me@example.com",
     ariaLabel: "Email link",
   },
   {
     platform: "facebook",
-    href: "www.facebook.com",
+    href: "https://www.facebook.com/sharer/sharer.php?u=",
     ariaLabel: "Facebook link",
   },
   {
     platform: "twitter",
-    href: "www.twitter.com",
+    href: "https://x.com/intent/tweet?url=",
     ariaLabel: "Twitter link",
   },
 ];
@@ -28,22 +28,22 @@ export const siaranSocialLinks = [
 export const footerSocialLinks = [
   {
     platform: "facebook",
-    href: "www.facebook.com",
+    href: "https://www.facebook.com/KemPendidikan",
     ariaLabel: "Facebook link",
   },
   {
     platform: "twitter",
-    href: "www.twitter.com",
-    ariaLabel: "Twitter link",
+    href: "https://x.com/KemPendidikan",
+    ariaLabel: "X link",
   },
   {
     platform: "instagram",
-    href: "www.instagram.com",
+    href: "https://www.instagram.com/kempendidikan/",
     ariaLabel: "Instagram link",
   },
   {
     platform: "youtube",
-    href: "www.youtube.com",
+    href: "https://www.youtube.com/buletinKPM",
     ariaLabel: "Youtube link",
   },
 ];

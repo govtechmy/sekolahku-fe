@@ -69,7 +69,7 @@ export default function SiaranId() {
                 {contents.categoryInfo.name}
               </span>
             )}
-            <p className=" text-2xl font-semibold font-body">
+            <p className="text-2xl font-semibold font-body">
               {contents.title}
             </p>
 
