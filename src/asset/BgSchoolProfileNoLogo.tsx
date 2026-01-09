@@ -1,14 +1,14 @@
-interface BgSchoolProfileNoLogo2Props {
+interface BgSchoolProfileNoLogoProps {
   className?: string;
   width?: number;
   height?: number;
 }
 
-export default function BgSchoolProfileNoLogo2({
+export default function BgSchoolProfileNoLogo({
   className,
   width = 737,
   height = 408,
-}: BgSchoolProfileNoLogo2Props) {
+}: BgSchoolProfileNoLogoProps) {
   return (
     <svg
       width={width}
