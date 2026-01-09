@@ -39,7 +39,7 @@ export const NearbySchoolCard = ({
         <h3 className="text-txt-black-900 font-medium">
           {caseConverter(school.namaSekolah)}
         </h3>
-        <p className="text-txt-black-500 text-sm h-12">
+        <p className="text-txt-black-500 text-sm min-h-12 line-clamp-2">
           {caseConverter(underScoreRemover(formatSchoolAddress(school)))}
         </p>
       </div>
