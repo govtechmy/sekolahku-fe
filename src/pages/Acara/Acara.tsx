@@ -42,13 +42,13 @@ export default function Acara() {
       try {
         const response =
           debouncedSearchQuery ||
-            (dateRange?.from != undefined && dateRange?.to != undefined)
+          (dateRange?.from != undefined && dateRange?.to != undefined)
             ? await getSearchAcara(
-              pageNumber,
-              debouncedSearchQuery,
-              dateRange?.from ? dateRange.from.toISOString() : undefined,
-              dateRange?.to ? dateRange.to.toISOString() : undefined,
-            )
+                pageNumber,
+                debouncedSearchQuery,
+                dateRange?.from ? dateRange.from.toISOString() : undefined,
+                dateRange?.to ? dateRange.to.toISOString() : undefined,
+              )
             : await getAllAcara(pageNumber);
         setItems(response.items);
         setPageNumber(response.pageNumber);
