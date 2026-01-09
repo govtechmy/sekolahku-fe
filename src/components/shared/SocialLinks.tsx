@@ -83,9 +83,9 @@ export default function SocialLinks({
     }
 
     if (!isHyperlink) {
-      let encodedHref = href
-      if (platform === 'facebook' || platform === 'twitter') { 
-        encodedHref = `${href}${encodeURIComponent(window.location.href)}`
+      let encodedHref = href;
+      if (platform === "facebook" || platform === "twitter") {
+        encodedHref = `${href}${encodeURIComponent(window.location.href)}`;
       }
 
       window.open(normalizeHref(encodedHref), "_blank", "noopener,noreferrer");

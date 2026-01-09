@@ -94,7 +94,9 @@ export function MapContainerComponent({
   // Determine if we should show polygons based on marker type
   const firstMarker = schoolMarkers.values().next().value;
   const currentMarkerType = firstMarker?.markerType;
-  const shouldShowPolygons = currentMarkerType === "NEGERI" || currentMarkerType === "WEST_EAST_MALAYSIA";
+  const shouldShowPolygons =
+    currentMarkerType === "NEGERI" ||
+    currentMarkerType === "WEST_EAST_MALAYSIA";
 
   return (
     <LeafletMapContainer

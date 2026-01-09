@@ -52,10 +52,18 @@ export default function FooterMyds() {
         </div>
         <div className="flex flex-col gap-3">
           <SiteLinkGroup groupTitle="Open Source">
-            <SiteLink href="https://github.com/govtechmy/sekolahku-fe" target="_blank" className="focus:outline-otl-primary-200">
+            <SiteLink
+              href="https://github.com/govtechmy/sekolahku-fe"
+              target="_blank"
+              className="focus:outline-otl-primary-200"
+            >
               Github Repo
             </SiteLink>
-            <SiteLink href="https://www.figma.com/design/oDUTO2KqIfVDKGKQrur9FP/Sekolahku-UI" target="_blank" className="focus:outline-otl-primary-200">
+            <SiteLink
+              href="https://www.figma.com/design/oDUTO2KqIfVDKGKQrur9FP/Sekolahku-UI"
+              target="_blank"
+              className="focus:outline-otl-primary-200"
+            >
               Figma
             </SiteLink>
           </SiteLinkGroup>
@@ -66,15 +74,21 @@ export default function FooterMyds() {
           <p>© 2026 Kementerian Pendidikan. Semua hakcipta terpelihara.</p>
           <p className="hidden lg:inline">|</p>
           <div className="text-txt-black-700 flex flex-grow flex-row gap-3">
-            <SiteLink className="focus:outline-otl-primary-200 cursor-pointer" onClick={() => {
-              navigate(`/${lang}/disclaimer`);
-            }}>
+            <SiteLink
+              className="focus:outline-otl-primary-200 cursor-pointer"
+              onClick={() => {
+                navigate(`/${lang}/disclaimer`);
+              }}
+            >
               Penafian
             </SiteLink>
             <p className="hidden lg:inline">|</p>
-            <SiteLink className="focus:outline-otl-primary-200 cursor-pointer" onClick={() => {
-              navigate(`/${lang}/privacy-policy`);
-            }}>
+            <SiteLink
+              className="focus:outline-otl-primary-200 cursor-pointer"
+              onClick={() => {
+                navigate(`/${lang}/privacy-policy`);
+              }}
+            >
               Dasar Privasi
             </SiteLink>
           </div>

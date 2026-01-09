@@ -69,9 +69,7 @@ export default function SiaranId() {
                 {contents.categoryInfo.name}
               </span>
             )}
-            <p className="text-2xl font-semibold font-body">
-              {contents.title}
-            </p>
+            <p className="text-2xl font-semibold font-body">{contents.title}</p>
 
             <div className=" flex flex-row gap-2 text-bg-black-500">
               <div className=" flex flex-row gap-1 items-center text-body-sm font-body font-normal">
