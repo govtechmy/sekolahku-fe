@@ -26,7 +26,7 @@ export default function SectionItemAnalytics({
             className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-[-2px]"
             tabIndex={0}
             role="button"
-            aria-label={`Jumlah Sekolah di Malaysia: ${analytics?.jumlahSekolah.toLocaleString()}`}
+            aria-label={`Jumlah Sekolah di Malaysia: ${analytics?.jumlahSekolah?.toLocaleString() || "0"}`}
             onKeyDown={handleKeyDown}
           >
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
@@ -46,7 +46,7 @@ export default function SectionItemAnalytics({
             className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-[-2px]"
             tabIndex={0}
             role="button"
-            aria-label={`Pelajar Guru di Malaysia: ${analytics?.jumlahGuru.toLocaleString()}`}
+            aria-label={`Pelajar Guru di Malaysia: ${analytics?.jumlahGuru?.toLocaleString() || "0"}`}
             onKeyDown={handleKeyDown}
           >
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
@@ -66,7 +66,7 @@ export default function SectionItemAnalytics({
             className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b last:border-b-0 lg:border-b-0 lg:border-r-0 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-[-2px]"
             tabIndex={0}
             role="button"
-            aria-label={`Jumlah Pelajar di Malaysia: ${analytics?.jumlahPelajar.toLocaleString()}`}
+            aria-label={`Jumlah Pelajar di Malaysia: ${analytics?.jumlahPelajar?.toLocaleString() || "0"}`}
             onKeyDown={handleKeyDown}
           >
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">

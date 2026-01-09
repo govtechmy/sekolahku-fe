@@ -126,7 +126,7 @@ export default function DoughnutChart({
         className="text-lg font-semibold mb-4 text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 rounded"
         tabIndex={0}
         role="button"
-        aria-label={title}
+        aria-label={title || "Chart title"}
         onKeyDown={handleTitleKeyDown}
       >
         {title}
