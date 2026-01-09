@@ -114,7 +114,7 @@ export default function SiaranId() {
           </div>
           <div className="text-xl text-justify font-normal md:px-10">
             <RichText
-              className="flex flex-col gap-10 text-[15px] text-txt-black-700 font-body font-normal"
+              className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
               data={contents.content}
             />
           </div>
