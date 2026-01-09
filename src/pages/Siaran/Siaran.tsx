@@ -41,13 +41,13 @@ export default function Siaran() {
       try {
         const response =
           debouncedSearchQuery ||
-            (dateRange?.from != undefined && dateRange?.to != undefined)
+          (dateRange?.from != undefined && dateRange?.to != undefined)
             ? await getSearchSiaran(
-              pageNumber,
-              debouncedSearchQuery,
-              dateRange?.from ? dateRange.from.toISOString() : undefined,
-              dateRange?.to ? dateRange.to.toISOString() : undefined,
-            )
+                pageNumber,
+                debouncedSearchQuery,
+                dateRange?.from ? dateRange.from.toISOString() : undefined,
+                dateRange?.to ? dateRange.to.toISOString() : undefined,
+              )
             : await getSiaranList({ pageNumber });
         setItems(response.items);
         setPageNumber(response.pageNumber);
@@ -145,7 +145,7 @@ export default function Siaran() {
                       navigate(`/${lang}/siaran/${item._id}`);
                     }}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
+                      if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
                         navigate(`/${lang}/siaran/${item._id}`);
                       }

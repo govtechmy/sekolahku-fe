@@ -129,7 +129,7 @@ export default function Acara() {
                   navigate(`/${lang}/acara/${item._id}`);
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     navigate(`/${lang}/acara/${item._id}`);
                   }
