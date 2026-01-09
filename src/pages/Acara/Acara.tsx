@@ -123,7 +123,7 @@ export default function Acara() {
             {items?.map((item) => (
               <div
                 key={item._id}
-                className="relative border border-otl-gray-200 rounded-lg h-[350px] flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow focus:outline-none focus:ring-[6px] focus:ring-fr-primary"
+                className="relative border border-otl-gray-200 rounded-lg h-[350px] flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow focus:outline-none focus:ring-[4px] focus:ring-fr-primary"
                 aria-label={item.title}
                 role="button"
                 tabIndex={0}
