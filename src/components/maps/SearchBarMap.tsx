@@ -93,7 +93,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
 
     window.addEventListener("keydown", handleSlashFocus);
     window.addEventListener("resize", handleResize);
-    
+
     return () => {
       window.removeEventListener("keydown", handleSlashFocus);
       window.removeEventListener("resize", handleResize);
