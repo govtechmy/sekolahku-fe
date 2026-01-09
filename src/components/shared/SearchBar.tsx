@@ -80,7 +80,7 @@ export default function SearchBarHome<T>({
           <p className="text-txt-black-900 text-center">No results found</p>
         )}
         {hasQuery && suggestions && suggestions.length > 0 && (
-          <SearchBarResultsList className="max-h-[400px] overflow-y-scroll">
+          <SearchBarResultsList className="max-h-[400px] overflow-y-auto focus-visible:outline-none">
             {suggestions.map((item) => (
               <SearchBarResultsItem
                 key={getKey?.(item)}
