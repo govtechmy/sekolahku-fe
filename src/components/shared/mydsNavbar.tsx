@@ -33,7 +33,7 @@ import {
   HamburgerMenuIcon,
 } from "@govtechmy/myds-react/icon";
 import { Button } from "@govtechmy/myds-react/button";
-import { clx } from "../../utils";
+import { clx } from "@govtechmy/myds-react/utils";
 
 type NavbarProps = ComponentProps<"header">;
 
