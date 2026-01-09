@@ -82,7 +82,7 @@ function HorizontalCardItem({
       className={`group border border-otl-gray-200 gap-[18px] rounded-lg p-2 md:p-3
           w-full flex flex-col cursor-pointer
           transition-shadow hover:shadow-lg 
-          focus:outline focus:outline-2 focus:outline-primary-200 focus:outline-offset-2 ${className}`}
+          focus:outline focus:outline-2 focus:outline-primary-200 ${className}`}
       onClick={onClick}
       onKeyDown={handleKeyDown}
     >
