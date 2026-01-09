@@ -33,7 +33,7 @@ export default function SectionItemCalendar({
             }}
             tabIndex={0}
             role="button"
-            aria-label={`View event: ${item.title}`}
+            aria-label={item.title ? `${item.title}` : "View event"}
           >
             {/* Background image */}
             <img
