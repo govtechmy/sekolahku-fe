@@ -93,11 +93,13 @@ export default function AcaraId() {
             </div>
           </div>
           <div className="flex flex-col gap-3">
-            <img
-              src={contents.imageHero.url}
-              alt={contents.imageHero.alt}
-              className="w-full max-h-[415px] object-contain rounded-lg"
-            />
+            <div className="flex justify-center">
+              <img
+                src={contents.imageHero.url}
+                alt={contents.imageHero.alt}
+                className="w-fit max-h-[415px] object-contain rounded-lg"
+              />
+            </div>
             <span className="text-txt-black-500 text-center font-body font-normal text-sm">
               Image from{" "}
               <span className="italic">{contents.imageHero.url}</span>
