@@ -85,10 +85,16 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
       }
     };
 
+    let resizeTimer: number | null = null;
     const handleResize = () => {
-      if (window.innerWidth < 768 && isExpanded) {
-        setIsExpanded(false);
+      if (resizeTimer) {
+        clearTimeout(resizeTimer);
       }
+      resizeTimer = window.setTimeout(() => {
+        if (window.innerWidth < 768 && isExpanded) {
+          setIsExpanded(false);
+        }
+      }, 150);
     };
 
     window.addEventListener("keydown", handleSlashFocus);
@@ -97,6 +103,9 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     return () => {
       window.removeEventListener("keydown", handleSlashFocus);
       window.removeEventListener("resize", handleResize);
+      if (resizeTimer) {
+        clearTimeout(resizeTimer);
+      }
     };
   }, [isExpanded]);
 
