@@ -86,7 +86,7 @@ export default function DoughnutChart({
           <div
             key={index}
             className="flex items-center justify-between gap-2 rounded-md p-2 -m-2 cursor-pointer
-                       transition-colors focus:outline focus:outline-2 focus:outline-primary-200 focus:outline-offset-2
+                       transition-colors focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2
                        hover:bg-bg-gray-50"
             tabIndex={0}
             role="button"
@@ -116,33 +116,36 @@ export default function DoughnutChart({
 
   return (
     <div className="w-full h-full flex flex-col">
-      <h3 className="text-lg font-semibold mb-4 text-center">{title}</h3>
-      <ResponsiveContainer width="100%" height={180}>
-        <PieChart>
-          <Pie
-            data={chartData}
-            cx="50%"
-            cy="50%"
-            innerRadius="50%"
-            outerRadius="100%"
-            paddingAngle={0}
-            dataKey="value"
-            onMouseEnter={onPieEnter}
-            onMouseLeave={onPieLeave}
-          >
-            {chartData.map((_entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={chartColors[index]}
-                opacity={
-                  activeIndex === undefined || activeIndex === index ? 1 : 0.6
-                }
-              />
-            ))}
-          </Pie>
-          <Tooltip content={<CustomTooltip />} />
-        </PieChart>
-      </ResponsiveContainer>
+      <h3 className="text-lg font-semibold mb-4 text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 rounded" tabIndex={0}>{title}</h3>
+      <div tabIndex={-1} style={{ outline: 'none' }} className="[&_*]:!outline-none [&_*]:![tabIndex:-1]">
+        <ResponsiveContainer width="100%" height={180}>
+          <PieChart tabIndex={-1}>
+            <Pie
+              data={chartData}
+              cx="50%"
+              cy="50%"
+              innerRadius="50%"
+              outerRadius="100%"
+              paddingAngle={0}
+              dataKey="value"
+              onMouseEnter={onPieEnter}
+              onMouseLeave={onPieLeave}
+              tabIndex={-1}
+            >
+              {chartData.map((_entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={chartColors[index]}
+                  opacity={
+                    activeIndex === undefined || activeIndex === index ? 1 : 0.6
+                  }
+                />
+              ))}
+            </Pie>
+            <Tooltip content={<CustomTooltip />} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
 
       {renderLegend()}
     </div>

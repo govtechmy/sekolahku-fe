@@ -14,9 +14,9 @@ export default function SectionItemAnalytics({
 }: SectionItemAnalyticsProps) {
   return (
     <>
-      <div className="border border-otl-gray-200 rounded-lg overflow-hidden">
+      <div className="border border-otl-gray-200 rounded-lg">
         <div className="grid grid-cols-1 lg:grid-cols-3">
-          <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0">
+          <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-[-2px]" tabIndex={0}>
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
               <PutrajayaIcon className="w-8 h-8" />
             </div>
@@ -30,7 +30,7 @@ export default function SectionItemAnalytics({
             </div>
           </div>
 
-          <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0">
+          <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-[-2px]" tabIndex={0}>
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
               <BookIcon className="w-8 h-8" />
             </div>
@@ -44,7 +44,7 @@ export default function SectionItemAnalytics({
             </div>
           </div>
 
-          <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b last:border-b-0 lg:border-b-0 lg:border-r-0">
+          <div className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b last:border-b-0 lg:border-b-0 lg:border-r-0 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-[-2px]" tabIndex={0}>
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
               <UserGroupIcon className="w-8 h-8" />
             </div>
