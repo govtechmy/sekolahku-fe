@@ -74,13 +74,13 @@ export default function NavbarMyds() {
           asChild
           href={`/${currentLang}/home`}
           aria-current={activeItem === "home" ? "page" : undefined}
-          className={activeItem === "home" ? "" : ""}
-          style={{
-            border: "1px solid var(--otl-primary-200)",
-            borderRadius: 4,
-          }}
+          className={activeItem === "home" ? "bg-bg-washed" : ""}
         >
-          <Link to={`/${currentLang}/home`} onClick={handleNavItemClick}>
+          <Link
+            to={`/${currentLang}/home`}
+            onClick={handleNavItemClick}
+            className="focus:outline-otl-primary-200"
+          >
             Utama
           </Link>
         </NavbarMenuItem>
@@ -88,15 +88,12 @@ export default function NavbarMyds() {
           asChild
           href={`/${currentLang}/carian-sekolah`}
           aria-current={activeItem === "carian-sekolah" ? "page" : undefined}
-          className={
-            activeItem === "carian-sekolah"
-              ? "bg-bg-washed focus:ring focus:outline-primary-200 focus:outline-offset-2 rounded"
-              : ""
-          }
+          className={activeItem === "carian-sekolah" ? "bg-bg-washed" : ""}
         >
           <Link
             to={`/${currentLang}/carian-sekolah`}
             onClick={handleNavItemClick}
+            className="focus:outline-otl-primary-200"
           >
             Carian Sekolah
           </Link>
@@ -109,7 +106,11 @@ export default function NavbarMyds() {
             activeItem === "siaran" ? "bg-bg-washed text-success-600" : ""
           }
         >
-          <Link to={`/${currentLang}/siaran`} onClick={handleNavItemClick}>
+          <Link
+            to={`/${currentLang}/siaran`}
+            onClick={handleNavItemClick}
+            className="focus:outline-otl-primary-200"
+          >
             Siaran
           </Link>
         </NavbarMenuItem>
@@ -119,7 +120,11 @@ export default function NavbarMyds() {
           aria-current={activeItem === "acara" ? "page" : undefined}
           className={activeItem === "acara" ? "bg-bg-washed" : ""}
         >
-          <Link to={`/${currentLang}/acara`} onClick={handleNavItemClick}>
+          <Link
+            to={`/${currentLang}/acara`}
+            onClick={handleNavItemClick}
+            className="focus:outline-otl-primary-200"
+          >
             Acara
           </Link>
         </NavbarMenuItem>

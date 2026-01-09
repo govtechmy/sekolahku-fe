@@ -246,9 +246,7 @@ interface NavbarMenuItemProps extends ComponentProps<
 
 const navbar_menu_item_cva = cva(
   [
-    "bg-transparent hover:bg-bg-washed",
-    "focus-within:outline-otl-primary-200",
-    "text-txt-black-700 truncate px-2.5 py-1.5",
+    "bg-transparent hover:bg-bg-washed text-txt-black-700 truncate px-2.5 py-1.5",
     "transition-colors motion-reduce:transition-none list-none",
     "w-full xl:w-fit text-body-sm flex items-center cursor-pointer",
   ],
@@ -273,10 +271,14 @@ const NavbarMenuItem: FunctionComponent<NavbarMenuItemProps> = ({
   const Comp = asChild ? Slot : Link;
   return (
     <NavigationMenuItem
-      className={clx(navbar_menu_item_cva({ is_from_dropdown }), className)}
+      className={clx("rounded-md font-medium", className)}
       {...props}
     >
-      <Comp href={href} underline="none" className="w-full">
+      <Comp
+        href={href}
+        underline="none"
+        className={clx("w-full", navbar_menu_item_cva({ is_from_dropdown }))}
+      >
         {children}
       </Comp>
     </NavigationMenuItem>
