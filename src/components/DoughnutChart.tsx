@@ -42,6 +42,14 @@ export default function DoughnutChart({
     value: item.total,
     percentage: item.peratus,
   }));
+
+  const handleLegendKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setActiveIndex(activeIndex === index ? undefined : index);
+    }
+  };
+
   const onPieEnter = (_: unknown, index: number) => {
     setActiveIndex(index);
   };
@@ -75,11 +83,26 @@ export default function DoughnutChart({
     return (
       <div className="grid grid-cols-2 gap-x-6 gap-y-6 mt-4 text-sm">
         {data.map((item, index) => (
-          <div key={index} className="flex items-center justify-between gap-2">
-            <div className=" flex flex-row items-center  gap-4">
+          <div
+            key={index}
+            className="flex items-center justify-between gap-2 rounded-md p-2 -m-2 cursor-pointer
+                       transition-colors focus:outline focus:outline-2 focus:outline-primary-200 focus:outline-offset-2
+                       hover:bg-bg-gray-50"
+            tabIndex={0}
+            role="button"
+            aria-label={`${item.jenis}: ${item.peratus}%`}
+            onMouseEnter={() => setActiveIndex(index)}
+            onMouseLeave={() => setActiveIndex(undefined)}
+            onClick={() =>
+              setActiveIndex(activeIndex === index ? undefined : index)
+            }
+            onKeyDown={(e) => handleLegendKeyDown(e, index)}
+          >
+            <div className="flex flex-row items-center gap-4">
               <div
                 className="w-6 h-6 rounded-full flex-shrink-0"
                 style={{ backgroundColor: chartColors[index] }}
+                aria-hidden="true"
               />
               {item.jenis}
             </div>
