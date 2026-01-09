@@ -6,6 +6,7 @@ type SectionHeaderProps = {
   title?: string;
   children: React.ReactNode;
   ButtonLabel?: string;
+  ButtonClickHandler?: () => void;
 };
 
 export default function SectionHeader({
@@ -13,6 +14,7 @@ export default function SectionHeader({
   title,
   children,
   ButtonLabel,
+  ButtonClickHandler
 }: SectionHeaderProps) {
   return (
     <div className="flex flex-col pb-16 px-4 lg:px-[50px]">
@@ -29,7 +31,7 @@ export default function SectionHeader({
       {children}
       <div className="pt-12">
         {ButtonLabel && (
-          <Button variant={"default-outline"}>
+          <Button variant={"default-outline"} onClick={ButtonClickHandler}>
             {ButtonLabel}
             <ButtonIcon>
               <ArrowForwardIcon />

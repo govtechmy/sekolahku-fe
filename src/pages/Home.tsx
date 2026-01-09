@@ -10,7 +10,7 @@ import HomeHero from "../components/Hero/HomeHero";
 import { getAllAcara } from "../services/acara.svc";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import type { AcaraItem } from "../types/acara";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getSiaranList } from "../services/siaran.svc";
 
 export default function HomePage() {
@@ -20,6 +20,7 @@ export default function HomePage() {
   const [dataItemNews, setDataItemNews] = useState<SiaranItem[]>();
   const inputRef = useRef<HTMLInputElement>(null!);
   const { lang } = useParams<{ lang: string }>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -84,6 +85,7 @@ export default function HomePage() {
           <SectionHeader
             header="SIARAN"
             ButtonLabel="Semua Berita"
+            ButtonClickHandler={()=>navigate(`/${lang}/siaran`)}
             children={
               <SectionItemNews
                 dataItemNews={dataItemNews}
@@ -98,6 +100,8 @@ export default function HomePage() {
         {dataItemCalendar && (
           <SectionHeader
             header="KALENDAR"
+            ButtonLabel="Semua Acara"
+            ButtonClickHandler={()=>navigate(`/${lang}/acara`)}
             children={
               <SectionItemCalendar
                 dataItemCalendar={dataItemCalendar}
@@ -105,7 +109,7 @@ export default function HomePage() {
                 lang={lang}
               />
             }
-            ButtonLabel="Semua Acara"
+       
           />
         )}
 
