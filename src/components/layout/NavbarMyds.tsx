@@ -37,7 +37,7 @@ export default function NavbarMyds() {
       '[aria-label="Close navigation menu"]',
     );
     closeButton?.click();
-    console.log("hehehe");
+    // console.log("hehehe");
   };
 
   // Sync state when URL param changes (for manual URL changes or navigation)

@@ -102,7 +102,7 @@ export default function SearchBarHome<T>({
           <p className="text-txt-black-900 text-center">No results found</p>
         )}
         {hasQuery && suggestions && suggestions.length > 0 && (
-          <SearchBarResultsList className="max-h-[400px] overflow-y-auto focus-visible:outline-none">
+          <SearchBarResultsList className="max-h-[400px] overflow-y-auto focus-visible:outline-none p-1">
             {suggestions.map((item) => (
               <SearchBarResultsItem
                 tabIndex={0}
@@ -110,7 +110,7 @@ export default function SearchBarHome<T>({
                 value={getLabel?.(item)}
                 onMouseDown={(e) => e.preventDefault()}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") {
+                  if (e.key === "Enter" || e.key === " ") {
                     if (onSelect) {
                       onSelect(item);
                       setHasFocus(false);
