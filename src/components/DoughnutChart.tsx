@@ -119,13 +119,14 @@ export default function DoughnutChart({
       <h3
         className="text-lg font-semibold mb-4 text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 rounded"
         tabIndex={0}
+        aria-label={title}
       >
         {title}
       </h3>
       <div
         tabIndex={-1}
         style={{ outline: "none" }}
-        className="[&_*]:!outline-none [&_*]:![tabIndex:-1]"
+        className="[&_*]:!outline-none"
       >
         <ResponsiveContainer width="100%" height={180}>
           <PieChart tabIndex={-1}>
