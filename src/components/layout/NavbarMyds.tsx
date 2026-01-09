@@ -1,12 +1,13 @@
 import { Link, useLocation, useParams } from "react-router-dom";
-// import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
-// import { GlobeIcon } from "@govtechmy/myds-react/icon";
 import {
   Navbar,
+  NavbarAction,
   NavbarMenu,
   NavbarMenuItem,
-  NavbarAction,
-} from "@govtechmy/myds-react/navbar";
+} from "../shared/mydsNavbar";
+// import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
+// import { GlobeIcon } from "@govtechmy/myds-react/icon";
+
 // import {
 //   Select,
 //   SelectTrigger,
@@ -59,7 +60,10 @@ export default function NavbarMyds() {
 
   return (
     <Navbar>
-      <Link to={`/${currentLang}/home`} className="flex items-center gap-2.5">
+      <Link
+        to={`/${currentLang}/home`}
+        className="flex items-center gap-2.5 focus:outline-otl-primary-200 rounded-sm"
+      >
         <img src="/JataNegara.svg" />
         <div className="font-heading text-txt-black-900 text-body-lg font-semibold">
           Sekolahku
