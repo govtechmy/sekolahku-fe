@@ -13,7 +13,7 @@ try {
   function buildRoutes() {
     const data = JSON.parse(fs.readFileSync(INPUT));
 
-    const staticRoutes = ["/", "/home", "/about", "/carian-sekolah", "/siaran"];
+    const staticRoutes = ["/", "/ms/home", "/ms/carian-sekolah", "/ms/siaran"];
     const schoolProfile = "/ms/halaman-sekolah";
     const dynamicRoutes = data.map(
       (school) => `${schoolProfile}/${school.KODSEKOLAH}`,

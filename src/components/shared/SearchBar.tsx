@@ -88,11 +88,11 @@ export default function SearchBarHome<T>({
         )}
         <SearchBarSearchButton
           tabIndex={0}
-          {...(location.pathname === `/${lang || "en"}/home` && {
-            onClick: () => navigate(`/${lang || "en"}/carian-sekolah`),
+          {...(location.pathname === `/${lang || "ms"}/home` && {
+            onClick: () => navigate(`/${lang || "ms"}/carian-sekolah`),
             onKeyDown: (e) => {
               if (e.key === "Enter") {
-                navigate(`/${lang || "en"}/carian-sekolah`);
+                navigate(`/${lang || "ms"}/carian-sekolah`);
               }
             },
           })}

@@ -11,15 +11,15 @@ export default function LangWrapper() {
       localStorage.setItem("lang", lang!);
       i18n.changeLanguage(lang!);
     } else {
-      localStorage.setItem("lang", "en");
-      i18n.changeLanguage("en");
+      localStorage.setItem("lang", "ms");
+      i18n.changeLanguage("ms");
     }
   }, [lang, isValidLang]);
 
   if (!isValidLang) {
     const localStorageLang = localStorage.getItem("lang");
     if (localStorageLang !== "en" && localStorageLang !== "ms") {
-      return <Navigate to="/en" replace />;
+      return <Navigate to="/ms" replace />;
     }
     return <Navigate to={`/${localStorageLang}`} replace />;
   }

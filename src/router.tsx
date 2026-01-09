@@ -47,7 +47,7 @@ function Redirect404Page() {
   const allowedLangs = ["en", "ms"];
   const langStorage = localStorage.getItem("lang");
   const targetLang =
-    lang && allowedLangs.includes(lang) ? lang : langStorage || "en";
+    lang && allowedLangs.includes(lang) ? lang : langStorage || "ms";
   return <Navigate to={`/${targetLang}/404`} replace />;
 }
 
@@ -63,7 +63,7 @@ function RedirectHomePage() {
   } else if (langStorage && allowedLangs.includes(langStorage)) {
     targetLang = langStorage;
   } else {
-    targetLang = "en"; // fallback
+    targetLang = "ms"; // fallback
   }
 
   return <Navigate to={`/${targetLang}/home`} replace />;
