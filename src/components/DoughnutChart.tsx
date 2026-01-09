@@ -94,7 +94,11 @@ export default function DoughnutChart({
   return (
     <div className="w-full h-full flex flex-col">
       <h3 className="text-lg font-semibold mb-4 text-center">{title}</h3>
-      <ResponsiveContainer width="100%" height={180}>
+      <ResponsiveContainer
+        width="100%"
+        height={180}
+        className="rounded-[4px] focus:ring focus:ring-fr-primary"
+      >
         <PieChart>
           <Pie
             data={chartData}

@@ -21,7 +21,7 @@ export default function SectionItemCalendar({
         {dataItemCalendar.map((item, index) => (
           <div
             key={index}
-            className="relative border border-otl-gray-200 rounded-lg p-3 h-[350px] !w-[248px] flex flex-shrink-0 flex-col gap-4.5 group overflow-hidden cursor-pointer"
+            className="relative border border-otl-gray-200 focus:border-otl-primary-200 rounded-lg p-3 h-[350px] !w-[248px] flex flex-shrink-0 flex-col gap-4.5 group overflow-hidden cursor-pointer"
             onClick={() => {
               navigate(`/${lang}/acara/${item._id}`);
             }}
@@ -30,7 +30,7 @@ export default function SectionItemCalendar({
             <img
               src={item.imageHero.url}
               alt={item.imageHero.alt}
-              className="absolute inset-0 w-full h-full object-cover rounded-[6px] z-0 transition-transform duration-300 group-hover:scale-110"
+              className="absolute inset-0 w-full h-full object-cover rounded-[6px] -z-20 transition-transform duration-300 group-hover:scale-110"
             />
             {/* Background Layer (only half height) with hover darker gradient */}
             <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-[linear-gradient(0deg,rgba(0,0,0,0.75)_0%,rgba(0,0,0,0)_100%)] group-hover:bg-[linear-gradient(0deg,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0)_100%)] transition-colors duration-300"></div>

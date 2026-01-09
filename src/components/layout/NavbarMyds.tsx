@@ -74,7 +74,11 @@ export default function NavbarMyds() {
           asChild
           href={`/${currentLang}/home`}
           aria-current={activeItem === "home" ? "page" : undefined}
-          className={activeItem === "home" ? "bg-bg-washed" : ""}
+          className={activeItem === "home" ? "" : ""}
+          style={{
+            border: "1px solid var(--otl-primary-200)",
+            borderRadius: 4,
+          }}
         >
           <Link to={`/${currentLang}/home`} onClick={handleNavItemClick}>
             Utama
@@ -84,7 +88,11 @@ export default function NavbarMyds() {
           asChild
           href={`/${currentLang}/carian-sekolah`}
           aria-current={activeItem === "carian-sekolah" ? "page" : undefined}
-          className={activeItem === "carian-sekolah" ? "bg-bg-washed" : ""}
+          className={
+            activeItem === "carian-sekolah"
+              ? "bg-bg-washed focus:ring focus:outline-primary-200 focus:outline-offset-2 rounded"
+              : ""
+          }
         >
           <Link
             to={`/${currentLang}/carian-sekolah`}
@@ -97,7 +105,9 @@ export default function NavbarMyds() {
           asChild
           href={`/${currentLang}/siaran`}
           aria-current={activeItem === "siaran" ? "page" : undefined}
-          className={activeItem === "siaran" ? "bg-bg-washed" : ""}
+          className={
+            activeItem === "siaran" ? "bg-bg-washed text-success-600" : ""
+          }
         >
           <Link to={`/${currentLang}/siaran`} onClick={handleNavItemClick}>
             Siaran

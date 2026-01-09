@@ -66,6 +66,9 @@ export default function HorizontalCard({
         ref={scrollRef}
         className={`
           w-full
+          focus:outline-otl-primary-200 rounded
+          p-1
+          z-50
 
           ${
             isMobileGrid
