@@ -48,8 +48,12 @@ export default function FooterMyds() {
         </div>
         <div className="flex flex-col gap-3">
           <SiteLinkGroup groupTitle="Open Source">
-            <SiteLink href="#">Github Repo</SiteLink>
-            <SiteLink href="#">Figma</SiteLink>
+            <SiteLink href="#" className="focus:outline-otl-primary-200">
+              Github Repo
+            </SiteLink>
+            <SiteLink href="#" className="focus:outline-otl-primary-200">
+              Figma
+            </SiteLink>
           </SiteLinkGroup>
         </div>
       </FooterSection>
@@ -58,8 +62,12 @@ export default function FooterMyds() {
           <p>© 2025 Kementerian Pendidikan. Semua hakcipta terpelihara.</p>
           <p className="hidden lg:inline">|</p>
           <div className="text-txt-black-700 flex flex-grow flex-row gap-3">
-            <SiteLink href="#">Penafian</SiteLink>
-            <SiteLink href="#">Dasar Privasi</SiteLink>
+            <SiteLink href="#" className="focus:outline-otl-primary-200">
+              Penafian
+            </SiteLink>
+            <SiteLink href="#" className="focus:outline-otl-primary-200">
+              Dasar Privasi
+            </SiteLink>
           </div>
         </div>
         <div className="text-gray-500 flex flex-grow flex-col gap-3 lg:flex-row lg:gap-3 lg:justify-end">

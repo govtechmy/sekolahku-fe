@@ -32,7 +32,7 @@ export default function SectionItemNews({
               key={index}
               to={`/${lang}/siaran/${item._id}`}
               tabIndex={0}
-              className="group border border-otl-gray-200 gap-[18px] rounded-lg p-2 md:p-3 w-full h-full flex flex-col cursor-pointer transition-shadow hover:shadow-lg"
+              className="group border border-otl-gray-200 gap-[18px] rounded-lg p-2 md:p-3 w-full h-full flex flex-col cursor-pointer transition-shadow hover:shadow-lg focus:outline-primary-200"
             >
               <img
                 src={item.imageHero.url}
@@ -49,8 +49,8 @@ export default function SectionItemNews({
               </div>
 
               <div className="flex flex-row justify-between items-center flex-shrink-0 mt-auto">
-                <div className="text-xs md:text-body-sm text-txt-black-500 px-2 md:px-3 flex-shrink-0 font-body font-normal">
-                  {formatDate(item.articleDate).toUpperCase()}
+                <div className="text-body-sm text-txt-black-500 px-2 md:px-3 flex-shrink-0 font-body font-normal">
+                  {formatDate(item.articleDate)}
                 </div>
                 <div
                   className="px-2 md:px-3 pb-2 md:pb-0 flex items-center gap-1 text-txt-primary font-semibold

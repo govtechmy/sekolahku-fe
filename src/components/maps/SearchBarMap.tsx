@@ -84,8 +84,29 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
         inputRef.current?.focus();
       }
     };
+
+    let resizeTimer: number | null = null;
+    const handleResize = () => {
+      if (resizeTimer) {
+        clearTimeout(resizeTimer);
+      }
+      resizeTimer = window.setTimeout(() => {
+        if (window.innerWidth < 768 && isExpanded) {
+          setIsExpanded(false);
+        }
+      }, 150);
+    };
+
     window.addEventListener("keydown", handleSlashFocus);
-    return () => window.removeEventListener("keydown", handleSlashFocus);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("keydown", handleSlashFocus);
+      window.removeEventListener("resize", handleResize);
+      if (resizeTimer) {
+        clearTimeout(resizeTimer);
+      }
+    };
   }, [isExpanded]);
 
   // Cleanup timer on unmount
