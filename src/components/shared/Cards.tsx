@@ -79,6 +79,7 @@ function HorizontalCardItem({
     <div
       tabIndex={0}
       role="button"
+      aria-label={item.title}
       className={`group border border-otl-gray-200 gap-[18px] rounded-lg p-2 md:p-3
           w-full flex flex-col cursor-pointer
           transition-shadow hover:shadow-lg 
