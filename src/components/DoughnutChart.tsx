@@ -43,19 +43,6 @@ export default function DoughnutChart({
     percentage: item.peratus,
   }));
 
-  const handleLegendKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setActiveIndex(activeIndex === index ? undefined : index);
-    }
-  };
-
-  const handleTitleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-    }
-  };
-
   const onPieEnter = (_: unknown, index: number) => {
     setActiveIndex(index);
   };
@@ -102,7 +89,6 @@ export default function DoughnutChart({
             onClick={() =>
               setActiveIndex(activeIndex === index ? undefined : index)
             }
-            onKeyDown={(e) => handleLegendKeyDown(e, index)}
           >
             <div className="flex flex-row items-center gap-4">
               <div
@@ -127,7 +113,6 @@ export default function DoughnutChart({
         tabIndex={0}
         role="button"
         aria-label={title || "Chart title"}
-        onKeyDown={handleTitleKeyDown}
       >
         {title}
       </h3>

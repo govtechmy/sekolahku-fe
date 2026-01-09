@@ -12,12 +12,6 @@ interface SectionItemAnalyticsProps {
 export default function SectionItemAnalytics({
   analytics,
 }: SectionItemAnalyticsProps) {
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-    }
-  };
-
   return (
     <>
       <div className="border border-otl-gray-200 rounded-lg">
@@ -27,7 +21,6 @@ export default function SectionItemAnalytics({
             tabIndex={0}
             role="button"
             aria-label={`Jumlah Sekolah di Malaysia: ${analytics?.jumlahSekolah?.toLocaleString() || "0"}`}
-            onKeyDown={handleKeyDown}
           >
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
               <PutrajayaIcon className="w-8 h-8" />
@@ -47,7 +40,6 @@ export default function SectionItemAnalytics({
             tabIndex={0}
             role="button"
             aria-label={`Pelajar Guru di Malaysia: ${analytics?.jumlahGuru?.toLocaleString() || "0"}`}
-            onKeyDown={handleKeyDown}
           >
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
               <BookIcon className="w-8 h-8" />
@@ -67,7 +59,6 @@ export default function SectionItemAnalytics({
             tabIndex={0}
             role="button"
             aria-label={`Jumlah Pelajar di Malaysia: ${analytics?.jumlahPelajar?.toLocaleString() || "0"}`}
-            onKeyDown={handleKeyDown}
           >
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
               <UserGroupIcon className="w-8 h-8" />
