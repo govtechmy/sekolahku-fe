@@ -102,9 +102,7 @@ export default function NavbarMyds() {
           asChild
           href={`/${currentLang}/siaran`}
           aria-current={activeItem === "siaran" ? "page" : undefined}
-          className={
-            activeItem === "siaran" ? "bg-bg-washed text-success-600" : ""
-          }
+          className={activeItem === "siaran" ? "bg-bg-washed" : ""}
         >
           <Link
             to={`/${currentLang}/siaran`}
