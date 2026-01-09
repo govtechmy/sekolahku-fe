@@ -1,128 +1,52 @@
-import {
-  UserGroupIcon,
-  GovtOfficeIcon,
-  JataNegaraIcon,
-  UserIcon,
-  PhoneIcon,
-  PrinterIcon,
-  EmailIcon,
-  PinIcon,
-} from "@govtechmy/myds-react/icon";
-import type { FindNearbyUpdatedEndpoint } from "./types/maps";
-import type { Document } from "./types/files";
+import { JataNegaraIcon } from "@govtechmy/myds-react/icon";
 
+//fetch backend when available later
 export const siaranSocialLinks = [
   {
     platform: "hyperlink",
-    href: "#",
-    ariaLabel: "Siaran link",
+    href: "",
+    ariaLabel: "Share hyperlink",
   },
   {
     platform: "email",
-    href: "#",
+    href: "mailto:test@test.com",
     ariaLabel: "Email link",
   },
   {
     platform: "facebook",
-    href: "#",
+    href: "www.facebook.com",
     ariaLabel: "Facebook link",
   },
   {
     platform: "twitter",
-    href: "#",
+    href: "www.twitter.com",
     ariaLabel: "Twitter link",
   },
 ];
 
+// fetch backend when available later
 export const footerSocialLinks = [
   {
     platform: "facebook",
-    href: "#",
+    href: "www.facebook.com",
     ariaLabel: "Facebook link",
   },
   {
     platform: "twitter",
-    href: "#",
+    href: "www.twitter.com",
     ariaLabel: "Twitter link",
   },
   {
     platform: "instagram",
-    href: "#",
+    href: "www.instagram.com",
     ariaLabel: "Instagram link",
   },
   {
     platform: "youtube",
-    href: "#",
+    href: "www.youtube.com",
     ariaLabel: "Youtube link",
   },
 ];
-
-export const siaranAcaraDummyDocuments: Document[] = [
-  {
-    name: "file1.pdf",
-    type: "application/pdf",
-    size: 5000,
-    fileurl:
-      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.pdf",
-  },
-  {
-    name: "file2.xlsx",
-    type: "application/vnd.ms-excel",
-    size: 50000,
-    fileurl:
-      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.xlsx",
-  },
-  {
-    name: "file3.jpg",
-    type: "image/jpeg",
-    size: 5000,
-    fileurl: "",
-  },
-  {
-    name: "SBP-English College.png",
-    type: "image/png",
-    size: 50000,
-    fileurl:
-      "https://sekolahku-cms.govtechmy.xyz/api/articles-media/file/acara4.png",
-  },
-];
-
-export const findNearbyUpdatedEndpoint: FindNearbyUpdatedEndpoint = {
-  viewInfoLokasi: {
-    koordinatXX: 37.7749,
-    koordinatYY: -122.4194,
-    zoom: 6,
-  },
-  markerGroups: [
-    {
-      markerType: "INDIVIDUAL",
-      radiusInMeter: 0,
-      infoLokasi: {
-        koordinatXX: 37.7749,
-        koordinatYY: -122.4194,
-      },
-      kodSekolah: "SCH001",
-    },
-    {
-      markerType: "INDIVIDUAL",
-      radiusInMeter: 0,
-      infoLokasi: {
-        koordinatXX: 37.7749,
-        koordinatYY: -122.4194,
-      },
-      kodSekolah: "SCH001",
-    },
-    {
-      markerType: "INDIVIDUAL",
-      radiusInMeter: 0,
-      infoLokasi: {
-        koordinatXX: 37.7749,
-        koordinatYY: -122.4194,
-      },
-      kodSekolah: "SCH001",
-    },
-  ],
-};
 
 export const NEGERI_LIST = [
   "JOHOR",
@@ -143,309 +67,7 @@ export const NEGERI_LIST = [
   "WILAYAH_PERSEKUTUAN_PUTRAJAYA",
 ];
 
-export const JENIS_LIST = ["SK", "K9"];
-
-// Statistics data for different years
-export const statisticYearlyData = {
-  2020: {
-    spm: { daily: 500, total: "250,000" },
-    stem: { daily: 150, total: "60,000" },
-    koku: { daily: 8, total: "280,000" },
-  },
-  2021: {
-    spm: { daily: 600, total: "275,000" },
-    stem: { daily: 180, total: "65,000" },
-    koku: { daily: 9, total: "295,000" },
-  },
-  2022: {
-    spm: { daily: 680, total: "295,000" },
-    stem: { daily: 210, total: "72,000" },
-    koku: { daily: 10, total: "305,000" },
-  },
-  2023: {
-    spm: { daily: 733, total: "313,352" },
-    stem: { daily: 231, total: "78,828" },
-    koku: { daily: 11, total: "313,352" },
-  },
-};
-
-// Chart data for different categories and years
-export const chartBaseData = {
-  spm: {
-    2020: [30, 120, 280, 480, 440, 420, 350, 520, 580, 620, 650, 680],
-    2021: [40, 150, 320, 550, 510, 480, 400, 580, 640, 690, 720, 750],
-    2022: [35, 140, 300, 520, 480, 460, 380, 560, 610, 660, 690, 720],
-    2023: [40, 170, 360, 610, 570, 540, 450, 645, 700, 750, 780, 800],
-  },
-  stem: {
-    2020: [45, 110, 250, 450, 410, 390, 320, 490, 550, 590, 620, 650],
-    2021: [60, 140, 290, 520, 480, 450, 370, 550, 610, 660, 690, 720],
-    2022: [50, 130, 270, 490, 450, 430, 350, 530, 580, 630, 660, 690],
-    2023: [60, 150, 320, 580, 530, 510, 400, 600, 660, 710, 740, 770],
-  },
-  koku: {
-    2020: [35, 130, 270, 470, 430, 410, 330, 510, 570, 610, 640, 670],
-    2021: [50, 160, 310, 540, 500, 470, 390, 570, 630, 680, 710, 740],
-    2022: [45, 150, 290, 510, 470, 450, 370, 550, 600, 650, 680, 710],
-    2023: [50, 160, 340, 590, 550, 520, 420, 620, 680, 730, 760, 790],
-  },
-};
-
-export const dataItemNews = [
-  {
-    id: "1",
-    imageSrc: "/utama/newsitem/1.png",
-    imageAlt: "Pelajar Belajar Menggunakan Tablet",
-    header: "Berita",
-    title: "Bantuan Tablet Malaysia",
-    description:
-      "Program bantuan tablet untuk pelajar Malaysia kini dibuka. Dapatkan peralatan digital untuk membantu pembelajaran anda.",
-    date: "11 FEB 2025",
-    readTime: "3 min",
-    link: "https://loremipsum.io/ultimate-list-of-lorem-ipsum-generators/",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-  },
-  {
-    id: "2",
-    imageSrc: "/utama/newsitem/2.png",
-    imageAlt: "Pelajar Belajar",
-    header: "Pengumuman",
-    title: "Jadual Peperiksaan Akhir Tahun 2024",
-    description:
-      "Jadual peperiksaan akhir tahun 2024 telah dikeluarkan. Semak tarikh dan masa peperiksaan anda dengan teliti.",
-    date: "10 FEB 2024",
-    readTime: "2 min",
-    link: "https://www.lipsum.com/feed/html",
-    content:
-      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.",
-  },
-  {
-    id: "3",
-    imageSrc: "/utama/newsitem/3.png",
-    imageAlt: "Pelajar Belajar Menggunakan Tablet",
-    header: "Berita",
-    title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description:
-      "Notis penting mengenai perubahan tarikh cuti sekolah akhir tahun. Semua pelajar dan ibu bapa diminta untuk mengambil maklum.",
-    date: "8 FEB 2024",
-    readTime: "4 min",
-    link: "https://generator.lorem-ipsum.info/",
-    content:
-      "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.",
-  },
-  {
-    id: "4",
-    imageSrc: "/utama/newsitem/4.png",
-    imageAlt: "Pelajar Belajar",
-    header: "Pengumuman",
-    title: "Jadual Peperiksaan SPM 2025",
-    description:
-      "Jadual lengkap peperiksaan SPM 2025 kini tersedia. Muat turun dan buat persediaan awal untuk kejayaan anda.",
-    date: "5 FEB 2024",
-    readTime: "2 min",
-    link: "https://www.blindtextgenerator.com/lorem-ipsum",
-    content:
-      "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
-  },
-  {
-    id: "5",
-    imageSrc: "/utama/newsitem/3.png",
-    imageAlt: "Pelajar Belajar Menggunakan Tablet",
-    header: "Berita",
-    title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description:
-      "Kemas kini terkini berkenaan penangguhan cuti sekolah. Pastikan anda sentiasa mengikuti perkembangan terbaru dari pihak sekolah.",
-    date: "8 FEB 2024",
-    readTime: "4 min",
-    link: "https://loremipsum.io/21-of-the-best-placeholder-image-generators/",
-    content:
-      "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.",
-  },
-  {
-    id: "6",
-    imageSrc: "/utama/newsitem/4.png",
-    imageAlt: "Pelajar Belajar",
-    header: "Pengumuman",
-    title: "Jadual Peperiksaan SPM 2025",
-    description:
-      "Persiapan menghadapi SPM 2025 bermula sekarang. Ketahui tarikh penting dan tips berjaya dalam peperiksaan.",
-    date: "5 FEB 2024",
-    readTime: "2 min",
-    link: "https://www.lipsum.com/",
-    content:
-      "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.",
-  },
-  {
-    id: "7",
-    imageSrc: "/utama/newsitem/1.png",
-    imageAlt: "Pelajar Belajar Menggunakan Tablet",
-    header: "Berita",
-    title: "Bantuan Tablet Malaysia",
-    description:
-      "Inisiatif kerajaan untuk menyediakan tablet kepada pelajar berprestasi. Permohonan kini dibuka untuk semua yang layak.",
-    date: "11 FEB 2025",
-    readTime: "3 min",
-    link: "https://loremipsum.de/downloads.html",
-    content:
-      "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. Ut enim ad minima veniam.",
-  },
-  {
-    id: "8",
-    imageSrc: "/utama/newsitem/2.png",
-    imageAlt: "Pelajar Belajar",
-    header: "Pengumuman",
-    title: "Jadual Peperiksaan Akhir Tahun 2024",
-    description:
-      "Semakan semula jadual peperiksaan akhir tahun. Ada beberapa perubahan penting yang perlu anda ketahui.",
-    date: "10 FEB 2024",
-    readTime: "2 min",
-    link: "https://www.webfx.com/tools/lorem-ipsum-generator/",
-    content:
-      "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-  },
-  {
-    id: "9",
-    imageSrc: "/utama/newsitem/3.png",
-    imageAlt: "Pelajar Belajar Menggunakan Tablet",
-    header: "Berita",
-    title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description:
-      "Maklumat terkini tentang tarikh cuti sekolah yang ditangguhkan. Sila rujuk kepada pihak sekolah untuk butiran lanjut.",
-    date: "8 FEB 2024",
-    readTime: "4 min",
-    link: "https://loripsum.net/",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.",
-  },
-  {
-    id: "10",
-    imageSrc: "/utama/newsitem/4.png",
-    imageAlt: "Pelajar Belajar",
-    header: "Pengumuman",
-    title: "Jadual Peperiksaan SPM 2025",
-    description:
-      "Panduan lengkap untuk calon SPM 2025. Ketahui semua yang perlu anda tahu untuk bersedia menghadapi peperiksaan.",
-    date: "5 FEB 2024",
-    readTime: "2 min",
-    link: "https://meettheipsums.com/",
-    content:
-      "Donec sollicitudin molestie malesuada. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Pellentesque in ipsum id orci porta dapibus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.",
-  },
-  {
-    id: "11",
-    imageSrc: "/utama/newsitem/3.png",
-    imageAlt: "Pelajar Belajar Menggunakan Tablet",
-    header: "Berita",
-    title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description:
-      "Pengumuman rasmi dari Kementerian Pendidikan mengenai penangguhan cuti sekolah. Bacaan wajib untuk semua.",
-    date: "8 FEB 2024",
-    readTime: "4 min",
-    link: "https://hipsum.co/",
-    content:
-      "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.",
-  },
-  {
-    id: "12",
-    imageSrc: "/utama/newsitem/4.png",
-    imageAlt: "Pelajar Belajar",
-    header: "Pengumuman",
-    title: "Jadual Peperiksaan SPM 2025",
-    description:
-      "Tarikh akhir pendaftaran peperiksaan SPM 2025 semakin hampir. Pastikan anda tidak terlepas peluang ini.",
-    date: "5 FEB 2024",
-    readTime: "2 min",
-    link: "https://baconipsum.com/",
-    content:
-      "Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Curabitur aliquet quam id dui posuere blandit. Nulla quis lorem ut libero malesuada feugiat. Quisque velit nisi, pretium ut lacinia in, elementum id enim.",
-  },
-  {
-    id: "13",
-    imageSrc: "/utama/newsitem/1.png",
-    imageAlt: "Pelajar Belajar Menggunakan Tablet",
-    header: "Berita",
-    title: "Bantuan Tablet Malaysia",
-    description:
-      "Senarai syarat kelayakan untuk menerima bantuan tablet percuma. Semak sama ada anda layak untuk memohon.",
-    date: "11 FEB 2025",
-    readTime: "3 min",
-    link: "https://www.cupcakeipsum.com/",
-    content:
-      "Cras ultricies ligula sed magna dictum porta. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Donec rutrum congue leo eget malesuada. Proin eget tortor risus.",
-  },
-  {
-    id: "14",
-    imageSrc: "/utama/newsitem/2.png",
-    imageAlt: "Pelajar Belajar",
-    header: "Pengumuman",
-    title: "Jadual Peperiksaan Akhir Tahun 2024",
-    description:
-      "Format baharu peperiksaan akhir tahun 2024. Pelajari perubahan yang telah dibuat untuk tahun ini.",
-    date: "10 FEB 2024",
-    readTime: "2 min",
-    link: "https://pirateipsum.me/",
-    content:
-      "Pellentesque in ipsum id orci porta dapibus. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Sed porttitor lectus nibh.",
-  },
-  {
-    id: "15",
-    imageSrc: "/utama/newsitem/3.png",
-    imageAlt: "Pelajar Belajar Menggunakan Tablet",
-    header: "Berita",
-    title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description:
-      "Implikasi penangguhan cuti sekolah terhadap aktiviti ko-kurikulum. Ketahui perubahan jadual yang akan berlaku.",
-    date: "8 FEB 2024",
-    readTime: "4 min",
-    link: "https://www.catipsum.com/index.php",
-    content:
-      "Nulla porttitor accumsan tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.",
-  },
-  {
-    id: "16",
-    imageSrc: "/utama/newsitem/4.png",
-    imageAlt: "Pelajar Belajar",
-    header: "Pengumuman",
-    title: "Jadual Peperiksaan SPM 2025",
-    description:
-      "Tips dan strategi menghadapi SPM 2025 daripada pelajar cemerlang terdahulu. Baca pengalaman mereka di sini.",
-    date: "5 FEB 2024",
-    readTime: "2 min",
-    link: "https://slipsum.com/",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sollicitudin molestie malesuada. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vivamus magna justo, lacinia eget consectetur sed.",
-  },
-  {
-    id: "17",
-    imageSrc: "/utama/newsitem/3.png",
-    imageAlt: "Pelajar Belajar Menggunakan Tablet",
-    header: "Berita",
-    title: "Penangguhan Cuti Sekolah Akhir Tahun 2025",
-    description:
-      "Soalan lazim berkaitan penangguhan cuti sekolah. Dapatkan jawapan kepada semua persoalan anda di sini.",
-    date: "8 FEB 2024",
-    readTime: "4 min",
-    link: "https://www.office-ipsum.com/",
-    content:
-      "Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla quis lorem ut libero malesuada feugiat.",
-  },
-  {
-    id: "18",
-    imageSrc: "/utama/newsitem/4.png",
-    imageAlt: "Pelajar Belajar",
-    header: "Pengumuman",
-    title: "Jadual Peperiksaan SPM 2025",
-    description:
-      "Kursus persediaan SPM percuma untuk semua calon. Daftar sekarang dan tingkatkan peluang kejayaan anda.",
-    date: "5 FEB 2024",
-    readTime: "2 min",
-    link: "https://litipsum.com/",
-    content:
-      "Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Proin eget tortor risus. Donec rutrum congue leo eget malesuada. Cras ultricies ligula sed magna dictum porta. Vivamus suscipit tortor eget felis porttitor volutpat.",
-  },
-];
-
+//fetch backend when available later
 export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
@@ -481,95 +103,5 @@ export const dataItemLinks = [
     icon: <JataNegaraIcon />,
     name: "DELIMa",
     link: "https://delima.moe-dl.edu.my/",
-  },
-];
-
-export const popularLinks = [
-  {
-    label: "Analitik Sekolah",
-    link: "/analitik",
-  },
-];
-
-// SekolahDetails-Data to Fetch
-export const dataSekolahJumlah = [
-  { label: "PELAJAR", value: "1", amount: "4,065", icon: <UserGroupIcon /> },
-  { label: "GURU", value: "2", amount: "4,065", icon: <UserIcon /> },
-];
-
-export const dataSekolahAbout = [
-  {
-    value: "1",
-    label: "Maktab Sultan Abu Bakar (English College)",
-    icon: <GovtOfficeIcon width={24} height={24} />,
-  },
-  {
-    value: "2",
-    label: "07-222 2651",
-    icon: <PhoneIcon width={24} height={24} />,
-  },
-  {
-    value: "3",
-    label: "07-222 2651",
-    icon: <PrinterIcon width={24} height={24} />,
-  },
-  {
-    value: "4",
-    label: "english.college@moe.gov.my",
-    icon: <EmailIcon width={24} height={24} />,
-  },
-  {
-    value: "5",
-    label:
-      "Jalan Sungai Chat, Sri Gelam, 80100 Johor Bahru, Johor Darul Ta'zim",
-    icon: <PinIcon width={24} height={24} />,
-  },
-];
-
-export const dataSekolahInfo = [
-  { label: "KOD SEKOLAH", value: "JEB1001" },
-  { label: "NEGERI", value: "Johor" },
-  { label: "PPD", value: "PPD Johor Bahru" },
-  { label: "PARLIMEN", value: "Pulai" },
-  { label: "BANTUAN", value: "SBK" },
-  { label: "BIL SESI", value: "2 Sesi | Pagi & Petang" },
-  { label: "PRASEKOLAH", value: "", icon: "cross" },
-  { label: "INTEGRASI", value: "", icon: "checked" },
-];
-
-export const dataSekolahSuggestion = [
-  {
-    label: "Sekolah Menengah Kebangsaan Dato Jaafar",
-    value: "001",
-    address: "Johor Bharu",
-  },
-  {
-    label: "Sekolah Menengah Kebangsaan Aminuddin Baki",
-    value: "002",
-    address: "Pulai, Johor Bharu",
-  },
-  {
-    label: "Sekolah Menengah Kebangsaan Saint Joseph",
-    value: "003",
-    address: "Johor Bharu",
-  },
-];
-
-export const notableMalaysians = [
-  // Arts
-  {
-    name: "Michelle Yeoh",
-    field: "Arts",
-    note: "Internationally acclaimed actress",
-  },
-  {
-    name: "P. Ramlee",
-    field: "Arts",
-    note: "Iconic actor, director, and musician",
-  },
-  {
-    name: "Siti Nurhaliza",
-    field: "Arts",
-    note: "Award-winning singer and songwriter",
   },
 ];

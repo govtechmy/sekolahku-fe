@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { popularLinks } from "../../contentData";
 import { useMapViewStore } from "../../store/mapView";
 import Hero from "../shared/Hero";
 import SearchBar from "../shared/SearchBar";
@@ -53,7 +52,7 @@ export default function HomeHero() {
           }}
         />
       }
-      links={popularLinks}
+      links={[{ label: "Pautan Pantas", link: "#pautan" }]}
       HeroclassName="bg-gradient-to-b from-[#E6F0FF] via-[#F2F7FF] to-[#FFFFFF]"
       background={
         <>
