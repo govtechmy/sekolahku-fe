@@ -50,6 +50,12 @@ export default function DoughnutChart({
     }
   };
 
+  const handleTitleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+    }
+  };
+
   const onPieEnter = (_: unknown, index: number) => {
     setActiveIndex(index);
   };
@@ -119,7 +125,9 @@ export default function DoughnutChart({
       <h3
         className="text-lg font-semibold mb-4 text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 rounded"
         tabIndex={0}
+        role="button"
         aria-label={title}
+        onKeyDown={handleTitleKeyDown}
       >
         {title}
       </h3>

@@ -12,6 +12,12 @@ interface SectionItemAnalyticsProps {
 export default function SectionItemAnalytics({
   analytics,
 }: SectionItemAnalyticsProps) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+    }
+  };
+
   return (
     <>
       <div className="border border-otl-gray-200 rounded-lg">
@@ -19,7 +25,9 @@ export default function SectionItemAnalytics({
           <div
             className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-[-2px]"
             tabIndex={0}
+            role="button"
             aria-label={`Jumlah Sekolah di Malaysia: ${analytics?.jumlahSekolah.toLocaleString()}`}
+            onKeyDown={handleKeyDown}
           >
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
               <PutrajayaIcon className="w-8 h-8" />
@@ -37,7 +45,9 @@ export default function SectionItemAnalytics({
           <div
             className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-[-2px]"
             tabIndex={0}
+            role="button"
             aria-label={`Pelajar Guru di Malaysia: ${analytics?.jumlahGuru.toLocaleString()}`}
+            onKeyDown={handleKeyDown}
           >
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
               <BookIcon className="w-8 h-8" />
@@ -55,7 +65,9 @@ export default function SectionItemAnalytics({
           <div
             className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b last:border-b-0 lg:border-b-0 lg:border-r-0 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-[-2px]"
             tabIndex={0}
+            role="button"
             aria-label={`Jumlah Pelajar di Malaysia: ${analytics?.jumlahPelajar.toLocaleString()}`}
+            onKeyDown={handleKeyDown}
           >
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
               <UserGroupIcon className="w-8 h-8" />
