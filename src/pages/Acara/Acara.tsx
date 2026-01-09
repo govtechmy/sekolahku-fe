@@ -123,7 +123,7 @@ export default function Acara() {
             {items?.map((item) => (
               <div
                 key={item._id}
-                className="relative border border-otl-gray-200 rounded-lg h-[350px] flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="relative border border-otl-gray-200 rounded-lg h-[350px] flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-fr-primary"
                 tabIndex={0}
                 onClick={() => {
                   navigate(`/${lang}/acara/${item._id}`);
