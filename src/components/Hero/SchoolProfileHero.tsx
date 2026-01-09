@@ -1,9 +1,9 @@
 import Hero from "../shared/Hero";
 import BgSchoolProfile from "../../asset/BgSchoolProfile";
-import BgSchoolProfileNoLogo from "../../asset/BgSchoolProfileNoLogo";
 import type { ItemSekolahModel } from "../../models/response";
 import { useState } from "react";
 import caseConverter from "../../utils/caseConverter";
+import BgSchoolProfileNoLogo from "../../asset/BgSchoolProfileNoLogo";
 
 interface SchoolProfileHeroProps {
   school: ItemSekolahModel;
@@ -31,7 +31,7 @@ export default function SchoolProfileHero({
           {hasLogo ? (
             <BgSchoolProfile className="absolute inset-0 w-full h-full bg-cover bg-center" />
           ) : (
-            <BgSchoolProfileNoLogo className="absolute inset-0 w-full h-full bg-cover bg-center" />
+            <BgSchoolProfileNoLogo className="absolute right-0 top-0 h-full" />
           )}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-full max-w-[1328px] px-6 lg:px-[109px] py-[50px] md:py-[50px] max-md:py-4 mx-auto">
