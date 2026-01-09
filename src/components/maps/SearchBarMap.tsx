@@ -84,8 +84,20 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
         inputRef.current?.focus();
       }
     };
+
+    const handleResize = () => {
+      if (window.innerWidth < 768 && isExpanded) {
+        setIsExpanded(false);
+      }
+    };
+
     window.addEventListener("keydown", handleSlashFocus);
-    return () => window.removeEventListener("keydown", handleSlashFocus);
+    window.addEventListener("resize", handleResize);
+    
+    return () => {
+      window.removeEventListener("keydown", handleSlashFocus);
+      window.removeEventListener("resize", handleResize);
+    };
   }, [isExpanded]);
 
   // Cleanup timer on unmount
