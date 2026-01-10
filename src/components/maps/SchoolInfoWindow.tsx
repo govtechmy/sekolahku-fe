@@ -95,7 +95,7 @@ export function SchoolInfoWindow({
           </Tag>
         </div>
         <div className="text-body-md font-semibold font-body">
-          {school?.namaSekolah || "Maktab Sultan Abu Bakar (English College)"}
+          {school?.namaSekolah ?? ""}
         </div>
         <div className="flex flex-col gap-2 text-txt-black-700">
           <InfoIconRow
@@ -137,7 +137,7 @@ export function SchoolInfoWindow({
             label="Daerah"
             value={school?.data?.infoPentadbiran?.ppd || "Tiada Maklumat"}
           />
-          <InfoRow label="Gred" value={"Tiada Maklumat"} />
+          {/* <InfoRow label="Gred" value={"Tiada Maklumat"} /> */}
           <InfoRow
             label="Sesi"
             value={school?.data?.infoPentadbiran?.sesi || "Tiada Maklumat"}

@@ -13,14 +13,13 @@ try {
   function buildRoutes() {
     const data = JSON.parse(fs.readFileSync(INPUT));
 
-    const staticRoutes = ["/", "/home", "/about", "/carian-sekolah", "/siaran"];
-    const schoolProfile = "/halaman-sekolah";
+    const staticRoutes = ["/", "/ms/home", "/ms/carian-sekolah", "/ms/siaran"];
+    const schoolProfile = "/ms/halaman-sekolah";
     const dynamicRoutes = data.map(
       (school) => `${schoolProfile}/${school.KODSEKOLAH}`,
     );
 
     const allRoutes = [...staticRoutes, ...dynamicRoutes];
-
     fs.writeFileSync(OUTPUT, JSON.stringify(allRoutes, null, 2));
     console.log(`✔ Generated`, allRoutes.length, `routes in snap-routes.json`);
   }

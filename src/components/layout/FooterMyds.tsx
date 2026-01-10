@@ -8,8 +8,12 @@ import {
 import { footerSocialLinks } from "../../contentData";
 import SocialLinks from "../shared/SocialLinks";
 import { SiteLink } from "@govtechmy/myds-react/footer";
+import { useNavigate } from "react-router-dom";
 
 export default function FooterMyds() {
+  const lang = localStorage.getItem("lang") || "ms";
+  const navigate = useNavigate();
+
   return (
     <Footer className="w-full max-md:px-0 md:px-0 gap-0">
       <FooterSection className="text-txt-black-500 md:max-lg:gap-4.5 mx-auto flex w-full max-w-screen-xl flex-col justify-between text-sm max-md:gap-4 lg:flex-row lg:gap-6 px-4.5 md:px-6 gap-0">
@@ -48,10 +52,18 @@ export default function FooterMyds() {
         </div>
         <div className="flex flex-col gap-3">
           <SiteLinkGroup groupTitle="Open Source">
-            <SiteLink href="#" className="focus:outline-otl-primary-200">
+            <SiteLink
+              href="https://github.com/govtechmy/sekolahku-fe"
+              target="_blank"
+              className="focus:outline-otl-primary-200"
+            >
               Github Repo
             </SiteLink>
-            <SiteLink href="#" className="focus:outline-otl-primary-200">
+            <SiteLink
+              href="https://www.figma.com/design/oDUTO2KqIfVDKGKQrur9FP/Sekolahku-UI"
+              target="_blank"
+              className="focus:outline-otl-primary-200"
+            >
               Figma
             </SiteLink>
           </SiteLinkGroup>
@@ -59,19 +71,30 @@ export default function FooterMyds() {
       </FooterSection>
       <FooterSection className="text-txt-black-500 md:max-lg:gap-4.5 mx-auto flex w-full max-w-screen-xl flex-col justify-between border-none text-sm max-md:gap-4 lg:flex-row lg:gap-6 px-4.5 md:px-6 gap-0 pt-6 md:pb-0">
         <div className="flex flex-col gap-3 lg:flex-row">
-          <p>© 2025 Kementerian Pendidikan. Semua hakcipta terpelihara.</p>
+          <p>© 2026 Kementerian Pendidikan. Semua hakcipta terpelihara.</p>
           <p className="hidden lg:inline">|</p>
           <div className="text-txt-black-700 flex flex-grow flex-row gap-3">
-            <SiteLink href="#" className="focus:outline-otl-primary-200">
+            <SiteLink
+              className="focus:outline-otl-primary-200 cursor-pointer"
+              onClick={() => {
+                navigate(`/${lang}/disclaimer`);
+              }}
+            >
               Penafian
             </SiteLink>
-            <SiteLink href="#" className="focus:outline-otl-primary-200">
+            <p className="hidden lg:inline">|</p>
+            <SiteLink
+              className="focus:outline-otl-primary-200 cursor-pointer"
+              onClick={() => {
+                navigate(`/${lang}/privacy-policy`);
+              }}
+            >
               Dasar Privasi
             </SiteLink>
           </div>
         </div>
         <div className="text-gray-500 flex flex-grow flex-col gap-3 lg:flex-row lg:gap-3 lg:justify-end">
-          <p>Kemaskini Terakhir: 01 Ogos 2025</p>
+          <p>Kemaskini Terakhir: 15 Januari 2026</p>
         </div>
       </FooterSection>
     </Footer>

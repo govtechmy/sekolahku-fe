@@ -48,7 +48,7 @@ export default function HomeHero() {
           getLabel={(item) => item.namaSekolah}
           onSelect={(item) => {
             setQuery(item.namaSekolah ?? "");
-            navigate(`/${lang || "en"}/carian-sekolah`);
+            navigate(`/${lang || "ms"}/carian-sekolah`);
           }}
         />
       }

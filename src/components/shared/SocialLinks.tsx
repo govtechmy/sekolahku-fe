@@ -83,7 +83,12 @@ export default function SocialLinks({
     }
 
     if (!isHyperlink) {
-      window.open(normalizeHref(href), "_blank", "noopener,noreferrer");
+      let encodedHref = href;
+      if (platform === "facebook" || platform === "twitter") {
+        encodedHref = `${href}${encodeURIComponent(window.location.href)}`;
+      }
+
+      window.open(normalizeHref(encodedHref), "_blank", "noopener,noreferrer");
     }
   };
 
