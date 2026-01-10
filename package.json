@@ -4,8 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "generate:routes": "node scripts/generate-routes.js",
+    "dev": "vite --mode development",
     "generate:sitemap": "NODE_ENV=production node scripts/generate-sitemap.js",
     "prebuild": "pnpm generate:sitemap",
     "build": "tsc -b && vite build",
