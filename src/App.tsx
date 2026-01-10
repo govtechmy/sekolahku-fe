@@ -7,6 +7,10 @@ function App() {
   const [isAllowed, setIsAllowedState] = useState(false);
   const [isProduction, setIsProduction] = useState(false);
 
+  if (import.meta.env.VITE_APP_ENV === "production") {
+    setIsProduction(true);
+  }
+
   const setIsAllowed = (value: boolean) => {
     setIsAllowedState(value);
     sessionStorage.setItem("dev_access_allowed", value.toString());
@@ -15,10 +19,6 @@ function App() {
   const devCode = "dev1234";
 
   useEffect(() => {
-    if (import.meta.env.VITE_APP_ENV === "production") {
-      setIsProduction(true);
-    }
-
     const devStorage = sessionStorage.getItem("dev_access_allowed");
     if (!devStorage) {
       if (import.meta.env.VITE_APP_ENV === "production") {
