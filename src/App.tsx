@@ -5,20 +5,18 @@ import { BrowserRouter } from "react-router-dom";
 
 function App() {
   const [isAllowed, setIsAllowedState] = useState(false);
-  const [isProduction, setIsProduction] = useState(false)
+  const [isProduction, setIsProduction] = useState(false);
 
   const setIsAllowed = (value: boolean) => {
     setIsAllowedState(value);
     sessionStorage.setItem("dev_access_allowed", value.toString());
   };
 
-  
-
   const devCode = "dev1234";
 
   useEffect(() => {
     if (import.meta.env.VITE_APP_ENV === "production") {
-      setIsProduction(true)
+      setIsProduction(true);
     }
 
     const devStorage = sessionStorage.getItem("dev_access_allowed");
@@ -39,7 +37,7 @@ function App() {
   return (
     // Temporarily used
     <>
-      {(!isAllowed && !isProduction )? (
+      {!isAllowed && !isProduction ? (
         <AccessGuard
           correctCode={devCode}
           onAccessGranted={() => setIsAllowed(true)}
