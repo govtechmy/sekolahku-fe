@@ -41,7 +41,6 @@ export const NearbySchoolCard = ({
             src={url}
             alt={`${school.namaSekolah}`}
             className="h-full w-fit object-contain py-2"
-            onError={handleImageError}
           />
         )}
       </div>
