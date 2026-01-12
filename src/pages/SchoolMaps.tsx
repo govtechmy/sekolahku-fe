@@ -102,7 +102,6 @@ export default function SchoolMaps() {
           return next;
         });
         setInitialLocationSet(true);
-        console.log("User location obtained:", latitude, longitude);
       },
       (error) => {
         if (error) setShowLocationPicker(true);
@@ -136,7 +135,6 @@ export default function SchoolMaps() {
   useEffect(() => {
     if (query && showLocationPicker) {
       setShowLocationPicker(false);
-      console.log("Setting initial location user to default due to query");
       setInitialLocationSet(true);
       setInitialLocationUser([3.2080597149999996, 101.72543377142858]);
       setUserMarkers((prev) => {
