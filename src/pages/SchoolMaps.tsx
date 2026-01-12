@@ -131,6 +131,28 @@ export default function SchoolMaps() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, initialLocationSet]);
 
+  // Close the location picker when query is set
+  useEffect(() => {
+    if (query && showLocationPicker) {
+      setShowLocationPicker(false);
+      setInitialLocationSet(true);
+      setInitialLocationUser([3.2080597149999996, 101.72543377142858]);
+      setUserMarkers((prev) => {
+        const next = new Map(prev);
+        next.clear();
+        next.set("user", {
+          koordinatXX: 3.2080597149999996,
+          koordinatYY: 101.72543377142858,
+          dataUrl: "",
+          markerType: "USER",
+        });
+        return next;
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, showLocationPicker]);
+
   return (
     <div className="h-full w-full flex relative">
       <SearchBarMap schoolTypes={schoolTypes} />
