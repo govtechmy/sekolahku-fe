@@ -28,10 +28,19 @@ export const NearbySchoolCard = ({
       onClick={() => handleNearbySchoolClick(school.kodSekolah)}
     >
       <div className="flex justify-center items-center h-40 border-b border-otl-gray-200">
+
+        {!url &&
+          <img
+            src={url || "/utama/nearby-school-default.png"}
+            alt={`${school.namaSekolah}`}
+            className="h-full w-fit object-cover py-2"
+            onError={handleImageError}
+          />
+        }
         <img
-          src={url || "/utama/nearby-school-default.png"}
+          src={url}
           alt={`${school.namaSekolah}`}
-          className="h-full w-fit object-cover py-2"
+          className="h-full w-fit object-contain py-2"
           onError={handleImageError}
         />
       </div>
