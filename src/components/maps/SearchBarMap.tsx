@@ -318,7 +318,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
               isFullScreen ? "top-[30vh] max-h-screen" : "max-h-[40vh]",
             )}
           >
-            <div className="overflow-y-auto flex-1">
+            <div className="overflow-y-auto flex-1 overscroll-none">
               <SchoolInfoWindow
                 school={viewSchool}
                 setSelected={() => {
