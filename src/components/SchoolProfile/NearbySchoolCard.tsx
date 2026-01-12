@@ -32,7 +32,7 @@ export const NearbySchoolCard = ({
           <img
             src={"/utama/nearby-school-default.png"}
             alt={`${school.namaSekolah}`}
-            className="h-full w-fit object-cover py-2"
+            className="h-full w-fit object-cover"
             onError={handleImageError}
           />
         )}
