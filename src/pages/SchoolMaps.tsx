@@ -102,6 +102,7 @@ export default function SchoolMaps() {
           return next;
         });
         setInitialLocationSet(true);
+        console.log("User location obtained:", latitude, longitude);
       },
       (error) => {
         if (error) setShowLocationPicker(true);
@@ -135,8 +136,22 @@ export default function SchoolMaps() {
   useEffect(() => {
     if (query && showLocationPicker) {
       setShowLocationPicker(false);
+      console.log("Setting initial location user to default due to query");
       setInitialLocationSet(true);
+      setInitialLocationUser([3.2080597149999996, 101.72543377142858]);
+      setUserMarkers((prev) => {
+        const next = new Map(prev);
+        next.clear();
+        next.set("user", {
+          koordinatXX: 3.2080597149999996,
+          koordinatYY: 101.72543377142858,
+          dataUrl: "",
+          markerType: "USER",
+        });
+        return next;
+      });
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, showLocationPicker]);
 

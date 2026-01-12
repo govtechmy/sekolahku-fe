@@ -134,30 +134,8 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
             (school) => school.namaSekolah.toLowerCase() === trimmedQuery,
           );
 
-          console.log("Trimmed query:", trimmedQuery);
-          console.log("Exact match:", exactMatch);
-          console.log("Local suggestions:", localSuggestions);
-
           if (exactMatch) {
-            getSchoolS3Json(
-              undefined,
-              exactMatch.negeri,
-              exactMatch.parlimen,
-              exactMatch.kodSekolah,
-            )
-              .then((detail) => {
-                if (detail) {
-                  setViewSchool(detail);
-                  setCenter([exactMatch.koordinatYY, exactMatch.koordinatXX]);
-                  setZoom(16);
-                  setTimeout(() => {
-                    setZoom(17);
-                  }, 0);
-                }
-              })
-              .catch((error) => {
-                console.error("Error fetching school details:", error);
-              });
+            handleSelect(exactMatch);
           } else {
             // No exact match found, don't show school info window
             setViewSchool(null);
