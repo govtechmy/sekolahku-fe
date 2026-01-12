@@ -28,12 +28,21 @@ export const NearbySchoolCard = ({
       onClick={() => handleNearbySchoolClick(school.kodSekolah)}
     >
       <div className="flex justify-center items-center h-40 border-b border-otl-gray-200">
-        <img
-          src={url || "/utama/nearby-school-default.png"}
-          alt={`${school.namaSekolah}`}
-          className="h-full w-fit object-cover py-2"
-          onError={handleImageError}
-        />
+        {!url && (
+          <img
+            src={"/utama/nearby-school-default.png"}
+            alt={`${school.namaSekolah}`}
+            className="h-full w-fit object-cover"
+            onError={handleImageError}
+          />
+        )}
+        {url && (
+          <img
+            src={url}
+            alt={`${school.namaSekolah}`}
+            className="h-full w-fit object-contain py-2"
+          />
+        )}
       </div>
       <div className="p-4.5 flex flex-col gap-2">
         <h3 className="text-txt-black-900 font-medium">
