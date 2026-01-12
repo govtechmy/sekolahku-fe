@@ -131,6 +131,15 @@ export default function SchoolMaps() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, initialLocationSet]);
 
+  // Close the location picker when query is set
+  useEffect(() => {
+    if (query && showLocationPicker) {
+      setShowLocationPicker(false);
+      setInitialLocationSet(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, showLocationPicker]);
+
   return (
     <div className="h-full w-full flex relative">
       <SearchBarMap schoolTypes={schoolTypes} />

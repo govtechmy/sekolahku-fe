@@ -118,6 +118,56 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     };
   }, []);
 
+  // Trigger search when query is set
+  useEffect(() => {
+    if (query.trim().length >= 3) {
+      setIsExpanded(true);
+      handleSearch({
+        namaSekolah: query,
+        negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+        jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+      }).then(() => {
+        // After search completes, find exact match
+        if (localSuggestions.length > 0) {
+          const trimmedQuery = query.trim().toLowerCase();
+          const exactMatch = localSuggestions.find(
+            (school) => school.namaSekolah.toLowerCase() === trimmedQuery,
+          );
+
+          console.log("Trimmed query:", trimmedQuery);
+          console.log("Exact match:", exactMatch);
+          console.log("Local suggestions:", localSuggestions);
+
+          if (exactMatch) {
+            getSchoolS3Json(
+              undefined,
+              exactMatch.negeri,
+              exactMatch.parlimen,
+              exactMatch.kodSekolah,
+            )
+              .then((detail) => {
+                if (detail) {
+                  setViewSchool(detail);
+                  setCenter([exactMatch.koordinatYY, exactMatch.koordinatXX]);
+                  setZoom(16);
+                  setTimeout(() => {
+                    setZoom(17);
+                  }, 0);
+                }
+              })
+              .catch((error) => {
+                console.error("Error fetching school details:", error);
+              });
+          } else {
+            // No exact match found, don't show school info window
+            setViewSchool(null);
+          }
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
   useEffect(() => {
     if (!initialLocationSet) return;
     handleSearch({
