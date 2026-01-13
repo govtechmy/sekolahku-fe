@@ -3,33 +3,32 @@ import SectionHeader from "../components/shared/SectionHeader";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
 import { getAnalytics } from "../services/analytics.svc";
-import type { AnalyticsModel } from "../models/response";
-import { dataItemLinks, dataItemNews } from "../contentData";
+import type { AnalyticsModel, SiaranItem } from "../models/response";
+import { dataItemLinks } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
 import { getAllAcara } from "../services/acara.svc";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import type { AcaraItem } from "../types/acara";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { getSiaranList } from "../services/siaran.svc";
 
 export default function HomePage() {
   const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
-  const [loading, setLoading] = useState(true);
-  //later add loading for acara
+  //later add loading for all , check design
   const [dataItemCalendar, setDataItemCalendar] = useState<AcaraItem[]>();
+  const [dataItemNews, setDataItemNews] = useState<SiaranItem[]>();
   const inputRef = useRef<HTMLInputElement>(null!);
   const { lang } = useParams<{ lang: string }>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        setLoading(true);
         const data = await getAnalytics();
         setAnalytics(data);
       } catch (err) {
         console.error("Error fetching analytics:", err);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -42,8 +41,18 @@ export default function HomePage() {
       }
     };
 
-    fetchAnalytics();
+    const fetchSiaran = async () => {
+      try {
+        const data = await getSiaranList();
+        setDataItemNews(data.items);
+      } catch (error) {
+        console.error("Error fetching Siaran:", error);
+      }
+    };
+
+    fetchSiaran();
     fetchAcara();
+    fetchAnalytics();
   }, []);
 
   useEffect(() => {
@@ -71,22 +80,28 @@ export default function HomePage() {
     <div>
       <HomeHero />
       <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
-        <SectionHeader
-          header="SIARAN"
-          ButtonLabel="Semua Berita"
-          children={
-            <SectionItemNews
-              dataItemNews={dataItemNews}
-              mainTitle="Apa yang Sedang Berlaku di Sekolah-sekolah Malaysia"
-              redirectDesc="Baca"
-            />
-          }
-        />
+        {/* design loading for this */}
+        {dataItemNews && (
+          <SectionHeader
+            header="SIARAN"
+            ButtonLabel="Semua Berita"
+            ButtonClickHandler={() => navigate(`/${lang}/siaran`)}
+            children={
+              <SectionItemNews
+                dataItemNews={dataItemNews}
+                mainTitle="Apa yang Sedang Berlaku di Sekolah-sekolah Malaysia"
+                redirectDesc="Baca"
+              />
+            }
+          />
+        )}
 
         {/* design loading for this  */}
         {dataItemCalendar && (
           <SectionHeader
             header="KALENDAR"
+            ButtonLabel="Semua Acara"
+            ButtonClickHandler={() => navigate(`/${lang}/acara`)}
             children={
               <SectionItemCalendar
                 dataItemCalendar={dataItemCalendar}
@@ -94,27 +109,26 @@ export default function HomePage() {
                 lang={lang}
               />
             }
-            ButtonLabel="Semua Acara"
           />
         )}
 
-        <SectionHeader
-          header="ANALITIK"
-          title="Fakta Menarik Sekolah di Malaysia"
-          children={
-            loading || !analytics ? (
-              <div className="p-6 text-center">Loading analytics...</div>
-            ) : (
-              <SectionItemAnalytics analytics={analytics} />
-            )
-          }
-        />
+        {/* design loading for this  */}
+        {analytics && (
+          <SectionHeader
+            header="ANALITIK"
+            title="Fakta Menarik Sekolah di Malaysia"
+            children={<SectionItemAnalytics analytics={analytics} />}
+          />
+        )}
 
-        <SectionHeader
-          header="PAUTAN PANTAS"
-          title="Pautan Popular bagi guru, pelajar dan ibu bapa"
-          children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
-        />
+        <div id="pautan">
+          {/* design loading for this, hardcoded atm  */}
+          <SectionHeader
+            header="PAUTAN PANTAS"
+            title="Pautan Popular bagi guru, pelajar dan ibu bapa"
+            children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
+          />
+        </div>
 
         {/* <Statistic
         yearlyData={statisticYearlyData}

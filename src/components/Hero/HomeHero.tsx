@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { popularLinks } from "../../contentData";
 import { useMapViewStore } from "../../store/mapView";
 import Hero from "../shared/Hero";
 import SearchBar from "../shared/SearchBar";
@@ -36,6 +35,15 @@ export default function HomeHero() {
     }
   };
 
+  const handleSearchEnter: React.KeyboardEventHandler<HTMLInputElement> = (
+    e,
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      navigate(`/${lang || "ms"}/carian-sekolah`);
+    }
+  };
+
   return (
     <Hero
       title="Selamat Datang Ke Portal Sekolahku"
@@ -44,16 +52,17 @@ export default function HomeHero() {
           query={query}
           setQuery={setQuery}
           handleValueChange={handleValueChange}
+          handleSearchEnter={handleSearchEnter}
           suggestions={localSuggestions}
           getKey={(item) => item.kodSekolah ?? ""}
           getLabel={(item) => item.namaSekolah}
           onSelect={(item) => {
             setQuery(item.namaSekolah ?? "");
-            navigate(`/${lang || "en"}/carian-sekolah`);
+            navigate(`/${lang || "ms"}/carian-sekolah`);
           }}
         />
       }
-      links={popularLinks}
+      links={[{ label: "Pautan Pantas", link: "#pautan" }]}
       HeroclassName="bg-gradient-to-b from-[#E6F0FF] via-[#F2F7FF] to-[#FFFFFF]"
       background={
         <>

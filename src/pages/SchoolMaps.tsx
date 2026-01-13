@@ -7,6 +7,8 @@ import { LocationPickerWindow } from "../components/maps";
 import { useMapViewStore } from "../store/mapView";
 import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
+import { fetchMultipleStatePolygons } from "../services/polygon.svc";
+import { NEGERI_LIST } from "../contentData";
 
 export default function SchoolMaps() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
@@ -25,9 +27,11 @@ export default function SchoolMaps() {
     schoolMarkers,
     query,
     setUserMarkers,
+    setStatePolygons,
   } = useMapViewStore();
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
+  const polygonsFetchedRef = useRef(false);
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
     schoolMarkers,
@@ -48,6 +52,25 @@ export default function SchoolMaps() {
       }
     };
     fetchSchoolTypes();
+
+    // Fetch all state polygons on mount
+    const fetchAllStatePolygons = async () => {
+      if (polygonsFetchedRef.current) return;
+
+      try {
+        polygonsFetchedRef.current = true;
+        const polygonMap = await fetchMultipleStatePolygons(NEGERI_LIST);
+        setStatePolygons(polygonMap);
+      } catch (error) {
+        console.error(
+          "[SchoolMaps] Error fetching state polygons on mount:",
+          error,
+        );
+        polygonsFetchedRef.current = false;
+      }
+    };
+    fetchAllStatePolygons();
+
     if (!("geolocation" in navigator)) {
       console.warn("Geolocation is not supported in this browser.");
       return;
@@ -107,6 +130,28 @@ export default function SchoolMaps() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, initialLocationSet]);
+
+  // Close the location picker when query is set
+  useEffect(() => {
+    if (query && showLocationPicker) {
+      setShowLocationPicker(false);
+      setInitialLocationSet(true);
+      setInitialLocationUser([3.2080597149999996, 101.72543377142858]);
+      setUserMarkers((prev) => {
+        const next = new Map(prev);
+        next.clear();
+        next.set("user", {
+          koordinatXX: 3.2080597149999996,
+          koordinatYY: 101.72543377142858,
+          dataUrl: "",
+          markerType: "USER",
+        });
+        return next;
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, showLocationPicker]);
 
   return (
     <div className="h-full w-full flex relative">

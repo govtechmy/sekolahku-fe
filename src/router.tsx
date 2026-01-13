@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import LangWrapper from "./components/layout/LangWrapper";
 import HomePage from "./pages/Home";
-import AboutPage from "./pages/About";
 import SchoolMapsPage from "./pages/SchoolMaps";
 import ErrorPage from "./pages/Error";
 import LayoutMain from "./components/layout/LayoutMain";
@@ -11,6 +10,8 @@ import SiaranId from "./pages/Siaran/SiaranId";
 import LayoutMap from "./components/layout/LayoutMap";
 import Acara from "./pages/Acara/Acara";
 import AcaraId from "./pages/Acara/AcaraId";
+import DisclaimerPage from "./pages/Disclaimer";
+import PrivacyPolicyPage from "./pages/PrivacyPolicy";
 
 export default function AppRoutes() {
   const lang = localStorage.getItem("lang") || "ms";
@@ -23,17 +24,13 @@ export default function AppRoutes() {
           {/* no home is not on / but on /home  so redirect */}
           <Route index element={<RedirectHomePage />} />
           <Route path="home" element={<HomePage />} />
-          <Route path="about" element={<AboutPage />} />
-
           <Route path="halaman-sekolah/:id" element={<SchoolProfile />} />
           <Route path="siaran" element={<Siaran />} />
           <Route path="siaran/:id" element={<SiaranId />} />
           <Route path="acara" element={<Acara />} />
           <Route path="acara/:id" element={<AcaraId />} />
-          <Route
-            path="testingpage"
-            element={<div> this is testing page</div>}
-          />
+          <Route path="disclaimer" element={<DisclaimerPage />} />
+          <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="404" element={<ErrorPage />} />
           <Route path="*" element={<Redirect404Page />} />
         </Route>
@@ -50,7 +47,7 @@ function Redirect404Page() {
   const allowedLangs = ["en", "ms"];
   const langStorage = localStorage.getItem("lang");
   const targetLang =
-    lang && allowedLangs.includes(lang) ? lang : langStorage || "en";
+    lang && allowedLangs.includes(lang) ? lang : langStorage || "ms";
   return <Navigate to={`/${targetLang}/404`} replace />;
 }
 
@@ -66,7 +63,7 @@ function RedirectHomePage() {
   } else if (langStorage && allowedLangs.includes(langStorage)) {
     targetLang = langStorage;
   } else {
-    targetLang = "en"; // fallback
+    targetLang = "ms"; // fallback
   }
 
   return <Navigate to={`/${targetLang}/home`} replace />;

@@ -84,8 +84,29 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
         inputRef.current?.focus();
       }
     };
+
+    let resizeTimer: number | null = null;
+    const handleResize = () => {
+      if (resizeTimer) {
+        clearTimeout(resizeTimer);
+      }
+      resizeTimer = window.setTimeout(() => {
+        if (window.innerWidth < 768 && isExpanded) {
+          setIsExpanded(false);
+        }
+      }, 150);
+    };
+
     window.addEventListener("keydown", handleSlashFocus);
-    return () => window.removeEventListener("keydown", handleSlashFocus);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("keydown", handleSlashFocus);
+      window.removeEventListener("resize", handleResize);
+      if (resizeTimer) {
+        clearTimeout(resizeTimer);
+      }
+    };
   }, [isExpanded]);
 
   // Cleanup timer on unmount
@@ -96,6 +117,34 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
       }
     };
   }, []);
+
+  // Trigger search when query is set
+  useEffect(() => {
+    if (query.trim().length >= 3) {
+      setIsExpanded(true);
+      handleSearch({
+        namaSekolah: query,
+        negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+        jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+      }).then(() => {
+        // After search completes, find exact match
+        if (localSuggestions.length > 0) {
+          const trimmedQuery = query.trim().toLowerCase();
+          const exactMatch = localSuggestions.find(
+            (school) => school.namaSekolah.toLowerCase() === trimmedQuery,
+          );
+
+          if (exactMatch) {
+            handleSelect(exactMatch);
+          } else {
+            // No exact match found, don't show school info window
+            setViewSchool(null);
+          }
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
 
   useEffect(() => {
     if (!initialLocationSet) return;
@@ -297,7 +346,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
               isFullScreen ? "top-[30vh] max-h-screen" : "max-h-[40vh]",
             )}
           >
-            <div className="overflow-y-auto flex-1">
+            <div className="overflow-y-auto flex-1 overscroll-none">
               <SchoolInfoWindow
                 school={viewSchool}
                 setSelected={() => {

@@ -43,29 +43,40 @@ export function SchoolInfoWindow({
   };
 
   return (
-    <div className="relative bg-white rounded-b-xl">
-      <div className="sticky top-0 -mt-12 flex justify-end p-2 bg-transparent">
-        <Button
-          onClick={() => setSelected(null)}
-          variant={"default-outline"}
-          className="p-1.5"
-        >
-          <CrossIcon className="size-4" />
-        </Button>
-      </div>
-      {mobile && (
-        <div
-          className="sticky top-0 -mt-12 flex justify-center p-2 bg-transparent"
-          onClick={() => {
-            if (onToggleFullScreen) {
-              onToggleFullScreen();
-            }
-          }}
-        >
-          <div className="w-10 h-1 bg-gray-500 rounded-full cursor-pointer"></div>
+    <div
+      className="relative bg-white rounded-b-xl"
+      onClick={() => {
+        if (onToggleFullScreen) {
+          onToggleFullScreen();
+        }
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          if (onToggleFullScreen) {
+            onToggleFullScreen();
+          }
+        }
+      }}
+      role="button"
+      aria-label="Toggle fullscreen school info window"
+      tabIndex={0}
+    >
+      <div className="flex justify-center items-center h-48 bg-white rounded-t-xl relative">
+        <div className="absolute top-2 right-2 z-10">
+          <Button
+            onClick={() => setSelected(null)}
+            variant={"default-outline"}
+            className="p-1.5"
+          >
+            <CrossIcon className="size-4" />
+          </Button>
         </div>
-      )}
-      <div className="flex justify-center items-center h-48 bg-white rounded-t-xl">
+        {mobile && (
+          <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-10">
+            <div className="w-10 h-1 bg-gray-500 rounded-full cursor-pointer"></div>
+          </div>
+        )}
         <img
           src={getSchoolLogoUrl(
             school.data.infoPentadbiran.negeri,
@@ -84,7 +95,7 @@ export function SchoolInfoWindow({
           </Tag>
         </div>
         <div className="text-body-md font-semibold font-body">
-          {school?.namaSekolah || "Maktab Sultan Abu Bakar (English College)"}
+          {school?.namaSekolah ?? ""}
         </div>
         <div className="flex flex-col gap-2 text-txt-black-700">
           <InfoIconRow
@@ -126,7 +137,7 @@ export function SchoolInfoWindow({
             label="Daerah"
             value={school?.data?.infoPentadbiran?.ppd || "Tiada Maklumat"}
           />
-          <InfoRow label="Gred" value={"Tiada Maklumat"} />
+          {/* <InfoRow label="Gred" value={"Tiada Maklumat"} /> */}
           <InfoRow
             label="Sesi"
             value={school?.data?.infoPentadbiran?.sesi || "Tiada Maklumat"}

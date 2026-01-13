@@ -15,6 +15,7 @@ import {
   GithubIcon,
 } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
+import { normalizeHref } from "../../utils/normalizeHref";
 
 interface SocialLinkProps {
   platform: string;
@@ -57,6 +58,40 @@ export default function SocialLinks({
     return key ? iconMap[key as keyof typeof iconMap] : null;
   };
 
+  const handleClick = (platform: string, href: string) => {
+    const isHyperlink = platform.toLowerCase().includes("hyperlink");
+
+    // Use the browser's Web Share API when available (navigator)
+    if (
+      isHyperlink &&
+      // check navigator availability
+      typeof navigator !== "undefined" &&
+      //check share function of navigator available or not
+      typeof navigator.share === "function"
+    ) {
+      navigator
+        .share({
+          url: window.location.href,
+        })
+        .catch((error) => {
+          console.error(
+            "Failed to share content using the Web Share API:",
+            error,
+          );
+        });
+      return;
+    }
+
+    if (!isHyperlink) {
+      let encodedHref = href;
+      if (platform === "facebook" || platform === "twitter") {
+        encodedHref = `${href}${encodeURIComponent(window.location.href)}`;
+      }
+
+      window.open(normalizeHref(encodedHref), "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <div className={clx("flex items-center gap-3", className)}>
       {links.map(({ platform, href, ariaLabel }) => {
@@ -68,7 +103,7 @@ export default function SocialLinks({
             variant="default-ghost"
             className={classNameButton}
             aria-label={ariaLabel}
-            onClick={() => window.open(href, "_blank", "noopener,noreferrer")}
+            onClick={() => handleClick(platform, href)}
           >
             <Icon />
           </Button>

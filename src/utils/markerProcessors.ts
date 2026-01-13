@@ -9,6 +9,9 @@ export type MarkerMap = Map<
     dataUrl: string;
     markerType: MarkerType;
     total?: number;
+    negeri?: string;
+    parlimen?: string;
+    region?: string;
   }
 >;
 export type SchoolMarker = {
@@ -17,6 +20,9 @@ export type SchoolMarker = {
   dataUrl: string;
   markerType: MarkerType;
   total?: number;
+  negeri?: string;
+  parlimen?: string;
+  region?: string;
 };
 
 const addMarkerIfNew = (
@@ -73,6 +79,8 @@ const processParlimenMarker = (marker: MarkerGroup, map: MarkerMap): number => {
     dataUrl: marker.total?.toString() ?? "",
     markerType: marker.markerType,
     total: marker.total,
+    parlimen: marker.parlimen,
+    negeri: marker.negeri,
   })
     ? 1
     : 0;
@@ -86,6 +94,7 @@ const processNegeriMarker = (marker: MarkerGroup, map: MarkerMap): number => {
     dataUrl: marker.total?.toString() ?? "",
     markerType: marker.markerType,
     total: marker.total,
+    negeri: marker.negeri,
   })
     ? 1
     : 0;
@@ -102,6 +111,7 @@ const processWestEastMalaysiaMarker = (
     dataUrl: "",
     markerType: marker.markerType,
     total: marker.total,
+    region: marker.region,
   })
     ? 1
     : 0;

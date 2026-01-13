@@ -69,9 +69,7 @@ export default function SiaranId() {
                 {contents.categoryInfo.name}
               </span>
             )}
-            <p className=" text-2xl font-semibold font-body">
-              {contents.title}
-            </p>
+            <p className="text-2xl font-semibold font-body">{contents.title}</p>
 
             <div className=" flex flex-row gap-2 text-bg-black-500">
               <div className=" flex flex-row gap-1 items-center text-body-sm font-body font-normal">
@@ -100,11 +98,13 @@ export default function SiaranId() {
             </div>
           </div>
           <div className="flex flex-col gap-3 ">
-            <img
-              src={contents.imageHero.url}
-              alt={contents.imageHero.alt}
-              className="w-full max-h-[415px] object-contain rounded-lg"
-            />
+            <div className="flex justify-center">
+              <img
+                src={contents.imageHero.url}
+                alt={contents.imageHero.alt}
+                className="w-fit max-h-[415px] object-contain rounded-lg"
+              />
+            </div>
             <span className="text-txt-black-500 text-center font-body font-normal text-body-sm md:px-10">
               Image from{" "}
               <span className="italic">{contents.imageHero.url}</span>
@@ -112,7 +112,7 @@ export default function SiaranId() {
           </div>
           <div className="text-xl text-justify font-normal md:px-10">
             <RichText
-              className="flex flex-col gap-10 text-[15px] text-txt-black-700 font-body font-normal"
+              className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
               data={contents.content}
             />
           </div>
