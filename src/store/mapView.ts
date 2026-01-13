@@ -9,7 +9,6 @@ type Center = [number, number];
 
 interface MapViewState {
   center: Center;
-  initialLocationUser: Center;
   zoom: number;
   initialLocationSet: boolean;
   radius: number;
@@ -20,7 +19,6 @@ interface MapViewState {
   query: string;
   statePolygons: Map<string, GeoJSONFeature>;
   setCenter: (c: Center) => void;
-  setInitialLocationUser: (c: Center) => void;
   setRadius: (r: number) => void;
   setZoom: (z: number) => void;
   setInitialLocationSet: (v: boolean) => void;
@@ -58,11 +56,6 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   setCenter: (c) => {
     set(() => {
       return { center: c };
-    });
-  },
-  setInitialLocationUser: (initlocuser) => {
-    set(() => {
-      return { initialLocationUser: initlocuser };
     });
   },
   setZoom: (z) => {

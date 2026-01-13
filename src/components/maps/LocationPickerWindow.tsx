@@ -18,6 +18,7 @@ import { getMapParlimenCenteroid } from "../../services/map.svc";
 import { toTitleCase } from "../../utils/titleCaseConverter";
 import { Spinner } from "@govtechmy/myds-react/spinner";
 import { clx } from "@govtechmy/myds-react/utils";
+import { useLocationSessionStore } from "../../store/locationSession";
 
 interface LocationPickerWindowProps {
   onClose: () => void;
@@ -36,9 +37,11 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
     setCenter,
     setZoom,
     setInitialLocationSet,
-    setInitialLocationUser,
+
     setUserMarkers,
   } = useMapViewStore();
+
+  const { setInitialLocationUser } = useLocationSessionStore();
   const [currentView, setCurrentView] = useState<"states" | "districts">(
     "states",
   );

@@ -9,6 +9,7 @@ import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
 import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import { NEGERI_LIST } from "../contentData";
+import { useLocationSessionStore } from "../store/locationSession";
 
 export default function SchoolMaps() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
@@ -22,13 +23,16 @@ export default function SchoolMaps() {
     setRadius,
     initialLocationSet,
     setInitialLocationSet,
-    setInitialLocationUser,
+
     setSchoolMarkers,
     schoolMarkers,
     query,
     setUserMarkers,
     setStatePolygons,
   } = useMapViewStore();
+
+  const { setInitialLocationUser } = useLocationSessionStore();
+
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
   const polygonsFetchedRef = useRef(false);
