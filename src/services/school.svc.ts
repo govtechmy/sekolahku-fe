@@ -65,7 +65,7 @@ export const getSchoolNearby = async (
         );
       }
     } else {
-      console.error("Return data empty - markerGroups is null or undefined");
+      console.warn("Return data empty - markerGroups is null or undefined");
     }
 
     return data;
