@@ -294,23 +294,24 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                         </span>
 
                         <span className="mt-1 flex items-center text-sm text-primary-600 gap-1">
-                          {initialLocationUser?.[0] && initialLocationUser?.[1] && (
-                            <>
-                              <MapIcon className="w-4 h-4" />
-                              {(() => {
-                                const distanceInMeters = calculateDistance(
-                                  initialLocationUser[0],
-                                  initialLocationUser[1],
-                                  school.koordinatYY,
-                                  school.koordinatXX,
-                                );
-                                if (distanceInMeters > 1000) {
-                                  return `${(distanceInMeters / 1000).toFixed(2)} km dari lokasi anda`;
-                                }
-                                return `${distanceInMeters.toFixed(2)} meter dari lokasi anda`;
-                              })()}
-                            </>
-                          )}
+                          {initialLocationUser?.[0] &&
+                            initialLocationUser?.[1] && (
+                              <>
+                                <MapIcon className="w-4 h-4" />
+                                {(() => {
+                                  const distanceInMeters = calculateDistance(
+                                    initialLocationUser[0],
+                                    initialLocationUser[1],
+                                    school.koordinatYY,
+                                    school.koordinatXX,
+                                  );
+                                  if (distanceInMeters > 1000) {
+                                    return `${(distanceInMeters / 1000).toFixed(2)} km dari lokasi anda`;
+                                  }
+                                  return `${distanceInMeters.toFixed(2)} meter dari lokasi anda`;
+                                })()}
+                              </>
+                            )}
                         </span>
                       </div>
 
