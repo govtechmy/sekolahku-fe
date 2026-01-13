@@ -68,10 +68,6 @@ export default function SchoolMaps() {
           return next;
         });
       } else {
-        setInitialLocationSet(false);
-      }
-
-      if (!sessionInitialLocation) {
         if (!("geolocation" in navigator)) {
           console.warn("Geolocation is not supported in this browser.");
           return;
