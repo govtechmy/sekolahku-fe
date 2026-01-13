@@ -181,7 +181,6 @@ export default function SchoolMaps() {
         });
         return next;
       });
-      // setInitialLocationSet(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
