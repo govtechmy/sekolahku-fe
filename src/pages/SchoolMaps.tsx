@@ -171,6 +171,7 @@ export default function SchoolMaps() {
   useEffect(() => {
     if (query && !initialLocationSet) {
       setInitialLocationSet(true);
+      // set default Kuala Lumpur
       setInitialLocationUser([3.2080597149999996, 101.72543377142858]);
       setUserMarkers((prev) => {
         const next = new Map(prev);
