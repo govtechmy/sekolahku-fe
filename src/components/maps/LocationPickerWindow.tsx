@@ -20,15 +20,11 @@ import { Spinner } from "@govtechmy/myds-react/spinner";
 import { clx } from "@govtechmy/myds-react/utils";
 import { useLocationSessionStore } from "../../store/locationSession";
 
-interface LocationPickerWindowProps {
-  onClose: () => void;
-}
-
 type ParlimenCenteroidProps = {
   [district: string]: [number, number];
 };
 
-export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
+export function LocationPickerWindow() {
   // cache using useRef for negeri based data
   const negeriDistrictCache = useRef<{
     [state: string]: ParlimenCenteroidProps[];
@@ -103,8 +99,6 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
         return next;
       });
       setZoom(14);
-
-      onClose();
       setInitialLocationSet(true);
     }
   };

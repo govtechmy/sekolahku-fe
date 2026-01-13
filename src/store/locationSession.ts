@@ -17,7 +17,7 @@ export const useLocationSessionStore = create<LocationSessionState>()(
         set({ initialLocationUser: location }),
     }),
     {
-      name: "location-session", // key in sessionStorage
+      name: "locationSession", // key in sessionStorage
       storage: createJSONStorage(() => sessionStorage),
     },
   ),

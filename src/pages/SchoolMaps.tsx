@@ -10,9 +10,9 @@ import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
 import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import { NEGERI_LIST } from "../contentData";
 import { useLocationSessionStore } from "../store/locationSession";
+import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
 
 export default function SchoolMaps() {
-  const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [schoolTypes, setSchoolTypes] = useState<string[]>([]);
   const {
     center,
@@ -46,6 +46,73 @@ export default function SchoolMaps() {
   });
 
   useEffect(() => {
+    if (!initialLocationSet) {
+      if (!("geolocation" in navigator)) {
+        console.warn("Geolocation is not supported in this browser.");
+        return;
+      }
+      if (geolocationRequestedRef.current) {
+        return;
+      }
+      geolocationRequestedRef.current = true;
+      const options: PositionOptions = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      };
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCenter([latitude, longitude]);
+          setInitialLocationUser([latitude, longitude]);
+          setZoom(17);
+          setUserMarkers((prev) => {
+            const next = new Map(prev);
+            next.clear();
+            next.set("user", {
+              koordinatXX: latitude,
+              koordinatYY: longitude,
+              dataUrl: "",
+              markerType: "USER",
+            });
+            return next;
+          });
+          setInitialLocationSet(true);
+        },
+        (error) => {
+          if (error) {
+            console.error(error);
+          }
+        },
+        options,
+      );
+    }
+
+    const sessionInitialLocation = getSessionInitialLocation();
+    if (sessionInitialLocation) {
+      setInitialLocationSet(true);
+      setCenter([sessionInitialLocation[0], sessionInitialLocation[1]]);
+      setInitialLocationUser([
+        sessionInitialLocation[0],
+        sessionInitialLocation[1],
+      ]);
+      setZoom(15);
+      setUserMarkers((prev) => {
+        const next = new Map(prev);
+        next.clear();
+        next.set("user", {
+          koordinatXX: sessionInitialLocation[0],
+          koordinatYY: sessionInitialLocation[1],
+          dataUrl: "",
+          markerType: "USER",
+        });
+        return next;
+      });
+    } else {
+      setInitialLocationSet(false);
+    }
+
     const fetchSchoolTypes = async () => {
       try {
         const types = await getSchoolTypes();
@@ -75,43 +142,6 @@ export default function SchoolMaps() {
     };
     fetchAllStatePolygons();
 
-    if (!("geolocation" in navigator)) {
-      console.warn("Geolocation is not supported in this browser.");
-      return;
-    }
-    if (geolocationRequestedRef.current) {
-      return;
-    }
-    geolocationRequestedRef.current = true;
-    const options: PositionOptions = {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0,
-    };
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setCenter([latitude, longitude]);
-        setInitialLocationUser([latitude, longitude]);
-        setZoom(17);
-        setUserMarkers((prev) => {
-          const next = new Map(prev);
-          next.clear();
-          next.set("user", {
-            koordinatXX: latitude,
-            koordinatYY: longitude,
-            dataUrl: "",
-            markerType: "USER",
-          });
-          return next;
-        });
-        setInitialLocationSet(true);
-      },
-      (error) => {
-        if (error) setShowLocationPicker(true);
-      },
-      options,
-    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -137,8 +167,7 @@ export default function SchoolMaps() {
 
   // Close the location picker when query is set
   useEffect(() => {
-    if (query && showLocationPicker) {
-      setShowLocationPicker(false);
+    if (query && !initialLocationSet) {
       setInitialLocationSet(true);
       setInitialLocationUser([3.2080597149999996, 101.72543377142858]);
       setUserMarkers((prev) => {
@@ -152,10 +181,10 @@ export default function SchoolMaps() {
         });
         return next;
       });
+      // setInitialLocationSet(false);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, showLocationPicker]);
+  }, [query]);
 
   return (
     <div className="h-full w-full flex relative">
@@ -165,9 +194,7 @@ export default function SchoolMaps() {
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
       />
-      {showLocationPicker && (
-        <LocationPickerWindow onClose={() => setShowLocationPicker(false)} />
-      )}
+      {!initialLocationSet && <LocationPickerWindow />}
       {!initialLocationSet && (
         <div className="fixed inset-0 z-[800] bg-bg-black-900/40 backdrop-blur-sm pointer-events-auto" />
       )}
