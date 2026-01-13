@@ -49,23 +49,25 @@ export const getSchoolNearby = async (
         paramsSerializer: { indexes: null },
       },
     );
- 
+
     const data = response.data.data;
-    
+
     if (data?.markerGroups) {
       data.markerGroups = data.markerGroups.filter(
         (school) =>
           school.infoLokasi?.koordinatXX != null &&
           school.infoLokasi?.koordinatYY != null,
       );
-      
+
       if (data.markerGroups.length === 0) {
-        console.error("Return data empty - no schools with valid coordinates found");
+        console.error(
+          "Return data empty - no schools with valid coordinates found",
+        );
       }
     } else {
       console.error("Return data empty - markerGroups is null or undefined");
     }
-    
+
     return data;
   } catch (error) {
     console.error("Error fetching nearby schools:", error);
