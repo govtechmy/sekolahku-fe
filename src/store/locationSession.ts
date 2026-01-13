@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 // Match the Center type used in mapView.ts
-export type Center = [number, number];
+export type Center = [number | null, number | null];
 
 export interface LocationSessionState {
   initialLocationUser: Center;
@@ -12,7 +12,7 @@ export interface LocationSessionState {
 export const useLocationSessionStore = create<LocationSessionState>()(
   persist(
     (set) => ({
-      initialLocationUser: [3.760115447396889, 108.46252441406251],
+      initialLocationUser: [null, null],
       setInitialLocationUser: (location) =>
         set({ initialLocationUser: location }),
     }),
