@@ -11,7 +11,11 @@ interface StatCardProps {
  */
 export const StatCard = ({ icon, label, value }: StatCardProps) => {
   return (
-    <div className="gap-0.5 mt-0">
+    <div
+      className="gap-0.5 mt-0 focus:outline-primary-200"
+      tabIndex={0}
+      aria-label={`${label}: ${value}`}
+    >
       <div className="flex w-full max-w-xl px-8 md:px-12 lg:px-16 py-8 items-start gap-4 shrink-0">
         <div className="flex w-[42px] h-[42px] justify-center items-center gap-x-[10px] gap-y-[10px] shrink-0 bg-primary-50 rounded-full">
           <div className="text-txt-primary font-semibold">{icon}</div>

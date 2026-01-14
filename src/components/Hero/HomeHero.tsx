@@ -35,6 +35,15 @@ export default function HomeHero() {
     }
   };
 
+  const handleSearchEnter: React.KeyboardEventHandler<HTMLInputElement> = (
+    e,
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      navigate(`/${lang || "ms"}/carian-sekolah`);
+    }
+  };
+
   return (
     <Hero
       title="Selamat Datang Ke Portal Sekolahku"
@@ -43,6 +52,7 @@ export default function HomeHero() {
           query={query}
           setQuery={setQuery}
           handleValueChange={handleValueChange}
+          handleSearchEnter={handleSearchEnter}
           suggestions={localSuggestions}
           getKey={(item) => item.kodSekolah ?? ""}
           getLabel={(item) => item.namaSekolah}

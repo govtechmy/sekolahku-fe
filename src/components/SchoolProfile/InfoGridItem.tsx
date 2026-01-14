@@ -7,7 +7,11 @@ interface InfoGridItemProps {
 
 export const InfoGridItem = ({ label, value }: InfoGridItemProps) => {
   return (
-    <div className=" gap-0.5">
+    <div
+      className="gap-0.5 focus:outline-primary-200"
+      tabIndex={0}
+      aria-label={`${label}: ${value}`}
+    >
       <div className="py-8 px-2.5 rounded-xl shadow text-center">
         <div className="text-txt-primary uppercase pb-2">{label}</div>
         {typeof value === "string" ? (

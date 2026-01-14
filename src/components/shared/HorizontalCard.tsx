@@ -65,7 +65,7 @@ export default function HorizontalCard({
       <div
         ref={scrollRef}
         className={`
-          w-full
+          w-full p-1
 
           ${
             isMobileGrid
