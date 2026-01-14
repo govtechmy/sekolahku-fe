@@ -128,52 +128,67 @@ export default function SiaranId() {
                         attachment.url &&
                         attachment.mimeType && (
                           <div
+                            tabIndex={0}
+                            role="button"
+                            aria-label={attachment.filename}
                             className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
                             onClick={
                               hasValidUrl
                                 ? () =>
-                                    downloadFile(
-                                      attachment.url,
-                                      attachment.filename,
-                                    )
+                                  downloadFile(
+                                    attachment.url,
+                                    attachment.filename,
+                                  )
+                                : undefined
+                            }
+                            onKeyDown={
+                              hasValidUrl
+                                ? (e) => {
+                                    if (e.key === "Enter" || e.key === " ") {
+                                      e.preventDefault();
+                                      downloadFile(attachment.url, attachment.filename);
+                                    }
+                                  }
                                 : undefined
                             }
                           >
-                            <div className="flex items-center gap-2 overflow-hidden">
-                              {getIcon(
-                                attachment.mimeType.split("/")[1],
-                                attachment.url,
-                              )}
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        {getIcon(
+                          attachment.mimeType.split("/")[1],
+                          attachment.url,
+                        )}
 
-                              <div className="text-start overflow-hidden">
-                                <div className="flex items-center">
-                                  <div className="max-w-[95px] truncate">
-                                    {attachment.filename.includes(".")
-                                      ? attachment.filename.slice(
-                                          0,
-                                          attachment.filename.lastIndexOf("."),
-                                        )
-                                      : attachment.filename}
-                                  </div>
-                                  <div className="flex-shrink-0">
-                                    .{attachment.mimeType.split("/")[1]}
-                                  </div>
-                                </div>
-                                <div className="text-txt-black-500 text-body-xs font-normal">
-                                  {formatFileSize(attachment.filesize)}
-                                </div>
-                              </div>
+                        <div className="text-start overflow-hidden">
+                          <div className="flex items-center">
+                            <div className="max-w-[95px] truncate">
+                              {attachment.filename.includes(".")
+                                ? attachment.filename.slice(
+                                  0,
+                                  attachment.filename.lastIndexOf("."),
+                                )
+                                : attachment.filename}
+                            </div>
+                            <div className="flex-shrink-0">
+                              .{attachment.mimeType.split("/")[1]}
                             </div>
                           </div>
-                        )}
+                          <div className="text-txt-black-500 text-body-xs font-normal">
+                            {formatFileSize(attachment.filesize)}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  );
+                  )
+                }
+                    </div>
+              );
                 })}
-              </div>
             </div>
-          )}
-        </div>
+            </div>
       )}
     </div>
+  )
+}
+    </div >
   );
 }
