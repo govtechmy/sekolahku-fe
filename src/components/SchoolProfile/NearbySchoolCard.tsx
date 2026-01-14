@@ -24,14 +24,26 @@ export const NearbySchoolCard = ({
   return (
     <div
       key={school.kodSekolah}
-      className="bg-bg-white rounded-2xl shadow overflow-hidden border outline-otl-divider cursor-pointer hover:shadow-lg transition-shadow"
+      className="bg-bg-white rounded-2xl shadow overflow-hidden border outline-otl-divider cursor-pointer hover:shadow-lg transition-shadow focus:outline-primary-200"
       onClick={() => handleNearbySchoolClick(school.kodSekolah)}
+      role="button"
+      onKeyPress={(e) => {
+        if (e.key === "Enter") {
+          handleNearbySchoolClick(school.kodSekolah);
+        }
+      }}
+      tabIndex={0}
+      aria-label={`Sekolah Berdekatan`}
     >
       <div className="flex justify-center items-center h-40 border-b border-otl-gray-200">
         <img
           src={url || "/utama/nearby-school-default.png"}
           alt={`${school.namaSekolah}`}
-          className="h-full w-fit object-cover py-2"
+          className={
+            url
+              ? "h-full w-fit object-contain py-2"
+              : "h-full w-fit object-cover"
+          }
           onError={handleImageError}
         />
       </div>

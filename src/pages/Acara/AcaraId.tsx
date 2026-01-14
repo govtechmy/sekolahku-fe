@@ -123,7 +123,10 @@ export default function AcaraId() {
                         attachment.url &&
                         attachment.mimeType && (
                           <div
-                            className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
+                            tabIndex={0}
+                            role="button"
+                            aria-label={attachment.filename}
+                            className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
                             onClick={
                               hasValidUrl
                                 ? () =>
@@ -131,6 +134,19 @@ export default function AcaraId() {
                                       attachment.url,
                                       attachment.filename,
                                     )
+                                : undefined
+                            }
+                            onKeyDown={
+                              hasValidUrl
+                                ? (e) => {
+                                    if (e.key === "Enter" || e.key === " ") {
+                                      e.preventDefault();
+                                      downloadFile(
+                                        attachment.url,
+                                        attachment.filename,
+                                      );
+                                    }
+                                  }
                                 : undefined
                             }
                           >

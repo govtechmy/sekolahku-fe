@@ -21,6 +21,7 @@ import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import { useMapViewStore } from "../../store/mapView";
 import { NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
+import { useLocationSessionStore } from "../../store/locationSession";
 
 export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const {
@@ -40,7 +41,8 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const debounceTimerRef = useRef<number | null>(null);
   const setCenter = useMapViewStore((s) => s.setCenter);
   const setZoom = useMapViewStore((s) => s.setZoom);
-  const initialLocationUser = useMapViewStore((s) => s.initialLocationUser);
+  const { initialLocationUser } = useLocationSessionStore();
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Use predefined lists instead of extracting from markers
@@ -117,6 +119,34 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
       }
     };
   }, []);
+
+  // Trigger search when query is set
+  useEffect(() => {
+    if (query.trim().length >= 3) {
+      setIsExpanded(true);
+      handleSearch({
+        namaSekolah: query,
+        negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+        jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+      }).then(() => {
+        // After search completes, find exact match
+        if (localSuggestions.length > 0) {
+          const trimmedQuery = query.trim().toLowerCase();
+          const exactMatch = localSuggestions.find(
+            (school) => school.namaSekolah.toLowerCase() === trimmedQuery,
+          );
+
+          if (exactMatch) {
+            handleSelect(exactMatch);
+          } else {
+            // No exact match found, don't show school info window
+            setViewSchool(null);
+          }
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
 
   useEffect(() => {
     if (!initialLocationSet) return;
@@ -264,19 +294,24 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                         </span>
 
                         <span className="mt-1 flex items-center text-sm text-primary-600 gap-1">
-                          <MapIcon className="w-4 h-4" />
-                          {(() => {
-                            const distanceInMeters = calculateDistance(
-                              initialLocationUser[0],
-                              initialLocationUser[1],
-                              school.koordinatYY,
-                              school.koordinatXX,
-                            );
-                            if (distanceInMeters > 1000) {
-                              return `${(distanceInMeters / 1000).toFixed(2)} km dari lokasi anda`;
-                            }
-                            return `${distanceInMeters.toFixed(2)} meter dari lokasi anda`;
-                          })()}
+                          {initialLocationUser?.[0] &&
+                            initialLocationUser?.[1] && (
+                              <>
+                                <MapIcon className="w-4 h-4" />
+                                {(() => {
+                                  const distanceInMeters = calculateDistance(
+                                    initialLocationUser[0],
+                                    initialLocationUser[1],
+                                    school.koordinatYY,
+                                    school.koordinatXX,
+                                  );
+                                  if (distanceInMeters > 1000) {
+                                    return `${(distanceInMeters / 1000).toFixed(2)} km dari lokasi anda`;
+                                  }
+                                  return `${distanceInMeters.toFixed(2)} meter dari lokasi anda`;
+                                })()}
+                              </>
+                            )}
                         </span>
                       </div>
 
@@ -318,7 +353,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
               isFullScreen ? "top-[30vh] max-h-screen" : "max-h-[40vh]",
             )}
           >
-            <div className="overflow-y-auto flex-1">
+            <div className="overflow-y-auto flex-1 overscroll-none">
               <SchoolInfoWindow
                 school={viewSchool}
                 setSelected={() => {

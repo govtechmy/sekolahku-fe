@@ -18,16 +18,13 @@ import { getMapParlimenCenteroid } from "../../services/map.svc";
 import { toTitleCase } from "../../utils/titleCaseConverter";
 import { Spinner } from "@govtechmy/myds-react/spinner";
 import { clx } from "@govtechmy/myds-react/utils";
-
-interface LocationPickerWindowProps {
-  onClose: () => void;
-}
+import { useLocationSessionStore } from "../../store/locationSession";
 
 type ParlimenCenteroidProps = {
   [district: string]: [number, number];
 };
 
-export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
+export function LocationPickerWindow() {
   // cache using useRef for negeri based data
   const negeriDistrictCache = useRef<{
     [state: string]: ParlimenCenteroidProps[];
@@ -36,9 +33,11 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
     setCenter,
     setZoom,
     setInitialLocationSet,
-    setInitialLocationUser,
+
     setUserMarkers,
   } = useMapViewStore();
+
+  const { setInitialLocationUser } = useLocationSessionStore();
   const [currentView, setCurrentView] = useState<"states" | "districts">(
     "states",
   );
@@ -100,8 +99,6 @@ export function LocationPickerWindow({ onClose }: LocationPickerWindowProps) {
         return next;
       });
       setZoom(14);
-
-      onClose();
       setInitialLocationSet(true);
     }
   };
