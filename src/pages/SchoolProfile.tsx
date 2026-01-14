@@ -226,10 +226,13 @@ export default function SchoolProfile() {
           <PageContainer>
             <div className="py-[84px] px-[109px] max-md:px-[28px] max-md:py-[48px]">
               <div className="text-heading-sm text-txt-black-900 font-semibold pb-12 ">
-                <div className="focus:outline-primary-200" tabIndex={0} aria-label={`Sekolah Berdekatan`}>
+                <div
+                  className="focus:outline-primary-200"
+                  tabIndex={0}
+                  aria-label={`Sekolah Berdekatan`}
+                >
                   Sekolah Berdekatan
                 </div>
-                
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {nearbySchools.map((school) => (

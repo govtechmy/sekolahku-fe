@@ -28,11 +28,11 @@ export const NearbySchoolCard = ({
       onClick={() => handleNearbySchoolClick(school.kodSekolah)}
       role="button"
       onKeyPress={(e) => {
-        if (e.key === 'Enter') {
+        if (e.key === "Enter") {
           handleNearbySchoolClick(school.kodSekolah);
         }
       }}
-      tabIndex={0} 
+      tabIndex={0}
       aria-label={`Sekolah Berdekatan`}
     >
       <div className="flex justify-center items-center h-40 border-b border-otl-gray-200">

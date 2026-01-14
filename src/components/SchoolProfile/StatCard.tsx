@@ -11,7 +11,7 @@ interface StatCardProps {
  */
 export const StatCard = ({ icon, label, value }: StatCardProps) => {
   return (
-    <div 
+    <div
       className="gap-0.5 mt-0 focus:outline-primary-200"
       tabIndex={0}
       aria-label={`${label}: ${value}`}
