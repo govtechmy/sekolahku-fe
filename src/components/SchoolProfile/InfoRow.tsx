@@ -14,7 +14,7 @@ export const InfoRow = ({ icon, text }: InfoRowProps) => {
   return (
     <div className="flex items-center gap-1.5 self-stretch pb-4">
       <div className="text-txt-primary">{icon}</div>
-      <div className="text-txt-black-500 text-body-lg font-medium">{text}</div>
+      <div className="text-txt-black-500 text-body-lg font-medium focus:outline-primary-200" tabIndex={0} aria-label={`${text}`}>{text} </div>
     </div>
   );
 };
