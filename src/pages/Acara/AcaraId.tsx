@@ -130,20 +130,23 @@ export default function AcaraId() {
                             onClick={
                               hasValidUrl
                                 ? () =>
-                                  downloadFile(
-                                    attachment.url,
-                                    attachment.filename,
-                                  )
+                                    downloadFile(
+                                      attachment.url,
+                                      attachment.filename,
+                                    )
                                 : undefined
                             }
                             onKeyDown={
                               hasValidUrl
                                 ? (e) => {
-                                  if (e.key === "Enter" || e.key === " ") {
-                                    e.preventDefault();
-                                    downloadFile(attachment.url, attachment.filename);
+                                    if (e.key === "Enter" || e.key === " ") {
+                                      e.preventDefault();
+                                      downloadFile(
+                                        attachment.url,
+                                        attachment.filename,
+                                      );
+                                    }
                                   }
-                                }
                                 : undefined
                             }
                           >
@@ -158,9 +161,9 @@ export default function AcaraId() {
                                   <div className="max-w-[95px] truncate">
                                     {attachment.filename.includes(".")
                                       ? attachment.filename.slice(
-                                        0,
-                                        attachment.filename.lastIndexOf("."),
-                                      )
+                                          0,
+                                          attachment.filename.lastIndexOf("."),
+                                        )
                                       : attachment.filename}
                                   </div>
                                   <div className="flex-shrink-0">

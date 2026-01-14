@@ -135,10 +135,10 @@ export default function SiaranId() {
                             onClick={
                               hasValidUrl
                                 ? () =>
-                                  downloadFile(
-                                    attachment.url,
-                                    attachment.filename,
-                                  )
+                                    downloadFile(
+                                      attachment.url,
+                                      attachment.filename,
+                                    )
                                 : undefined
                             }
                             onKeyDown={
@@ -146,49 +146,50 @@ export default function SiaranId() {
                                 ? (e) => {
                                     if (e.key === "Enter" || e.key === " ") {
                                       e.preventDefault();
-                                      downloadFile(attachment.url, attachment.filename);
+                                      downloadFile(
+                                        attachment.url,
+                                        attachment.filename,
+                                      );
                                     }
                                   }
                                 : undefined
                             }
                           >
-                      <div className="flex items-center gap-2 overflow-hidden">
-                        {getIcon(
-                          attachment.mimeType.split("/")[1],
-                          attachment.url,
-                        )}
+                            <div className="flex items-center gap-2 overflow-hidden">
+                              {getIcon(
+                                attachment.mimeType.split("/")[1],
+                                attachment.url,
+                              )}
 
-                        <div className="text-start overflow-hidden">
-                          <div className="flex items-center">
-                            <div className="max-w-[95px] truncate">
-                              {attachment.filename.includes(".")
-                                ? attachment.filename.slice(
-                                  0,
-                                  attachment.filename.lastIndexOf("."),
-                                )
-                                : attachment.filename}
-                            </div>
-                            <div className="flex-shrink-0">
-                              .{attachment.mimeType.split("/")[1]}
+                              <div className="text-start overflow-hidden">
+                                <div className="flex items-center">
+                                  <div className="max-w-[95px] truncate">
+                                    {attachment.filename.includes(".")
+                                      ? attachment.filename.slice(
+                                          0,
+                                          attachment.filename.lastIndexOf("."),
+                                        )
+                                      : attachment.filename}
+                                  </div>
+                                  <div className="flex-shrink-0">
+                                    .{attachment.mimeType.split("/")[1]}
+                                  </div>
+                                </div>
+                                <div className="text-txt-black-500 text-body-xs font-normal">
+                                  {formatFileSize(attachment.filesize)}
+                                </div>
+                              </div>
                             </div>
                           </div>
-                          <div className="text-txt-black-500 text-body-xs font-normal">
-                            {formatFileSize(attachment.filesize)}
-                          </div>
-                        </div>
-                      </div>
+                        )}
                     </div>
-                  )
-                }
-                    </div>
-              );
+                  );
                 })}
+              </div>
             </div>
-            </div>
+          )}
+        </div>
       )}
     </div>
-  )
-}
-    </div >
   );
 }
