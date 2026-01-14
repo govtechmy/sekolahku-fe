@@ -24,25 +24,28 @@ export const NearbySchoolCard = ({
   return (
     <div
       key={school.kodSekolah}
-      className="bg-bg-white rounded-2xl shadow overflow-hidden border outline-otl-divider cursor-pointer hover:shadow-lg transition-shadow"
+      className="bg-bg-white rounded-2xl shadow overflow-hidden border outline-otl-divider cursor-pointer hover:shadow-lg transition-shadow focus:outline-primary-200"
       onClick={() => handleNearbySchoolClick(school.kodSekolah)}
+      role="button"
+      onKeyPress={(e) => {
+        if (e.key === "Enter") {
+          handleNearbySchoolClick(school.kodSekolah);
+        }
+      }}
+      tabIndex={0}
+      aria-label={`Sekolah Berdekatan`}
     >
       <div className="flex justify-center items-center h-40 border-b border-otl-gray-200">
-        {!url && (
-          <img
-            src={"/utama/nearby-school-default.png"}
-            alt={`${school.namaSekolah}`}
-            className="h-full w-fit object-cover"
-            onError={handleImageError}
-          />
-        )}
-        {url && (
-          <img
-            src={url}
-            alt={`${school.namaSekolah}`}
-            className="h-full w-fit object-contain py-2"
-          />
-        )}
+        <img
+          src={url || "/utama/nearby-school-default.png"}
+          alt={`${school.namaSekolah}`}
+          className={
+            url
+              ? "h-full w-fit object-contain py-2"
+              : "h-full w-fit object-cover"
+          }
+          onError={handleImageError}
+        />
       </div>
       <div className="p-4.5 flex flex-col gap-2">
         <h3 className="text-txt-black-900 font-medium">
