@@ -84,7 +84,7 @@ export const getSchoolS3Json = async (
   try {
     if (!dataUrl) {
       if (negeri && parlimen && kodSekolah) {
-        dataUrl = `https://sekolahku-data.govtechmy.xyz/${negeri}/${parlimen}/${kodSekolah}/${kodSekolah}.json`;
+        dataUrl = `${DATA_BASE_URL}/${negeri}/${parlimen}/${kodSekolah}/${kodSekolah}.json`;
       } else {
         throw new Error("Insufficient parameters to construct S3 URL");
       }
