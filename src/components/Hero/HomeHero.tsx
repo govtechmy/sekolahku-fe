@@ -68,7 +68,7 @@ export default function HomeHero() {
       background={
         <>
           <div className="block lg:hidden h-full w-full bg-[url('/utama/home-hero-mobile.svg')] bg-cover bg-center bg-no-repeat" />
-          <div className="hidden lg:block h-full w-full bg-[url('/utama/sekolahku.png')] bg-cover bg-center bg-no-repeat" />{" "}
+          <div className="hidden lg:block h-full w-full bg-[url('/utama/sekolahku.png')] bg-cover bg-center bg-no-repeat" />
         </>
       }
     />
