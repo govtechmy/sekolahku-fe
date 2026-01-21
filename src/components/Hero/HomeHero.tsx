@@ -47,7 +47,6 @@ export default function HomeHero() {
   return (
     <Hero
       title="Selamat Datang Ke Portal Sekolahku"
-      variant="full"
       search={
         <SearchBar
           query={query}
