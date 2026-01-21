@@ -47,28 +47,28 @@ export default function HomeHero() {
   return (
     <Hero
       title="Selamat Datang Ke Portal Sekolahku"
+      variant="full"
       search={
-        <SearchBar
-          query={query}
-          setQuery={setQuery}
-          handleValueChange={handleValueChange}
-          handleSearchEnter={handleSearchEnter}
-          suggestions={localSuggestions}
-          getKey={(item) => item.kodSekolah ?? ""}
-          getLabel={(item) => item.namaSekolah}
-          onSelect={(item) => {
-            setQuery(item.namaSekolah ?? "");
-            navigate(`/${lang || "ms"}/carian-sekolah`);
-          }}
-        />
-      }
-      links={[{ label: "Pautan Pantas", link: "#pautan" }]}
-      HeroclassName="bg-gradient-to-b from-[#E6F0FF] via-[#F2F7FF] to-[#FFFFFF]"
-      background={
-        <>
-          <div className="block lg:hidden h-full w-full bg-[url('/utama/home-hero-mobile.svg')] bg-cover bg-center bg-no-repeat" />
-          <div className="hidden lg:block h-full w-full bg-[url('/utama/sekolahku.png')] bg-cover bg-center bg-no-repeat" />
-        </>
+          <SearchBar
+            query={query}
+            setQuery={setQuery}
+            handleValueChange={handleValueChange}
+            handleSearchEnter={handleSearchEnter}
+            suggestions={localSuggestions}
+            getKey={(item) => item.kodSekolah ?? ""}
+            getLabel={(item) => item.namaSekolah}
+            onSelect={(item) => {
+              setQuery(item.namaSekolah ?? "");
+              navigate(`/${lang || "ms"}/carian-sekolah`);
+            }}
+          />
+        }
+        links={[{ label: "Pautan Pantas", link: "#pautan" }]}
+        HeroclassName="bg-gradient-to-b from-[#E6F0FF] via-[#F2F7FF] to-[#FFFFFF]"
+        background={
+          <>
+            <div className="block lg:hidden h-full w-full bg-[url('/utama/home-hero-mobile.svg')] bg-cover bg-center bg-no-repeat" />
+            <div className="hidden lg:block h-full w-full bg-[url('/utama/sekolahku.png')] bg-cover bg-center bg-no-repeat" />        </>
       }
     />
   );

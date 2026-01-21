@@ -90,7 +90,7 @@ export default function Hero({
       ) : null}
       <div
         className={clx(
-          "w-full h-full flex p-6 justify-center items-center ",
+          "w-full h-full flex px-[18px] py-6 sm:px-[18px] md:p-6 justify-center items-center ",
           variant === "side"
             ? "md:max-w-[1328px] lg:px-[74px] mx-auto flex-1 lg:justify-start"
             : "",
