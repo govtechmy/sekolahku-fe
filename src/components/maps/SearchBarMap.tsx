@@ -240,8 +240,8 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
               <SearchBarInputContainer
                 className={clx(
                   isExpanded
-                    ? "border-none shadow-[none] !px-0 min-w-[150px]"
-                    : "w-full min-w-[150px]",
+                    ? "border-none shadow-[none] !px-0"
+                    : "w-full",
                 )}
               >
                 <SearchBarInput
@@ -252,7 +252,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                   // readOnly={!isExpanded}
                   className={clx(isExpanded ? "pl-0" : "")}
                 />
-                {(!query || query.trim().length === 0) && (
+                {(!query || query.trim().length === 0) && !isExpanded && (
                   <SearchBarHint className="">
                     Tekan <Pill size="small">/</Pill> untuk cari
                   </SearchBarHint>
