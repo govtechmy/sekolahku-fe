@@ -100,7 +100,7 @@ export default function HomePage() {
         {dataItemCalendar && (
           <SectionHeader
             header="KALENDAR"
-            ButtonLabel="Semua Acara"
+            ButtonLabel="Semua Takwim"
             ButtonClickHandler={() => navigate(`/${lang}/acara`)}
             children={
               <SectionItemCalendar
@@ -125,7 +125,7 @@ export default function HomePage() {
           {/* design loading for this, hardcoded atm  */}
           <SectionHeader
             header="PAUTAN PINTAS"
-            title="Pautan bagi guru, pelajar dan ibu bapa"
+            title=""
             children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
             isLastSection={true}
           />
