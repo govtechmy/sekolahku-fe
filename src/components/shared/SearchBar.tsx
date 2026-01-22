@@ -65,7 +65,7 @@ export default function SearchBarHome<T>({
       <SearchBarInputContainer>
         <SearchBarInput
           ref={inputRef}
-          placeholder="Carian sekolah"
+          placeholder="Carian"
           value={query}
           onValueChange={handleValueChange}
           onKeyDown={handleSearchEnter}

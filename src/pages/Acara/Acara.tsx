@@ -92,7 +92,7 @@ export default function Acara() {
   return (
     <>
       <Hero
-        title="Acara Sekolahku"
+        title="Takwim Sekolahku"
         variant="full"
         search={
           <SearchBarMain
