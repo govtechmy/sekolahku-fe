@@ -236,9 +236,13 @@ export default function SchoolProfile() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {nearbySchools.map((school, index) => (
-                  <div 
+                  <div
                     key={school.kodSekolah}
-                    className={nearbySchools.length === 3 && index === 2 ? 'md:col-span-2 md:justify-self-center xl:col-span-1' : ''}
+                    className={
+                      nearbySchools.length === 3 && index === 2
+                        ? "md:col-span-2 md:justify-self-center xl:col-span-1"
+                        : ""
+                    }
                   >
                     <NearbySchoolCard
                       school={school}
