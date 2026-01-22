@@ -34,7 +34,7 @@ export default function SchoolProfileHero({
             <BgSchoolProfileNoLogo className="absolute right-0 top-0 h-full" />
           )}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-full max-w-[1280px] px-6 lg:px-[109px] py-[50px] md:py-[50px] max-md:py-4 mx-auto">
+            <div className="w-full max-w-[1280px] px-[65px] py-[50px] md:py-[50px] max-md:py-4 max-md:px-[28px] mx-auto">
               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between w-full">
                 <div className="max-w-xl pt-10 md:pt-0 text-center md:text-left">
                   <div className="text-txt-primary font-semibold gap-6 pb-6">
