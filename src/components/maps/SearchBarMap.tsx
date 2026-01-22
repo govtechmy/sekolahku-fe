@@ -220,7 +220,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
           <div
             className={clx(
               "flex items-center gap-2 ",
-              isExpanded ? "py-[16px] px-4" : "",
+              isExpanded ? "py-[16px] px-4 w-[360px]" : "",
             )}
           >
             {isExpanded && (
@@ -250,7 +250,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                   // readOnly={!isExpanded}
                   className={clx(isExpanded ? "pl-0" : "")}
                 />
-                {(!query || query.trim().length === 0) && !isExpanded && (
+                {(!query || query.trim().length === 0) && (
                   <SearchBarHint className="">
                     Tekan <Pill size="small">/</Pill> untuk cari
                   </SearchBarHint>
