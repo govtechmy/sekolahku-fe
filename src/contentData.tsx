@@ -69,20 +69,20 @@ export const NEGERI_LIST = [
 
 //fetch backend when available later
 export const dataItemLinks = [
+  // {
+  //   icon: <JataNegaraIcon />,
+  //   name: "SAPS NKRA",
+  //   link: "https://sapsnkra.moe.gov.my/",
+  // },
   {
     icon: <JataNegaraIcon />,
-    name: "SAPS NKRA",
-    link: "https://sapsnkra.moe.gov.my/",
-  },
-  {
-    icon: <JataNegaraIcon />,
-    name: "APDM",
-    link: "https://splkpm.moe.gov.my/",
+    name: "IDME",
+    link: "https://idme.moe.gov.my/",
   },
   {
     icon: <JataNegaraIcon />,
     name: "e-Operasi",
-    link: "https://eoperasii.my/",
+    link: "https://eoperasi.moe.gov.my/",
   },
   {
     icon: <JataNegaraIcon />,
@@ -92,7 +92,7 @@ export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
     name: "SPL-KPM",
-    link: "https://eoperasi.moe.gov.my/",
+    link: "https://splkpm.moe.gov.my/",
   },
   {
     icon: <JataNegaraIcon />,
@@ -102,6 +102,6 @@ export const dataItemLinks = [
   {
     icon: <JataNegaraIcon />,
     name: "DELIMa",
-    link: "https://delima.moe-dl.edu.my/",
+    link: "https://d2.delima.edu.my/",
   },
 ];

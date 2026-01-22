@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
 import type { SiaranItem } from "../../models/response";
-import CategoryLabel from "./CategoryLabel";
+// import CategoryLabel from "./CategoryLabel";
 import { formatDate } from "../../utils/dateFormatter";
 
 type SectionItemNewsProps = {
@@ -41,7 +41,7 @@ export default function SectionItemNews({
               />
 
               <div className="flex flex-col gap-2 px-3 flex-grow">
-                <CategoryLabel categoryName={item.categoryInfo.name} />
+                {/* <CategoryLabel categoryName={item.categoryInfo.name} /> */}
 
                 <div className="font-heading text-body-lg font-semibold truncate-2-lines">
                   {item.title}

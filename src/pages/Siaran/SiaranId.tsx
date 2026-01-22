@@ -105,10 +105,10 @@ export default function SiaranId() {
                 className="w-fit max-h-[415px] object-contain rounded-lg"
               />
             </div>
-            <span className="text-txt-black-500 text-center font-body font-normal text-body-sm md:px-10">
+            {/* <span className="text-txt-black-500 text-center font-body font-normal text-body-sm md:px-10">
               Image from{" "}
               <span className="italic">{contents.imageHero.url}</span>
-            </span>
+            </span> */}
           </div>
           <div className="text-xl text-justify font-normal md:px-10">
             <RichText
