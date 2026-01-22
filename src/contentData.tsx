@@ -89,11 +89,11 @@ export const dataItemLinks = [
     name: "e-GTukar",
     link: "https://epgo.moe.gov.my/menu/maklumat_perlu.cfm",
   },
-  {
-    icon: <JataNegaraIcon />,
-    name: "SPL-KPM",
-    link: "https://splkpm.moe.gov.my/",
-  },
+  // {
+  //   icon: <JataNegaraIcon />,
+  //   name: "SPL-KPM",
+  //   link: "https://splkpm.moe.gov.my/",
+  // },
   {
     icon: <JataNegaraIcon />,
     name: "EMIS",
