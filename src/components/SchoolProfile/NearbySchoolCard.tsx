@@ -47,11 +47,11 @@ export const NearbySchoolCard = ({
           onError={handleImageError}
         />
       </div>
-      <div className="p-4.5 flex flex-col gap-2 h-fit">
+      <div className="p-4.5 flex flex-col gap-2">
         <h3 className="text-txt-black-900 font-medium">
           {caseConverter(school.namaSekolah)}
         </h3>
-        <p className="text-txt-black-500 text-sm min-h-12">
+        <p className="text-txt-black-500 text-sm min-h-12 line-clamp-2">
           {caseConverter(underScoreRemover(formatSchoolAddress(school)))}
         </p>
       </div>
