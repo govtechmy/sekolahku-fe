@@ -43,7 +43,7 @@ export default function SectionItemNews({
               <div className="flex flex-col gap-2 px-3 flex-grow">
                 {/* <CategoryLabel categoryName={item.categoryInfo.name} /> */}
 
-                <div className="font-heading text-body-lg font-semibold truncate-2-lines">
+                <div className="font-heading text-justify text-body-lg font-semibold truncate-2-lines line-clamp-2 md:line-clamp-4">
                   {item.title}
                 </div>
               </div>

@@ -7,17 +7,19 @@ type SectionHeaderProps = {
   children: React.ReactNode;
   ButtonLabel?: string;
   ButtonClickHandler?: () => void;
+  isLastSection?: boolean;
 };
 
 export default function SectionHeader({
   header,
   title,
   children,
-  ButtonLabel,
+  ButtonLabel,  
   ButtonClickHandler,
+  isLastSection
 }: SectionHeaderProps) {
   return (
-    <div className="flex flex-col pb-16 px-4 lg:px-[50px]">
+    <div className={`flex flex-col ${isLastSection ? "" : "pb-16"} px-4 lg:px-[50px]`}>
       <div className="flex flex-col gap-4">
         <div className="text-txt-primary font-body font-semibold text-sm tracking-[2.8px]">
           {header}
@@ -29,16 +31,16 @@ export default function SectionHeader({
         )}
       </div>
       {children}
-      <div className="pt-12">
-        {ButtonLabel && (
+      {ButtonLabel && (
+        <div className="pt-12">
           <Button variant={"default-outline"} onClick={ButtonClickHandler}>
             {ButtonLabel}
             <ButtonIcon>
               <ArrowForwardIcon />
             </ButtonIcon>
           </Button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

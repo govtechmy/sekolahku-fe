@@ -1,4 +1,4 @@
-// import { clx } from "@govtechmy/myds-react/utils";
+import { clx } from "@govtechmy/myds-react/utils";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
 import type { ReactNode } from "react";
@@ -32,7 +32,6 @@ function HorizontalCardPagination({
   handlePageChange,
 }: HorizontalCardPaginationItemProps) {
   const totalPages = Math.ceil(totalRecords / pageSize);
-
   if (totalPages <= 1) return null;
 
   return (
@@ -65,7 +64,7 @@ interface HorizontalCardItemProps {
 function HorizontalCardItem({
   item,
   className = "",
-  // classNameHeader = "",
+  classNameHeader = "",
   onClick,
 }: HorizontalCardItemProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -94,7 +93,7 @@ function HorizontalCardItem({
       />
 
       <div className="flex flex-col gap-1.5 md:gap-2 px-2 md:px-3 min-h-[116px]">
-        {/* <p
+        <p
           className={clx(
             "text-xs md:text-sm font-semibold flex-shrink-0",
             classNameHeader,
@@ -102,7 +101,7 @@ function HorizontalCardItem({
           style={item.headerColor ? { color: item.headerColor } : undefined}
         >
           {item.header}
-        </p> */}
+        </p>
 
         <p className="text-sm md:text-body-lg font-semibold text-justify text-txt-black-900 line-clamp-2 md:line-clamp-3">
           {item.title}

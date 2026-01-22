@@ -135,7 +135,7 @@ export default function Siaran() {
                     item={{
                       imageSrc: item.imageHero?.url,
                       imageAlt: item.imageHero?.alt,
-                      header: item.categoryInfo?.name,
+                      header: "", //item.categoryInfo?.name,
                       headerColor: item.categoryInfo?.colors,
                       date: formatDate(item.articleDate),
                       title: item.title,

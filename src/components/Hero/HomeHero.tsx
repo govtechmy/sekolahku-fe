@@ -62,7 +62,7 @@ export default function HomeHero() {
           }}
         />
       }
-      links={[{ label: "Pautan PINTAS", link: "#pautan" }]}
+      links={[{ label: "Pautan Pintas", link: "#pautan" }]}
       HeroclassName="bg-gradient-to-b from-[#E6F0FF] via-[#F2F7FF] to-[#FFFFFF]"
       background={
         <>

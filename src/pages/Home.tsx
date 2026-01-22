@@ -127,6 +127,7 @@ export default function HomePage() {
             header="PAUTAN PINTAS"
             title="Pautan bagi guru, pelajar dan ibu bapa"
             children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
+            isLastSection={true}
           />
         </div>
 
