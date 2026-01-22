@@ -239,9 +239,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
             <SearchBar size="large" className="w-full">
               <SearchBarInputContainer
                 className={clx(
-                  isExpanded
-                    ? "border-none shadow-[none] !px-0"
-                    : "w-full",
+                  isExpanded ? "border-none shadow-[none] !px-0" : "w-full",
                 )}
               >
                 <SearchBarInput
