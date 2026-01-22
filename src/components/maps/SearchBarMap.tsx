@@ -220,7 +220,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
           <div
             className={clx(
               "flex items-center gap-2 ",
-              isExpanded ? "py-[16px] px-4" : "",
+              isExpanded ? "py-[16px] px-4 w-[360px]" : "",
             )}
           >
             {isExpanded && (
