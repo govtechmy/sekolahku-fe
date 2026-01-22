@@ -39,7 +39,7 @@ export default function SectionItemAnalytics({
             className="flex items-center gap-6 px-6 py-8 border-otl-gray-200 border-b lg:border-r lg:border-b-0 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-[-2px]"
             tabIndex={0}
             role="button"
-            aria-label={`Pelajar Guru di Malaysia: ${analytics?.jumlahGuru?.toLocaleString() || "0"}`}
+            aria-label={`Jumlah Guru di Malaysia: ${analytics?.jumlahGuru?.toLocaleString() || "0"}`}
           >
             <div className="p-4 rounded-full bg-bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
               <BookIcon className="w-8 h-8" />
@@ -49,7 +49,7 @@ export default function SectionItemAnalytics({
                 {analytics?.jumlahGuru.toLocaleString()}
               </div>
               <div className="text-txt-black-700 font-body text-body-md font-semibold">
-                Pelajar Guru di Malaysia
+                Jumlah Guru di Malaysia
               </div>
             </div>
           </div>
