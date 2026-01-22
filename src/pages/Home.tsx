@@ -105,7 +105,7 @@ export default function HomePage() {
             children={
               <SectionItemCalendar
                 dataItemCalendar={dataItemCalendar}
-                mainTitle="Majlis yang bakal disambut tahun ini"
+                mainTitle="Yang bakal disambut tahun ini"
                 lang={lang}
               />
             }
@@ -124,9 +124,10 @@ export default function HomePage() {
         <div id="pautan">
           {/* design loading for this, hardcoded atm  */}
           <SectionHeader
-            header="PAUTAN PANTAS"
-            title="Pautan Popular bagi guru, pelajar dan ibu bapa"
+            header="PAUTAN PINTAS"
+            title="Pautan bagi guru, pelajar dan ibu bapa"
             children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
+            isLastSection={true}
           />
         </div>
 

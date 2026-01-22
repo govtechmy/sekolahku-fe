@@ -132,7 +132,7 @@ export default function SchoolProfile() {
             </PageContainer>
           </div>
           <PageContainer>
-            <div className="pt-[84px] pb-[32px] px-[109px] max-md:pt-[48px] max-md:px-[28px]">
+            <div className="pt-[84px] pb-[32px] px-[65px] max-md:pt-[48px] max-md:px-[28px]">
               <div className="text-heading-sm text-txt-black-900 font-semibold pb-12">
                 <div
                   className=" focus:outline-primary-200"
@@ -224,7 +224,7 @@ export default function SchoolProfile() {
             </PageContainer>
           </div>
           <PageContainer>
-            <div className="py-[84px] px-[109px] max-md:px-[28px] max-md:py-[48px]">
+            <div className="py-[84px] px-[65px] max-md:px-[28px] max-md:py-[48px]">
               <div className="text-heading-sm text-txt-black-900 font-semibold pb-12 ">
                 <div
                   className="focus:outline-primary-200"
@@ -234,18 +234,26 @@ export default function SchoolProfile() {
                   Sekolah Berdekatan
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {nearbySchools.map((school) => (
-                  <NearbySchoolCard
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {nearbySchools.map((school, index) => (
+                  <div
                     key={school.kodSekolah}
-                    school={school}
-                    url={getSchoolLogoUrl(
-                      school.data.infoPentadbiran.negeri,
-                      school.data.infoPentadbiran.parlimen,
-                      school.kodSekolah,
-                    )}
-                    handleNearbySchoolClick={handleNearbySchoolClick}
-                  />
+                    className={
+                      nearbySchools.length === 3 && index === 2
+                        ? "md:col-span-2 md:justify-self-center xl:col-span-1"
+                        : ""
+                    }
+                  >
+                    <NearbySchoolCard
+                      school={school}
+                      url={getSchoolLogoUrl(
+                        school.data.infoPentadbiran.negeri,
+                        school.data.infoPentadbiran.parlimen,
+                        school.kodSekolah,
+                      )}
+                      handleNearbySchoolClick={handleNearbySchoolClick}
+                    />
+                  </div>
                 ))}
               </div>
             </div>

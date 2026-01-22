@@ -117,7 +117,7 @@ export default function Acara() {
           <DateRangePicker value={dateRange} onValueChange={setDateRange} />
         }
       />
-      <div className="mx-auto flex-1 px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
+      <div className="mx-auto flex-1 px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1280px] py-16 flex flex-col">
         <div className="flex flex-col gap-8">
           <div className="grid grid-cols-1 max-[400px]:grid-cols-1 max-sm:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {items?.map((item) => (

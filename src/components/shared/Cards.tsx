@@ -32,7 +32,6 @@ function HorizontalCardPagination({
   handlePageChange,
 }: HorizontalCardPaginationItemProps) {
   const totalPages = Math.ceil(totalRecords / pageSize);
-
   if (totalPages <= 1) return null;
 
   return (
@@ -104,7 +103,7 @@ function HorizontalCardItem({
           {item.header}
         </p>
 
-        <p className="text-sm md:text-body-lg font-semibold text-txt-black-900 line-clamp-2 md:line-clamp-3">
+        <p className="text-sm md:text-body-lg font-semibold text-justify text-txt-black-900 line-clamp-2 md:line-clamp-3">
           {item.title}
         </p>
       </div>

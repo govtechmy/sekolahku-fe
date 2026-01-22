@@ -122,7 +122,7 @@ export default function NavbarMyds() {
             onClick={handleNavItemClick}
             className="focus:outline-otl-primary-200"
           >
-            Acara
+            Takwim
           </Link>
         </NavbarMenuItem>
       </NavbarMenu>

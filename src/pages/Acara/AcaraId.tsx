@@ -49,7 +49,7 @@ export default function AcaraId() {
         <div className="flex flex-col gap-6 max-w-[825px]">
           <Breadcrumb className="md:px-10 print:hidden">
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/${lang}/acara`}>Acara</BreadcrumbLink>
+              <BreadcrumbLink href={`/${lang}/acara`}>Takwim</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -62,7 +62,7 @@ export default function AcaraId() {
                 "text-body-sm font-body font-semibold text-success-700",
               )}
             >
-              Acara
+              Takwim
             </span>
             <p className="text-2xl font-semibold font-body">{contents.title}</p>
 
@@ -100,10 +100,10 @@ export default function AcaraId() {
                 className="w-fit max-h-[415px] object-contain rounded-lg"
               />
             </div>
-            <span className="text-txt-black-500 text-center font-body font-normal text-sm">
+            {/* <span className="text-txt-black-500 text-center font-body font-normal text-sm">
               Image from{" "}
               <span className="italic">{contents.imageHero.url}</span>
-            </span>
+            </span> */}
           </div>
           <div className="text-xl text-justify font-normal md:px-10">
             <RichText

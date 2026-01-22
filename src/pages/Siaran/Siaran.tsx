@@ -108,7 +108,7 @@ export default function Siaran() {
         }
         background={
           <>
-            <div className="block lg:hidden h-full w-full bg-[url('/utama/siaran/hero-banner/mobile-sekolahku.svg')] bg-contain bg-center bg-no-repeat" />
+            <div className="block lg:hidden h-full w-full bg-[url('/utama/siaran/hero-banner/mobile-sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
             <div className="hidden lg:block h-full w-full bg-[url('/utama/siaran/hero-banner/large-sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
           </>
         }
@@ -116,7 +116,7 @@ export default function Siaran() {
           <DateRangePicker value={dateRange} onValueChange={setDateRange} />
         }
       />
-      <div className="mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
+      <div className="mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1280px] py-16 flex flex-col">
         <Card totalPages={totalRecord}>
           <div className="flex flex-col justify-center gap-8">
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
@@ -135,7 +135,7 @@ export default function Siaran() {
                     item={{
                       imageSrc: item.imageHero?.url,
                       imageAlt: item.imageHero?.alt,
-                      header: item.categoryInfo?.name,
+                      header: "", //item.categoryInfo?.name,
                       headerColor: item.categoryInfo?.colors,
                       date: formatDate(item.articleDate),
                       title: item.title,
