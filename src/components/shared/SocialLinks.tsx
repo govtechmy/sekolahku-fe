@@ -60,6 +60,7 @@ export default function SocialLinks({
 
   const handleClick = (platform: string, href: string) => {
     const isHyperlink = platform.toLowerCase().includes("hyperlink");
+    const currentUrl = window.location.href;
 
     // Use the browser's Web Share API when available (navigator)
     if (
@@ -84,8 +85,14 @@ export default function SocialLinks({
 
     if (!isHyperlink) {
       let encodedHref = href;
+    if (platform === "email") {
+      const separator = href.includes("?") ? "&" : "?";
+      encodedHref = `${href}${separator}body=${encodeURIComponent(
+          currentUrl,
+      )}`;
+    }
       if (platform === "facebook" || platform === "twitter") {
-        encodedHref = `${href}${encodeURIComponent(window.location.href)}`;
+        encodedHref = `${href}${encodeURIComponent(currentUrl)}`;
       }
 
       window.open(normalizeHref(encodedHref), "_blank", "noopener,noreferrer");
