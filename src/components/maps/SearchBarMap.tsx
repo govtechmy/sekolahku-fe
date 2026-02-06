@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, UIEvent } from "react";
+import { useState, useEffect, useRef, type UIEvent } from "react";
 import {
   ArrowBackIcon,
   ChevronRightIcon,
@@ -195,6 +195,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const loadMoreSuggestions = () => {
     if (isLoadingLocalSuggestions || !hasMoreLocalSuggestions) return;
 
+    // Keep lazy-loading consistent with search bar: only load more when query has at least 3 characters
     if (query.trim().length < 3) return;
 
     handleSearch(
@@ -210,7 +211,8 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
 
   const handleScroll = (event: UIEvent<HTMLDivElement>) => {
     const target = event.currentTarget;
-    const threshold = 50; // px before bottom to trigger load
+    // Distance (in px) from the bottom at which to trigger loading more results
+    const threshold = 50; 
 
     if (
       target.scrollTop + target.clientHeight >=

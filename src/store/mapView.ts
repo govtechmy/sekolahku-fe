@@ -5,8 +5,6 @@ import type { ItemSekolahModel } from "../models/response";
 import { getSchoolSuggestion } from "../services/school.svc";
 import type { GeoJSONFeature } from "../types/polygon";
 
-const SUGGESTION_PAGE_SIZE = 12;
-
 type Center = [number, number];
 
 interface MapViewState {
@@ -135,7 +133,8 @@ export const useMapViewStore = create<MapViewState>((set) => ({
         return {
           localSuggestions: newSuggestions,
           localSuggestionsPage: pageNumber,
-          hasMoreLocalSuggestions: transformed.length >= SUGGESTION_PAGE_SIZE,
+          //12 is page size returned from Backend. Atm not supported for changes.
+          hasMoreLocalSuggestions: transformed.length >= 12,
         };
       });
 
