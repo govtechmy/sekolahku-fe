@@ -48,7 +48,7 @@ interface MapViewState {
   clearStatePolygons: () => void;
 }
 
-export const useMapViewStore = create<MapViewState>((set) => ({
+export const useMapViewStore = create<MapViewState>((set, get) => ({
   initialLocationUser: [3.760115447396889, 108.46252441406251],
   center: [3.760115447396889, 108.46252441406251],
   zoom: 6,
@@ -106,6 +106,10 @@ export const useMapViewStore = create<MapViewState>((set) => ({
     });
   },
   handleSearch: async (params, pageNumber = 1, append = false) => {
+    // Prevent overlapping requests regardless of UI timing
+    if (get().isLoadingLocalSuggestions) {
+      return;
+    }
     try {
       set({ isLoadingLocalSuggestions: true });
 
