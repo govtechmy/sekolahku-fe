@@ -153,9 +153,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
       console.error("Error fetching school suggestions:", error);
       set((state) => ({
         localSuggestions: append ? state.localSuggestions : [],
-        hasMoreLocalSuggestions: append
-          ? state.hasMoreLocalSuggestions
-          : false,
+        hasMoreLocalSuggestions: append ? state.hasMoreLocalSuggestions : false,
       }));
     } finally {
       set({ isLoadingLocalSuggestions: false });
