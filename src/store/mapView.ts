@@ -5,6 +5,8 @@ import type { ItemSekolahModel } from "../models/response";
 import { getSchoolSuggestion } from "../services/school.svc";
 import type { GeoJSONFeature } from "../types/polygon";
 
+const SUGGESTION_PAGE_SIZE = 12;
+
 type Center = [number, number];
 
 interface MapViewState {
@@ -15,6 +17,9 @@ interface MapViewState {
   schoolMarkers: MarkerMap;
   userMarkers: MarkerMap;
   localSuggestions: SearchBarMapProps[];
+  localSuggestionsPage: number;
+  hasMoreLocalSuggestions: boolean;
+  isLoadingLocalSuggestions: boolean;
   viewSchool: ItemSekolahModel | null;
   query: string;
   statePolygons: Map<string, GeoJSONFeature>;
@@ -30,11 +35,15 @@ interface MapViewState {
   ) => void;
   setLocalSuggestions: (suggestions: SearchBarMapProps[]) => void;
   setViewSchool: (school: ItemSekolahModel | null) => void;
-  handleSearch: (params: {
-    namaSekolah?: string;
-    negeri?: string;
-    jenis?: string;
-  }) => Promise<void>;
+  handleSearch: (
+    params: {
+      namaSekolah?: string;
+      negeri?: string;
+      jenis?: string;
+    },
+    pageNumber?: number,
+    append?: boolean,
+  ) => Promise<void>;
   setQuery: (q: string) => void;
   // Polygon actions
   setStatePolygons: (polygons: Map<string, GeoJSONFeature>) => void;
@@ -50,6 +59,9 @@ export const useMapViewStore = create<MapViewState>((set) => ({
   schoolMarkers: new Map() as MarkerMap,
   userMarkers: new Map() as MarkerMap,
   localSuggestions: [],
+  localSuggestionsPage: 1,
+  hasMoreLocalSuggestions: true,
+  isLoadingLocalSuggestions: false,
   viewSchool: null,
   query: "",
   statePolygons: new Map<string, GeoJSONFeature>(),
@@ -95,9 +107,11 @@ export const useMapViewStore = create<MapViewState>((set) => ({
       return { viewSchool: school };
     });
   },
-  handleSearch: async (params) => {
+  handleSearch: async (params, pageNumber = 1, append = false) => {
     try {
-      const results = await getSchoolSuggestion(params);
+      set({ isLoadingLocalSuggestions: true });
+
+      const results = await getSchoolSuggestion(params, pageNumber);
       const transformed = results.map(
         (school): SearchBarMapProps => ({
           namaSekolah: school.namaSekolah ?? "Sekolah Tidak Diketahui",
@@ -113,9 +127,19 @@ export const useMapViewStore = create<MapViewState>((set) => ({
         }),
       );
 
-      set({ localSuggestions: transformed });
+      set((state) => {
+        const newSuggestions = append
+          ? [...state.localSuggestions, ...transformed]
+          : transformed;
 
-      if (transformed.length > 0) {
+        return {
+          localSuggestions: newSuggestions,
+          localSuggestionsPage: pageNumber,
+          hasMoreLocalSuggestions: transformed.length >= SUGGESTION_PAGE_SIZE,
+        };
+      });
+
+      if (!append && transformed.length > 0) {
         const firstResult = transformed[0];
         set({
           center: [firstResult.koordinatYY, firstResult.koordinatXX],
@@ -124,7 +148,12 @@ export const useMapViewStore = create<MapViewState>((set) => ({
       }
     } catch (error) {
       console.error("Error fetching school suggestions:", error);
-      set({ localSuggestions: [] });
+      set((state) => ({
+        localSuggestions: append ? state.localSuggestions : [],
+        hasMoreLocalSuggestions: false,
+      }));
+    } finally {
+      set({ isLoadingLocalSuggestions: false });
     }
   },
   setQuery: (q) => {

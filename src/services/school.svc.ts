@@ -15,10 +15,11 @@ export const DATA_BASE_URL = import.meta.env.VITE_DATA_BASE_URL;
 
 export const getSchoolSuggestion = async (
   params?: schoolSearchModel,
+  pageNumber: number = 1,
 ): Promise<ItemSekolahModel[]> => {
   try {
     const response = await authAxios.get<APIResponse<ListSekolahModel>>(
-      `${BASE_URL}${SCHOOL_ENDPOINT}/search`,
+      `${BASE_URL}${SCHOOL_ENDPOINT}/search?page=${pageNumber}&pageSize=12`,
       {
         params,
         paramsSerializer: { indexes: null },
