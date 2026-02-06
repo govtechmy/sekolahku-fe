@@ -37,8 +37,8 @@ export default function SectionItemCalendar({
           >
             {/* Background image */}
             <img
-              src={item.imageHero.url}
-              alt={item.imageHero.alt}
+              src={item.imageHero?.url}
+              alt={item.imageHero?.alt}
               className="absolute inset-0 w-full h-full object-cover rounded-[6px] z-0 transition-transform duration-300 group-hover:scale-110"
             />
             {/* Background Layer (only half height) with hover darker gradient */}
