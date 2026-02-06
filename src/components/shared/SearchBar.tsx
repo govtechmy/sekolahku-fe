@@ -9,7 +9,7 @@ import {
   SearchBarClearButton,
   SearchBarHint,
 } from "@govtechmy/myds-react/search-bar";
-import { Pill } from "@govtechmy/myds-react/pill";
+// import { Pill } from "@govtechmy/myds-react/pill";
 import { ChevronRightIcon } from "@govtechmy/myds-react/icon";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";

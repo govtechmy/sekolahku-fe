@@ -16,7 +16,7 @@ import {
 } from "@govtechmy/myds-react/search-bar";
 import { clx } from "@govtechmy/myds-react/utils";
 import { Button } from "@govtechmy/myds-react/button";
-import { Pill } from "@govtechmy/myds-react/pill";
+// import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import { useMapViewStore } from "../../store/mapView";
 import { NEGERI_LIST } from "../../contentData";
