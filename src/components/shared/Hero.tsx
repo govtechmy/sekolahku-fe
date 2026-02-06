@@ -67,15 +67,15 @@ export default function Hero({
         >
           <div
             className="hidden lg:block h-full w-full bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url('${typeof heroBanner.desktop.file_desktop !== "string" && heroBanner.desktop.file_desktop.url}')`,
-            }}
+            // style={{
+            //   backgroundImage: `url('${typeof heroBanner.desktop.file_desktop !== "string" && heroBanner.desktop.file_desktop.url}')`,
+            // }}
           />
           <div
             className="block lg:hidden h-full w-full bg-contain bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url('${typeof heroBanner.mobile.file_mobile !== "string" && heroBanner.mobile.file_mobile.url}')`,
-            }}
+            // style={{
+            //   backgroundImage: `url('${typeof heroBanner.mobile.file_mobile !== "string" && heroBanner.mobile.file_mobile.url}')`,
+            // }}
           />
         </div>
       ) : background ? (
@@ -85,7 +85,7 @@ export default function Hero({
             HeroclassName,
           )}
         >
-          {background}
+          {/* {background} */}
         </div>
       ) : null}
       <div
@@ -125,7 +125,7 @@ export default function Hero({
             <div className="items-center flex w-full">
               <div className="flex-1 max-w-[600px]">
                 <div className="text-body-sm text-txt-black-500">
-                  Pautan Popular:
+                  {/* Pautan Pintas: */}
                 </div>
                 <div
                   className={clx(

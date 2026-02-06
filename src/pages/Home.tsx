@@ -89,7 +89,8 @@ export default function HomePage() {
             children={
               <SectionItemNews
                 dataItemNews={dataItemNews}
-                mainTitle="Apa yang Sedang Berlaku di Sekolah-sekolah Malaysia"
+                // mainTitle="Apa yang Sedang Berlaku di Sekolah-sekolah Malaysia"
+                mainTitle=""
                 redirectDesc="Baca"
               />
             }
@@ -105,7 +106,8 @@ export default function HomePage() {
             children={
               <SectionItemCalendar
                 dataItemCalendar={dataItemCalendar}
-                mainTitle="Yang bakal disambut tahun ini"
+                // mainTitle="Yang bakal disambut tahun ini"
+                mainTitle=""
                 lang={lang}
               />
             }
@@ -116,15 +118,17 @@ export default function HomePage() {
         {analytics && (
           <SectionHeader
             header="ANALITIK"
-            title="Fakta Menarik Sekolah di Malaysia"
+            // title="Fakta Menarik Sekolah di Malaysia"
+            title=""
             children={<SectionItemAnalytics analytics={analytics} />}
           />
         )}
 
         <div id="pautan">
           {/* design loading for this, hardcoded atm  */}
+          {/* PAUTAN PINTAS */}
           <SectionHeader
-            header="PAUTAN PINTAS"
+            header=""
             title=""
             children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
             isLastSection={true}

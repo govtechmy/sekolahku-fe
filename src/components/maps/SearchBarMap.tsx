@@ -252,7 +252,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                 />
                 {(!query || query.trim().length === 0) && (
                   <SearchBarHint className="">
-                    Tekan <Pill size="small">/</Pill> untuk cari
+                    {/* Tekan <Pill size="small">/</Pill> untuk cari */}
                   </SearchBarHint>
                 )}
                 <SearchBarSearchButton />
