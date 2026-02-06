@@ -212,7 +212,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const handleScroll = (event: UIEvent<HTMLDivElement>) => {
     const target = event.currentTarget;
     // Distance (in px) from the bottom at which to trigger loading more results
-    const threshold = 50; 
+    const threshold = 50;
 
     if (
       target.scrollTop + target.clientHeight >=
