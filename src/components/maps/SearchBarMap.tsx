@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type UIEvent } from "react";
 import {
   ArrowBackIcon,
   ChevronRightIcon,
@@ -33,6 +33,9 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     query,
     setQuery,
     handleSearch,
+    localSuggestionsPage,
+    hasMoreLocalSuggestions,
+    isLoadingLocalSuggestions,
   } = useMapViewStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -44,6 +47,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const { initialLocationUser } = useLocationSessionStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
@@ -188,6 +192,36 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     }
   };
 
+  const loadMoreSuggestions = () => {
+    if (isLoadingLocalSuggestions || !hasMoreLocalSuggestions) return;
+
+    // Keep lazy-loading consistent with search bar: only load more when query has at least 3 characters
+    if (query.trim().length < 3) return;
+
+    handleSearch(
+      {
+        namaSekolah: query,
+        negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
+        jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
+      },
+      (localSuggestionsPage || 1) + 1,
+      true,
+    );
+  };
+
+  const handleScroll = (event: UIEvent<HTMLDivElement>) => {
+    const target = event.currentTarget;
+    // Distance (in px) from the bottom at which to trigger loading more results
+    const threshold = 50;
+
+    if (
+      target.scrollTop + target.clientHeight >=
+      target.scrollHeight - threshold
+    ) {
+      loadMoreSuggestions();
+    }
+  };
+
   return (
     <div
       className={`absolute flex z-[500] bottom-0 
@@ -271,7 +305,11 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
           )}
 
           {isExpanded && (
-            <div className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1">
+            <div
+              ref={listRef}
+              onScroll={handleScroll}
+              className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1"
+            >
               {localSuggestions.length > 0 ? (
                 localSuggestions.map((school, idx) => (
                   <li
