@@ -1,6 +1,6 @@
 import type { SerializedEditorState, SerializedLexicalNode } from "lexical";
 
-export interface AcaraItem {
+export interface TakwimItem {
   _id: string;
   createdAt: string;
   updatedAt: string;

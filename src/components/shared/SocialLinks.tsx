@@ -85,12 +85,12 @@ export default function SocialLinks({
 
     if (!isHyperlink) {
       let encodedHref = href;
-    if (platform === "email") {
-      const separator = href.includes("?") ? "&" : "?";
-      encodedHref = `${href}${separator}body=${encodeURIComponent(
+      if (platform === "email") {
+        const separator = href.includes("?") ? "&" : "?";
+        encodedHref = `${href}${separator}body=${encodeURIComponent(
           currentUrl,
-      )}`;
-    }
+        )}`;
+      }
       if (platform === "facebook" || platform === "twitter") {
         encodedHref = `${href}${encodeURIComponent(currentUrl)}`;
       }

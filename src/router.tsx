@@ -8,8 +8,8 @@ import SchoolProfile from "./pages/SchoolProfile";
 import Siaran from "./pages/Siaran/Siaran";
 import SiaranId from "./pages/Siaran/SiaranId";
 import LayoutMap from "./components/layout/LayoutMap";
-import Acara from "./pages/Acara/Acara";
-import AcaraId from "./pages/Acara/AcaraId";
+import Takwim from "./pages/Takwim/Takwim";
+import TakwimId from "./pages/Takwim/TakwimId";
 import DisclaimerPage from "./pages/Disclaimer";
 import PrivacyPolicyPage from "./pages/PrivacyPolicy";
 
@@ -27,8 +27,8 @@ export default function AppRoutes() {
           <Route path="halaman-sekolah/:id" element={<SchoolProfile />} />
           <Route path="siaran" element={<Siaran />} />
           <Route path="siaran/:id" element={<SiaranId />} />
-          <Route path="acara" element={<Acara />} />
-          <Route path="acara/:id" element={<AcaraId />} />
+          <Route path="takwim" element={<Takwim />} />
+          <Route path="takwim/:id" element={<TakwimId />} />
           <Route path="disclaimer" element={<DisclaimerPage />} />
           <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="404" element={<ErrorPage />} />

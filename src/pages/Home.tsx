@@ -7,16 +7,16 @@ import type { AnalyticsModel, SiaranItem } from "../models/response";
 import { dataItemLinks } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
-import { getAllAcara } from "../services/acara.svc";
+import { getAllTakwim } from "../services/takwim.svc";
 import SectionItemCalendar from "../components/shared/SectionItemCalendar";
-import type { AcaraItem } from "../types/acara";
+import type { TakwimItem } from "../types/takwim";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSiaranList } from "../services/siaran.svc";
 
 export default function HomePage() {
   const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
   //later add loading for all , check design
-  const [dataItemCalendar, setDataItemCalendar] = useState<AcaraItem[]>();
+  const [dataItemCalendar, setDataItemCalendar] = useState<TakwimItem[]>();
   const [dataItemNews, setDataItemNews] = useState<SiaranItem[]>();
   const inputRef = useRef<HTMLInputElement>(null!);
   const { lang } = useParams<{ lang: string }>();
@@ -32,12 +32,12 @@ export default function HomePage() {
       }
     };
 
-    const fetchAcara = async () => {
+    const fetchTakwim = async () => {
       try {
-        const data = await getAllAcara();
+        const data = await getAllTakwim();
         setDataItemCalendar(data.items);
       } catch (error) {
-        console.error("Error fetching Acara:", error);
+        console.error("Error fetching Takwim:", error);
       }
     };
 
@@ -51,7 +51,7 @@ export default function HomePage() {
     };
 
     fetchSiaran();
-    fetchAcara();
+    fetchTakwim();
     fetchAnalytics();
   }, []);
 
@@ -101,7 +101,7 @@ export default function HomePage() {
           <SectionHeader
             header="KALENDAR"
             ButtonLabel="Semua Takwim"
-            ButtonClickHandler={() => navigate(`/${lang}/acara`)}
+            ButtonClickHandler={() => navigate(`/${lang}/takwim`)}
             children={
               <SectionItemCalendar
                 dataItemCalendar={dataItemCalendar}
