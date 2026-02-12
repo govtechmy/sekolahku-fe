@@ -13,33 +13,33 @@ import SocialLinks from "../../components/shared/SocialLinks";
 import { siaranSocialLinks } from "../../contentData";
 import DotIcon from "../../icons/DotIcon";
 import { useEffect, useState } from "react";
-import type { AcaraItem } from "../../types/acara";
-import { getAcaraById } from "../../services/acara.svc";
+import type { TakwimItem } from "../../types/takwim";
+import { getTakwimById } from "../../services/takwim.svc";
 import { formatFullEventDate, formatEventTime } from "../../utils/date";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { getIcon } from "../../utils/getIconLogo";
 import { formatFileSize } from "../../utils/formatFileSize";
 import { downloadFile } from "../../services/download.svc";
 
-export default function AcaraId() {
+export default function TakwimId() {
   const { lang } = useParams<{ lang: string }>();
 
   // Find the news item by ID
   const { id } = useParams<{ id: string }>();
-  const [contents, setContents] = useState<AcaraItem | null>(null);
+  const [contents, setContents] = useState<TakwimItem | null>(null);
 
   useEffect(() => {
-    const fetchAcaraById = async (id: string) => {
+    const fetchTakwimById = async (id: string) => {
       try {
-        const response = await getAcaraById(id);
+        const response = await getTakwimById(id);
         setContents(response);
       } catch (error) {
-        console.error("Error fetching acara by id:", error);
+        console.error("Error fetching takwim by id:", error);
       }
     };
 
     if (id) {
-      fetchAcaraById(id);
+      fetchTakwimById(id);
     }
   }, [id]);
 
@@ -49,7 +49,7 @@ export default function AcaraId() {
         <div className="flex flex-col gap-6 max-w-[825px]">
           <Breadcrumb className="md:px-10 print:hidden">
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/${lang}/acara`}>Takwim</BreadcrumbLink>
+              <BreadcrumbLink href={`/${lang}/takwim`}>Takwim</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

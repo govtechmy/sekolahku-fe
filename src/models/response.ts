@@ -1,6 +1,6 @@
 import type { SerializedEditorState, SerializedLexicalNode } from "lexical";
 import type { MarkerType } from "../types/maps";
-import type { Attachment } from "../types/acara";
+import type { Attachment } from "../types/takwim";
 
 interface BaseListModel {
   totalRecords: number;

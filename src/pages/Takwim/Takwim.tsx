@@ -8,20 +8,20 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useEffect, useState, useRef } from "react";
-import { getAllAcara, getSearchAcara } from "../../services/acara.svc";
-import type { AcaraItem } from "../../types/acara";
+import { getAllTakwim, getSearchTakwim } from "../../services/takwim.svc";
+import type { TakwimItem } from "../../types/takwim";
 import { formatEventDay, formatEventDateMonth } from "../../utils/date";
 
-export default function Acara() {
+export default function Takwim() {
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
-  const [items, setItems] = useState<AcaraItem[]>([]);
+  const [items, setItems] = useState<TakwimItem[]>([]);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(12);
   const [totalRecord, setTotalRecord] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
-  const [searchSuggestions, setSearchSuggestions] = useState<AcaraItem[]>([]);
+  const [searchSuggestions, setSearchSuggestions] = useState<TakwimItem[]>([]);
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,
@@ -43,19 +43,19 @@ export default function Acara() {
         const response =
           debouncedSearchQuery ||
           (dateRange?.from != undefined && dateRange?.to != undefined)
-            ? await getSearchAcara(
+            ? await getSearchTakwim(
                 pageNumber,
                 debouncedSearchQuery,
                 dateRange?.from ? dateRange.from.toISOString() : undefined,
                 dateRange?.to ? dateRange.to.toISOString() : undefined,
               )
-            : await getAllAcara(pageNumber);
+            : await getAllTakwim(pageNumber);
         setItems(response.items);
         setPageNumber(response.pageNumber);
         setPageSize(response.pageSize);
         setTotalRecord(response.totalRecords);
       } catch (error) {
-        console.error("Error fetching acara:", error);
+        console.error("Error fetching takwim:", error);
       }
     };
 
@@ -76,7 +76,7 @@ export default function Acara() {
       }, 500);
 
       try {
-        const response = await getSearchAcara(1, value);
+        const response = await getSearchTakwim(1, value);
         setSearchSuggestions(response.items.slice(0, 5));
       } catch (error) {
         console.error("Error fetching search suggestions:", error);
@@ -102,8 +102,8 @@ export default function Acara() {
             suggestions={searchSuggestions}
             getKey={(item) => item._id}
             getLabel={(item) => item.title}
-            onSelect={(item: AcaraItem) => {
-              navigate(`/${lang}/acara/${item._id}`);
+            onSelect={(item: TakwimItem) => {
+              navigate(`/${lang}/takwim/${item._id}`);
             }}
           />
         }
@@ -128,12 +128,12 @@ export default function Acara() {
                 role="button"
                 tabIndex={0}
                 onClick={() => {
-                  navigate(`/${lang}/acara/${item._id}`);
+                  navigate(`/${lang}/takwim/${item._id}`);
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    navigate(`/${lang}/acara/${item._id}`);
+                    navigate(`/${lang}/takwim/${item._id}`);
                   }
                 }}
               >

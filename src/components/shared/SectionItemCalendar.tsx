@@ -1,11 +1,11 @@
 import { Tag } from "@govtechmy/myds-react/tag";
 import HorizontalCard from "./HorizontalCard";
-import type { AcaraItem } from "../../types/acara";
+import type { TakwimItem } from "../../types/takwim";
 import { formatEventDateMonth, formatEventDay } from "../../utils/date";
 import { useNavigate } from "react-router-dom";
 
 type SectionItemCalendarProps = {
-  dataItemCalendar: AcaraItem[];
+  dataItemCalendar: TakwimItem[];
   mainTitle: string;
   lang: string | undefined;
 };
@@ -23,12 +23,12 @@ export default function SectionItemCalendar({
             key={index}
             className="relative border border-otl-gray-200 focus:border-otl-primary-200 focus:outline-none focus:ring-2 focus:ring-otl-primary-200 rounded-lg p-3 h-[350px] !w-[248px] flex flex-shrink-0 flex-col gap-4.5 group overflow-hidden cursor-pointer"
             onClick={() => {
-              navigate(`/${lang}/acara/${item._id}`);
+              navigate(`/${lang}/takwim/${item._id}`);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                navigate(`/${lang}/acara/${item._id}`);
+                navigate(`/${lang}/takwim/${item._id}`);
               }
             }}
             tabIndex={0}

@@ -113,12 +113,12 @@ export default function NavbarMyds() {
         </NavbarMenuItem>
         <NavbarMenuItem
           asChild
-          href={`/${currentLang}/acara`}
-          aria-current={activeItem === "acara" ? "page" : undefined}
-          className={activeItem === "acara" ? "bg-bg-washed" : ""}
+          href={`/${currentLang}/takwim`}
+          aria-current={activeItem === "takwim" ? "page" : undefined}
+          className={activeItem === "takwim" ? "bg-bg-washed" : ""}
         >
           <Link
-            to={`/${currentLang}/acara`}
+            to={`/${currentLang}/takwim`}
             onClick={handleNavItemClick}
             className="focus:outline-otl-primary-200"
           >
