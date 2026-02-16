@@ -48,7 +48,7 @@ jobs:
             || (echo "Failed to download snap-routes.json, using existing local file" && ls -l snap-routes.json || true)
 
       - name: Build project
-        run: pnpm run build --mode production
+        run: export NODE_ENV=production && pnpm run build --mode production
 
       - name: Deploy APP to S3
         run: |

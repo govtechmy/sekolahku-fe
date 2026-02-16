@@ -7,9 +7,13 @@ try {
   // Fix __dirname in ESM
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  const envFile = path.join(__dirname, "..", ".env.development");
+  const envFile =
+    process.env.NODE_ENV === "production"
+      ? ".env.production"
+      : ".env.development";
+  const envPath = path.join(__dirname, "..", envFile);
 
-  dotenv.config({ path: envFile });
+  dotenv.config({ path: envPath });
 
   // Test output
   console.log("Loaded VITE_DOMAIN_NAME:", process.env.VITE_DOMAIN_NAME);
