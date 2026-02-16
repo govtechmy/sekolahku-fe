@@ -79,26 +79,26 @@ export const dataItemLinks = [
     name: "IDME",
     link: "https://idme.moe.gov.my/",
   },
-  {
-    icon: <JataNegaraIcon />,
-    name: "e-Operasi",
-    link: "https://eoperasi.moe.gov.my/",
-  },
-  {
-    icon: <JataNegaraIcon />,
-    name: "e-GTukar",
-    link: "https://epgo.moe.gov.my/",
-  },
+  // {
+  //   icon: <JataNegaraIcon />,
+  //   name: "e-Operasi",
+  //   link: "https://eoperasi.moe.gov.my/",
+  // },
+  // {
+  //   icon: <JataNegaraIcon />,
+  //   name: "e-GTukar",
+  //   link: "https://epgo.moe.gov.my/",
+  // },
   // {
   //   icon: <JataNegaraIcon />,
   //   name: "SPL-KPM",
   //   link: "https://splkpm.moe.gov.my/",
   // },
-  {
-    icon: <JataNegaraIcon />,
-    name: "EMIS",
-    link: "https://emisonline.moe.gov.my/",
-  },
+  // {
+  //   icon: <JataNegaraIcon />,
+  //   name: "EMIS",
+  //   link: "https://emisonline.moe.gov.my/",
+  // },
   {
     icon: <JataNegaraIcon />,
     name: "DELIMa",

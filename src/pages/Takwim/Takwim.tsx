@@ -47,7 +47,11 @@ export default function Takwim() {
                 pageNumber,
                 debouncedSearchQuery,
                 dateRange?.from ? dateRange.from.toISOString() : undefined,
-                dateRange?.to ? dateRange.to.toISOString() : undefined,
+                dateRange?.to ? (() => {
+                  const endDate = new Date(dateRange.to);
+                  endDate.setHours(23, 59, 59, 999);
+                  return endDate.toISOString();
+                })() : undefined,
               )
             : await getAllTakwim(pageNumber);
         setItems(response.items);
