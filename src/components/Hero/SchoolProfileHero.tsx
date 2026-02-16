@@ -24,7 +24,7 @@ export default function SchoolProfileHero({
   return (
     <Hero
       title=""
-      variant="full"
+      variant="side"
       className="border-b-0 max-md:h-[650px]"
       background={
         <div className="absolute inset-0 w-full h-full">
