@@ -49,7 +49,6 @@ export default function SchoolMaps() {
     if (!initialLocationSet) {
       const sessionInitialLocation = getSessionInitialLocation();
       if (sessionInitialLocation) {
-        setInitialLocationSet(true);
         setCenter([sessionInitialLocation[0], sessionInitialLocation[1]]);
         setInitialLocationUser([
           sessionInitialLocation[0],
@@ -67,6 +66,8 @@ export default function SchoolMaps() {
           });
           return next;
         });
+        // Set this AFTER all state updates to ensure re-render
+        setInitialLocationSet(true);
       } else {
         if (!("geolocation" in navigator)) {
           console.warn("Geolocation is not supported in this browser.");
@@ -99,12 +100,14 @@ export default function SchoolMaps() {
               });
               return next;
             });
-            setInitialLocationSet(true);
+            // Set this LAST to trigger re-render and hide LocationPickerWindow
+            setTimeout(() => {
+              setInitialLocationSet(true);
+            }, 0);
           },
           (error) => {
-            if (error) {
-              console.error(error);
-            }
+            console.error("Geolocation error:", error);
+            geolocationRequestedRef.current = false;
           },
           options,
         );
