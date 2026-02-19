@@ -113,13 +113,13 @@ export default function HomePage() {
         )}
 
         {/* design loading for this  */}
-        {analytics && (
+        {/* {analytics && (
           <SectionHeader
             header="ANALITIK"
             title="Fakta Menarik Sekolah di Malaysia"
             children={<SectionItemAnalytics analytics={analytics} />}
           />
-        )}
+        )} */}
 
         <div id="pautan">
           {/* design loading for this, hardcoded atm  */}
