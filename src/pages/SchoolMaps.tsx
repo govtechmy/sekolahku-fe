@@ -193,6 +193,7 @@ export default function SchoolMaps() {
   return (
     <div className="h-full w-full flex relative">
       <AlertMaps
+        classname="w-full mx-auto"
         DialogOpen={!initialPopupState}
         title="Penafian"
         description={
@@ -214,6 +215,7 @@ export default function SchoolMaps() {
           setInitialPopupState(true);
         }}
       />
+
       <SearchBarMap schoolTypes={schoolTypes} />
       <MapContainerComponent
         dragStartPos={dragStartPos}

@@ -9,6 +9,7 @@ import {
   DialogFooter,
   DialogClose,
 } from "@govtechmy/myds-react/dialog";
+import { clx } from "@govtechmy/myds-react/utils";
 import React, { useEffect } from "react";
 
 type AlertMapsProps = {
@@ -17,6 +18,7 @@ type AlertMapsProps = {
   description: React.ReactNode;
   closeTitle: string;
   onClose?: () => void;
+  classname?: string;
 };
 
 export default function AlertMaps(items: AlertMapsProps) {
@@ -35,7 +37,10 @@ export default function AlertMaps(items: AlertMapsProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogBody hideClose={true} className="!max-w-[400px]">
+      <DialogBody
+        hideClose={true}
+        className={clx(`!max-w-[400px] `, items.classname)}
+      >
         <DialogHeader>
           <DialogTitle>{items.title}</DialogTitle>
         </DialogHeader>
