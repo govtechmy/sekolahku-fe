@@ -11,6 +11,8 @@ import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import { NEGERI_LIST } from "../contentData";
 import { useLocationSessionStore } from "../store/locationSession";
 import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
+import AlertMaps from "../components/maps/AlertMaps";
+import { usePopupState } from "../store/disclaimerPopup";
 
 export default function SchoolMaps() {
   const [schoolTypes, setSchoolTypes] = useState<string[]>([]);
@@ -32,6 +34,7 @@ export default function SchoolMaps() {
   } = useMapViewStore();
 
   const { setInitialLocationUser } = useLocationSessionStore();
+  const { initialPopupState, setInitialPopupState } = usePopupState();
 
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
@@ -46,6 +49,9 @@ export default function SchoolMaps() {
   });
 
   useEffect(() => {
+    if (!initialPopupState) {
+      return;
+    }
     if (!initialLocationSet) {
       const sessionInitialLocation = getSessionInitialLocation();
       if (sessionInitialLocation) {
@@ -141,7 +147,7 @@ export default function SchoolMaps() {
     fetchAllStatePolygons();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialPopupState]);
 
   useEffect(() => {
     if (initialLocationSet) {
@@ -186,14 +192,36 @@ export default function SchoolMaps() {
 
   return (
     <div className="h-full w-full flex relative">
+      <AlertMaps
+        DialogOpen={!initialPopupState}
+        title="Penafian"
+        description={
+          <>
+            Fungsi{" "}
+            <i>
+              <strong>Carian Sekolah</strong>
+            </i>{" "}
+            kini berada dalam fasa{" "}
+            <i>
+              <strong>Ujian Beta</strong>
+            </i>
+            . Kemungkinan terdapat beberapa pepijat atau isu teknikal.
+            Penambahbaikan akan dilakukan dari semasa ke semasa.
+          </>
+        }
+        closeTitle="Faham & Teruskan"
+        onClose={() => {
+          setInitialPopupState(true);
+        }}
+      />
       <SearchBarMap schoolTypes={schoolTypes} />
       <MapContainerComponent
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
       />
-      {!initialLocationSet && <LocationPickerWindow />}
-      {!initialLocationSet && (
+      {initialPopupState && !initialLocationSet && <LocationPickerWindow />}
+      {!initialLocationSet && !initialLocationSet && (
         <div className="fixed inset-0 z-[800] bg-bg-black-900/40 backdrop-blur-sm pointer-events-auto" />
       )}
     </div>
