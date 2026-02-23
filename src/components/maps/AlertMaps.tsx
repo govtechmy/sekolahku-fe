@@ -10,33 +10,26 @@ import {
   DialogClose,
 } from "@govtechmy/myds-react/dialog";
 import { clx } from "@govtechmy/myds-react/utils";
-import { useEffect, useState } from "react";
 
 type AlertMapsProps = {
   DialogOpen: boolean;
   title: string;
   description: React.ReactNode;
   closeTitle: string;
-  onClose?: () => void;
   classname?: string;
+  onClose?: () => void;
 };
 
 export default function AlertMaps(items: AlertMapsProps) {
-  const [open, setOpen] = useState(items.DialogOpen);
-
-  useEffect(() => {
-    setOpen(items.DialogOpen);
-  }, [items.DialogOpen]);
-
-  const handleOpenChange = (open: boolean) => {
-    setOpen(open);
-    if (!open && items.onClose) {
-      items.onClose();
-    }
-  };
-
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog
+      defaultOpen={items.DialogOpen}
+      onOpenChange={(open) => {
+        if (!open && items.onClose) {
+          items.onClose();
+        }
+      }}
+    >
       <DialogBody
         hideClose={true}
         className={clx(`!max-w-[400px] `, items.classname)}

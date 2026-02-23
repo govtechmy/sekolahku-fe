@@ -194,36 +194,38 @@ export default function SchoolMaps() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
+  const handleAlertClose = () => {
+    alertAcknowledgedRef.current = true;
+    setShowLocationAlert(false);
+  };
+
   return (
     <div className="h-full w-full flex relative">
-      <AlertMaps
-        classname="w-full mx-auto"
-        DialogOpen={
-          showLocationAlert &&
-          !initialLocationSet &&
-          !alertAcknowledgedRef.current
-        }
-        title="Penafian"
-        description={
-          <>
-            Fungsi{" "}
-            <i>
-              <strong>Carian Sekolah</strong>
-            </i>{" "}
-            kini berada dalam fasa{" "}
-            <i>
-              <strong>Ujian Beta</strong>
-            </i>
-            . Kemungkinan terdapat beberapa pepijat atau isu teknikal.
-            Penambahbaikan akan dilakukan dari semasa ke semasa.
-          </>
-        }
-        closeTitle="Faham & Teruskan"
-        onClose={() => {
-          setShowLocationAlert(false);
-          alertAcknowledgedRef.current = true;
-        }}
-      />
+      {showLocationAlert &&
+        !initialLocationSet &&
+        !alertAcknowledgedRef.current && (
+          <AlertMaps
+            classname="w-full mx-auto"
+            DialogOpen={true}
+            title="Penafian"
+            description={
+              <>
+                Fungsi{" "}
+                <i>
+                  <strong>Carian Sekolah</strong>
+                </i>{" "}
+                kini berada dalam fasa{" "}
+                <i>
+                  <strong>Ujian Beta</strong>
+                </i>
+                . Kemungkinan terdapat beberapa pepijat atau isu teknikal.
+                Penambahbaikan akan dilakukan dari semasa ke semasa.
+              </>
+            }
+            closeTitle="Faham & Teruskan"
+            onClose={handleAlertClose}
+          />
+        )}
 
       <SearchBarMap schoolTypes={schoolTypes} />
       <MapContainerComponent
