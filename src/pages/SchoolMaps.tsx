@@ -12,10 +12,11 @@ import { NEGERI_LIST } from "../contentData";
 import { useLocationSessionStore } from "../store/locationSession";
 import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
 import AlertMaps from "../components/maps/AlertMaps";
-import { usePopupState } from "../store/disclaimerPopup";
 
 export default function SchoolMaps() {
   const [schoolTypes, setSchoolTypes] = useState<string[]>([]);
+  const [showLocationAlert, setShowLocationAlert] = useState(true);
+  const alertAcknowledgedRef = useRef(false);
   const {
     center,
     setCenter,
@@ -34,7 +35,6 @@ export default function SchoolMaps() {
   } = useMapViewStore();
 
   const { setInitialLocationUser } = useLocationSessionStore();
-  const { initialPopupState, setInitialPopupState } = usePopupState();
 
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
@@ -49,72 +49,76 @@ export default function SchoolMaps() {
   });
 
   useEffect(() => {
-    if (!initialPopupState) {
+    const sessionInitialLocation = getSessionInitialLocation();
+    if (sessionInitialLocation && !initialLocationSet) {
+      alertAcknowledgedRef.current = true;
+      setShowLocationAlert(false);
+      setInitialLocationSet(true);
+      setCenter([sessionInitialLocation[0], sessionInitialLocation[1]]);
+      setInitialLocationUser([
+        sessionInitialLocation[0],
+        sessionInitialLocation[1],
+      ]);
+      setZoom(15);
+      setUserMarkers((prev) => {
+        const next = new Map(prev);
+        next.clear();
+        next.set("user", {
+          koordinatXX: sessionInitialLocation[0],
+          koordinatYY: sessionInitialLocation[1],
+          dataUrl: "",
+          markerType: "USER",
+        });
+        return next;
+      });
       return;
     }
-    if (!initialLocationSet) {
-      const sessionInitialLocation = getSessionInitialLocation();
-      if (sessionInitialLocation) {
-        setInitialLocationSet(true);
-        setCenter([sessionInitialLocation[0], sessionInitialLocation[1]]);
-        setInitialLocationUser([
-          sessionInitialLocation[0],
-          sessionInitialLocation[1],
-        ]);
-        setZoom(15);
-        setUserMarkers((prev) => {
-          const next = new Map(prev);
-          next.clear();
-          next.set("user", {
-            koordinatXX: sessionInitialLocation[0],
-            koordinatYY: sessionInitialLocation[1],
-            dataUrl: "",
-            markerType: "USER",
-          });
-          return next;
-        });
-      } else {
-        if (!("geolocation" in navigator)) {
-          console.warn("Geolocation is not supported in this browser.");
-          return;
-        }
-        if (geolocationRequestedRef.current) {
-          return;
-        }
-        geolocationRequestedRef.current = true;
-        const options: PositionOptions = {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0,
-        };
 
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setCenter([latitude, longitude]);
-            setInitialLocationUser([latitude, longitude]);
-            setZoom(17);
-            setUserMarkers((prev) => {
-              const next = new Map(prev);
-              next.clear();
-              next.set("user", {
-                koordinatXX: latitude,
-                koordinatYY: longitude,
-                dataUrl: "",
-                markerType: "USER",
-              });
-              return next;
-            });
-            setInitialLocationSet(true);
-          },
-          (error) => {
-            if (error) {
-              console.error(error);
-            }
-          },
-          options,
-        );
+    if (!alertAcknowledgedRef.current && !initialLocationSet) {
+      return;
+    }
+
+    if (!initialLocationSet) {
+      if (!("geolocation" in navigator)) {
+        console.warn("Geolocation is not supported in this browser.");
+        return;
       }
+      if (geolocationRequestedRef.current) {
+        return;
+      }
+      geolocationRequestedRef.current = true;
+      const options: PositionOptions = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      };
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCenter([latitude, longitude]);
+          setInitialLocationUser([latitude, longitude]);
+          setZoom(17);
+          setUserMarkers((prev) => {
+            const next = new Map(prev);
+            next.clear();
+            next.set("user", {
+              koordinatXX: latitude,
+              koordinatYY: longitude,
+              dataUrl: "",
+              markerType: "USER",
+            });
+            return next;
+          });
+          setInitialLocationSet(true);
+        },
+        (error) => {
+          if (error) {
+            console.error(error);
+          }
+        },
+        options,
+      );
     }
 
     const fetchSchoolTypes = async () => {
@@ -147,7 +151,7 @@ export default function SchoolMaps() {
     fetchAllStatePolygons();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialPopupState]);
+  }, [showLocationAlert]);
 
   useEffect(() => {
     if (initialLocationSet) {
@@ -194,7 +198,11 @@ export default function SchoolMaps() {
     <div className="h-full w-full flex relative">
       <AlertMaps
         classname="w-full mx-auto"
-        DialogOpen={!initialPopupState}
+        DialogOpen={
+          showLocationAlert &&
+          !initialLocationSet &&
+          !alertAcknowledgedRef.current
+        }
         title="Penafian"
         description={
           <>
@@ -212,7 +220,8 @@ export default function SchoolMaps() {
         }
         closeTitle="Faham & Teruskan"
         onClose={() => {
-          setInitialPopupState(true);
+          setShowLocationAlert(false);
+          alertAcknowledgedRef.current = true;
         }}
       />
 
@@ -222,8 +231,10 @@ export default function SchoolMaps() {
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
       />
-      {initialPopupState && !initialLocationSet && <LocationPickerWindow />}
-      {!initialLocationSet && !initialLocationSet && (
+      {!initialLocationSet && alertAcknowledgedRef.current && (
+        <LocationPickerWindow />
+      )}
+      {!initialLocationSet && alertAcknowledgedRef.current && (
         <div className="fixed inset-0 z-[800] bg-bg-black-900/40 backdrop-blur-sm pointer-events-auto" />
       )}
     </div>

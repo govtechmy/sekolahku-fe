@@ -10,7 +10,7 @@ import {
   DialogClose,
 } from "@govtechmy/myds-react/dialog";
 import { clx } from "@govtechmy/myds-react/utils";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type AlertMapsProps = {
   DialogOpen: boolean;
@@ -22,7 +22,7 @@ type AlertMapsProps = {
 };
 
 export default function AlertMaps(items: AlertMapsProps) {
-  const [open, setOpen] = React.useState(items.DialogOpen);
+  const [open, setOpen] = useState(items.DialogOpen);
 
   useEffect(() => {
     setOpen(items.DialogOpen);
