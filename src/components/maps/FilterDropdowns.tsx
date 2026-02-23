@@ -9,25 +9,25 @@ import {
 } from "../shared/SelectMydsFix";
 
 const SCHOOL_TYPE_LABELS: Record<string, string> = {
-  "K11": "Sekolah Model Khas Komprehensif 11",
-  "K9": "Sekolah Model Khas Komprehensif 9",
-  "KT6": "Kolej Tingkatan Enam",
-  "KV": "Kolej Vokasional",
+  K11: "Sekolah Model Khas Komprehensif 11",
+  K9: "Sekolah Model Khas Komprehensif 9",
+  KT6: "Kolej Tingkatan Enam",
+  KV: "Kolej Vokasional",
   "MODEL KHAS": "Sekolah Model Khas",
-  "SBJK": "Sekolah Bimbingan Jalinan Kasih",
-  "SBP": "Sekolah Berasrama Penuh",
-  "SENI": "Sekolah Seni Malaysia",
-  "SJKC": "Sekolah Jenis Kebangsaan (Cina)",
-  "SJKT": "Sekolah Jenis Kebangsaan (Tamil)",
-  "SK": "Sekolah Kebangsaan",
+  SBJK: "Sekolah Bimbingan Jalinan Kasih",
+  SBP: "Sekolah Berasrama Penuh",
+  SENI: "Sekolah Seni Malaysia",
+  SJKC: "Sekolah Jenis Kebangsaan (Cina)",
+  SJKT: "Sekolah Jenis Kebangsaan (Tamil)",
+  SK: "Sekolah Kebangsaan",
   "SK KHAS": "Sekolah Kebangsaan Pendidikan Khas",
   "SM KHAS": "Sekolah Menengah Pendidikan Khas",
   "SM SABK": "Sekolah Menengah Agama Bantuan Kerajaan",
-  "SMK": "Sekolah Menengah Kebangsaan",
-  "SMKA": "Sekolah Menengah Kebangsaan Agama",
-  "SMT": "Sekolah Menengah Teknik",
+  SMK: "Sekolah Menengah Kebangsaan",
+  SMKA: "Sekolah Menengah Kebangsaan Agama",
+  SMT: "Sekolah Menengah Teknik",
   "SR SABK": "Sekolah Rendah Agama Bantuan Kerajaan",
-  "SUKAN": "Sekolah Sukan Malaysia",
+  SUKAN: "Sekolah Sukan Malaysia",
 };
 
 type FilterDropdownsProps = {
@@ -47,7 +47,6 @@ export function FilterDropdowns({
   setSelectedNegeri,
   setSelectedJenis,
 }: FilterDropdownsProps) {
-
   console.log(jenisList);
   return (
     <div className="px-3 py-4 border-t border-gray-200 flex gap-2 text-sm">
@@ -83,10 +82,7 @@ export function FilterDropdowns({
         onValueChange={setSelectedJenis}
         value={selectedJenis ?? "ALL"}
       >
-        <SelectTrigger
-          aria-label="Pilih Jenis"
-          className="truncate"
-        >
+        <SelectTrigger aria-label="Pilih Jenis" className="truncate">
           <SelectValue placeholder="Jenis Sekolah" />
         </SelectTrigger>
         <SelectContent className="z-[700]">
@@ -96,7 +92,9 @@ export function FilterDropdowns({
               .filter((x): x is string => typeof x === "string")
               .map((x, idx: number) => (
                 <SelectItem key={idx} value={x}>
-                  {SCHOOL_TYPE_LABELS[x] ? `${SCHOOL_TYPE_LABELS[x]} (${x})` : x}
+                  {SCHOOL_TYPE_LABELS[x]
+                    ? `${SCHOOL_TYPE_LABELS[x]} (${x})`
+                    : x}
                 </SelectItem>
               ))}
           </SelectGroup>
