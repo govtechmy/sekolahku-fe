@@ -27,12 +27,14 @@ interface SocialLinksProps {
   links: SocialLinkProps[];
   className?: string;
   classNameButton?: string;
+  isShareLinks?: boolean;
 }
 
 export default function SocialLinks({
   links,
   className,
   classNameButton,
+  isShareLinks = false,
 }: SocialLinksProps) {
   const iconMap = {
     hyperlink: LinkDiagonalIcon,
@@ -85,14 +87,18 @@ export default function SocialLinks({
 
     if (!isHyperlink) {
       let encodedHref = href;
-      if (platform === "email") {
-        const separator = href.includes("?") ? "&" : "?";
-        encodedHref = `${href}${separator}body=${encodeURIComponent(
-          currentUrl,
-        )}`;
-      }
-      if (platform === "facebook" || platform === "twitter") {
-        encodedHref = `${href}${encodeURIComponent(currentUrl)}`;
+
+      // Only append current URL for share links (like siaran), not for direct social media links
+      if (isShareLinks) {
+        if (platform === "email") {
+          const separator = href.includes("?") ? "&" : "?";
+          encodedHref = `${href}${separator}body=${encodeURIComponent(
+            currentUrl,
+          )}`;
+        }
+        if (platform === "facebook" || platform === "twitter") {
+          encodedHref = `${href}${encodeURIComponent(currentUrl)}`;
+        }
       }
 
       window.open(normalizeHref(encodedHref), "_blank", "noopener,noreferrer");

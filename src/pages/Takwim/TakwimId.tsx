@@ -81,7 +81,11 @@ export default function TakwimId() {
           </div>
           <div className="md:px-10 print:hidden">
             <div className="flex justify-between pb-[18px] border-b border-gray-200">
-              <SocialLinks links={siaranSocialLinks} classNameButton="p-2" />
+              <SocialLinks
+                links={siaranSocialLinks}
+                classNameButton="p-2"
+                isShareLinks={true}
+              />
               <div className="flex items-center ">
                 <Button
                   variant="default-outline"
