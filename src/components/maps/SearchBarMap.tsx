@@ -9,14 +9,12 @@ import type { SearchBarMapProps } from "../../types/maps";
 import { getSchoolS3Json } from "../../services/school.svc";
 import {
   SearchBar,
-  SearchBarHint,
   SearchBarInput,
   SearchBarInputContainer,
   SearchBarSearchButton,
 } from "@govtechmy/myds-react/search-bar";
 import { clx } from "@govtechmy/myds-react/utils";
 import { Button } from "@govtechmy/myds-react/button";
-import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import { useMapViewStore } from "../../store/mapView";
 import { NEGERI_LIST } from "../../contentData";
@@ -284,11 +282,11 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                   // readOnly={!isExpanded}
                   className={clx(isExpanded ? "pl-0" : "")}
                 />
-                {(!query || query.trim().length === 0) && (
+                {/* {(!query || query.trim().length === 0) && (
                   <SearchBarHint className="">
                     Tekan <Pill size="small">/</Pill> untuk cari
                   </SearchBarHint>
-                )}
+                )} */}
                 <SearchBarSearchButton />
               </SearchBarInputContainer>
             </SearchBar>
