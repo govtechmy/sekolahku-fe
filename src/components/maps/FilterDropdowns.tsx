@@ -47,7 +47,6 @@ export function FilterDropdowns({
   setSelectedNegeri,
   setSelectedJenis,
 }: FilterDropdownsProps) {
-  console.log(jenisList);
   return (
     <div className="px-3 py-4 border-t border-gray-200 flex gap-2 text-sm">
       <Select
@@ -58,7 +57,7 @@ export function FilterDropdowns({
       >
         <SelectTrigger
           aria-label="Pilih Negeri"
-          className="w-[155px] justify-betweent truncate"
+          className="w-[155px] justify-between truncate"
         >
           <SelectValue placeholder="Jenis Negeri" />
         </SelectTrigger>
@@ -82,7 +81,7 @@ export function FilterDropdowns({
         onValueChange={setSelectedJenis}
         value={selectedJenis ?? "ALL"}
       >
-        <SelectTrigger aria-label="Pilih Jenis" className="truncate">
+        <SelectTrigger aria-label="Pilih Jenis">
           <SelectValue placeholder="Jenis Sekolah" />
         </SelectTrigger>
         <SelectContent className="z-[700]">
