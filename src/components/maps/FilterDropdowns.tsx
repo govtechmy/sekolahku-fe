@@ -81,7 +81,7 @@ export function FilterDropdowns({
         onValueChange={setSelectedJenis}
         value={selectedJenis ?? "ALL"}
       >
-        <SelectTrigger aria-label="Pilih Jenis">
+        <SelectTrigger aria-label="Pilih Jenis" className="w-[155px] justify-between truncate">
           <SelectValue placeholder="Jenis Sekolah" />
         </SelectTrigger>
         <SelectContent className="z-[700]">
