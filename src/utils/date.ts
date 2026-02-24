@@ -22,7 +22,7 @@ export function formatEventDateMonth(eventDate: string) {
 export function formatEventTime(eventDate: string) {
   const d = new Date(eventDate);
   return d
-    .toLocaleTimeString("en-MY", {
+    .toLocaleTimeString("ms-MY", {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
