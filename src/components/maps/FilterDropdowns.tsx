@@ -92,8 +92,8 @@ export function FilterDropdowns({
             <SelectItem value="ALL">Semua Jenis</SelectItem>
             {jenisList
               .filter((x): x is string => typeof x === "string")
-              .map((x, idx: number) => (
-                <SelectItem key={idx} value={x}>
+              .map((x) => (
+                <SelectItem key={x} value={x}>
                   {SCHOOL_TYPE_LABELS[x]
                     ? `${SCHOOL_TYPE_LABELS[x]} (${x})`
                     : x}
