@@ -32,7 +32,7 @@ export function formatEventTime(eventDate: string) {
 
 export function formatFullEventDate(eventDate: string) {
   const d = new Date(eventDate);
-  return d.toLocaleDateString("en-MY", {
+  return d.toLocaleDateString("ms-MY", {
     day: "numeric",
     month: "long",
     year: "numeric",
