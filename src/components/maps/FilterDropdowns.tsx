@@ -57,7 +57,7 @@ export function FilterDropdowns({
       >
         <SelectTrigger
           aria-label="Pilih Negeri"
-          className="w-[155px] justify-between truncate"
+          className="!w-[155px] justify-between truncate"
         >
           <SelectValue placeholder="Jenis Negeri" />
         </SelectTrigger>
@@ -83,7 +83,7 @@ export function FilterDropdowns({
       >
         <SelectTrigger
           aria-label="Pilih Jenis"
-          className="w-[155px] justify-between truncate"
+          className="!w-[155px] justify-between truncate"
         >
           <SelectValue placeholder="Jenis Sekolah" />
         </SelectTrigger>
