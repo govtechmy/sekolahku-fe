@@ -115,7 +115,7 @@ export default function Hero({
           >
             <div className=" items-center justify-center flex flex-col w-[300px]">
               <p>{title}</p>
-              {homeTitle && 
+              {homeTitle && (
                 <div className="relative">
                   {homeTitle}
                   <div className="absolute bottom-[-8px] right-[0px] max-[350px]:hidden">
@@ -125,7 +125,7 @@ export default function Hero({
                     <HomeArrowIcon></HomeArrowIcon>
                   </div>
                 </div>
-              }
+              )}
             </div>
           </h1>
           {search && (

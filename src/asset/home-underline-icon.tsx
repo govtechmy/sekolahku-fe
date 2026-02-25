@@ -2,7 +2,7 @@ interface BgErrorPagProps {
   className?: string;
 }
 
-export default function HomeUnderlineIcon({className}:BgErrorPagProps) {
+export default function HomeUnderlineIcon({ className }: BgErrorPagProps) {
   return (
     <svg
       width="186"
