@@ -46,7 +46,9 @@ export default function HomeHero() {
 
   return (
     <Hero
-      title="Selamat Datang Ke Portal Sekolahku"
+      title="Selamat Datang Ke"
+      homeTitle="Portal Sekolahku"
+      variant="full"
       search={
         <SearchBar
           query={query}
@@ -62,12 +64,12 @@ export default function HomeHero() {
           }}
         />
       }
-      links={[{ label: "Pautan Pintas", link: "#pautan" }]}
+      // links={[{ label: "Pautan Pintas", link: "#pautan" }]}
       HeroclassName="bg-gradient-to-b from-[#E6F0FF] via-[#F2F7FF] to-[#FFFFFF]"
       background={
         <>
           <div className="block lg:hidden h-full w-full bg-[url('/utama/home-hero-mobile.svg')] bg-cover bg-center bg-no-repeat" />
-          <div className="hidden lg:block h-full w-full bg-[url('/utama/sekolahku.png')] bg-cover bg-center bg-no-repeat" />
+          <div className="hidden lg:block h-full w-full bg-[url('/utama/sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
         </>
       }
     />
