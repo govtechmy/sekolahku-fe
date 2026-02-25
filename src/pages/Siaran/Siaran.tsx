@@ -99,6 +99,7 @@ export default function Siaran() {
       <Hero
         title="Siaran Sekolahku"
         variant="full"
+        className="h-[350px]"
         search={
           <SearchBarMain
             query={searchQuery}
