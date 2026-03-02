@@ -35,7 +35,7 @@ export default function SearchBarHome<T>({
   getKey,
   getLabel,
   onSelect,
-  searchBarTitle ="Carian"
+  searchBarTitle = "Carian",
 }: SearchBarHomeProps<T>) {
   const [hasFocus, setHasFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
