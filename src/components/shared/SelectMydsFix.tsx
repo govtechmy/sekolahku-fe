@@ -352,6 +352,10 @@ const SelectContent: React.ForwardRefExoticComponent<
 > = React.forwardRef(
   ({ className, children, position = "popper", ...props }, ref) => {
     const { _handleClose, size } = React.useContext(SelectContext);
+
+    const viewportMaxHeightClass =
+      size === "large" ? "max-h-80" : size === "medium" ? "max-h-72" : "max-h-64";
+
     return (
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content
@@ -364,7 +368,9 @@ const SelectContent: React.ForwardRefExoticComponent<
           <SelectPrimitive.Viewport
             className={clx(
               position === "popper" &&
-                "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
+                "w-full min-w-[var(--radix-select-trigger-width)]",
+              viewportMaxHeightClass,
+              "overflow-y-scroll show-scrollbar",
             )}
           >
             {children}
