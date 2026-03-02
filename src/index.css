@@ -21,8 +21,7 @@
   scrollbar-gutter: stable both-edges;
 }
 
-RGB 
-.show-scrollbar::-webkit-scrollbar {
+RGB .show-scrollbar::-webkit-scrollbar {
   display: initial !important;
   width: 10px !important;
   height: 10px !important;

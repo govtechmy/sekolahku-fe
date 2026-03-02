@@ -354,7 +354,11 @@ const SelectContent: React.ForwardRefExoticComponent<
     const { _handleClose, size } = React.useContext(SelectContext);
 
     const viewportMaxHeightClass =
-      size === "large" ? "max-h-80" : size === "medium" ? "max-h-72" : "max-h-64";
+      size === "large"
+        ? "max-h-80"
+        : size === "medium"
+          ? "max-h-72"
+          : "max-h-64";
 
     return (
       <SelectPrimitive.Portal>
