@@ -60,6 +60,7 @@ export default function HomeHero() {
             setQuery(item.namaSekolah ?? "");
             navigate(`/${lang || "ms"}/carian-sekolah`);
           }}
+          searchBarTitle="Carian Sekolah"
         />
       }
       links={[{ label: "Pautan Pintas", link: "#pautan" }]}
