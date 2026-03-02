@@ -46,7 +46,7 @@ export default function TakwimId() {
   return (
     <div className="py-12 justify-center print:py-0 mx-auto px-4.5 flex w-full relative md:px-6 max-w-screen-xl">
       {contents && (
-        <div className="flex flex-col gap-6 max-w-[825px] md:min-w-[825px]">
+        <div className="flex flex-col gap-6 max-w-[825px] lg:min-w-[825px]">
           <Breadcrumb className="md:px-10 print:hidden">
             <BreadcrumbItem>
               <BreadcrumbLink href={`/${lang}/takwim`}>Takwim</BreadcrumbLink>
