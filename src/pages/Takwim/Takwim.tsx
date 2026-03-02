@@ -99,6 +99,7 @@ export default function Takwim() {
     <>
       <Hero
         title="Takwim Sekolahku"
+        className="h-[350px]"
         variant="full"
         search={
           <SearchBarMain
