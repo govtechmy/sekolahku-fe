@@ -11,6 +11,7 @@ import { getSiaranList, getSearchSiaran } from "../../services/siaran.svc";
 import type { SiaranItem } from "../../models/response";
 import Card from "../../components/shared/Cards";
 import { formatDate } from "../../utils/dateFormatter";
+import { Button } from "@govtechmy/myds-react/button";
 
 export default function Siaran() {
   const navigate = useNavigate();
@@ -94,6 +95,14 @@ export default function Siaran() {
     }
   };
 
+  const handleResetFilters = () => {
+    setSearchQuery("");
+    setDebouncedSearchQuery("");
+    setSearchSuggestions([]);
+    setDateRange({ from: undefined, to: undefined });
+    setPageNumber(1);
+  };
+
   return (
     <>
       <Hero
@@ -120,7 +129,15 @@ export default function Siaran() {
           </>
         }
         filters={
-          <DateRangePicker value={dateRange} onValueChange={setDateRange} />
+          <div className="flex flex-col sm:flex-row gap-3 items-center">
+            <DateRangePicker value={dateRange} onValueChange={setDateRange} />
+              <Button
+                variant="primary-fill"
+                onClick={handleResetFilters}
+              >
+                Set Semula
+              </Button>
+          </div>
         }
       />
       <div className="mx-auto flex-1 px-[18px] sm:px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1280px] py-16 flex flex-col">

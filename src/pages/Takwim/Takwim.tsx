@@ -11,6 +11,7 @@ import { useEffect, useState, useRef } from "react";
 import { getAllTakwim, getSearchTakwim } from "../../services/takwim.svc";
 import type { TakwimItem } from "../../types/takwim";
 import { formatEventDay, formatEventDateMonth } from "../../utils/date";
+import { Button } from "@govtechmy/myds-react/button";
 
 export default function Takwim() {
   const navigate = useNavigate();
@@ -95,6 +96,14 @@ export default function Takwim() {
     }
   };
 
+  const handleResetFilters = () => {
+    setSearchQuery("");
+    setDebouncedSearchQuery("");
+    setSearchSuggestions([]);
+    setDateRange({ from: undefined, to: undefined });
+    setPageNumber(1);
+  };
+
   return (
     <>
       <Hero
@@ -121,7 +130,15 @@ export default function Takwim() {
           </>
         }
         filters={
-          <DateRangePicker value={dateRange} onValueChange={setDateRange} />
+          <div className="flex flex-col sm:flex-row gap-3 items-center">
+            <DateRangePicker value={dateRange} onValueChange={setDateRange} />
+              <Button
+                variant="primary-fill"
+                onClick={handleResetFilters}
+              >
+                Set Semula
+              </Button>
+          </div>
         }
       />
       <div className="mx-auto flex-1 px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1280px] py-16 flex flex-col">
