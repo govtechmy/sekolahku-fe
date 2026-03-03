@@ -10,15 +10,16 @@ import {
 import { PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
+import AttachmentItem from "../../components/shared/AttachmentItem";
 import { siaranSocialLinks } from "../../contentData";
 import { useEffect, useState } from "react";
 import type { TakwimItem } from "../../types/takwim";
 import { getTakwimById } from "../../services/takwim.svc";
 import { formatFullEventDate } from "../../utils/date";
 import { RichText } from "@payloadcms/richtext-lexical/react";
-import { getIcon } from "../../utils/getIconLogo";
-import { formatFileSize } from "../../utils/formatFileSize";
-import { downloadFile } from "../../services/download.svc";
+// import { getIcon } from "../../utils/getIconLogo";
+// import { formatFileSize } from "../../utils/formatFileSize";
+// import { downloadFile } from "../../services/download.svc";
 import PrintHeader from "../../components/shared/PrintHeader";
 
 export default function TakwimId() {
@@ -115,6 +116,17 @@ export default function TakwimId() {
                 {contents.attachments.map((attachment) => {
                   const hasValidUrl = !!attachment.url;
                   return (
+                    <AttachmentItem
+                      key={attachment.id}
+                      attachment={attachment}
+                      hasValidUrl={hasValidUrl}
+                    />
+                  );
+                })}
+                {/* old
+                {contents.attachments.map((attachment) => {
+                  const hasValidUrl = !!attachment.url;
+                  return (
                     <div key={attachment.id}>
                       {attachment.filename &&
                         attachment.filesize &&
@@ -178,6 +190,7 @@ export default function TakwimId() {
                     </div>
                   );
                 })}
+                */}
               </div>
             </div>
           )}
