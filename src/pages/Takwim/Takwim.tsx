@@ -28,7 +28,8 @@ export default function Takwim() {
     to: undefined,
   });
   const debounceTimerRef = useRef<number | null>(null);
-  const requestIdRef = useRef<number>(0);
+  const listRequestIdRef = useRef<number>(0);
+  const suggestionRequestIdRef = useRef<number>(0);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function Takwim() {
 
   useEffect(() => {
     const fetchAcara = async () => {
-      const currentRequestId = ++requestIdRef.current;
+      const currentRequestId = ++listRequestIdRef.current;
       try {
         const response =
           debouncedSearchQuery ||
@@ -61,7 +62,7 @@ export default function Takwim() {
             : await getAllTakwim(pageNumber);
 
         // Only update state if this is still the latest request
-        if (currentRequestId === requestIdRef.current) {
+        if (currentRequestId === listRequestIdRef.current) {
           setItems(response.items);
           setPageNumber(response.pageNumber);
           setPageSize(response.pageSize);
@@ -86,19 +87,19 @@ export default function Takwim() {
     if (trimmedValue.length > 0) {
       // Debounce both the search suggestions and the main search
       debounceTimerRef.current = window.setTimeout(async () => {
-        const suggestionRequestId = ++requestIdRef.current;
+        const suggestionRequestId = ++suggestionRequestIdRef.current;
         setDebouncedSearchQuery(value);
 
         try {
           const response = await getSearchTakwim(1, value);
 
           // Only update suggestions if this is still the latest request
-          if (suggestionRequestId === requestIdRef.current) {
+          if (suggestionRequestId === suggestionRequestIdRef.current) {
             setSearchSuggestions(response.items.slice(0, 5));
           }
         } catch (error) {
           console.error("Error fetching search suggestions:", error);
-          if (suggestionRequestId === requestIdRef.current) {
+          if (suggestionRequestId === suggestionRequestIdRef.current) {
             setSearchSuggestions([]);
           }
         }
@@ -116,7 +117,9 @@ export default function Takwim() {
       debounceTimerRef.current = null;
     }
 
-    requestIdRef.current++;
+    // Invalidate any in-flight requests
+    listRequestIdRef.current++;
+    suggestionRequestIdRef.current++;
 
     setSearchQuery("");
     setDebouncedSearchQuery("");

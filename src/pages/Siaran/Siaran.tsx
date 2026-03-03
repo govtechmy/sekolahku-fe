@@ -28,7 +28,8 @@ export default function Siaran() {
     to: undefined,
   });
   const debounceTimerRef = useRef<number | null>(null);
-  const requestIdRef = useRef<number>(0);
+  const listRequestIdRef = useRef<number>(0);
+  const suggestionRequestIdRef = useRef<number>(0);
 
   useEffect(() => {
     return () => {
@@ -40,7 +41,7 @@ export default function Siaran() {
 
   useEffect(() => {
     const fetchSiaran = async () => {
-      const currentRequestId = ++requestIdRef.current;
+      const currentRequestId = ++listRequestIdRef.current;
       try {
         const response =
           debouncedSearchQuery ||
@@ -57,10 +58,9 @@ export default function Siaran() {
                     })()
                   : undefined,
               )
-            : await getSiaranList({ pageNumber });
-
+            : await getSiaranList({ pageNumber });        
         // Only update state if this is still the latest request
-        if (currentRequestId === requestIdRef.current) {
+        if (currentRequestId === listRequestIdRef.current) {
           setItems(response.items);
           setPageNumber(response.pageNumber);
           setPageSize(response.pageSize);
@@ -85,18 +85,18 @@ export default function Siaran() {
     if (trimmedValue.length > 0) {
       // Debounce both the search suggestions and the main search
       debounceTimerRef.current = window.setTimeout(async () => {
-        const suggestionRequestId = ++requestIdRef.current;
+        const suggestionRequestId = ++suggestionRequestIdRef.current;
         setDebouncedSearchQuery(value);
 
         try {
           const response = await getSearchSiaran(1, value);
 
-          if (suggestionRequestId === requestIdRef.current) {
+          if (suggestionRequestId === suggestionRequestIdRef.current) {
             setSearchSuggestions(response.items.slice(0, 5));
           }
         } catch (error) {
           console.error("Error fetching search suggestions:", error);
-          if (suggestionRequestId === requestIdRef.current) {
+          if (suggestionRequestId === suggestionRequestIdRef.current) {
             setSearchSuggestions([]);
           }
         }
@@ -115,7 +115,8 @@ export default function Siaran() {
     }
 
     // Invalidate any in-flight requests
-    requestIdRef.current++;
+    listRequestIdRef.current++;
+    suggestionRequestIdRef.current++;
 
     setSearchQuery("");
     setDebouncedSearchQuery("");
