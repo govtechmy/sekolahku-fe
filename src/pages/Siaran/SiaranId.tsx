@@ -50,8 +50,12 @@ interface AttachmentItemProps {
 }
 
 function AttachmentItem({ attachment, hasValidUrl }: AttachmentItemProps) {
-
-  if (!attachment.filename || !attachment.filesize || !attachment.url || !attachment.mimeType) {
+  if (
+    !attachment.filename ||
+    !attachment.filesize ||
+    !attachment.url ||
+    !attachment.mimeType
+  ) {
     return null;
   }
 
@@ -82,10 +86,7 @@ function AttachmentItem({ attachment, hasValidUrl }: AttachmentItemProps) {
           }
         >
           <div className="flex items-center gap-2 overflow-hidden">
-            {getIcon(
-              attachment.mimeType.split("/")[1],
-              attachment.url,
-            )}
+            {getIcon(attachment.mimeType.split("/")[1], attachment.url)}
             <div className="text-start overflow-hidden">
               <div className="flex items-center">
                 <div className="max-w-[95px] truncate">
@@ -235,9 +236,9 @@ export default function SiaranId() {
                 {contents.attachments.map((attachment) => {
                   const hasValidUrl = !!attachment.url;
                   return (
-                    <AttachmentItem 
-                      key={attachment.id} 
-                      attachment={attachment} 
+                    <AttachmentItem
+                      key={attachment.id}
+                      attachment={attachment}
                       hasValidUrl={hasValidUrl}
                     />
                   );
