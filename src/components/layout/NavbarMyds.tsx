@@ -99,16 +99,16 @@ export default function NavbarMyds() {
         </NavbarMenuItem>
         <NavbarMenuItem
           asChild
-          href={`/${currentLang}/siaran`}
-          aria-current={activeItem === "siaran" ? "page" : undefined}
-          className={activeItem === "siaran" ? "bg-bg-washed" : ""}
+          href={`/${currentLang}/berita-kpm`}
+          aria-current={activeItem === "berita-kpm" ? "page" : undefined}
+          className={activeItem === "berita-kpm" ? "bg-bg-washed" : ""}
         >
           <Link
-            to={`/${currentLang}/siaran`}
+            to={`/${currentLang}/berita-kpm`}
             onClick={handleNavItemClick}
             className="focus:outline-otl-primary-200"
           >
-            Siaran
+            Berita KPM
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem

@@ -111,7 +111,7 @@ export default function Siaran() {
   return (
     <>
       <Hero
-        title="Siaran Sekolahku"
+        title="Berita KPM"
         variant="full"
         className="h-[350px]"
         search={
@@ -123,7 +123,7 @@ export default function Siaran() {
             getKey={(item) => item._id}
             getLabel={(item) => item.title}
             onSelect={(item: SiaranItem) => {
-              navigate(`/${lang}/siaran/${item._id}`);
+              navigate(`/${lang}/berita-kpm/${item._id}`);
             }}
           />
         }
@@ -168,7 +168,7 @@ export default function Siaran() {
                       redirectDesc: "Baca",
                     }}
                     onClick={() => {
-                      navigate(`/${lang}/siaran/${item._id}`);
+                      navigate(`/${lang}/berita-kpm/${item._id}`);
                     }}
                   />
                 );

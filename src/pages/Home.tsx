@@ -83,13 +83,13 @@ export default function HomePage() {
         {/* design loading for this */}
         {dataItemNews && (
           <SectionHeader
-            header="SIARAN"
+            header="BERITA KPM"
             ButtonLabel="Semua Berita"
-            ButtonClickHandler={() => navigate(`/${lang}/siaran`)}
+            ButtonClickHandler={() => navigate(`/${lang}/berita-kpm`)}
             children={
               <SectionItemNews
                 dataItemNews={dataItemNews}
-                mainTitle="Apa yang Sedang Berlaku di Sekolah-sekolah Malaysia"
+                mainTitle="Tahun Ini Tahun Kita"
                 redirectDesc="Baca"
               />
             }
