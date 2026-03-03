@@ -58,7 +58,7 @@ export default function Siaran() {
                     })()
                   : undefined,
               )
-            : await getSiaranList({ pageNumber });        
+            : await getSiaranList({ pageNumber });
         // Only update state if this is still the latest request
         if (currentRequestId === listRequestIdRef.current) {
           setItems(response.items);
