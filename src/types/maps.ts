@@ -22,7 +22,7 @@ export type SearchBarMapProps = {
   jumlahPelajar?: number;
   jumlahGuru?: number;
   parlimen?: string;
-  isSekolahAngkatMADANI?:boolean;
+  isSekolahAngkatMADANI?: boolean;
 };
 
 export type MarkerType =

@@ -20,7 +20,6 @@ export interface ItemSekolahModel {
   isSekolahAngkatMADANI?: boolean;
 }
 
-
 export interface ListSekolahModel extends BaseListModel {
   items: ItemSekolahModel[];
 }

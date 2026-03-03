@@ -324,7 +324,9 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                           <span className="text-xs font-medium text-txt-primary bg-bg-primary-100 px-2 py-0.5 rounded-full w-fit border border-bg-primary-700">
                             {school.jenisLabel || "Sekolah"}
                           </span>
-                          {school.isSekolahAngkatMADANI && <SekolahAngkatMadaniIcon/>} 
+                          {school.isSekolahAngkatMADANI && (
+                            <SekolahAngkatMadaniIcon />
+                          )}
                         </div>
 
                         <span className="text-base font-medium text-gray-900">
