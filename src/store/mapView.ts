@@ -126,6 +126,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
           jumlahPelajar: school.data.infoSekolah.jumlahPelajar ?? 0,
           jumlahGuru: school.data.infoSekolah.jumlahGuru ?? 0,
           parlimen: school.data.infoPentadbiran.parlimen ?? "",
+          isSekolahAngkatMADANI: school.isSekolahAngkatMADANI ?? false,
         }),
       );
 
