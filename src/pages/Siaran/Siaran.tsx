@@ -100,7 +100,7 @@ export default function Siaran() {
       clearTimeout(debounceTimerRef.current);
       debounceTimerRef.current = null;
     }
-    
+
     setSearchQuery("");
     setDebouncedSearchQuery("");
     setSearchSuggestions([]);

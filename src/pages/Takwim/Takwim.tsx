@@ -101,7 +101,7 @@ export default function Takwim() {
       clearTimeout(debounceTimerRef.current);
       debounceTimerRef.current = null;
     }
-    
+
     setSearchQuery("");
     setDebouncedSearchQuery("");
     setSearchSuggestions([]);
