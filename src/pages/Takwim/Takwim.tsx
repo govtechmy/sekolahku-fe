@@ -59,7 +59,7 @@ export default function Takwim() {
                   : undefined,
               )
             : await getAllTakwim(pageNumber);
-        
+
         // Only update state if this is still the latest request
         if (currentRequestId === requestIdRef.current) {
           setItems(response.items);
@@ -91,7 +91,7 @@ export default function Takwim() {
 
         try {
           const response = await getSearchTakwim(1, value);
-          
+
           // Only update suggestions if this is still the latest request
           if (suggestionRequestId === requestIdRef.current) {
             setSearchSuggestions(response.items.slice(0, 5));

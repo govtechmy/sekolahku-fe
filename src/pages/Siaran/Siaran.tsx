@@ -58,7 +58,7 @@ export default function Siaran() {
                   : undefined,
               )
             : await getSiaranList({ pageNumber });
-        
+
         // Only update state if this is still the latest request
         if (currentRequestId === requestIdRef.current) {
           setItems(response.items);
@@ -90,7 +90,7 @@ export default function Siaran() {
 
         try {
           const response = await getSearchSiaran(1, value);
-          
+
           if (suggestionRequestId === requestIdRef.current) {
             setSearchSuggestions(response.items.slice(0, 5));
           }
