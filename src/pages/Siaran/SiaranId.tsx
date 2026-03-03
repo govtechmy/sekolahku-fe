@@ -136,12 +136,10 @@ export default function SiaranId() {
             <div className="md:px-10">
               <div className="flex flex-wrap pt-6 border-t border-gray-200 gap-2">
                 {contents.attachments.map((attachment) => {
-                  const hasValidUrl = !!attachment.url;
                   return (
                     <AttachmentItem
                       key={attachment.id}
                       attachment={attachment}
-                      hasValidUrl={hasValidUrl}
                     />
                   );
                 })}

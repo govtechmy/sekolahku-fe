@@ -20,40 +20,30 @@ interface AttachmentItemProps {
     url: string;
     mimeType: string;
   };
-  hasValidUrl: boolean;
 }
 
 export default function AttachmentItem({
   attachment,
-  hasValidUrl,
 }: AttachmentItemProps) {
   if (
     !attachment.filename ||
-    !attachment.filesize ||
+    attachment.filesize == null ||
     !attachment.url ||
     !attachment.mimeType
   ) {
     return null;
   }
 
+  const isImage = attachment.mimeType.startsWith("image/");
+  const isPdf = attachment.mimeType === "application/pdf";
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div
-          tabIndex={0}
-          role="button"
+        <button
+          type="button"
           aria-label={attachment.filename}
-          className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
-          onKeyDown={
-            hasValidUrl
-              ? (e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    e.currentTarget.click();
-                  }
-                }
-              : undefined
-          }
+          className="border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 cursor-pointer"
         >
           <div className="flex items-center gap-2 overflow-hidden">
             {getIcon(attachment.mimeType.split("/")[1], attachment.url)}
@@ -76,7 +66,7 @@ export default function AttachmentItem({
               </div>
             </div>
           </div>
-        </div>
+        </button>
       </DialogTrigger>
       <DialogBody>
         <DialogHeader>
@@ -84,11 +74,39 @@ export default function AttachmentItem({
         </DialogHeader>
         <DialogContent>
           <div className="flex justify-center items-center">
-            <img
-              src={attachment.url}
-              alt={attachment.filename}
-              className="max-w-full max-h-[70vh] object-contain"
-            />
+            {isImage && (
+              <img
+                src={attachment.url}
+                alt={attachment.filename}
+                className="max-w-full max-h-[70vh] object-contain"
+              />
+            )}
+            {!isImage && isPdf && (
+              <iframe
+                src={attachment.url}
+                title={attachment.filename}
+                className="w-full h-[70vh]"
+              />
+            )}
+            {!isImage && !isPdf && (
+              <div className="flex flex-col items-center gap-4 p-6">
+                <div className="text-center">
+                  {getIcon(attachment.mimeType.split("/")[1], attachment.url)}
+                </div>
+                <p className="text-body-md font-medium text-center break-all">
+                  {attachment.filename}
+                </p>
+                <p className="text-body-sm text-txt-black-500">
+                  {formatFileSize(attachment.filesize)}
+                </p>
+                <Button
+                  variant="primary-fill"
+                  onClick={() => window.open(attachment.url, "_blank")}
+                >
+                  Open File
+                </Button>
+              </div>
+            )}
           </div>
         </DialogContent>
         <DialogFooter>
