@@ -17,6 +17,7 @@ export interface ItemSekolahModel {
   namaSekolah: string;
   updatedAt: string;
   status: string;
+  isSekolahAngkatMADANI?: boolean;
 }
 
 export interface ListSekolahModel extends BaseListModel {
