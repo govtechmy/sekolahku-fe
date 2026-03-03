@@ -22,9 +22,7 @@ interface AttachmentItemProps {
   };
 }
 
-export default function AttachmentItem({
-  attachment,
-}: AttachmentItemProps) {
+export default function AttachmentItem({ attachment }: AttachmentItemProps) {
   if (
     !attachment.filename ||
     attachment.filesize == null ||
