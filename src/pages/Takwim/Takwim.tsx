@@ -97,6 +97,11 @@ export default function Takwim() {
   };
 
   const handleResetFilters = () => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = null;
+    }
+    
     setSearchQuery("");
     setDebouncedSearchQuery("");
     setSearchSuggestions([]);

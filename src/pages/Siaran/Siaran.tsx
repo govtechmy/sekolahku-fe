@@ -96,6 +96,11 @@ export default function Siaran() {
   };
 
   const handleResetFilters = () => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = null;
+    }
+    
     setSearchQuery("");
     setDebouncedSearchQuery("");
     setSearchSuggestions([]);
