@@ -56,7 +56,9 @@ export default function SiaranId() {
         <div className="flex flex-col gap-6 max-w-[825px]">
           <Breadcrumb className="md:px-10 print:hidden">
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/${lang}/siaran`}>Siaran</BreadcrumbLink>
+              <BreadcrumbLink href={`/${lang}/berita-kpm`}>
+                Berita KPM
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
