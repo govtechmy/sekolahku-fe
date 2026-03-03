@@ -7,19 +7,19 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from "@govtechmy/myds-react/breadcrumb";
-import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
+import { PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
 import { siaranSocialLinks } from "../../contentData";
-import DotIcon from "../../icons/DotIcon";
 import { useEffect, useState } from "react";
 import type { TakwimItem } from "../../types/takwim";
 import { getTakwimById } from "../../services/takwim.svc";
-import { formatFullEventDate, formatEventTime } from "../../utils/date";
+import { formatFullEventDate } from "../../utils/date";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { getIcon } from "../../utils/getIconLogo";
 import { formatFileSize } from "../../utils/formatFileSize";
 import { downloadFile } from "../../services/download.svc";
+import PrintHeader from "../../components/shared/PrintHeader";
 
 export default function TakwimId() {
   const { lang } = useParams<{ lang: string }>();
@@ -47,6 +47,7 @@ export default function TakwimId() {
     <div className="py-12 justify-center print:py-0 mx-auto px-4.5 flex w-full relative md:px-6 max-w-screen-xl">
       {contents && (
         <div className="flex flex-col gap-6 max-w-[825px] lg:min-w-[825px]">
+          <PrintHeader />
           <Breadcrumb className="md:px-10 print:hidden">
             <BreadcrumbItem>
               <BreadcrumbLink href={`/${lang}/takwim`}>Takwim</BreadcrumbLink>
@@ -67,15 +68,8 @@ export default function TakwimId() {
             <p className="text-2xl font-semibold font-body">{contents.title}</p>
 
             <div className=" flex flex-row gap-2 text-bg-black-500">
-              <div className=" flex flex-row gap-1 items-center text-body-sm font-body font-normal">
-                <ClockIcon /> Bacaan {contents.readTime} min
-              </div>
-              <div className="flex items-center">
-                <DotIcon className="size-0.5" />
-              </div>
               <div className="text-body-sm font-body font-normal">
-                {formatFullEventDate(contents.articleDate)},{" "}
-                {formatEventTime(contents.articleDate)}
+                {formatFullEventDate(contents.articleDate)}
               </div>
             </div>
           </div>
