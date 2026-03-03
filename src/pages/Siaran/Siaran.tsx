@@ -28,6 +28,7 @@ export default function Siaran() {
     to: undefined,
   });
   const debounceTimerRef = useRef<number | null>(null);
+  const requestIdRef = useRef<number>(0);
 
   useEffect(() => {
     return () => {
@@ -39,6 +40,7 @@ export default function Siaran() {
 
   useEffect(() => {
     const fetchSiaran = async () => {
+      const currentRequestId = ++requestIdRef.current;
       try {
         const response =
           debouncedSearchQuery ||
@@ -56,10 +58,14 @@ export default function Siaran() {
                   : undefined,
               )
             : await getSiaranList({ pageNumber });
-        setItems(response.items);
-        setPageNumber(response.pageNumber);
-        setPageSize(response.pageSize);
-        setTotalRecord(response.totalRecords);
+        
+        // Only update state if this is still the latest request
+        if (currentRequestId === requestIdRef.current) {
+          setItems(response.items);
+          setPageNumber(response.pageNumber);
+          setPageSize(response.pageSize);
+          setTotalRecord(response.totalRecords);
+        }
       } catch (error) {
         console.error("Error fetching siaran:", error);
       }
@@ -77,17 +83,24 @@ export default function Siaran() {
 
     const trimmedValue = value.trim();
     if (trimmedValue.length > 0) {
-      debounceTimerRef.current = window.setTimeout(() => {
+      // Debounce both the search suggestions and the main search
+      debounceTimerRef.current = window.setTimeout(async () => {
+        const suggestionRequestId = ++requestIdRef.current;
         setDebouncedSearchQuery(value);
-      }, 500);
 
-      try {
-        const response = await getSearchSiaran(1, value);
-        setSearchSuggestions(response.items.slice(0, 5));
-      } catch (error) {
-        console.error("Error fetching search suggestions:", error);
-        setSearchSuggestions([]);
-      }
+        try {
+          const response = await getSearchSiaran(1, value);
+          
+          if (suggestionRequestId === requestIdRef.current) {
+            setSearchSuggestions(response.items.slice(0, 5));
+          }
+        } catch (error) {
+          console.error("Error fetching search suggestions:", error);
+          if (suggestionRequestId === requestIdRef.current) {
+            setSearchSuggestions([]);
+          }
+        }
+      }, 500);
     } else {
       setSearchSuggestions([]);
       setDebouncedSearchQuery("");
@@ -100,6 +113,9 @@ export default function Siaran() {
       clearTimeout(debounceTimerRef.current);
       debounceTimerRef.current = null;
     }
+
+    // Invalidate any in-flight requests
+    requestIdRef.current++;
 
     setSearchQuery("");
     setDebouncedSearchQuery("");

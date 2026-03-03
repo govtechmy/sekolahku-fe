@@ -28,6 +28,7 @@ export default function Takwim() {
     to: undefined,
   });
   const debounceTimerRef = useRef<number | null>(null);
+  const requestIdRef = useRef<number>(0);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function Takwim() {
 
   useEffect(() => {
     const fetchAcara = async () => {
+      const currentRequestId = ++requestIdRef.current;
       try {
         const response =
           debouncedSearchQuery ||
@@ -57,10 +59,14 @@ export default function Takwim() {
                   : undefined,
               )
             : await getAllTakwim(pageNumber);
-        setItems(response.items);
-        setPageNumber(response.pageNumber);
-        setPageSize(response.pageSize);
-        setTotalRecord(response.totalRecords);
+        
+        // Only update state if this is still the latest request
+        if (currentRequestId === requestIdRef.current) {
+          setItems(response.items);
+          setPageNumber(response.pageNumber);
+          setPageSize(response.pageSize);
+          setTotalRecord(response.totalRecords);
+        }
       } catch (error) {
         console.error("Error fetching takwim:", error);
       }
@@ -78,17 +84,25 @@ export default function Takwim() {
 
     const trimmedValue = value.trim();
     if (trimmedValue.length > 0) {
-      debounceTimerRef.current = window.setTimeout(() => {
+      // Debounce both the search suggestions and the main search
+      debounceTimerRef.current = window.setTimeout(async () => {
+        const suggestionRequestId = ++requestIdRef.current;
         setDebouncedSearchQuery(value);
-      }, 500);
 
-      try {
-        const response = await getSearchTakwim(1, value);
-        setSearchSuggestions(response.items.slice(0, 5));
-      } catch (error) {
-        console.error("Error fetching search suggestions:", error);
-        setSearchSuggestions([]);
-      }
+        try {
+          const response = await getSearchTakwim(1, value);
+          
+          // Only update suggestions if this is still the latest request
+          if (suggestionRequestId === requestIdRef.current) {
+            setSearchSuggestions(response.items.slice(0, 5));
+          }
+        } catch (error) {
+          console.error("Error fetching search suggestions:", error);
+          if (suggestionRequestId === requestIdRef.current) {
+            setSearchSuggestions([]);
+          }
+        }
+      }, 500);
     } else {
       setSearchSuggestions([]);
       setDebouncedSearchQuery("");
@@ -101,6 +115,8 @@ export default function Takwim() {
       clearTimeout(debounceTimerRef.current);
       debounceTimerRef.current = null;
     }
+
+    requestIdRef.current++;
 
     setSearchQuery("");
     setDebouncedSearchQuery("");
