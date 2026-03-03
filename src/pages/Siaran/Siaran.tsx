@@ -131,12 +131,9 @@ export default function Siaran() {
         filters={
           <div className="flex flex-col sm:flex-row gap-3 items-center">
             <DateRangePicker value={dateRange} onValueChange={setDateRange} />
-              <Button
-                variant="primary-fill"
-                onClick={handleResetFilters}
-              >
-                Set Semula
-              </Button>
+            <Button variant="primary-fill" onClick={handleResetFilters}>
+              Set Semula
+            </Button>
           </div>
         }
       />
