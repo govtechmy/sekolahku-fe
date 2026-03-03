@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, type UIEvent } from "react";
 import {
   ArrowBackIcon,
   ChevronRightIcon,
-  MapIcon,
+  PinIcon,
 } from "@govtechmy/myds-react/icon";
 import { FilterDropdowns } from "./FilterDropdowns";
 import type { SearchBarMapProps } from "../../types/maps";
@@ -22,6 +22,7 @@ import { useMapViewStore } from "../../store/mapView";
 import { NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
 import { useLocationSessionStore } from "../../store/locationSession";
+import SekolahAngkatMadaniIcon from "../../icons/SekolahAngkatMadaniIcon";
 
 export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const {
@@ -319,15 +320,20 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col">
-                        <span className="text-xs font-medium text-txt-primary bg-bg-primary-100 px-2 py-0.5 rounded-full w-fit mb-1 border border-bg-primary-700">
-                          {school.jenisLabel || "Sekolah"}
-                        </span>
+                        <div className="flex gap-2 items-center pb-3">
+                          <span className="text-xs font-medium text-txt-primary bg-bg-primary-100 px-2 py-0.5 rounded-full w-fit border border-bg-primary-700">
+                            {school.jenisLabel || "Sekolah"}
+                          </span>
+                          {school.isSekolahAngkatMADANI && (
+                            <SekolahAngkatMadaniIcon />
+                          )}
+                        </div>
 
                         <span className="text-base font-medium text-gray-900">
                           {school.namaSekolah}
                         </span>
 
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-500 pb-3">
                           {school.bandarSurat}, {school.negeri}
                         </span>
 
@@ -335,7 +341,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                           {initialLocationUser?.[0] &&
                             initialLocationUser?.[1] && (
                               <>
-                                <MapIcon className="w-4 h-4" />
+                                <PinIcon className="w-4 h-4" />
                                 {(() => {
                                   const distanceInMeters = calculateDistance(
                                     initialLocationUser[0],

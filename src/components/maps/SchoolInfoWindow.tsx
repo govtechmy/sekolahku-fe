@@ -17,6 +17,7 @@ import {
   getSchoolLogoUrl,
 } from "../../utils/schoolHelpers";
 import underScoreRemover from "../../utils/underscoreRemover";
+import SekolahAngkatMadaniImage from "../../icons/SekolahAngkatMadaniImage";
 
 type SchoolInfoWindowProps = {
   school: ItemSekolahModel;
@@ -88,6 +89,11 @@ export function SchoolInfoWindow({
           onError={handleImageError}
         />
       </div>
+      {school.isSekolahAngkatMADANI && (
+        <div className="items-center justify-center flex pt-3">
+          <SekolahAngkatMadaniImage />
+        </div>
+      )}
       <div className="p-3 flex flex-col gap-3 justify-start">
         <div>
           <Tag mode="pill" variant="success" className="font-normal">
