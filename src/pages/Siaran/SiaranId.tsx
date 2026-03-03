@@ -7,6 +7,17 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from "@govtechmy/myds-react/breadcrumb";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogBody,
+  DialogHeader,
+  DialogTitle,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@govtechmy/myds-react/dialog";
 // import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
 import { PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
@@ -23,9 +34,98 @@ import { formatEventDateDDMMYY } from "../../utils/date";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { getIcon } from "../../utils/getIconLogo";
 import { formatFileSize } from "../../utils/formatFileSize";
-import { downloadFile } from "../../services/download.svc";
+// import { downloadFile } from "../../services/download.svc";
 import type { SiaranItem } from "../../models/response";
 import { getSiaranById } from "../../services/siaran.svc";
+
+interface AttachmentItemProps {
+  attachment: {
+    id: string;
+    filename: string;
+    filesize: number;
+    url: string;
+    mimeType: string;
+  };
+  hasValidUrl: boolean;
+}
+
+function AttachmentItem({ attachment, hasValidUrl }: AttachmentItemProps) {
+
+  if (!attachment.filename || !attachment.filesize || !attachment.url || !attachment.mimeType) {
+    return null;
+  }
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <div
+          tabIndex={0}
+          role="button"
+          aria-label={attachment.filename}
+          className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
+          onClick={
+            hasValidUrl
+              ? (e) => {
+                  e.currentTarget.click();
+                }
+              : undefined
+          }
+          onKeyDown={
+            hasValidUrl
+              ? (e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    e.currentTarget.click();
+                  }
+                }
+              : undefined
+          }
+        >
+          <div className="flex items-center gap-2 overflow-hidden">
+            {getIcon(
+              attachment.mimeType.split("/")[1],
+              attachment.url,
+            )}
+            <div className="text-start overflow-hidden">
+              <div className="flex items-center">
+                <div className="max-w-[95px] truncate">
+                  {attachment.filename.includes(".")
+                    ? attachment.filename.slice(
+                        0,
+                        attachment.filename.lastIndexOf("."),
+                      )
+                    : attachment.filename}
+                </div>
+                <div className="flex-shrink-0">
+                  .{attachment.mimeType.split("/")[1]}
+                </div>
+              </div>
+              <div className="text-txt-black-500 text-body-xs font-normal">
+                {formatFileSize(attachment.filesize)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </DialogTrigger>
+      <DialogBody>
+        <DialogHeader>
+          <DialogTitle>Dialog Title</DialogTitle>
+        </DialogHeader>
+        <DialogContent>
+          <DialogDescription>Dialog content goes here.</DialogDescription>
+        </DialogContent>
+        <DialogFooter>
+          <DialogClose>
+            <Button variant="default-outline">Secondary Action</Button>
+          </DialogClose>
+          <DialogClose>
+            <Button variant="primary-fill">Primary Action</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogBody>
+    </Dialog>
+  );
+}
 
 export default function SiaranId() {
   const { lang } = useParams<{ lang: string }>();
@@ -135,69 +235,102 @@ export default function SiaranId() {
                 {contents.attachments.map((attachment) => {
                   const hasValidUrl = !!attachment.url;
                   return (
+                    <AttachmentItem 
+                      key={attachment.id} 
+                      attachment={attachment} 
+                      hasValidUrl={hasValidUrl}
+                    />
+                  );
+                })}
+                {/* old
+                {contents.attachments.map((attachment) => {
+                  const hasValidUrl = !!attachment.url;
+                  return (
                     <div key={attachment.id}>
                       {attachment.filename &&
                         attachment.filesize &&
                         attachment.url &&
                         attachment.mimeType && (
-                          <div
-                            tabIndex={0}
-                            role="button"
-                            aria-label={attachment.filename}
-                            className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
-                            onClick={
-                              hasValidUrl
-                                ? () =>
-                                    downloadFile(
-                                      attachment.url,
-                                      attachment.filename,
-                                    )
-                                : undefined
-                            }
-                            onKeyDown={
-                              hasValidUrl
-                                ? (e) => {
-                                    if (e.key === "Enter" || e.key === " ") {
-                                      e.preventDefault();
-                                      downloadFile(
-                                        attachment.url,
-                                        attachment.filename,
-                                      );
-                                    }
-                                  }
-                                : undefined
-                            }
-                          >
-                            <div className="flex items-center gap-2 overflow-hidden">
-                              {getIcon(
-                                attachment.mimeType.split("/")[1],
-                                attachment.url,
-                              )}
-
-                              <div className="text-start overflow-hidden">
-                                <div className="flex items-center">
-                                  <div className="max-w-[95px] truncate">
-                                    {attachment.filename.includes(".")
-                                      ? attachment.filename.slice(
-                                          0,
-                                          attachment.filename.lastIndexOf("."),
+                          <Dialog>
+                            <DialogTrigger>
+                              <div
+                                tabIndex={0}
+                                role="button"
+                                aria-label={attachment.filename}
+                                className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
+                                onClick={
+                                  hasValidUrl
+                                    ? () =>
+                                        downloadFile(
+                                          attachment.url,
+                                          attachment.filename,
                                         )
-                                      : attachment.filename}
+                                    : undefined
+                                }
+                                onKeyDown={
+                                  hasValidUrl
+                                    ? (e) => {
+                                        if (e.key === "Enter" || e.key === " ") {
+                                          e.preventDefault();
+                                          downloadFile(
+                                            attachment.url,
+                                            attachment.filename,
+                                          );
+                                          console.log("aiudwaiudhiwi")
+                                        }
+                                      }
+                                    : undefined
+                                }
+                              >
+                                <div className="flex items-center gap-2 overflow-hidden">
+                                  {getIcon(
+                                    attachment.mimeType.split("/")[1],
+                                    attachment.url,
+                                  )}
+
+                                  <div className="text-start overflow-hidden">
+                                    <div className="flex items-center">
+                                      <div className="max-w-[95px] truncate">
+                                        {attachment.filename.includes(".")
+                                          ? attachment.filename.slice(
+                                              0,
+                                              attachment.filename.lastIndexOf("."),
+                                            )
+                                          : attachment.filename}
+                                      </div>
+                                      <div className="flex-shrink-0">
+                                        .{attachment.mimeType.split("/")[1]}
+                                      </div>
+                                    </div>
+                                    <div className="text-txt-black-500 text-body-xs font-normal">
+                                      {formatFileSize(attachment.filesize)}
+                                    </div>
                                   </div>
-                                  <div className="flex-shrink-0">
-                                    .{attachment.mimeType.split("/")[1]}
-                                  </div>
-                                </div>
-                                <div className="text-txt-black-500 text-body-xs font-normal">
-                                  {formatFileSize(attachment.filesize)}
                                 </div>
                               </div>
-                            </div>
-                          </div>
+                            </DialogTrigger>
+                            <DialogBody>
+                              <DialogHeader>
+                                <DialogTitle>Dialog Title</DialogTitle>
+                              </DialogHeader>
+                              <DialogContent>
+                                <DialogDescription>Dialog content goes here.</DialogDescription>
+                              </DialogContent>
+                              <DialogFooter>
+                                <DialogClose>
+                                  <Button variant="default-outline">Secondary Action</Button>
+                                </DialogClose>
+                                <DialogClose>
+                                  <Button variant="primary-fill">Primary Action</Button>
+                                </DialogClose>
+                              </DialogFooter>
+                            </DialogBody>
+                          </Dialog>
                         )}
                     </div>
                   );
                 })}
+                */}
               </div>
             </div>
           )}
