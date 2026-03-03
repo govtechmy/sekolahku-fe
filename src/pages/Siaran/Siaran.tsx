@@ -86,7 +86,7 @@ export default function Siaran() {
       // Debounce the search query update, which will trigger the main useEffect
       debounceTimerRef.current = window.setTimeout(async () => {
         const suggestionRequestId = ++suggestionRequestIdRef.current;
-        
+
         // Update debounced query - this will trigger the main list fetch via useEffect
         setDebouncedSearchQuery(value);
 
