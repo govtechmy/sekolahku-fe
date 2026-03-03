@@ -13,6 +13,32 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
+/* Show scrollbar (useful to override .hide-scrollbar) */
+.show-scrollbar {
+  -ms-overflow-style: auto; /* IE and Edge */
+  scrollbar-width: auto !important; /* Firefox */
+  scrollbar-color: rgb(161 161 170) transparent; /* Firefox */
+  scrollbar-gutter: stable both-edges;
+}
+
+.show-scrollbar::-webkit-scrollbar {
+  display: initial !important;
+  width: 10px !important;
+  height: 10px !important;
+}
+.show-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.show-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(161 161 170) !important;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.show-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(161 161 170) !important;
+}
+
 /* Target the CommandK search input specifically */
 input[aria-controls="search-input"][cmdk-input][role="combobox"] {
   width: 100px;

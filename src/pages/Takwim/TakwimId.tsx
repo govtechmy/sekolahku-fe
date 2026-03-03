@@ -44,9 +44,9 @@ export default function TakwimId() {
   }, [id]);
 
   return (
-    <div className=" py-12 px-[18px] md:px-20  md:flex md:justify-center print:py-0">
+    <div className="py-12 justify-center print:py-0 mx-auto px-4.5 flex w-full relative md:px-6 max-w-screen-xl">
       {contents && (
-        <div className="flex flex-col gap-6 max-w-[825px]">
+        <div className="flex flex-col gap-6 max-w-[825px] lg:min-w-[825px]">
           <PrintHeader />
           <Breadcrumb className="md:px-10 print:hidden">
             <BreadcrumbItem>
