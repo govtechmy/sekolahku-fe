@@ -83,12 +83,15 @@ export default function Siaran() {
 
     const trimmedValue = value.trim();
     if (trimmedValue.length > 0) {
-      // Debounce both the search suggestions and the main search
+      // Debounce the search query update, which will trigger the main useEffect
       debounceTimerRef.current = window.setTimeout(async () => {
         const suggestionRequestId = ++suggestionRequestIdRef.current;
+        
+        // Update debounced query - this will trigger the main list fetch via useEffect
         setDebouncedSearchQuery(value);
 
         try {
+          // Fetch suggestions separately (different page, first 5 items)
           const response = await getSearchSiaran(1, value);
 
           if (suggestionRequestId === suggestionRequestIdRef.current) {
@@ -180,7 +183,7 @@ export default function Siaran() {
                       imageAlt: item.imageHero?.alt,
                       header: "", //item.categoryInfo?.name,
                       headerColor: item.categoryInfo?.colors,
-                      date: formatDate(item.articleDate),
+                      date: formatDate(item.articleDate, lang),
                       title: item.title,
                       redirectDesc: "Baca",
                     }}

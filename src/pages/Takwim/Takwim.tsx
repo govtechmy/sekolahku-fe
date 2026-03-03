@@ -85,12 +85,15 @@ export default function Takwim() {
 
     const trimmedValue = value.trim();
     if (trimmedValue.length > 0) {
-      // Debounce both the search suggestions and the main search
+      // Debounce the search query update, which will trigger the main useEffect
       debounceTimerRef.current = window.setTimeout(async () => {
         const suggestionRequestId = ++suggestionRequestIdRef.current;
+        
+        // Update debounced query - this will trigger the main list fetch via useEffect
         setDebouncedSearchQuery(value);
 
         try {
+          // Fetch suggestions separately (different page, first 5 items)
           const response = await getSearchTakwim(1, value);
 
           // Only update suggestions if this is still the latest request
