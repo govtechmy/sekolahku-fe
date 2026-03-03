@@ -84,8 +84,8 @@ export default function AttachmentItem({
         </DialogHeader>
         <DialogContent>
           <div className="flex justify-center items-center">
-            <img 
-              src={attachment.url} 
+            <img
+              src={attachment.url}
               alt={attachment.filename}
               className="max-w-full max-h-[70vh] object-contain"
             />
