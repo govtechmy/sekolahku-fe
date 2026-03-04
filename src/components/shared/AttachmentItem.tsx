@@ -101,7 +101,7 @@ export default function AttachmentItem({ attachment }: AttachmentItemProps) {
                   variant="primary-fill"
                   onClick={() => window.open(attachment.url, "_blank")}
                 >
-                  Open File
+                  Buka fail
                 </Button>
               </div>
             )}
@@ -109,7 +109,7 @@ export default function AttachmentItem({ attachment }: AttachmentItemProps) {
         </DialogContent>
         <DialogFooter>
           <DialogClose>
-            <Button variant="default-outline">Close</Button>
+            <Button variant="default-outline">Tutup</Button>
           </DialogClose>
         </DialogFooter>
       </DialogBody>
