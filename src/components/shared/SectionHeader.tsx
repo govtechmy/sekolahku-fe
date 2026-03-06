@@ -9,7 +9,7 @@ type SectionHeaderProps = {
   ButtonLabel?: string;
   ButtonClickHandler?: () => void;
   isLastSection?: boolean;
-  classNameHeader?: string
+  classNameHeader?: string;
 };
 
 export default function SectionHeader({
@@ -19,14 +19,19 @@ export default function SectionHeader({
   ButtonLabel,
   ButtonClickHandler,
   isLastSection,
-  classNameHeader
+  classNameHeader,
 }: SectionHeaderProps) {
   return (
     <div
       className={`flex flex-col ${isLastSection ? "" : "pb-16"} px-4 lg:px-[50px]`}
     >
       <div className="flex flex-col gap-4">
-        <div className={clx("text-txt-primary font-body font-semibold text-sm tracking-[2.8px]",classNameHeader)}>
+        <div
+          className={clx(
+            "text-txt-primary font-body font-semibold text-sm tracking-[2.8px]",
+            classNameHeader,
+          )}
+        >
           {header}
         </div>
         {title && (
