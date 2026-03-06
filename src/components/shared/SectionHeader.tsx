@@ -1,5 +1,6 @@
 import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 import { ArrowForwardIcon } from "@govtechmy/myds-react/icon";
+import { clx } from "@govtechmy/myds-react/utils";
 
 type SectionHeaderProps = {
   header: string;
@@ -8,6 +9,7 @@ type SectionHeaderProps = {
   ButtonLabel?: string;
   ButtonClickHandler?: () => void;
   isLastSection?: boolean;
+  classNameHeader?: string
 };
 
 export default function SectionHeader({
@@ -17,13 +19,14 @@ export default function SectionHeader({
   ButtonLabel,
   ButtonClickHandler,
   isLastSection,
+  classNameHeader
 }: SectionHeaderProps) {
   return (
     <div
       className={`flex flex-col ${isLastSection ? "" : "pb-16"} px-4 lg:px-[50px]`}
     >
       <div className="flex flex-col gap-4">
-        <div className="text-txt-primary font-body font-semibold text-sm tracking-[2.8px]">
+        <div className={clx("text-txt-primary font-body font-semibold text-sm tracking-[2.8px]",classNameHeader)}>
           {header}
         </div>
         {title && (
