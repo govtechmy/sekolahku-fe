@@ -128,6 +128,7 @@ export default function HomePage() {
             title=""
             children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
             isLastSection={true}
+            classNameHeader="mb-[20px]"
           />
         </div>
 
