@@ -34,7 +34,6 @@ export const getSchoolSuggestion = async (
     );
     const totalSchool = response.data.data?.totalRecords ?? 0;
 
-    console.log(totalSchool);
     return { filteredData, totalSchool };
   } catch (error) {
     console.error("Error fetching school suggestions:", error);
