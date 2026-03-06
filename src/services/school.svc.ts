@@ -32,10 +32,10 @@ export const getSchoolSuggestion = async (
         school.data.infoLokasi.koordinatYY != null &&
         school.data.infoLokasi.koordinatXX != null,
     );
-    const totalSchool = response.data.data?.totalRecords ?? 0
+    const totalSchool = response.data.data?.totalRecords ?? 0;
 
-    console.log(totalSchool)
-    return { filteredData, totalSchool }
+    console.log(totalSchool);
+    return { filteredData, totalSchool };
   } catch (error) {
     console.error("Error fetching school suggestions:", error);
     throw error;

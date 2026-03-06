@@ -120,9 +120,9 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
       set({ isLoadingLocalSuggestions: true });
 
       const results = await getSchoolSuggestion(params, pageNumber);
-      const dataResults = results.filteredData
-      const dataTotal = results.totalSchool
-      set({ dataTotal })
+      const dataResults = results.filteredData;
+      const dataTotal = results.totalSchool;
+      set({ dataTotal });
       const transformed = dataResults.map(
         (school): SearchBarMapProps => ({
           namaSekolah: school.namaSekolah ?? "Sekolah Tidak Diketahui",
