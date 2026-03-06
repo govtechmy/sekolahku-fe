@@ -16,7 +16,7 @@ export const DATA_BASE_URL = import.meta.env.VITE_DATA_BASE_URL;
 export const getSchoolSuggestion = async (
   params?: schoolSearchModel,
   pageNumber: number = 1,
-): Promise<ItemSekolahModel[]> => {
+): Promise<{ filteredData: ItemSekolahModel[]; totalSchool: number }> => {
   try {
     const response = await authAxios.get<APIResponse<ListSekolahModel>>(
       `${BASE_URL}${SCHOOL_ENDPOINT}/search?page=${pageNumber}&pageSize=12`,
@@ -32,7 +32,10 @@ export const getSchoolSuggestion = async (
         school.data.infoLokasi.koordinatYY != null &&
         school.data.infoLokasi.koordinatXX != null,
     );
-    return filteredData;
+    const totalSchool = response.data.data?.totalRecords ?? 0
+
+    console.log(totalSchool)
+    return { filteredData, totalSchool }
   } catch (error) {
     console.error("Error fetching school suggestions:", error);
     throw error;

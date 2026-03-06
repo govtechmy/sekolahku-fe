@@ -37,6 +37,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     localSuggestionsPage,
     hasMoreLocalSuggestions,
     isLoadingLocalSuggestions,
+    dataTotal
   } = useMapViewStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -294,8 +295,8 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
               </SearchBarInputContainer>
             </SearchBar>
           </div>
-          {isExpanded && (
-            <FilterDropdowns
+          {isExpanded && (<>
+                      <FilterDropdowns
               selectedNegeri={selectedNegeri}
               selectedJenis={selectedJenis}
               negeriList={negeriList}
@@ -303,6 +304,9 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
               setSelectedNegeri={setSelectedNegeri}
               setSelectedJenis={setSelectedJenis}
             />
+            <div className="p-4 pt-0 text-txt-black-500">{dataTotal} buah sekolah ditemui berdasarkan carian anda</div>
+</>
+
           )}
 
           {isExpanded && (
