@@ -52,7 +52,7 @@ interface MapViewState {
 
 export const useMapViewStore = create<MapViewState>((set, get) => ({
   dataTotal: 0,
-  initialLocationUser: [3.760115447396889, 108.46252441406251],
+  // initialLocationUser: [3.760115447396889, 108.46252441406251],
   center: [3.760115447396889, 108.46252441406251],
   zoom: 6,
   radius: 3000,
