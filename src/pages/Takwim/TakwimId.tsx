@@ -11,15 +11,13 @@ import { PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
 import AttachmentItem from "../../components/shared/AttachmentItem";
+import DownloadAttachmentItem from "../../components/shared/DownloadAttachmentItem";
 import { siaranSocialLinks } from "../../contentData";
 import { useEffect, useState } from "react";
 import type { TakwimItem } from "../../types/takwim";
 import { getTakwimById } from "../../services/takwim.svc";
 import { formatFullEventDate } from "../../utils/date";
 import { RichText } from "@payloadcms/richtext-lexical/react";
-// import { getIcon } from "../../utils/getIconLogo";
-// import { formatFileSize } from "../../utils/formatFileSize";
-// import { downloadFile } from "../../services/download.svc";
 import PrintHeader from "../../components/shared/PrintHeader";
 
 export default function TakwimId() {
@@ -112,83 +110,48 @@ export default function TakwimId() {
           </div>
           {contents.attachments.length > 0 && (
             <div className="md:px-10">
-              <div className="flex flex-wrap pt-6 border-t border-gray-200 gap-2">
-                {contents.attachments.map((attachment) => {
-                  return (
-                    <AttachmentItem
-                      key={attachment.id}
-                      attachment={attachment}
-                    />
-                  );
-                })}
-                {/* old
-                {contents.attachments.map((attachment) => {
-                  const hasValidUrl = !!attachment.url;
-                  return (
-                    <div key={attachment.id}>
-                      {attachment.filename &&
-                        attachment.filesize &&
-                        attachment.url &&
-                        attachment.mimeType && (
-                          <div
-                            tabIndex={0}
-                            role="button"
-                            aria-label={attachment.filename}
-                            className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
-                            onClick={
-                              hasValidUrl
-                                ? () =>
-                                    downloadFile(
-                                      attachment.url,
-                                      attachment.filename,
-                                    )
-                                : undefined
-                            }
-                            onKeyDown={
-                              hasValidUrl
-                                ? (e) => {
-                                    if (e.key === "Enter" || e.key === " ") {
-                                      e.preventDefault();
-                                      downloadFile(
-                                        attachment.url,
-                                        attachment.filename,
-                                      );
-                                    }
-                                  }
-                                : undefined
-                            }
-                          >
-                            <div className="flex items-center gap-2 overflow-hidden">
-                              {getIcon(
-                                attachment.mimeType.split("/")[1],
-                                attachment.url,
-                              )}
-
-                              <div className="text-start overflow-hidden">
-                                <div className="flex items-center">
-                                  <div className="max-w-[95px] truncate">
-                                    {attachment.filename.includes(".")
-                                      ? attachment.filename.slice(
-                                          0,
-                                          attachment.filename.lastIndexOf("."),
-                                        )
-                                      : attachment.filename}
-                                  </div>
-                                  <div className="flex-shrink-0">
-                                    .{attachment.mimeType.split("/")[1]}
-                                  </div>
-                                </div>
-                                <div className="text-txt-black-500 text-body-xs font-normal">
-                                  {formatFileSize(attachment.filesize)}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
+              <div className="flex flex-col pt-6 border-t border-gray-200 gap-4">
+                {/* PDF/Document Attachments */}
+                {contents.attachments.some(
+                  (att) => !att.mimeType.startsWith("image/"),
+                ) && (
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-body-lg font-semibold font-body">
+                      Lampiran
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {contents.attachments
+                        .filter((att) => !att.mimeType.startsWith("image/"))
+                        .map((attachment) => (
+                          <DownloadAttachmentItem
+                            key={attachment.id}
+                            attachment={attachment}
+                          />
+                        ))}
                     </div>
-                  );
-                })}
-                */}
+                  </div>
+                )}
+
+                {/* Image Attachments */}
+                {contents.attachments.some((att) =>
+                  att.mimeType.startsWith("image/"),
+                ) && (
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-body-lg font-semibold font-body">
+                      Gambar
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {contents.attachments
+                        .filter((att) => att.mimeType.startsWith("image/"))
+                        .map((attachment) => (
+                          <AttachmentItem
+                            key={attachment.id}
+                            attachment={attachment}
+                          />
+                        ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
