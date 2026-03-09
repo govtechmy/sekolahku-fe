@@ -118,7 +118,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     }
 
     const trimmedQuery = query.trim();
-    
+
     if (trimmedQuery.length >= 3 && initialLocationSet) {
       setIsExpanded(true);
       debounceTimerRef.current = window.setTimeout(() => {
@@ -142,7 +142,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
             }
           }
         });
-      }, 200);
+      }, 250);
     } else if (trimmedQuery.length < 3) {
       setLocalSuggestions([]);
       setDataTotal(0);
