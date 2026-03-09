@@ -118,7 +118,6 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
     }
     try {
       set({ isLoadingLocalSuggestions: true });
-
       const results = await getSchoolSuggestion(params, pageNumber);
       const dataResults = results.filteredData;
       const dataTotal = results.totalSchool;
@@ -164,6 +163,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
       set((state) => ({
         localSuggestions: append ? state.localSuggestions : [],
         hasMoreLocalSuggestions: append ? state.hasMoreLocalSuggestions : false,
+        dataTotal: append ? state.dataTotal : 0,
       }));
     } finally {
       set({ isLoadingLocalSuggestions: false });

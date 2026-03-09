@@ -38,6 +38,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     hasMoreLocalSuggestions,
     isLoadingLocalSuggestions,
     dataTotal,
+    setDataTotal,
   } = useMapViewStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -69,9 +70,10 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
           negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
           jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
         });
-      }, 500);
+      }, 1000);
     } else {
       setLocalSuggestions([]);
+      setDataTotal(0);
     }
   };
 
@@ -305,9 +307,11 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                 setSelectedNegeri={setSelectedNegeri}
                 setSelectedJenis={setSelectedJenis}
               />
-              <div className="p-4 pt-0 text-txt-black-500">
-                {dataTotal} buah sekolah ditemui berdasarkan carian anda
-              </div>
+              {query.length > 1 && (
+                <div className="p-4 pt-0 text-txt-black-500">
+                  {dataTotal} buah sekolah ditemui berdasarkan carian anda
+                </div>
+              )}
             </>
           )}
 
