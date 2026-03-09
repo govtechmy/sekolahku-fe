@@ -58,23 +58,6 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   // Handler for MyDS SearchBar onValueChange
   const handleValueChange = (value: string) => {
     setQuery(value);
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    const trimmedValue = value.trim();
-    if (trimmedValue.length >= 3 && initialLocationSet) {
-      debounceTimerRef.current = window.setTimeout(() => {
-        handleSearch({
-          namaSekolah: value,
-          negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
-          jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
-        });
-      }, 1000);
-    } else {
-      setLocalSuggestions([]);
-      setDataTotal(0);
-    }
   };
 
   useEffect(() => {
@@ -128,33 +111,44 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     };
   }, []);
 
-  // Trigger search when query is set
+  // Trigger search when query is set (with debouncing)
   useEffect(() => {
-    if (query.trim().length >= 3) {
-      setIsExpanded(true);
-      handleSearch({
-        namaSekolah: query,
-        negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
-        jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
-      }).then(() => {
-        // After search completes, find exact match
-        if (localSuggestions.length > 0) {
-          const trimmedQuery = query.trim().toLowerCase();
-          const exactMatch = localSuggestions.find(
-            (school) => school.namaSekolah.toLowerCase() === trimmedQuery,
-          );
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
 
-          if (exactMatch) {
-            handleSelect(exactMatch);
-          } else {
-            // No exact match found, don't show school info window
-            setViewSchool(null);
+    const trimmedQuery = query.trim();
+    
+    if (trimmedQuery.length >= 3 && initialLocationSet) {
+      setIsExpanded(true);
+      debounceTimerRef.current = window.setTimeout(() => {
+        handleSearch({
+          namaSekolah: query,
+          negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+          jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+        }).then(() => {
+          // After search completes, find exact match
+          if (localSuggestions.length > 0) {
+            const trimmedQuery = query.trim().toLowerCase();
+            const exactMatch = localSuggestions.find(
+              (school) => school.namaSekolah.toLowerCase() === trimmedQuery,
+            );
+
+            if (exactMatch) {
+              handleSelect(exactMatch);
+            } else {
+              // No exact match found, don't show school info window
+              setViewSchool(null);
+            }
           }
-        }
-      });
+        });
+      }, 200);
+    } else if (trimmedQuery.length < 3) {
+      setLocalSuggestions([]);
+      setDataTotal(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+  }, [query, initialLocationSet]);
 
   useEffect(() => {
     if (!initialLocationSet) return;
