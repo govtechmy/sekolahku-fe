@@ -50,11 +50,12 @@ export default function TakwimId() {
       ) ?? [],
     [contents],
   );
-  
+
   const documentAttachments = useMemo(
     () =>
-      contents?.attachments.filter((att) => !att.mimeType.startsWith("image/")) ??
-      [],
+      contents?.attachments.filter(
+        (att) => !att.mimeType.startsWith("image/"),
+      ) ?? [],
     [contents],
   );
 
