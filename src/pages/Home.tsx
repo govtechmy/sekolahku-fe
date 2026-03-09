@@ -99,7 +99,7 @@ export default function HomePage() {
         {/* design loading for this  */}
         {dataItemCalendar && (
           <SectionHeader
-            header="KALENDAR"
+            header="TAKWIM"
             ButtonLabel="Semua Takwim"
             ButtonClickHandler={() => navigate(`/${lang}/takwim`)}
             children={
