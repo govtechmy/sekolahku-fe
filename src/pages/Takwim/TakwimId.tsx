@@ -13,7 +13,7 @@ import SocialLinks from "../../components/shared/SocialLinks";
 import AttachmentItem from "../../components/shared/AttachmentItem";
 import DownloadAttachmentItem from "../../components/shared/DownloadAttachmentItem";
 import { siaranSocialLinks } from "../../contentData";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type { TakwimItem } from "../../types/takwim";
 import { getTakwimById } from "../../services/takwim.svc";
 import { formatFullEventDate } from "../../utils/date";
@@ -41,6 +41,22 @@ export default function TakwimId() {
       fetchTakwimById(id);
     }
   }, [id]);
+
+  // Filter attachments once to avoid multiple iterations
+  const imageAttachments = useMemo(
+    () =>
+      contents?.attachments.filter((att) =>
+        att.mimeType.startsWith("image/"),
+      ) ?? [],
+    [contents],
+  );
+  
+  const documentAttachments = useMemo(
+    () =>
+      contents?.attachments.filter((att) => !att.mimeType.startsWith("image/")) ??
+      [],
+    [contents],
+  );
 
   return (
     <div className="py-12 justify-center print:py-0 mx-auto px-4.5 flex w-full relative md:px-6 max-w-screen-xl">
@@ -112,37 +128,27 @@ export default function TakwimId() {
             <div className="md:px-10">
               <div className="flex flex-col pt-6 border-t border-gray-200 gap-4">
                 {/* PDF/Document Attachments */}
-                {contents.attachments.some(
-                  (att) => !att.mimeType.startsWith("image/"),
-                ) && (
+                {documentAttachments.length > 0 && (
                   <div className="flex flex-col gap-2">
                     <h3 className="text-body-lg font-semibold font-body">
                       Lampiran
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       <DownloadAttachmentItem
-                        attachments={contents.attachments.filter(
-                          (att) => !att.mimeType.startsWith("image/"),
-                        )}
+                        attachments={documentAttachments}
                       />
                     </div>
                   </div>
                 )}
 
                 {/* Image Attachments */}
-                {contents.attachments.some((att) =>
-                  att.mimeType.startsWith("image/"),
-                ) && (
+                {imageAttachments.length > 0 && (
                   <div className="flex flex-col gap-2">
                     <h3 className="text-body-lg font-semibold font-body">
                       Gambar
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      <AttachmentItem
-                        attachments={contents.attachments.filter((att) =>
-                          att.mimeType.startsWith("image/"),
-                        )}
-                      />
+                      <AttachmentItem attachments={imageAttachments} />
                     </div>
                   </div>
                 )}

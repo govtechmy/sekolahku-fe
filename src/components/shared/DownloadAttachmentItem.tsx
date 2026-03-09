@@ -28,30 +28,22 @@ export default function DownloadAttachmentItem({
         }
 
         return (
-          <div
+          <button
             key={attachment.id}
-            tabIndex={0}
-            role="button"
+            type="button"
             aria-label={attachment.filename}
-            className={`border border-otl-gray-200 w-[204px] h-[54px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 ${attachment.url ? "cursor-pointer" : "cursor-default"}`}
-            onClick={
-              attachment.url
-                ? () => downloadFile(attachment.url, attachment.filename)
-                : undefined
-            }
-            onKeyDown={
-              attachment.url
-                ? (e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      downloadFile(attachment.url, attachment.filename);
-                    }
-                  }
-                : undefined
-            }
+            className="border border-otl-gray-200 w-[204px] h-[54px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 cursor-pointer"
+            onClick={() => downloadFile(attachment.url, attachment.filename)}
           >
             <div className="flex items-center gap-2 overflow-hidden">
-              {getIcon(attachment.mimeType.split("/")[1], attachment.url)}
+              {getIcon(
+                attachment.filename.includes(".")
+                  ? attachment.filename
+                      .slice(attachment.filename.lastIndexOf(".") + 1)
+                      .toLowerCase()
+                  : attachment.mimeType.split("/")[1],
+                attachment.url,
+              )}
               <div className="text-start overflow-hidden">
                 <div className="flex items-center">
                   <div className="max-w-[95px] truncate">
@@ -63,7 +55,10 @@ export default function DownloadAttachmentItem({
                       : attachment.filename}
                   </div>
                   <div className="flex-shrink-0">
-                    .{attachment.mimeType.split("/")[1]}
+                    .
+                    {attachment.filename.includes(".")
+                      ? attachment.filename.split(".").pop()
+                      : attachment.mimeType.split("/")[1]}
                   </div>
                 </div>
                 <div className="text-txt-black-500 text-body-xs font-normal">
@@ -71,7 +66,7 @@ export default function DownloadAttachmentItem({
                 </div>
               </div>
             </div>
-          </div>
+          </button>
         );
       })}
     </>
