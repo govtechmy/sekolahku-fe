@@ -120,14 +120,11 @@ export default function TakwimId() {
                       Lampiran
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {contents.attachments
-                        .filter((att) => !att.mimeType.startsWith("image/"))
-                        .map((attachment) => (
-                          <DownloadAttachmentItem
-                            key={attachment.id}
-                            attachment={attachment}
-                          />
-                        ))}
+                      <DownloadAttachmentItem
+                        attachments={contents.attachments.filter(
+                          (att) => !att.mimeType.startsWith("image/"),
+                        )}
+                      />
                     </div>
                   </div>
                 )}
@@ -141,14 +138,11 @@ export default function TakwimId() {
                       Gambar
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {contents.attachments
-                        .filter((att) => att.mimeType.startsWith("image/"))
-                        .map((attachment) => (
-                          <AttachmentItem
-                            key={attachment.id}
-                            attachment={attachment}
-                          />
-                        ))}
+                      <AttachmentItem
+                        attachments={contents.attachments.filter((att) =>
+                          att.mimeType.startsWith("image/"),
+                        )}
+                      />
                     </div>
                   </div>
                 )}

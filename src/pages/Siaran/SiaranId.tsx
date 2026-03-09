@@ -119,10 +119,6 @@ export default function SiaranId() {
                 className="w-fit max-h-[415px] object-contain rounded-lg"
               />
             </div>
-            {/* <span className="text-txt-black-500 text-center font-body font-normal text-body-sm md:px-10">
-              Image from{" "}
-              <span className="italic">{contents.imageHero.url}</span>
-            </span> */}
           </div>
           <div className="text-xl text-justify font-normal md:px-10">
             <RichText
@@ -142,14 +138,11 @@ export default function SiaranId() {
                       Lampiran
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {contents.attachments
-                        .filter((att) => !att.mimeType.startsWith("image/"))
-                        .map((attachment) => (
-                          <DownloadAttachmentItem
-                            key={attachment.id}
-                            attachment={attachment}
-                          />
-                        ))}
+                      <DownloadAttachmentItem
+                        attachments={contents.attachments.filter(
+                          (att) => !att.mimeType.startsWith("image/"),
+                        )}
+                      />
                     </div>
                   </div>
                 )}
@@ -163,14 +156,11 @@ export default function SiaranId() {
                       Gambar
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {contents.attachments
-                        .filter((att) => att.mimeType.startsWith("image/"))
-                        .map((attachment) => (
-                          <AttachmentItem
-                            key={attachment.id}
-                            attachment={attachment}
-                          />
-                        ))}
+                      <AttachmentItem
+                        attachments={contents.attachments.filter((att) =>
+                          att.mimeType.startsWith("image/"),
+                        )}
+                      />
                     </div>
                   </div>
                 )}
