@@ -89,7 +89,7 @@ export default function HomePage() {
             children={
               <SectionItemNews
                 dataItemNews={dataItemNews}
-                mainTitle="Tahun Ini Tahun Kita"
+                mainTitle="Apa yang Sedang Berlaku di sekolah-sekolah Malaysia"
                 redirectDesc="Baca"
               />
             }
@@ -128,6 +128,7 @@ export default function HomePage() {
             title=""
             children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
             isLastSection={true}
+            classNameHeader="mb-[20px]"
           />
         </div>
 
