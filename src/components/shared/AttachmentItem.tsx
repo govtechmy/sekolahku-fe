@@ -28,7 +28,7 @@ export default function AttachmentItem({ attachments }: AttachmentItemProps) {
       attachment.filename &&
       attachment.filesize != null &&
       attachment.url &&
-      attachment.mimeType
+      attachment.mimeType,
   );
 
   if (validAttachments.length === 0) {
