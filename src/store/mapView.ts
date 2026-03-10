@@ -4,6 +4,7 @@ import type { SearchBarMapProps } from "../types/maps";
 import type { ItemSekolahModel } from "../models/response";
 import { getSchoolSuggestion } from "../services/school.svc";
 import type { GeoJSONFeature } from "../types/polygon";
+import { useLocationSessionStore } from "./locationSession";
 
 type Center = [number, number];
 
@@ -118,7 +119,13 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
     }
     try {
       set({ isLoadingLocalSuggestions: true });
-      const results = await getSchoolSuggestion(params, pageNumber);
+      const initialLocationUser =
+        useLocationSessionStore.getState().initialLocationUser;
+      const results = await getSchoolSuggestion(
+        params,
+        pageNumber,
+        initialLocationUser,
+      );
       const dataResults = results.filteredData;
       const dataTotal = results.totalSchool;
       set({ dataTotal });
