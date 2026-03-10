@@ -77,7 +77,7 @@ export default function AttachmentItem({ attachments }: AttachmentItemProps) {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogBody>
           <DialogHeader>
-            <DialogTitle >Paparan Imej</DialogTitle>
+            <DialogTitle>Paparan Imej</DialogTitle>
           </DialogHeader>
           <DialogContent>
             <img
