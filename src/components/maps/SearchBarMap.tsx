@@ -2,26 +2,27 @@ import { useState, useEffect, useRef, type UIEvent } from "react";
 import {
   ArrowBackIcon,
   ChevronRightIcon,
-  MapIcon,
+  PinIcon,
 } from "@govtechmy/myds-react/icon";
 import { FilterDropdowns } from "./FilterDropdowns";
 import type { SearchBarMapProps } from "../../types/maps";
 import { getSchoolS3Json } from "../../services/school.svc";
 import {
   SearchBar,
-  SearchBarHint,
   SearchBarInput,
   SearchBarInputContainer,
   SearchBarSearchButton,
+  // SearchBarHint,
 } from "@govtechmy/myds-react/search-bar";
 import { clx } from "@govtechmy/myds-react/utils";
 import { Button } from "@govtechmy/myds-react/button";
-import { Pill } from "@govtechmy/myds-react/pill";
+// import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import { useMapViewStore } from "../../store/mapView";
 import { NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
 import { useLocationSessionStore } from "../../store/locationSession";
+import SekolahAngkatMadaniIcon from "../../icons/SekolahAngkatMadaniIcon";
 
 export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const {
@@ -36,6 +37,8 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     localSuggestionsPage,
     hasMoreLocalSuggestions,
     isLoadingLocalSuggestions,
+    dataTotal,
+    setDataTotal,
   } = useMapViewStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -55,22 +58,6 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   // Handler for MyDS SearchBar onValueChange
   const handleValueChange = (value: string) => {
     setQuery(value);
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    const trimmedValue = value.trim();
-    if (trimmedValue.length >= 3 && initialLocationSet) {
-      debounceTimerRef.current = window.setTimeout(() => {
-        handleSearch({
-          namaSekolah: value,
-          negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
-          jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
-        });
-      }, 500);
-    } else {
-      setLocalSuggestions([]);
-    }
   };
 
   useEffect(() => {
@@ -124,33 +111,44 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     };
   }, []);
 
-  // Trigger search when query is set
+  // Trigger search when query is set (with debouncing)
   useEffect(() => {
-    if (query.trim().length >= 3) {
-      setIsExpanded(true);
-      handleSearch({
-        namaSekolah: query,
-        negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
-        jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
-      }).then(() => {
-        // After search completes, find exact match
-        if (localSuggestions.length > 0) {
-          const trimmedQuery = query.trim().toLowerCase();
-          const exactMatch = localSuggestions.find(
-            (school) => school.namaSekolah.toLowerCase() === trimmedQuery,
-          );
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
 
-          if (exactMatch) {
-            handleSelect(exactMatch);
-          } else {
-            // No exact match found, don't show school info window
-            setViewSchool(null);
+    const trimmedQuery = query.trim();
+
+    if (trimmedQuery.length >= 3 && initialLocationSet) {
+      setIsExpanded(true);
+      debounceTimerRef.current = window.setTimeout(() => {
+        handleSearch({
+          namaSekolah: query,
+          negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+          jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+        }).then(() => {
+          // After search completes, find exact match
+          if (localSuggestions.length > 0) {
+            const trimmedQuery = query.trim().toLowerCase();
+            const exactMatch = localSuggestions.find(
+              (school) => school.namaSekolah.toLowerCase() === trimmedQuery,
+            );
+
+            if (exactMatch) {
+              handleSelect(exactMatch);
+            } else {
+              // No exact match found, don't show school info window
+              setViewSchool(null);
+            }
           }
-        }
-      });
+        });
+      }, 250);
+    } else if (trimmedQuery.length < 3) {
+      setLocalSuggestions([]);
+      setDataTotal(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+  }, [query, initialLocationSet]);
 
   useEffect(() => {
     if (!initialLocationSet) return;
@@ -284,24 +282,31 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                   // readOnly={!isExpanded}
                   className={clx(isExpanded ? "pl-0" : "")}
                 />
-                {(!query || query.trim().length === 0) && (
+                {/* {(!query || query.trim().length === 0) && (
                   <SearchBarHint className="">
                     Tekan <Pill size="small">/</Pill> untuk cari
                   </SearchBarHint>
-                )}
+                )} */}
                 <SearchBarSearchButton />
               </SearchBarInputContainer>
             </SearchBar>
           </div>
           {isExpanded && (
-            <FilterDropdowns
-              selectedNegeri={selectedNegeri}
-              selectedJenis={selectedJenis}
-              negeriList={negeriList}
-              jenisList={schoolTypes}
-              setSelectedNegeri={setSelectedNegeri}
-              setSelectedJenis={setSelectedJenis}
-            />
+            <>
+              <FilterDropdowns
+                selectedNegeri={selectedNegeri}
+                selectedJenis={selectedJenis}
+                negeriList={negeriList}
+                jenisList={schoolTypes}
+                setSelectedNegeri={setSelectedNegeri}
+                setSelectedJenis={setSelectedJenis}
+              />
+              {query.length > 1 && (
+                <div className="p-4 pt-0 text-txt-black-500">
+                  {dataTotal} buah sekolah ditemui berdasarkan carian anda
+                </div>
+              )}
+            </>
           )}
 
           {isExpanded && (
@@ -319,15 +324,20 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col">
-                        <span className="text-xs font-medium text-txt-primary bg-bg-primary-100 px-2 py-0.5 rounded-full w-fit mb-1 border border-bg-primary-700">
-                          {school.jenisLabel || "Sekolah"}
-                        </span>
+                        <div className="flex gap-2 items-center pb-3">
+                          <span className="text-xs font-medium text-txt-primary bg-bg-primary-100 px-2 py-0.5 rounded-full w-fit border border-bg-primary-700">
+                            {school.jenisLabel || "Sekolah"}
+                          </span>
+                          {school.isSekolahAngkatMADANI && (
+                            <SekolahAngkatMadaniIcon />
+                          )}
+                        </div>
 
                         <span className="text-base font-medium text-gray-900">
                           {school.namaSekolah}
                         </span>
 
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-500 pb-3">
                           {school.bandarSurat}, {school.negeri}
                         </span>
 
@@ -335,7 +345,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                           {initialLocationUser?.[0] &&
                             initialLocationUser?.[1] && (
                               <>
-                                <MapIcon className="w-4 h-4" />
+                                <PinIcon className="w-4 h-4" />
                                 {(() => {
                                   const distanceInMeters = calculateDistance(
                                     initialLocationUser[0],

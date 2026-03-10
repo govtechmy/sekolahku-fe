@@ -1,6 +1,8 @@
 import { Button } from "@govtechmy/myds-react/button";
 import { FilterAscIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
+import HomeArrowIcon from "../../asset/home-arrow-icon";
+import HomeUnderlineIcon from "../../asset/home-underline-icon";
 
 interface HeroBanner {
   "top-gradient": string;
@@ -28,6 +30,7 @@ interface Link {
 }
 
 export default function Hero({
+  homeTitle,
   title,
   search,
   links,
@@ -40,6 +43,7 @@ export default function Hero({
   className,
 }: {
   title: string;
+  homeTitle?: string;
   search?: React.ReactNode;
   links?: Link[];
   filters?: React.ReactNode;
@@ -98,18 +102,31 @@ export default function Hero({
       >
         <div
           className={clx(
-            "flex flex-col gap-8 py-16 items-center lg:text-start text-center",
+            "flex flex-col gap-8 py-16 items-center lg:text-start text-center w-full",
             variant === "side" ? "md:w-[550px] lg:w-[350px]" : " ",
           )}
         >
           <div></div>
           <h1
             className={clx(
-              "text-txt-black-900 font-heading font-semibold text-3xl w-full",
+              "text-txt-black-900 font-heading font-semibold text-3xl w-full items-center justify-center flex flex-col",
               variant === "full" ? "text-center" : "",
             )}
           >
-            {title}
+            <div className=" items-center justify-center flex flex-col w-[300px]">
+              <p>{title}</p>
+              {homeTitle && (
+                <div className="relative">
+                  {homeTitle}
+                  <div className="absolute bottom-[-8px] right-[0px] max-[350px]:hidden">
+                    <HomeUnderlineIcon className="w-[155px]"></HomeUnderlineIcon>
+                  </div>
+                  <div className="absolute bottom-[-20px] right-[-50px] max-[350px]:hidden">
+                    <HomeArrowIcon></HomeArrowIcon>
+                  </div>
+                </div>
+              )}
+            </div>
           </h1>
           {search && (
             <div
@@ -118,7 +135,7 @@ export default function Hero({
                 variant === "full" ? "justify-center" : "",
               )}
             >
-              <div className="flex-1 max-w-[600px]">{search}</div>
+              <div className="flex-1 max-w-[600px] ">{search}</div>
             </div>
           )}
           {links && links.length > 0 && (

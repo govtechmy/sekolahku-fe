@@ -7,13 +7,19 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from "@govtechmy/myds-react/breadcrumb";
-import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
+// import { ClockIcon, PrinterIcon } from "@govtechmy/myds-react/icon";
+import { PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
 import { siaranSocialLinks } from "../../contentData";
-import DotIcon from "../../icons/DotIcon";
+// import DotIcon from "../../icons/DotIcon";
 import { useEffect, useState } from "react";
-import { formatFullEventDate, formatEventTime } from "../../utils/date";
+// import {
+//   formatFullEventDate,
+//   formatEventTime,
+//   translateEnglishMonthToMalay,
+// } from "../../utils/date";
+import { formatEventDateDDMMYY } from "../../utils/date";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { getIcon } from "../../utils/getIconLogo";
 import { formatFileSize } from "../../utils/formatFileSize";
@@ -49,7 +55,9 @@ export default function SiaranId() {
         <div className="flex flex-col gap-6 max-w-[825px]">
           <Breadcrumb className="md:px-10 print:hidden">
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/${lang}/siaran`}>Siaran</BreadcrumbLink>
+              <BreadcrumbLink href={`/${lang}/berita-kpm`}>
+                Berita KPM
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -72,21 +80,28 @@ export default function SiaranId() {
             <p className="text-2xl font-semibold font-body">{contents.title}</p>
 
             <div className=" flex flex-row gap-2 text-bg-black-500">
-              <div className=" flex flex-row gap-1 items-center text-body-sm font-body font-normal">
+              {/* <div className=" flex flex-row gap-1 items-center text-body-sm font-body font-normal">
                 <ClockIcon /> Bacaan {contents.readTime} min
               </div>
               <div className="flex items-center">
                 <DotIcon className="size-0.5" />
-              </div>
+              </div> */}
               <div className="text-body-sm font-body font-normal">
-                {formatFullEventDate(contents.articleDate)},{" "}
+                {formatEventDateDDMMYY(contents.articleDate)}
+                {/* Previous format (kept for reference), incase they wanted the old design back or translate to English because design is bad:
+                {translateEnglishMonthToMalay(formatFullEventDate(contents.articleDate))}
                 {formatEventTime(contents.articleDate)}
+                */}
               </div>
             </div>
           </div>
           <div className="md:px-10 print:hidden">
             <div className="flex justify-between pb-[18px] border-b border-gray-200">
-              <SocialLinks links={siaranSocialLinks} classNameButton="p-2" />
+              <SocialLinks
+                links={siaranSocialLinks}
+                classNameButton="p-2"
+                isShareLinks={true}
+              />
               <div className="flex items-center ">
                 <Button
                   variant="default-outline"

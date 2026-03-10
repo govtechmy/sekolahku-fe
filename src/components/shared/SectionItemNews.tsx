@@ -30,7 +30,7 @@ export default function SectionItemNews({
           {dataItemNews.slice(0, 4).map((item: SiaranItem, index: number) => (
             <Link
               key={index}
-              to={`/${lang}/siaran/${item._id}`}
+              to={`/${lang}/berita-kpm/${item._id}`}
               tabIndex={0}
               className="group border border-otl-gray-200 gap-[18px] rounded-lg p-2 md:p-3 w-full h-full flex flex-col cursor-pointer transition-shadow hover:shadow-lg focus:outline-primary-200"
             >

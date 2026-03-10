@@ -7,9 +7,9 @@ import {
   SearchBarResultsList,
   SearchBarResultsItem,
   SearchBarClearButton,
-  SearchBarHint,
+  // SearchBarHint,
 } from "@govtechmy/myds-react/search-bar";
-import { Pill } from "@govtechmy/myds-react/pill";
+// import { Pill } from "@govtechmy/myds-react/pill";
 import { ChevronRightIcon } from "@govtechmy/myds-react/icon";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
@@ -23,6 +23,7 @@ interface SearchBarHomeProps<T> {
   getKey?: (item: T) => string;
   getLabel?: (item: T) => string;
   onSelect?: (item: T) => void;
+  searchBarTitle?: string;
 }
 
 export default function SearchBarHome<T>({
@@ -34,6 +35,7 @@ export default function SearchBarHome<T>({
   getKey,
   getLabel,
   onSelect,
+  searchBarTitle = "Carian",
 }: SearchBarHomeProps<T>) {
   const [hasFocus, setHasFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -65,7 +67,7 @@ export default function SearchBarHome<T>({
       <SearchBarInputContainer>
         <SearchBarInput
           ref={inputRef}
-          placeholder="Carian"
+          placeholder={searchBarTitle}
           value={query}
           onValueChange={handleValueChange}
           onKeyDown={handleSearchEnter}
@@ -81,11 +83,11 @@ export default function SearchBarHome<T>({
             }}
           />
         )}
-        {(!query || query.trim().length === 0) && (
+        {/* {(!query || query.trim().length === 0) && (
           <SearchBarHint className="">
             Tekan <Pill size="small">/</Pill> untuk cari
           </SearchBarHint>
-        )}
+        )} */}
         <SearchBarSearchButton
           tabIndex={0}
           {...(location.pathname === `/${lang || "ms"}/home` && {

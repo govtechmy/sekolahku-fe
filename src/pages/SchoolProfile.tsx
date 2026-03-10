@@ -112,7 +112,7 @@ export default function SchoolProfile() {
         />
         <>
           <div className="border-otl-divider border-y">
-            <PageContainer className="">
+            <PageContainer>
               <div className="grid grid-cols-2 xl:grid-cols-2 overflow-hidden border border-otl-divider border-y-0 divide-y md:divide-y-0 divide-x divide-otl-divider ">
                 <StatCard
                   icon={<UserGroupIcon />}
@@ -132,7 +132,7 @@ export default function SchoolProfile() {
             </PageContainer>
           </div>
           <PageContainer>
-            <div className="pt-[84px] pb-[32px] px-[65px] max-md:pt-[48px] max-md:px-[28px]">
+            <div className="pt-[84px] pb-[32px] px-[40px] max-md:pt-[48px] max-md:px-[28px]">
               <div className="text-heading-sm text-txt-black-900 font-semibold pb-12">
                 <div
                   className=" focus:outline-primary-200"
@@ -224,7 +224,7 @@ export default function SchoolProfile() {
             </PageContainer>
           </div>
           <PageContainer>
-            <div className="py-[84px] px-[65px] max-md:px-[28px] max-md:py-[48px]">
+            <div className="py-[84px] px-[40px] max-md:px-[28px] max-md:py-[48px]">
               <div className="text-heading-sm text-txt-black-900 font-semibold pb-12 ">
                 <div
                   className="focus:outline-primary-200"
