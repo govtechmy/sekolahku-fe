@@ -87,13 +87,13 @@ export default function AttachmentItem({ attachments }: AttachmentItemProps) {
             />
           </DialogContent>
           <DialogFooter className="flex justify-center items-center">
-            <div className="flex gap-2 overflow-x-auto">
+            <div className="flex gap-2 overflow-x-auto h-[120px] items-center px-2">
               {validAttachments.map((attachment, index) => (
                 <button
                   key={attachment.id}
                   type="button"
                   aria-label={`View ${attachment.filename}`}
-                  className={`flex items-center justify-center w-[100px] h-[100px] rounded-lg border-2 cursor-pointer transition-all focus:outline focus:outline-2 focus:outline-otl-primary-200 ${
+                  className={`flex items-center justify-center w-[100px] h-[100px] rounded-lg border-2 cursor-pointer transition-all focus:outline focus:outline-2 focus:outline-primary-200 ${
                     selectedImageIndex === index
                       ? "border-primary-200"
                       : "border-otl-gray-200"
