@@ -9,6 +9,7 @@ import {
 import { formatFileSize } from "../../utils/formatFileSize";
 import { useState } from "react";
 import type { Attachment } from "../../types/takwim";
+import "./AttachmentItem.css";
 interface AttachmentItemProps {
   attachments: Attachment[];
 }
