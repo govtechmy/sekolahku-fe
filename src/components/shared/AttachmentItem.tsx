@@ -75,35 +75,35 @@ export default function AttachmentItem({ attachments }: AttachmentItemProps) {
       ))}
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogBody>
-          <DialogHeader>
+        <DialogBody className="!max-w-[95vw] lg:!max-w-[1200px] !h-[90vh] lg:!h-[85vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>Paparan Imej</DialogTitle>
           </DialogHeader>
-          <DialogContent>
+          <DialogContent className="flex-1 flex items-center justify-center overflow-hidden p-4 min-h-0">
             <img
               src={validAttachments[selectedImageIndex]?.url}
               alt={validAttachments[selectedImageIndex]?.filename}
-              className="w-full h-full object-contain"
+              className="max-w-full max-h-full object-contain"
             />
           </DialogContent>
-          <DialogFooter className="flex justify-center items-center">
-            <div className="flex gap-2 overflow-x-auto h-[120px] items-center px-2">
+          <DialogFooter className="flex-shrink-0 flex justify-center items-center py-4 border-t border-otl-gray-200">
+            <div className="flex gap-3 overflow-x-auto max-w-full px-4">
               {validAttachments.map((attachment, index) => (
                 <button
                   key={attachment.id}
                   type="button"
                   aria-label={`View ${attachment.filename}`}
-                  className={`flex items-center justify-center w-[100px] h-[100px] rounded-lg border-2 cursor-pointer transition-all focus:outline focus:outline-2 focus:outline-primary-200 ${
+                  className={`flex-shrink-0 flex items-center justify-center w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-lg border-2 cursor-pointer transition-all focus:outline focus:outline-2 focus:outline-primary-200 ${
                     selectedImageIndex === index
-                      ? "border-primary-200"
-                      : "border-otl-gray-200"
+                      ? "border-primary-600 shadow-md"
+                      : "border-otl-gray-200 hover:border-otl-gray-300"
                   }`}
                   onClick={() => setSelectedImageIndex(index)}
                 >
                   <img
                     src={attachment.url}
                     alt={attachment.filename}
-                    className="max-w-[96px] max-h-[96px] object-contain rounded-md"
+                    className="w-[72px] h-[72px] lg:w-[92px] lg:h-[92px] object-cover rounded-md"
                   />
                 </button>
               ))}
