@@ -11,7 +11,7 @@ import {
 import { PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
-import AttachmentItem from "../../components/shared/AttachmentItem";
+import ImageAttachmentItem from "../../components/shared/ImageAttachmentItem";
 import DownloadAttachmentItem from "../../components/shared/DownloadAttachmentItem";
 import { siaranSocialLinks } from "../../contentData";
 // import DotIcon from "../../icons/DotIcon";
@@ -167,7 +167,7 @@ export default function SiaranId() {
                       Gambar
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      <AttachmentItem attachments={imageAttachments} />
+                      <ImageAttachmentItem attachments={imageAttachments} />
                     </div>
                   </div>
                 )}

@@ -9,11 +9,11 @@ import {
 import { formatFileSize } from "../../utils/formatFileSize";
 import { useState } from "react";
 import type { Attachment } from "../../types/takwim";
-interface AttachmentItemProps {
+interface ImageAttachmentItemProps {
   attachments: Attachment[];
 }
 
-export default function AttachmentItem({ attachments }: AttachmentItemProps) {
+export default function ImageAttachmentItem({ attachments }: ImageAttachmentItemProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
