@@ -2,16 +2,14 @@ import { formatFileSize } from "../../utils/formatFileSize";
 import { getIcon } from "../../utils/getIconLogo";
 import { downloadFile } from "../../services/download.svc";
 import type { Attachment } from "../../types/takwim";
-interface DownloadAttachmentItemProps {
 
+interface DownloadAttachmentItemProps {
   attachments: Attachment[];
-  
 }
 
 export default function DownloadAttachmentItem({
   attachments,
 }: DownloadAttachmentItemProps) {
-
   return (
     <>
       {attachments.map((attachment) => {
