@@ -75,7 +75,7 @@ export default function AttachmentItem({ attachments }: AttachmentItemProps) {
       ))}
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogBody className="!max-w-[95vw] lg:!max-w-[1200px] !h-[90vh] lg:!h-[85vh] flex flex-col">
+        <DialogBody className="!max-w-[95vw] lg:!max-w-[1200px] !h-[90vh] lg:!h-[85vh] flex flex-col max-sm:!h-[80vh]">
           <DialogHeader className="flex-shrink-0">
             <DialogTitle>Paparan Imej</DialogTitle>
           </DialogHeader>
