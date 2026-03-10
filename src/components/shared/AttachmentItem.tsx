@@ -8,15 +8,9 @@ import {
 } from "@govtechmy/myds-react/dialog";
 import { formatFileSize } from "../../utils/formatFileSize";
 import { useState } from "react";
-
+import type { Attachment } from "../../types/takwim";
 interface AttachmentItemProps {
-  attachments: Array<{
-    id: string;
-    filename: string;
-    filesize: number;
-    url: string;
-    mimeType: string;
-  }>;
+  attachments: Attachment[];
 }
 
 export default function AttachmentItem({ attachments }: AttachmentItemProps) {
@@ -83,9 +77,9 @@ export default function AttachmentItem({ attachments }: AttachmentItemProps) {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogBody>
           <DialogHeader>
-            <DialogTitle>Paparan Imej</DialogTitle>
+            <DialogTitle >Paparan Imej</DialogTitle>
           </DialogHeader>
-          <DialogContent className="px-0 pt-2">
+          <DialogContent>
             <img
               src={validAttachments[selectedImageIndex]?.url}
               alt={validAttachments[selectedImageIndex]?.filename}
@@ -93,7 +87,7 @@ export default function AttachmentItem({ attachments }: AttachmentItemProps) {
             />
           </DialogContent>
           <DialogFooter className="flex justify-center items-center">
-            <div className="flex gap-2">
+            <div className="flex gap-2 overflow-x-auto">
               {validAttachments.map((attachment, index) => (
                 <button
                   key={attachment.id}
