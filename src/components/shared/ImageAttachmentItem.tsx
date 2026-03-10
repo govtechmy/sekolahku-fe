@@ -13,7 +13,9 @@ interface ImageAttachmentItemProps {
   attachments: Attachment[];
 }
 
-export default function ImageAttachmentItem({ attachments }: ImageAttachmentItemProps) {
+export default function ImageAttachmentItem({
+  attachments,
+}: ImageAttachmentItemProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
