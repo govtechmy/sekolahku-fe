@@ -77,16 +77,16 @@ export default function AttachmentItem({ attachments }: AttachmentItemProps) {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogBody className="!max-w-[95vw] lg:!max-w-[1200px] !h-[90vh] lg:!h-[85vh] flex flex-col max-sm:!h-[80vh]">
           <DialogHeader className="flex-shrink-0">
-            <DialogTitle>Paparan Imej</DialogTitle>
+            <DialogTitle className="pb-2">Paparan Imej</DialogTitle>
           </DialogHeader>
-          <DialogContent className="flex-1 flex items-center justify-center overflow-hidden p-4 min-h-0">
+          <DialogContent className="flex-1 flex items-center justify-center overflow-hidden p-4 min-h-0 border-y">
             <img
               src={validAttachments[selectedImageIndex]?.url}
               alt={validAttachments[selectedImageIndex]?.filename}
               className="max-w-full max-h-full object-contain"
             />
           </DialogContent>
-          <DialogFooter className="flex-shrink-0 flex justify-center items-center py-4 border-t border-otl-gray-200">
+          <DialogFooter className="flex-shrink-0 flex justify-center items-center py-4 border-otl-gray-200">
             <div className="flex gap-3 overflow-x-auto max-w-full px-4 py-1">
               {validAttachments.map((attachment, index) => (
                 <button
