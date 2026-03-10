@@ -18,7 +18,7 @@ type CenterCoord = [number | null, number | null];
 export const getSchoolSuggestion = async (
   params?: schoolSearchModel,
   pageNumber: number = 1,
-  initialLocationUser?: CenterCoord
+  initialLocationUser?: CenterCoord,
 ): Promise<{ filteredData: ItemSekolahModel[]; totalSchool: number }> => {
   try {
     const [lat, lng] = initialLocationUser || [null, null];

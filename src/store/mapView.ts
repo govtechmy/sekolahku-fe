@@ -119,8 +119,13 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
     }
     try {
       set({ isLoadingLocalSuggestions: true });
-      const initialLocationUser = useLocationSessionStore.getState().initialLocationUser;
-      const results = await getSchoolSuggestion(params, pageNumber, initialLocationUser);
+      const initialLocationUser =
+        useLocationSessionStore.getState().initialLocationUser;
+      const results = await getSchoolSuggestion(
+        params,
+        pageNumber,
+        initialLocationUser,
+      );
       const dataResults = results.filteredData;
       const dataTotal = results.totalSchool;
       set({ dataTotal });
