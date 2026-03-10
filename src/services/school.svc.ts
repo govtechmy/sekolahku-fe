@@ -13,13 +13,17 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const SCHOOL_ENDPOINT = "/schools";
 export const DATA_BASE_URL = import.meta.env.VITE_DATA_BASE_URL;
 
+type CenterCoord = [number | null, number | null];
+
 export const getSchoolSuggestion = async (
   params?: schoolSearchModel,
   pageNumber: number = 1,
+  initialLocationUser?: CenterCoord
 ): Promise<{ filteredData: ItemSekolahModel[]; totalSchool: number }> => {
   try {
+    const [lat, lng] = initialLocationUser || [null, null];
     const response = await authAxios.get<APIResponse<ListSekolahModel>>(
-      `${BASE_URL}${SCHOOL_ENDPOINT}/search?page=${pageNumber}&pageSize=12`,
+      `${BASE_URL}${SCHOOL_ENDPOINT}/search?latitude=${lat}&longitude=${lng}&page=${pageNumber}&pageSize=12`,
       {
         params,
         paramsSerializer: { indexes: null },
