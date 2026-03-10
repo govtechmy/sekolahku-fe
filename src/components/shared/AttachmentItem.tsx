@@ -87,7 +87,7 @@ export default function AttachmentItem({ attachments }: AttachmentItemProps) {
             />
           </DialogContent>
           <DialogFooter className="flex-shrink-0 flex justify-center items-center py-4 border-t border-otl-gray-200">
-            <div className="flex gap-3 overflow-x-auto max-w-full px-4">
+            <div className="flex gap-3 overflow-x-auto max-w-full px-4 py-1">
               {validAttachments.map((attachment, index) => (
                 <button
                   key={attachment.id}
@@ -95,7 +95,7 @@ export default function AttachmentItem({ attachments }: AttachmentItemProps) {
                   aria-label={`View ${attachment.filename}`}
                   className={`flex-shrink-0 flex items-center justify-center w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] rounded-lg border-2 cursor-pointer transition-all focus:outline focus:outline-2 focus:outline-primary-200 ${
                     selectedImageIndex === index
-                      ? "border-primary-600 shadow-md"
+                      ? "border-primary-300 shadow-md"
                       : "border-otl-gray-200 hover:border-otl-gray-300"
                   }`}
                   onClick={() => setSelectedImageIndex(index)}
