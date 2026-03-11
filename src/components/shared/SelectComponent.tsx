@@ -179,7 +179,11 @@ export function SimpleSelect({
           <ChevronDownFillIcon
             className={clx(
               "text-txt-black-900 shrink-0 transition-transform",
-              size === "small" ? "size-4" : size === "medium" ? "size-5" : "size-5",
+              size === "small"
+                ? "size-4"
+                : size === "medium"
+                  ? "size-5"
+                  : "size-5",
               isOpen && "rotate-180",
             )}
           />
