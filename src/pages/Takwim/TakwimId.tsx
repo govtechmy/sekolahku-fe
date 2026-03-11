@@ -109,10 +109,10 @@ export default function TakwimId() {
               data={contents.content}
             />
           </div>
-          {contents.attachments.length > 0 && (
+          {contents.attachments?.length > 0 && (
             <div className="md:px-10">
               <div className="flex flex-wrap pt-6 border-t border-gray-200 gap-2">
-                {contents.attachments.map((attachment) => {
+                {contents.attachments?.map((attachment) => {
                   const hasValidUrl = !!attachment.url;
                   return (
                     <div key={attachment.id}>
