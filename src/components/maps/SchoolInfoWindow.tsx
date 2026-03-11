@@ -45,7 +45,7 @@ export function SchoolInfoWindow({
 
   return (
     <div
-      className={`relative bg-white rounded-b-xl ${isFullScreen ? 'min-h-full' : ''}`}
+      className={`relative bg-white rounded-b-xl ${isFullScreen ? "min-h-full" : ""}`}
       onClick={() => {
         if (onToggleFullScreen) {
           onToggleFullScreen();
@@ -84,7 +84,7 @@ export function SchoolInfoWindow({
             school.data.infoPentadbiran.parlimen,
             school.kodSekolah,
           )}
-          alt={school?.namaSekolah+" "+school?.kodSekolah || "Sekolah"}
+          alt={school?.namaSekolah + " " + school?.kodSekolah || "Sekolah"}
           className="max-h-32 w-auto object-contain"
           onError={handleImageError}
         />
@@ -137,8 +137,9 @@ export function SchoolInfoWindow({
           <InfoRow
             label="JPN"
             value={
-              underScoreRemover("JPN "+school?.data?.infoPentadbiran?.negeri) ||
-              "Tiada Maklumat"
+              underScoreRemover(
+                "JPN " + school?.data?.infoPentadbiran?.negeri,
+              ) || "Tiada Maklumat"
             }
           />
           <InfoRow
