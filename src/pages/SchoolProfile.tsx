@@ -240,12 +240,16 @@ export default function SchoolProfile() {
                   }
                 />
 
-                {school.data.infoPentadbiran?.integrasi && (
-                  <InfoGridItem
-                    label="INTEGRASI"
-                    value={school.data.infoPentadbiran.integrasi}
-                  />
-                )}
+                <InfoGridItem
+                  label="INTEGRASI"
+                  value={
+                    school.data.infoPentadbiran.integrasi !== undefined
+                      ? school.data.infoPentadbiran.integrasi
+                        ? true
+                        : false
+                      : "Tiada Maklumat"
+                  }
+                />
               </div>
             </PageContainer>
           </div>
