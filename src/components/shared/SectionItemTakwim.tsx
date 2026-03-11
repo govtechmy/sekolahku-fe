@@ -20,7 +20,7 @@ export default function SectionItemTakwim({
       {dataItemCalendar.map((item, index) => (
         <div
           key={index}
-          className="w-full border border-otl-gray-200 rounded-lg cursor-pointer"
+          className="w-full border border-otl-gray-200 rounded-lg cursor-pointer focus:outline-primary-200 hover:bg-bg-gray-50"
           onClick={() => {
             navigate(`/${lang}/takwim/${item._id}`);
           }}
@@ -56,20 +56,18 @@ export default function SectionItemTakwim({
               )}
             </div>
             <div className="items-center flex max-sm:hidden !w-[161px] flex-shrink-0">
-              <div className="border border-otl-gray-200 flex px-2.5 py-1.5 rounded-md gap-1.5 items-center flex-shrink-0 shadow-button">
+              <div className="border border-otl-gray-200 flex px-2.5 py-1.5 rounded-md gap-1.5 items-center flex-shrink-0 shadow-button hover:bg-bg-gray-50">
                 <SearchIcon className="size-4" />
                 <div className="text-body-sm font-medium text-txt-black-700">
-                  {" "}
                   Semak Takwim
                 </div>
               </div>
             </div>
           </div>
           <div className="items-center flex sm:hidden pl-[80px] mb-3">
-            <div className="border border-otl-gray-200 flex px-2.5 py-1.5 rounded-md gap-1.5 items-center flex-shrink-0 shadow-button">
+            <div className="border border-otl-gray-200 flex px-2.5 py-1.5 rounded-md gap-1.5 items-center flex-shrink-0 shadow-button hover:bg-bg-gray-50">
               <SearchIcon className="size-4" />
               <div className="text-body-sm font-medium text-txt-black-700">
-                {" "}
                 Semak Takwim
               </div>
             </div>
