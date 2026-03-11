@@ -78,6 +78,7 @@ export function MapContainerComponent({
     setSchoolMarkers,
     initialLocationSet,
     setViewSchool,
+    viewSchool,
     statePolygons,
     userMarkers,
   } = useMapViewStore();
@@ -178,6 +179,10 @@ export function MapContainerComponent({
             id: kodSekolah,
             total: coords.total,
           }}
+          isSelected={
+            coords.markerType === "INDIVIDUAL" &&
+            viewSchool?.kodSekolah === kodSekolah
+          }
           onClick={async () => {
             const { koordinatXX, koordinatYY, markerType } = coords;
             setCenter([koordinatXX, koordinatYY]);
