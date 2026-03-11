@@ -30,7 +30,7 @@ const AccessGuard: React.FC<AccessGuardProps> = ({
       setError("");
       onAccessGranted();
     } else {
-      setError("Invalid access code");
+      setError("Kod Access Salah");
     }
   };
 

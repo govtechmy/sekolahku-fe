@@ -57,7 +57,7 @@ export default function FooterMyds() {
               target="_blank"
               className="focus:outline-otl-primary-200"
             >
-              Repositori Github
+              Repositori GitHub
             </SiteLink>
             <SiteLink
               href="https://www.figma.com/design/oDUTO2KqIfVDKGKQrur9FP/Sekolahku-UI"
