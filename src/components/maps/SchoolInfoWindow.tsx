@@ -1,7 +1,6 @@
 import {
   CrossIcon,
   EmailIcon,
-  // OrgChartIcon,
   PhoneIcon,
   PinIcon,
 } from "@govtechmy/myds-react/icon";
@@ -31,6 +30,7 @@ export function SchoolInfoWindow({
   school,
   setSelected,
   mobile,
+  isFullScreen,
   onToggleFullScreen,
 }: SchoolInfoWindowProps) {
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ export function SchoolInfoWindow({
 
   return (
     <div
-      className="relative bg-white rounded-b-xl"
+      className={`relative bg-white rounded-b-xl ${isFullScreen ? 'min-h-full' : ''}`}
       onClick={() => {
         if (onToggleFullScreen) {
           onToggleFullScreen();
@@ -117,10 +117,6 @@ export function SchoolInfoWindow({
           {school?.namaSekolah ?? ""}
         </div>
         <div className="flex flex-col gap-2 text-txt-black-700">
-          {/* <InfoIconRow
-            icon={<OrgChartIcon />}
-            value={school?.kodSekolah || "Tiada Maklumat"}
-          /> */}
           <InfoIconRow
             icon={<PhoneIcon />}
             value={school?.data?.infoKomunikasi?.noTelefon || "Tiada Maklumat"}
@@ -136,22 +132,7 @@ export function SchoolInfoWindow({
         </div>
       </div>
 
-      {/* old code  
-      <div className="border-y border-otl-divider p-3 flex flex-col gap-2 ">
-        <div className="font-body text-body-xs font-semibold">JPN</div>
-        <div className="flex gap-1 flex-col">
-          <InfoRow
-            label="JPN"
-            value={
-              underScoreRemover(school?.data?.infoPentadbiran?.negeri) ||
-              "Tiada Maklumat"
-            }
-          />
-        </div>
-      </div> */}
-
       <div className="p-3 flex flex-col gap-2 border-t border-otl-divider">
-        {/* <div className="font-body text-body-xs font-semibold">PPD</div> */}
         <div className="flex gap-1 flex-col">
           <InfoRow
             label="JPN"
@@ -173,7 +154,7 @@ export function SchoolInfoWindow({
           />
           <InfoRow
             label="Daerah"
-            value={school?.data?.infoKomunikasi?.bandarSurat || "Tiada Maklumat"}
+            value={school?.data?.infoKomunikasi.bandarSurat || "Tiada Maklumat"}
           />
           <InfoRow
             label="Sesi"
