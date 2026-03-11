@@ -74,7 +74,7 @@ export default function SchoolProfile() {
   if (loading) {
     return (
       <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
-        <div className="text-center py-8">Loading school data...</div>
+        <div className="text-center py-8">Memuatkan data sekolah...</div>
       </div>
     );
   }
@@ -83,7 +83,7 @@ export default function SchoolProfile() {
     return (
       <div className="w-full flex-shrink-0 mx-auto flex-1 [906px]:px-[24px] space-y-3">
         <div className="text-center py-8">
-          {error ? `Error: ${error.message}` : "School not found"}
+          {error ? `Ralat: ${error.message}` : "Sekolah tidak dijumpai"}
         </div>
       </div>
     );
@@ -92,21 +92,21 @@ export default function SchoolProfile() {
   return (
     <>
       <HelmetMeta
-        title={`${school?.namaSekolah} School Profile`}
-        description={`School profile page for ${school?.namaSekolah}.`}
+        title={`Profil Sekolah ${school?.namaSekolah ?? 'Sekolah'}`}
+        description={`Halaman profil sekolah untuk ${school?.namaSekolah ?? 'sekolah'}.`}
         canonical={`${domain}${schoolProfile}/${id}`}
       />
       <HelmetMeta
-        title={`${school?.namaSekolah} School Profile`}
-        description={`School profile page for ${school?.namaSekolah}.`}
+        title={`Profil Sekolah ${school?.namaSekolah ?? 'Sekolah'}`}
+        description={`Halaman profil sekolah untuk ${school?.namaSekolah ?? 'sekolah'}.`}
         canonical={`${domain}${schoolProfile}/${id}`}
       />
       <div>
         <SchoolProfileHero
           school={school}
           url={getSchoolLogoUrl(
-            school.data.infoPentadbiran.negeri,
-            school.data.infoPentadbiran.parlimen,
+            school.data.infoPentadbiran?.negeri,
+            school.data.infoPentadbiran?.parlimen,
             school.kodSekolah,
           )}
         />
@@ -144,22 +144,30 @@ export default function SchoolProfile() {
               </div>
               <div className="shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
-                  <InfoRow
-                    icon={<GovtOfficeIcon width={24} height={24} />}
-                    text={caseConverter(school.namaSekolah)}
-                  />
-                  <InfoRow
-                    icon={<PhoneIcon width={24} height={24} />}
-                    text={school.data.infoKomunikasi?.noTelefon}
-                  />
-                  <InfoRow
-                    icon={<PrinterIcon width={24} height={24} />}
-                    text={school.data.infoKomunikasi?.noFax}
-                  />
-                  <InfoRow
-                    icon={<EmailIcon width={24} height={24} />}
-                    text={school.data.infoKomunikasi?.email}
-                  />
+                  {school.namaSekolah && (
+                    <InfoRow
+                      icon={<GovtOfficeIcon width={24} height={24} />}
+                      text={caseConverter(school.namaSekolah)}
+                    />
+                  )}
+                  {school.data.infoKomunikasi?.noTelefon && (
+                    <InfoRow
+                      icon={<PhoneIcon width={24} height={24} />}
+                      text={school.data.infoKomunikasi.noTelefon}
+                    />
+                  )}
+                  {school.data.infoKomunikasi?.noFax && (
+                    <InfoRow
+                      icon={<PrinterIcon width={24} height={24} />}
+                      text={school.data.infoKomunikasi.noFax}
+                    />
+                  )}
+                  {school.data.infoKomunikasi?.email && (
+                    <InfoRow
+                      icon={<EmailIcon width={24} height={24} />}
+                      text={school.data.infoKomunikasi.email}
+                    />
+                  )}
                   <InfoRow
                     icon={<PinIcon width={24} height={24} />}
                     text={caseConverter(
@@ -180,84 +188,98 @@ export default function SchoolProfile() {
           <div className="border-otl-divider border-y">
             <PageContainer className="px-4">
               <div className="grid grid-cols-2 xl:grid-cols-4 overflow-hidden border border-otl-divider border-y-0 divide-x divide-y divide-otl-divider">
-                <InfoGridItem label="KOD SEKOLAH" value={school.kodSekolah} />
-
-                {school.data.infoPentadbiran.negeri && (
+                {school.kodSekolah && (
+                  <InfoGridItem label="KOD SEKOLAH" value={school.kodSekolah} />
+                )}
+                {school.data.infoPentadbiran?.negeri && (
                   <InfoGridItem
                     label="NEGERI"
                     value={caseConverter(
-                      underScoreRemover(school.data.infoPentadbiran?.negeri),
+                      underScoreRemover(school.data.infoPentadbiran.negeri),
                     )}
                   />
                 )}
-
-                <InfoGridItem
-                  label="PPD"
-                  value={
-                    "PPD " +
-                    caseConverter(removePPD(school.data.infoPentadbiran?.ppd))
-                  }
-                />
-                <InfoGridItem
-                  label="PARLIMEN"
-                  value={caseConverter(
-                    underScoreRemover(school.data.infoPentadbiran?.parlimen),
-                  )}
-                />
-                <InfoGridItem
-                  label="BANTUAN"
-                  value={school.data.infoPentadbiran?.bantuan}
-                />
-                <InfoGridItem
-                  label="BIL SESI"
-                  value={caseConverter(school.data.infoPentadbiran?.bilSesi)}
-                />
-                <InfoGridItem
-                  label="PRASEKOLAH"
-                  value={school.data.infoPentadbiran?.prasekolah}
-                />
-                <InfoGridItem
-                  label="INTEGRASI"
-                  value={school.data.infoPentadbiran?.integrasi}
-                />
+                {school.data.infoPentadbiran?.ppd && (
+                  <InfoGridItem
+                    label="PPD"
+                    value={
+                      "PPD " +
+                      caseConverter(removePPD(school.data.infoPentadbiran.ppd))
+                    }
+                  />
+                )}
+                {school.data.infoPentadbiran?.parlimen && (
+                  <InfoGridItem
+                    label="PARLIMEN"
+                    value={caseConverter(
+                      underScoreRemover(school.data.infoPentadbiran.parlimen),
+                    )}
+                  />
+                )}
+                {school.data.infoPentadbiran?.bantuan && (
+                  <InfoGridItem
+                    label="BANTUAN"
+                    value={school.data.infoPentadbiran.bantuan}
+                  />
+                )}
+                {school.data.infoPentadbiran?.bilSesi && (
+                  <InfoGridItem
+                    label="BIL SESI"
+                    value={caseConverter(school.data.infoPentadbiran.bilSesi)}
+                  />
+                )}
+                {school.data.infoPentadbiran?.prasekolah && (
+                  <InfoGridItem
+                    label="PRASEKOLAH"
+                    value={school.data.infoPentadbiran.prasekolah}
+                  />
+                )}
+                {school.data.infoPentadbiran?.integrasi && (
+                  <InfoGridItem
+                    label="INTEGRASI"
+                    value={school.data.infoPentadbiran.integrasi}
+                  />
+                )}
               </div>
             </PageContainer>
           </div>
-          <PageContainer>
-            <div className="py-[84px] px-[40px] max-md:px-[28px] max-md:py-[48px]">
-              <div className="text-heading-sm text-txt-black-900 font-semibold pb-12 ">
-                <div
-                  className="focus:outline-primary-200"
-                  tabIndex={0}
-                  aria-label={`Sekolah Berdekatan`}
-                >
-                  Sekolah Berdekatan
+          {nearbySchools && nearbySchools.length > 0 && (
+            <PageContainer>
+              <div className="py-[84px] px-[40px] max-md:px-[28px] max-md:py-[48px]">
+                <div className="text-heading-sm text-txt-black-900 font-semibold pb-12 ">
+                  <div
+                    className="focus:outline-primary-200"
+                    tabIndex={0}
+                    aria-label={`Sekolah Berdekatan`}
+                  >
+                    Sekolah Berdekatan
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {nearbySchools.map((school, index) => (
+                    <div
+                      key={school.kodSekolah}
+                      className={
+                        nearbySchools.length === 3 && index === 2
+                          ? "md:col-span-2 md:justify-self-center xl:col-span-1"
+                          : ""
+                      }
+                    >
+                      <NearbySchoolCard
+                        school={school}
+                        url={getSchoolLogoUrl(
+                          school.data.infoPentadbiran?.negeri,
+                          school.data.infoPentadbiran?.parlimen,
+                          school.kodSekolah,
+                        )}
+                        handleNearbySchoolClick={handleNearbySchoolClick}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {nearbySchools.map((school, index) => (
-                  <div
-                    key={school.kodSekolah}
-                    className={
-                      nearbySchools.length === 3 && index === 2
-                        ? "md:col-span-2 md:justify-self-center xl:col-span-1"
-                        : ""
-                    }
-                  >
-                    <NearbySchoolCard
-                      school={school}
-                      url={getSchoolLogoUrl(
-                        school.data.infoPentadbiran.negeri,
-                        school.data.infoPentadbiran.parlimen,
-                        school.kodSekolah,
-                      )}
-                      handleNearbySchoolClick={handleNearbySchoolClick}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </PageContainer>
+            </PageContainer>
+          )}
         </>
       </div>
     </>
