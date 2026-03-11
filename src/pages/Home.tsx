@@ -81,7 +81,7 @@ export default function HomePage() {
       <HomeHero />
       <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
         {/* design loading for this */}
-        {dataItemNews && (
+        {dataItemNews && dataItemNews.length > 0 && (
           <SectionHeader
             header="BERITA KPM"
             ButtonLabel="Semua Berita"
@@ -89,15 +89,15 @@ export default function HomePage() {
             children={
               <SectionItemNews
                 dataItemNews={dataItemNews}
-                mainTitle="Apa yang Sedang Berlaku di sekolah-sekolah Malaysia"
                 redirectDesc="Baca"
+                mainTitleClassName="mb-0"
               />
             }
           />
         )}
 
         {/* design loading for this  */}
-        {dataItemCalendar && (
+        {dataItemCalendar && dataItemCalendar.length > 0 && (
           <SectionHeader
             header="TAKWIM"
             ButtonLabel="Semua Takwim"

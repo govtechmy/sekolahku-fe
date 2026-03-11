@@ -51,7 +51,7 @@ export default function SiaranId() {
   // Filter attachments once to avoid multiple iterations
   const imageAttachments = useMemo(
     () =>
-      contents?.attachments.filter((att) =>
+      contents?.attachments?.filter((att) =>
         att?.mimeType?.startsWith("image/"),
       ) ?? [],
     [contents],
@@ -59,7 +59,7 @@ export default function SiaranId() {
 
   const documentAttachments = useMemo(
     () =>
-      contents?.attachments.filter(
+      contents?.attachments?.filter(
         (att) => !att?.mimeType?.startsWith("image/"),
       ) ?? [],
     [contents],
@@ -77,7 +77,7 @@ export default function SiaranId() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{contents.title}</BreadcrumbPage>
+              <BreadcrumbPage>{contents.title ?? ""}</BreadcrumbPage>
             </BreadcrumbItem>
           </Breadcrumb>
           <div className="flex flex-col gap-3 md:px-10">
@@ -93,8 +93,11 @@ export default function SiaranId() {
                 {contents.categoryInfo.name}
               </span>
             )}
-            <p className="text-2xl font-semibold font-body">{contents.title}</p>
-
+            {contents.title && (
+              <p className="text-2xl font-semibold font-body">
+                {contents.title}
+              </p>
+            )}
             <div className=" flex flex-row gap-2 text-bg-black-500">
               {/* <div className=" flex flex-row gap-1 items-center text-body-sm font-body font-normal">
                 <ClockIcon /> Bacaan {contents.readTime} min
@@ -102,13 +105,15 @@ export default function SiaranId() {
               <div className="flex items-center">
                 <DotIcon className="size-0.5" />
               </div> */}
-              <div className="text-body-sm font-body font-normal">
-                {formatEventDateDDMMYY(contents.articleDate)}
-                {/* Previous format (kept for reference), incase they wanted the old design back or translate to English because design is bad:
+              {contents.articleDate && (
+                <div className="text-body-sm font-body font-normal">
+                  {formatEventDateDDMMYY(contents.articleDate)}
+                  {/* Previous format (kept for reference), incase they wanted the old design back or translate to English because design is bad:
                 {translateEnglishMonthToMalay(formatFullEventDate(contents.articleDate))}
                 {formatEventTime(contents.articleDate)}
                 */}
-              </div>
+                </div>
+              )}
             </div>
           </div>
           <div className="md:px-10 print:hidden">
@@ -128,22 +133,30 @@ export default function SiaranId() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3 ">
-            <div className="flex justify-center">
-              <img
-                src={contents.imageHero.url}
-                alt={contents.imageHero.alt}
-                className="w-fit max-h-[415px] object-contain rounded-lg"
+          {contents.imageHero && (
+            <div className="flex flex-col gap-3 ">
+              <div className="flex justify-center">
+                <img
+                  src={contents.imageHero.url}
+                  alt={contents.imageHero.alt || "Imej Siaran"}
+                  className="w-fit max-h-[415px] object-contain rounded-lg"
+                />
+              </div>
+              {/* <span className="text-txt-black-500 text-center font-body font-normal text-body-sm md:px-10">
+              Image from{" "}
+              <span className="italic">{contents.imageHero.url}</span>
+            </span> */}
+            </div>
+          )}
+          {contents.content && (
+            <div className="text-xl text-justify font-normal md:px-10">
+              <RichText
+                className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
+                data={contents.content}
               />
             </div>
-          </div>
-          <div className="text-xl text-justify font-normal md:px-10">
-            <RichText
-              className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
-              data={contents.content}
-            />
-          </div>
-          {contents.attachments.length > 0 && (
+          )}
+          {contents.attachments && contents.attachments.length > 0 && (
             <div className="md:px-10">
               <div className="flex flex-col pt-6 border-t border-gray-200 gap-4">
                 {/* PDF/Document Attachments */}
