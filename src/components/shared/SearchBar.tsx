@@ -102,7 +102,7 @@ export default function SearchBarHome<T>({
       </SearchBarInputContainer>
       <SearchBarResults open={hasQuery && hasFocus}>
         {hasQuery && !(suggestions && suggestions.length) && (
-          <p className="text-txt-black-900 text-center">No results found</p>
+          <p className="text-txt-black-900 text-center">Tiada hasil ditemui</p>
         )}
         {hasQuery && suggestions && suggestions.length > 0 && (
           <SearchBarResultsList className="max-h-[400px] overflow-y-auto focus-visible:outline-none p-1">

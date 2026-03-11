@@ -16,7 +16,7 @@ import { siaranSocialLinks } from "../../contentData";
 import { useEffect, useState, useMemo } from "react";
 import type { TakwimItem } from "../../types/takwim";
 import { getTakwimById } from "../../services/takwim.svc";
-import { formatFullEventDate } from "../../utils/date";
+import { formatEventDateDDMMYY } from "../../utils/date";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import PrintHeader from "../../components/shared/PrintHeader";
 
@@ -76,7 +76,7 @@ export default function TakwimId() {
           <div className="flex flex-col gap-3 md:px-10">
             <span
               className={clx(
-                "text-body-sm font-body font-semibold text-success-700",
+                "text-body-sm font-body font-semibold text-txt-primary",
               )}
             >
               Takwim
@@ -89,7 +89,7 @@ export default function TakwimId() {
             <div className=" flex flex-row gap-2 text-bg-black-500">
               {contents.articleDate && (
                 <div className="text-body-sm font-body font-normal">
-                  {formatFullEventDate(contents.articleDate)}
+                   {formatEventDateDDMMYY(contents.articleDate)}
                 </div>
               )}
             </div>

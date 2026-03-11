@@ -81,14 +81,15 @@ export default function SiaranId() {
             </BreadcrumbItem>
           </Breadcrumb>
           <div className="flex flex-col gap-3 md:px-10">
-            {contents.categoryInfo?.name && contents.categoryInfo?.colors && (
+            {/* {contents.categoryInfo?.name && contents.categoryInfo?.colors && ( */}
+            {contents.categoryInfo?.name && (
               <span
-                className={clx("text-body-sm font-body font-semibold")}
-                style={
-                  contents.categoryInfo.colors
-                    ? { color: contents.categoryInfo.colors }
-                    : undefined
-                }
+                className={clx("text-body-sm font-body font-semibold text-txt-primary")}
+                // style={
+                //   contents.categoryInfo.colors
+                //     ? { color: contents.categoryInfo.colors }
+                //     : undefined
+                // }
               >
                 {contents.categoryInfo.name}
               </span>

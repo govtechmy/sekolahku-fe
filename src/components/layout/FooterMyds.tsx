@@ -41,7 +41,7 @@ export default function FooterMyds() {
               Kerajaan Persekutuan, 62604 W.P. Putrajaya, Malaysia
             </p>
             <p className="text-txt-black-900 text-body-sm font-semibold not-prose">
-              Follow Us
+              Ikuti Kami
             </p>
             <SocialLinks
               links={footerSocialLinks}
@@ -51,13 +51,13 @@ export default function FooterMyds() {
           </SiteInfo>
         </div>
         <div className="flex flex-col gap-3">
-          <SiteLinkGroup groupTitle="Open Source">
+          <SiteLinkGroup groupTitle="Sumber terbuka">
             <SiteLink
               href="https://github.com/govtechmy/sekolahku-fe"
               target="_blank"
               className="focus:outline-otl-primary-200"
             >
-              Github Repo
+              Repositori Github
             </SiteLink>
             <SiteLink
               href="https://www.figma.com/design/oDUTO2KqIfVDKGKQrur9FP/Sekolahku-UI"
