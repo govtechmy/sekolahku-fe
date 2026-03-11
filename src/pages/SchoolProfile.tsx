@@ -97,14 +97,19 @@ export default function SchoolProfile() {
         canonical={`${domain}${schoolProfile}/${id}`}
       />
       <div>
-        <SchoolProfileHero
-          school={school}
-          url={getSchoolLogoUrl(
-            school.data.infoPentadbiran?.negeri,
-            school.data.infoPentadbiran?.parlimen,
-            school.kodSekolah,
+        {school?.data?.infoPentadbiran?.parlimen &&
+          school?.kodSekolah &&
+          school?.data?.infoPentadbiran?.negeri && (
+            <SchoolProfileHero
+              school={school}
+              url={getSchoolLogoUrl(
+                school.data.infoPentadbiran.negeri,
+                school.data.infoPentadbiran.parlimen,
+                school.kodSekolah,
+              )}
+            />
           )}
-        />
+
         <>
           <div className="border-otl-divider border-y">
             <PageContainer>
@@ -223,12 +228,18 @@ export default function SchoolProfile() {
                     value={caseConverter(school.data.infoPentadbiran.bilSesi)}
                   />
                 )}
-                {school.data.infoPentadbiran?.prasekolah && (
-                  <InfoGridItem
-                    label="PRASEKOLAH"
-                    value={school.data.infoPentadbiran.prasekolah}
-                  />
-                )}
+
+                <InfoGridItem
+                  label="PRASEKOLAH"
+                  value={
+                    school.data.infoPentadbiran.prasekolah !== undefined
+                      ? school.data.infoPentadbiran.prasekolah
+                        ? true
+                        : false
+                      : "Tiada Maklumat"
+                  }
+                />
+
                 {school.data.infoPentadbiran?.integrasi && (
                   <InfoGridItem
                     label="INTEGRASI"
@@ -260,15 +271,19 @@ export default function SchoolProfile() {
                           : ""
                       }
                     >
-                      <NearbySchoolCard
-                        school={school}
-                        url={getSchoolLogoUrl(
-                          school.data.infoPentadbiran?.negeri,
-                          school.data.infoPentadbiran?.parlimen,
-                          school.kodSekolah,
+                      {school?.data?.infoPentadbiran?.negeri &&
+                        school?.data?.infoPentadbiran?.parlimen &&
+                        school?.kodSekolah && (
+                          <NearbySchoolCard
+                            school={school}
+                            url={getSchoolLogoUrl(
+                              school.data.infoPentadbiran.negeri,
+                              school.data.infoPentadbiran.parlimen,
+                              school.kodSekolah,
+                            )}
+                            handleNearbySchoolClick={handleNearbySchoolClick}
+                          />
                         )}
-                        handleNearbySchoolClick={handleNearbySchoolClick}
-                      />
                     </div>
                   ))}
                 </div>
