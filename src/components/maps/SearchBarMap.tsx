@@ -287,7 +287,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                     Tekan <Pill size="small">/</Pill> untuk cari
                   </SearchBarHint>
                 )} */}
-                <SearchBarSearchButton/>
+                <SearchBarSearchButton />
               </SearchBarInputContainer>
             </SearchBar>
           </div>
