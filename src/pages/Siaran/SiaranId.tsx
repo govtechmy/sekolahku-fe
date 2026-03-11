@@ -84,7 +84,9 @@ export default function SiaranId() {
             {/* {contents.categoryInfo?.name && contents.categoryInfo?.colors && ( */}
             {contents.categoryInfo?.name && (
               <span
-                className={clx("text-body-sm font-body font-semibold text-txt-primary")}
+                className={clx(
+                  "text-body-sm font-body font-semibold text-txt-primary",
+                )}
                 // style={
                 //   contents.categoryInfo.colors
                 //     ? { color: contents.categoryInfo.colors }

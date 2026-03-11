@@ -89,7 +89,7 @@ export default function TakwimId() {
             <div className=" flex flex-row gap-2 text-bg-black-500">
               {contents.articleDate && (
                 <div className="text-body-sm font-body font-normal">
-                   {formatEventDateDDMMYY(contents.articleDate)}
+                  {formatEventDateDDMMYY(contents.articleDate)}
                 </div>
               )}
             </div>
