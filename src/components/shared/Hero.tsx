@@ -2,7 +2,6 @@ import { Button } from "@govtechmy/myds-react/button";
 import { FilterAscIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import HomeArrowIcon from "../../asset/home-arrow-icon";
-import HomeUnderlineIcon from "../../asset/home-underline-icon";
 
 interface HeroBanner {
   "top-gradient": string;
@@ -118,9 +117,9 @@ export default function Hero({
               {homeTitle && (
                 <div className="relative">
                   {homeTitle}
-                  <div className="absolute bottom-[-8px] right-[0px] max-[350px]:hidden">
+                  {/* <div className="absolute bottom-[-8px] right-[0px] max-[350px]:hidden">
                     <HomeUnderlineIcon className="w-[155px]"></HomeUnderlineIcon>
-                  </div>
+                  </div> */}
                   <div className="absolute bottom-[-20px] right-[-50px] max-[350px]:hidden">
                     <HomeArrowIcon></HomeArrowIcon>
                   </div>
