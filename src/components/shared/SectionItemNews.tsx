@@ -3,17 +3,20 @@ import { ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
 import type { SiaranItem } from "../../models/response";
 // import CategoryLabel from "./CategoryLabel";
 import { formatDate } from "../../utils/dateFormatter";
+import { clx } from "@govtechmy/myds-react/utils";
 
 type SectionItemNewsProps = {
   dataItemNews: SiaranItem[];
-  mainTitle: string;
+  mainTitle?: string;
   redirectDesc?: string;
+  mainTitleClassName?: string;
 };
 
 export default function SectionItemNews({
   dataItemNews,
   mainTitle,
   redirectDesc,
+  mainTitleClassName,
 }: SectionItemNewsProps) {
   const { lang } = useParams<{ lang: string }>();
 
@@ -21,11 +24,16 @@ export default function SectionItemNews({
     <div className="w-full flex flex-col justify-center gap-8">
       <div className="flex flex-col gap-2">
         {/* Header */}
-        <div className="flex mb-12 mt-4 items-center">
-          <div className="text-txt-black-900 font-heading font-semibold text-heading-sm">
-            {mainTitle}
-          </div>
+        <div
+          className={clx("flex mb-12 mt-4 items-center", mainTitleClassName)}
+        >
+          {mainTitle && (
+            <div className="text-txt-black-900 font-heading font-semibold text-heading-sm">
+              {mainTitle}
+            </div>
+          )}
         </div>
+
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {dataItemNews.slice(0, 4).map((item: SiaranItem, index: number) => (
             <Link

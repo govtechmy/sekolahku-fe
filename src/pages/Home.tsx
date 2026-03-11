@@ -89,8 +89,8 @@ export default function HomePage() {
             children={
               <SectionItemNews
                 dataItemNews={dataItemNews}
-                mainTitle="Apa yang Sedang Berlaku di sekolah-sekolah Malaysia"
                 redirectDesc="Baca"
+                mainTitleClassName="mb-0"
               />
             }
           />
