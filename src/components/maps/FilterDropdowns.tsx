@@ -1,4 +1,7 @@
 import underScoreRemover from "../../utils/underscoreRemover";
+import { SimpleSelect, SimpleSelectItem } from "../shared/SelectComponent";
+
+/*
 import {
   Select,
   SelectContent,
@@ -7,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../shared/SelectMydsFix";
+*/
 
 const SCHOOL_TYPE_LABELS: Record<string, string> = {
   K11: "Sekolah Model Khas Komprehensif 11",
@@ -49,6 +53,26 @@ export function FilterDropdowns({
 }: FilterDropdownsProps) {
   return (
     <div className="px-3 py-4 border-t border-gray-200 flex gap-2 text-sm">
+      {/* NEW IMPLEMENTATION - SimpleSelect with built-in truncation */}
+      <SimpleSelect
+        size="small"
+        variant="outline"
+        onValueChange={setSelectedNegeri}
+        value={selectedNegeri ?? "ALL"}
+        placeholder="Jenis Negeri"
+        className="w-[155px]"
+      >
+        <SimpleSelectItem value="ALL">Semua Negeri</SimpleSelectItem>
+        {negeriList
+          .filter((n): n is string => typeof n === "string")
+          .map((n, idx) => (
+            <SimpleSelectItem key={idx} value={n}>
+              {underScoreRemover(n)}
+            </SimpleSelectItem>
+          ))}
+      </SimpleSelect>
+
+      {/*
       <Select
         size="small"
         variant="outline"
@@ -74,7 +98,29 @@ export function FilterDropdowns({
           </SelectGroup>
         </SelectContent>
       </Select>
+      */}
 
+      <SimpleSelect
+        size="small"
+        variant="outline"
+        onValueChange={setSelectedJenis}
+        value={selectedJenis ?? "ALL"}
+        placeholder="Jenis Sekolah"
+        className="w-[155px]"
+      >
+        <SimpleSelectItem value="ALL">Semua Jenis</SimpleSelectItem>
+        {jenisList
+          .filter((x): x is string => typeof x === "string")
+          .map((x) => (
+            <SimpleSelectItem key={x} value={x}>
+              {SCHOOL_TYPE_LABELS[x]
+                ? `${SCHOOL_TYPE_LABELS[x]} (${x})`
+                : x}
+            </SimpleSelectItem>
+          ))}
+      </SimpleSelect>
+
+      {/*
       <Select
         size="small"
         variant="outline"
@@ -102,6 +148,7 @@ export function FilterDropdowns({
           </SelectGroup>
         </SelectContent>
       </Select>
+      */}
     </div>
   );
 }
