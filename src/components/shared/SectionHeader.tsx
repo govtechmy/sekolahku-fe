@@ -10,8 +10,8 @@ type SectionHeaderProps = {
   ButtonClickHandler?: () => void;
   isLastSection?: boolean;
   classNameHeader?: string;
-  buttonLabelClassName?:string
-  arrowIconDisplay?:boolean
+  buttonLabelClassName?: string;
+  arrowIconDisplay?: boolean;
 };
 
 export default function SectionHeader({

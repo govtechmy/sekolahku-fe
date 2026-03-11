@@ -49,21 +49,29 @@ export default function SectionItemTakwim({
                 )}
               </div>
 
-              {item.title && (<div className="text-txt-black-700 text-body-lg font-semibold">
-                {item.title}
-              </div>)}
+              {item.title && (
+                <div className="text-txt-black-700 text-body-lg font-semibold">
+                  {item.title}
+                </div>
+              )}
             </div>
             <div className="items-center flex max-sm:hidden !w-[161px] flex-shrink-0">
               <div className="border border-otl-gray-200 flex px-2.5 py-1.5 rounded-md gap-1.5 items-center flex-shrink-0 shadow-button">
                 <SearchIcon className="size-4" />
-                <div className="text-body-sm font-medium text-txt-black-700"> Semak Takwim</div>
+                <div className="text-body-sm font-medium text-txt-black-700">
+                  {" "}
+                  Semak Takwim
+                </div>
               </div>
             </div>
           </div>
           <div className="items-center flex sm:hidden pl-[80px] mb-3">
             <div className="border border-otl-gray-200 flex px-2.5 py-1.5 rounded-md gap-1.5 items-center flex-shrink-0 shadow-button">
-               <SearchIcon className="size-4"/>
-              <div className="text-body-sm font-medium text-txt-black-700"> Semak Takwim</div>
+              <SearchIcon className="size-4" />
+              <div className="text-body-sm font-medium text-txt-black-700">
+                {" "}
+                Semak Takwim
+              </div>
             </div>
           </div>
         </div>
