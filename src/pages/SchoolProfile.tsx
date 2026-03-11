@@ -229,27 +229,31 @@ export default function SchoolProfile() {
                   />
                 )}
 
-                <InfoGridItem
-                  label="PRASEKOLAH"
-                  value={
-                    school.data.infoPentadbiran.prasekolah !== undefined
-                      ? school.data.infoPentadbiran.prasekolah
-                        ? true
-                        : false
-                      : "Tiada Maklumat"
-                  }
-                />
+                {school.data.infoPentadbiran && (
+                  <InfoGridItem
+                    label="PRASEKOLAH"
+                    value={
+                      school.data.infoPentadbiran.prasekolah !== undefined
+                        ? school.data.infoPentadbiran.prasekolah
+                          ? true
+                          : false
+                        : "Tiada Maklumat"
+                    }
+                  />
+                )}
 
-                <InfoGridItem
-                  label="INTEGRASI"
-                  value={
-                    school.data.infoPentadbiran.integrasi !== undefined
-                      ? school.data.infoPentadbiran.integrasi
-                        ? true
-                        : false
-                      : "Tiada Maklumat"
-                  }
-                />
+                {school.data.infoPentadbiran && (
+                  <InfoGridItem
+                    label="INTEGRASI"
+                    value={
+                      school.data.infoPentadbiran.integrasi !== undefined
+                        ? school.data.infoPentadbiran.integrasi
+                          ? true
+                          : false
+                        : "Tiada Maklumat"
+                    }
+                  />
+                )}
               </div>
             </PageContainer>
           </div>

@@ -51,7 +51,7 @@ export default function SiaranId() {
   // Filter attachments once to avoid multiple iterations
   const imageAttachments = useMemo(
     () =>
-      contents?.attachments.filter((att) =>
+      contents?.attachments?.filter((att) =>
         att?.mimeType?.startsWith("image/"),
       ) ?? [],
     [contents],
@@ -59,7 +59,7 @@ export default function SiaranId() {
 
   const documentAttachments = useMemo(
     () =>
-      contents?.attachments.filter(
+      contents?.attachments?.filter(
         (att) => !att?.mimeType?.startsWith("image/"),
       ) ?? [],
     [contents],
@@ -138,7 +138,7 @@ export default function SiaranId() {
               <div className="flex justify-center">
                 <img
                   src={contents.imageHero.url}
-                  alt={contents.imageHero.alt}
+                  alt={contents.imageHero.alt || "Imej Siaran"}
                   className="w-fit max-h-[415px] object-contain rounded-lg"
                 />
               </div>
