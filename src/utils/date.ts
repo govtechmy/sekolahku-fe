@@ -1,8 +1,8 @@
 function getDayAndDateMonth(eventDate: string) {
   const d = new Date(eventDate);
 
-  const day = d.toLocaleDateString("en-MY", { weekday: "long" });
-  const dateMonth = d.toLocaleDateString("en-MY", {
+  const day = d.toLocaleDateString("ms-MY", { weekday: "long" });
+  const dateMonth = d.toLocaleDateString("ms-MY", {
     day: "2-digit",
     month: "short",
   });
