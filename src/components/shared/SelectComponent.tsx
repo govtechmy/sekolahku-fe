@@ -195,8 +195,12 @@ export function SimpleSelect({
 }
 
 export function SimpleSelectItem({ value, children }: SimpleSelectItemProps) {
-  const { value: selectedValue, onValueChange, size, closeDropdown } =
-    React.useContext(SimpleSelectContext);
+  const {
+    value: selectedValue,
+    onValueChange,
+    size,
+    closeDropdown,
+  } = React.useContext(SimpleSelectContext);
 
   const isSelected = selectedValue === value;
 
