@@ -6,10 +6,10 @@ import { dataItemLinks } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
 import { getAllTakwim } from "../services/takwim.svc";
-import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import type { TakwimItem } from "../types/takwim";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSiaranList } from "../services/siaran.svc";
+import SectionItemTakwim from "../components/shared/SectionItemTakwim";
 
 //all statistic are commented out and removed the imported analytics, will add later once confirmed later,
 
@@ -96,8 +96,23 @@ export default function HomePage() {
           />
         )}
 
-        {/* design loading for this  */}
         {dataItemCalendar && dataItemCalendar.length > 0 && (
+          <SectionHeader
+            header="TAKWIM/KALENDAR"
+            classNameHeader="mb-12"
+            ButtonLabel="Lihat Semua"
+            buttonLabelClassName="flex justify-end"
+            ButtonClickHandler={() => navigate(`/${lang}/takwim`)}
+            arrowIconDisplay={false}
+          >
+            <SectionItemTakwim 
+              dataItemCalendar={dataItemCalendar} 
+              lang={lang} />
+          </SectionHeader>
+        )}
+
+        {/* design loading for this  */}
+        {/* {dataItemCalendar && dataItemCalendar.length > 0 && (
           <SectionHeader
             header="TAKWIM"
             ButtonLabel="Semua Takwim"
@@ -110,7 +125,7 @@ export default function HomePage() {
               />
             }
           />
-        )}
+        )} */}
 
         {/* design loading for this  */}
         {/* {analytics && (
