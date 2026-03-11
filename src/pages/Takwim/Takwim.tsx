@@ -1,8 +1,6 @@
 import Hero from "../../components/shared/Hero";
 import SearchBarMain from "../../components/shared/SearchBar";
-import {
-  type DateRange,
-} from "@govtechmy/myds-react/daterange-picker";
+import { type DateRange } from "@govtechmy/myds-react/daterange-picker";
 import { useNavigate, useParams } from "react-router-dom";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useEffect, useState, useRef } from "react";
