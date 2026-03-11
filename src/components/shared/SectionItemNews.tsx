@@ -42,24 +42,30 @@ export default function SectionItemNews({
               tabIndex={0}
               className="group border border-otl-gray-200 gap-[18px] rounded-lg p-2 md:p-3 w-full h-full flex flex-col cursor-pointer transition-shadow hover:shadow-lg focus:outline-primary-200"
             >
-              <img
-                src={item.imageHero.url}
-                alt={item.imageHero.alt}
-                className="w-full aspect-[16/9] rounded-[6px] object-cover flex-shrink-0"
-              />
+              {item.imageHero?.url && (
+                <img
+                  src={item.imageHero.url}
+                  alt={item.imageHero.alt || "Imej Berita"}
+                  className="w-full aspect-[16/9] rounded-[6px] object-cover flex-shrink-0"
+                />
+              )}
 
               <div className="flex flex-col gap-2 px-3 flex-grow">
                 {/* <CategoryLabel categoryName={item.categoryInfo.name} /> */}
 
-                <div className="font-heading text-justify text-body-lg font-semibold truncate-2-lines line-clamp-2 md:line-clamp-4">
-                  {item.title}
-                </div>
+                {item.title && (
+                  <div className="font-heading text-justify text-body-md font-semibold truncate-2-lines line-clamp-2 md:line-clamp-4">
+                    {item.title}
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-row justify-between items-center flex-shrink-0 mt-auto">
-                <div className="text-body-sm text-txt-black-500 px-2 md:px-3 flex-shrink-0 font-body font-normal">
-                  {formatDate(item.articleDate, lang)}
-                </div>
+                {item.articleDate && (
+                  <div className="text-body-sm text-txt-black-500 px-2 md:px-3 flex-shrink-0 font-body font-normal">
+                    {formatDate(item.articleDate, lang)}
+                  </div>
+                )}
                 <div
                   className="px-2 md:px-3 pb-2 md:pb-0 flex items-center gap-1 text-txt-primary font-semibold
                     text-xs md:text-sm opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0
