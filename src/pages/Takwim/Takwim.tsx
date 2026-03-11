@@ -145,24 +145,29 @@ export default function Takwim() {
                 }}
               >
                 {/* Background image */}
-                <img
-                  src={item.imageHero.url}
-                  alt={item.imageHero.alt}
-                  className="absolute inset-0 w-full h-full object-cover z-0"
-                />
-
+                {item.imageHero?.url && (
+                  <img
+                    src={item.imageHero.url}
+                    alt={item.imageHero.alt}
+                    className="absolute inset-0 w-full h-full object-cover z-0"
+                  />
+                )}
                 {/* Background Layer (only half height) */}
                 <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-[linear-gradient(0deg,rgba(0,0,0,0.75)_0%,rgba(0,0,0,0)_100%)]"></div>
                 {/* Foreground content */}
                 <div className="relative z-10 flex flex-col justify-end h-full text-white p-4">
-                  <Tag variant="primary" className="w-fit mb-3">
-                    <div>{formatEventDay(item.articleDate)}</div>
-                    <div> | </div>
-                    <div>{formatEventDateMonth(item.articleDate)}</div>
-                  </Tag>
-                  <div className="text-txt-white text-body-lg font-semibold">
-                    {item.title}
-                  </div>
+                  {item.articleDate && (
+                    <Tag variant="primary" className="w-fit mb-3">
+                      <div>{formatEventDay(item.articleDate)}</div>
+                      <div> | </div>
+                      <div>{formatEventDateMonth(item.articleDate)}</div>
+                    </Tag>
+                  )}
+                  {item.title && (
+                    <div className="text-txt-white text-body-lg font-semibold">
+                      {item.title}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

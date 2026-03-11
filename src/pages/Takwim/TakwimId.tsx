@@ -45,7 +45,7 @@ export default function TakwimId() {
   // Filter attachments once to avoid multiple iterations
   const imageAttachments = useMemo(
     () =>
-      contents?.attachments.filter((att) =>
+      contents?.attachments?.filter((att) =>
         att?.mimeType?.startsWith("image/"),
       ) ?? [],
     [contents],
@@ -53,7 +53,7 @@ export default function TakwimId() {
 
   const documentAttachments = useMemo(
     () =>
-      contents?.attachments.filter(
+      contents?.attachments?.filter(
         (att) => !att?.mimeType?.startsWith("image/"),
       ) ?? [],
     [contents],
@@ -70,7 +70,7 @@ export default function TakwimId() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{contents.title}</BreadcrumbPage>
+              <BreadcrumbPage>{contents.title ?? ""}</BreadcrumbPage>
             </BreadcrumbItem>
           </Breadcrumb>
           <div className="flex flex-col gap-3 md:px-10">
@@ -81,12 +81,17 @@ export default function TakwimId() {
             >
               Takwim
             </span>
-            <p className="text-2xl font-semibold font-body">{contents.title}</p>
-
+            {contents.title && (
+              <p className="text-2xl font-semibold font-body">
+                {contents.title}
+              </p>
+            )}
             <div className=" flex flex-row gap-2 text-bg-black-500">
-              <div className="text-body-sm font-body font-normal">
-                {formatFullEventDate(contents.articleDate)}
-              </div>
+              {contents.articleDate && (
+                <div className="text-body-sm font-body font-normal">
+                  {formatFullEventDate(contents.articleDate)}
+                </div>
+              )}
             </div>
           </div>
           <div className="md:px-10 print:hidden">
@@ -106,26 +111,30 @@ export default function TakwimId() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3">
-            <div className="flex justify-center">
-              <img
-                src={contents.imageHero.url}
-                alt={contents.imageHero.alt}
-                className="w-fit max-h-[415px] object-contain rounded-lg"
-              />
-            </div>
-            {/* <span className="text-txt-black-500 text-center font-body font-normal text-sm">
+          {contents.imageHero && (
+            <div className="flex flex-col gap-3">
+              <div className="flex justify-center">
+                <img
+                  src={contents.imageHero.url}
+                  alt={contents.imageHero.alt || "Imej Event"}
+                  className="w-fit max-h-[415px] object-contain rounded-lg"
+                />
+              </div>
+              {/* <span className="text-txt-black-500 text-center font-body font-normal text-sm">
               Image from{" "}
               <span className="italic">{contents.imageHero.url}</span>
             </span> */}
-          </div>
-          <div className="text-xl text-justify font-normal md:px-10">
-            <RichText
-              className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
-              data={contents.content}
-            />
-          </div>
-          {contents.attachments.length > 0 && (
+            </div>
+          )}
+          {contents.content && (
+            <div className="text-xl text-justify font-normal md:px-10">
+              <RichText
+                className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
+                data={contents.content}
+              />
+            </div>
+          )}
+          {contents.attachments && contents.attachments.length > 0 && (
             <div className="md:px-10">
               <div className="flex flex-col pt-6 border-t border-gray-200 gap-4">
                 {/* PDF/Document Attachments */}
