@@ -142,16 +142,17 @@ export function SchoolInfoWindow({
           <InfoRow
             label="JPN"
             value={
-              underScoreRemover(
-                "JPN " + school?.data?.infoPentadbiran?.negeri,
-              ) || "Tiada Maklumat"
+              school?.data?.infoPentadbiran?.negeri
+                ? underScoreRemover("JPN " + school.data.infoPentadbiran.negeri)
+                : "Tiada Maklumat"
             }
           />
           <InfoRow
             label="Lokasi"
             value={
-              underScoreRemover(school?.data?.infoPentadbiran?.negeri) ||
-              "Tiada Maklumat"
+              school?.data?.infoPentadbiran?.negeri
+                ? underScoreRemover(school.data.infoPentadbiran.negeri)
+                : "Tiada Maklumat"
             }
           />
           <InfoRow
