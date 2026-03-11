@@ -81,25 +81,25 @@ export default function HomePage() {
       <HomeHero />
       <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
         {/* design loading for this */}
-        {dataItemNews && (
+        {dataItemNews && dataItemNews.length > 0 && (
           <SectionHeader
-            header="SIARAN"
+            header="BERITA KPM"
             ButtonLabel="Semua Berita"
-            ButtonClickHandler={() => navigate(`/${lang}/siaran`)}
+            ButtonClickHandler={() => navigate(`/${lang}/berita-kpm`)}
             children={
               <SectionItemNews
                 dataItemNews={dataItemNews}
-                mainTitle="Apa yang Sedang Berlaku di Sekolah-sekolah Malaysia"
                 redirectDesc="Baca"
+                mainTitleClassName="mb-0"
               />
             }
           />
         )}
 
         {/* design loading for this  */}
-        {dataItemCalendar && (
+        {dataItemCalendar && dataItemCalendar.length > 0 && (
           <SectionHeader
-            header="KALENDAR"
+            header="TAKWIM"
             ButtonLabel="Semua Takwim"
             ButtonClickHandler={() => navigate(`/${lang}/takwim`)}
             children={
@@ -128,6 +128,7 @@ export default function HomePage() {
             title=""
             children={<SectionItemLinks dataItemLinks={dataItemLinks} />}
             isLastSection={true}
+            classNameHeader="mb-[20px]"
           />
         </div>
 

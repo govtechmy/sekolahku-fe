@@ -21,6 +21,7 @@ interface SearchBarHomeProps<T> {
   getKey?: (item: T) => string;
   getLabel?: (item: T) => string;
   onSelect?: (item: T) => void;
+  searchBarTitle?: string;
 }
 
 export default function SearchBarHome<T>({
@@ -32,6 +33,7 @@ export default function SearchBarHome<T>({
   getKey,
   getLabel,
   onSelect,
+  searchBarTitle = "Carian",
 }: SearchBarHomeProps<T>) {
   const [hasFocus, setHasFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -63,7 +65,7 @@ export default function SearchBarHome<T>({
       <SearchBarInputContainer>
         <SearchBarInput
           ref={inputRef}
-          placeholder="Carian"
+          placeholder={searchBarTitle}
           value={query}
           onValueChange={handleValueChange}
           onKeyDown={handleSearchEnter}

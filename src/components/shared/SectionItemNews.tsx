@@ -3,17 +3,20 @@ import { ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
 import type { SiaranItem } from "../../models/response";
 // import CategoryLabel from "./CategoryLabel";
 import { formatDate } from "../../utils/dateFormatter";
+import { clx } from "@govtechmy/myds-react/utils";
 
 type SectionItemNewsProps = {
   dataItemNews: SiaranItem[];
-  mainTitle: string;
+  mainTitle?: string;
   redirectDesc?: string;
+  mainTitleClassName?: string;
 };
 
 export default function SectionItemNews({
   dataItemNews,
   mainTitle,
   redirectDesc,
+  mainTitleClassName,
 }: SectionItemNewsProps) {
   const { lang } = useParams<{ lang: string }>();
 
@@ -21,16 +24,21 @@ export default function SectionItemNews({
     <div className="w-full flex flex-col justify-center gap-8">
       <div className="flex flex-col gap-2">
         {/* Header */}
-        <div className="flex mb-12 mt-4 items-center">
-          <div className="text-txt-black-900 font-heading font-semibold text-heading-sm">
-            {mainTitle}
-          </div>
+        <div
+          className={clx("flex mb-12 mt-4 items-center", mainTitleClassName)}
+        >
+          {mainTitle && (
+            <div className="text-txt-black-900 font-heading font-semibold text-heading-sm">
+              {mainTitle}
+            </div>
+          )}
         </div>
+
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           {dataItemNews.slice(0, 4).map((item: SiaranItem, index: number) => (
             <Link
               key={index}
-              to={`/${lang}/siaran/${item._id}`}
+              to={`/${lang}/berita-kpm/${item._id}`}
               tabIndex={0}
               className="group border border-otl-gray-200 gap-[18px] rounded-lg p-2 md:p-3 w-full h-full flex flex-col cursor-pointer transition-shadow hover:shadow-lg focus:outline-primary-200"
             >
@@ -50,7 +58,7 @@ export default function SectionItemNews({
 
               <div className="flex flex-row justify-between items-center flex-shrink-0 mt-auto">
                 <div className="text-body-sm text-txt-black-500 px-2 md:px-3 flex-shrink-0 font-body font-normal">
-                  {formatDate(item.articleDate)}
+                  {formatDate(item.articleDate, lang)}
                 </div>
                 <div
                   className="px-2 md:px-3 pb-2 md:pb-0 flex items-center gap-1 text-txt-primary font-semibold

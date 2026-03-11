@@ -25,8 +25,8 @@ export default function AppRoutes() {
           <Route index element={<RedirectHomePage />} />
           <Route path="home" element={<HomePage />} />
           <Route path="halaman-sekolah/:id" element={<SchoolProfile />} />
-          <Route path="siaran" element={<Siaran />} />
-          <Route path="siaran/:id" element={<SiaranId />} />
+          <Route path="berita-kpm" element={<Siaran />} />
+          <Route path="berita-kpm/:id" element={<SiaranId />} />
           <Route path="takwim" element={<Takwim />} />
           <Route path="takwim/:id" element={<TakwimId />} />
           <Route path="disclaimer" element={<DisclaimerPage />} />
