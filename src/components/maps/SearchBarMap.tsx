@@ -252,7 +252,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
           <div
             className={clx(
               "flex items-center gap-2 ",
-              isExpanded ? "py-[16px] px-4 w-[360px]" : "",
+              isExpanded ? "py-[16px] px-4" : "",
             )}
           >
             {isExpanded && (
@@ -287,7 +287,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                     Tekan <Pill size="small">/</Pill> untuk cari
                   </SearchBarHint>
                 )} */}
-                <SearchBarSearchButton />
+                <SearchBarSearchButton/>
               </SearchBarInputContainer>
             </SearchBar>
           </div>
@@ -334,7 +334,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                         </div>
 
                         <span className="text-base font-medium text-gray-900">
-                          {school.namaSekolah}
+                          {`${school?.namaSekolah ?? "Sekolah"} ${school?.kodSekolah ?? ""}`.trim()}
                         </span>
 
                         <span className="text-sm text-gray-500 pb-3">
