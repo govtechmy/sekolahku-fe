@@ -61,7 +61,7 @@ export default function SiaranId() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{contents.title ?? ''}</BreadcrumbPage>
+              <BreadcrumbPage>{contents.title ?? ""}</BreadcrumbPage>
             </BreadcrumbItem>
           </Breadcrumb>
           <div className="flex flex-col gap-3 md:px-10">
@@ -78,7 +78,9 @@ export default function SiaranId() {
               </span>
             )}
             {contents.title && (
-              <p className="text-2xl font-semibold font-body">{contents.title}</p>
+              <p className="text-2xl font-semibold font-body">
+                {contents.title}
+              </p>
             )}
             <div className=" flex flex-row gap-2 text-bg-black-500">
               {/* <div className=" flex flex-row gap-1 items-center text-body-sm font-body font-normal">

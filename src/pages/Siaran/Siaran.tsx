@@ -144,7 +144,9 @@ export default function Siaran() {
                       imageAlt: item.imageHero?.alt,
                       header: "", //item.categoryInfo?.name,
                       headerColor: item.categoryInfo?.colors,
-                      date: item.articleDate ? formatDate(item.articleDate) : "",
+                      date: item.articleDate
+                        ? formatDate(item.articleDate)
+                        : "",
                       title: item.title,
                       redirectDesc: "Baca",
                     }}

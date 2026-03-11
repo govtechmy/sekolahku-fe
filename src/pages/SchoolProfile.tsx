@@ -92,13 +92,13 @@ export default function SchoolProfile() {
   return (
     <>
       <HelmetMeta
-        title={`Profil Sekolah ${school?.namaSekolah ?? 'Sekolah'}`}
-        description={`Halaman profil sekolah untuk ${school?.namaSekolah ?? 'sekolah'}.`}
+        title={`Profil Sekolah ${school?.namaSekolah ?? "Sekolah"}`}
+        description={`Halaman profil sekolah untuk ${school?.namaSekolah ?? "sekolah"}.`}
         canonical={`${domain}${schoolProfile}/${id}`}
       />
       <HelmetMeta
-        title={`Profil Sekolah ${school?.namaSekolah ?? 'Sekolah'}`}
-        description={`Halaman profil sekolah untuk ${school?.namaSekolah ?? 'sekolah'}.`}
+        title={`Profil Sekolah ${school?.namaSekolah ?? "Sekolah"}`}
+        description={`Halaman profil sekolah untuk ${school?.namaSekolah ?? "sekolah"}.`}
         canonical={`${domain}${schoolProfile}/${id}`}
       />
       <div>
