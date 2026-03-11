@@ -1,7 +1,7 @@
 import {
   CrossIcon,
   EmailIcon,
-  OrgChartIcon,
+  // OrgChartIcon,
   PhoneIcon,
   PinIcon,
 } from "@govtechmy/myds-react/icon";
@@ -84,12 +84,25 @@ export function SchoolInfoWindow({
             school.data.infoPentadbiran.parlimen,
             school.kodSekolah,
           )}
-          alt={school?.namaSekolah || "Sekolah"}
+          alt={school?.namaSekolah+" "+school?.kodSekolah || "Sekolah"}
           className="max-h-32 w-auto object-contain"
           onError={handleImageError}
         />
       </div>
-      {school.isSekolahAngkatMADANI && (
+      <div className="p-2 w-full">
+        <Button
+          variant="primary-outline"
+          className="w-full justify-center"
+          onClick={() => {
+            if (school?.kodSekolah) {
+              navigate(`/${lang}/halaman-sekolah/${school.kodSekolah}`);
+            }
+          }}
+        >
+          Lihat Laman Web
+        </Button>
+      </div>
+      {school?.isSekolahAngkatMADANI && (
         <div className="items-center justify-center flex pt-3">
           <SekolahAngkatMadaniImage />
         </div>
@@ -104,10 +117,10 @@ export function SchoolInfoWindow({
           {school?.namaSekolah ?? ""}
         </div>
         <div className="flex flex-col gap-2 text-txt-black-700">
-          <InfoIconRow
+          {/* <InfoIconRow
             icon={<OrgChartIcon />}
             value={school?.kodSekolah || "Tiada Maklumat"}
-          />
+          /> */}
           <InfoIconRow
             icon={<PhoneIcon />}
             value={school?.data?.infoKomunikasi?.noTelefon || "Tiada Maklumat"}
@@ -122,9 +135,31 @@ export function SchoolInfoWindow({
           />
         </div>
       </div>
+
+      {/* old code  
       <div className="border-y border-otl-divider p-3 flex flex-col gap-2 ">
         <div className="font-body text-body-xs font-semibold">JPN</div>
         <div className="flex gap-1 flex-col">
+          <InfoRow
+            label="JPN"
+            value={
+              underScoreRemover(school?.data?.infoPentadbiran?.negeri) ||
+              "Tiada Maklumat"
+            }
+          />
+        </div>
+      </div> */}
+
+      <div className="p-3 flex flex-col gap-2 border-t border-otl-divider">
+        {/* <div className="font-body text-body-xs font-semibold">PPD</div> */}
+        <div className="flex gap-1 flex-col">
+          <InfoRow
+            label="JPN"
+            value={
+              underScoreRemover("JPN "+school?.data?.infoPentadbiran?.negeri) ||
+              "Tiada Maklumat"
+            }
+          />
           <InfoRow
             label="Lokasi"
             value={
@@ -132,18 +167,14 @@ export function SchoolInfoWindow({
               "Tiada Maklumat"
             }
           />
-          <InfoRow label="Status SKM" value={"Tiada Maklumat"} />
-          <InfoRow label="Kategori Pedalaman" value={"Tiada Maklumat"} />
-        </div>
-      </div>
-      <div className="p-3 flex flex-col gap-2 ">
-        <div className="font-body text-body-xs font-semibold">PPD</div>
-        <div className="flex gap-1 flex-col">
           <InfoRow
-            label="Daerah"
+            label="PPD"
             value={school?.data?.infoPentadbiran?.ppd || "Tiada Maklumat"}
           />
-          {/* <InfoRow label="Gred" value={"Tiada Maklumat"} /> */}
+          <InfoRow
+            label="Daerah"
+            value={school?.data?.infoKomunikasi?.bandarSurat || "Tiada Maklumat"}
+          />
           <InfoRow
             label="Sesi"
             value={school?.data?.infoPentadbiran?.sesi || "Tiada Maklumat"}
@@ -152,21 +183,7 @@ export function SchoolInfoWindow({
             label="Jenis Bantuan"
             value={school?.data?.infoPentadbiran?.bantuan || "Tiada Maklumat"}
           />
-          <InfoRow label="Tarikh Tubuh" value={"Tiada Maklumat"} />
         </div>
-      </div>
-      <div className="p-2 w-full">
-        <Button
-          variant="primary-outline"
-          className="w-full justify-center"
-          onClick={() => {
-            if (school?.kodSekolah) {
-              navigate(`/${lang}/halaman-sekolah/${school.kodSekolah}`);
-            }
-          }}
-        >
-          Lihat Laman Web
-        </Button>
       </div>
     </div>
   );
