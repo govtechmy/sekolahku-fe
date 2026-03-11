@@ -45,7 +45,7 @@ export default function SectionItemNews({
               {item.imageHero?.url && (
                 <img
                   src={item.imageHero.url}
-                  alt={item.imageHero.alt || ""}
+                  alt={item.imageHero.alt || "Imej Berita"}
                   className="w-full aspect-[16/9] rounded-[6px] object-cover flex-shrink-0"
                 />
               )}
