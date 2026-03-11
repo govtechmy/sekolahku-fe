@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
 /* Hide scrollbar but keep functionality */
 .hide-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */

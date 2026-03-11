@@ -6,4 +6,11 @@ export default {
     "node_modules/@govtechmy/myds-react/dist/**/*.{js,jsx,ts,tsx}",
   ],
   presets: [preset],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+    },
+  },
 };
