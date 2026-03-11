@@ -111,7 +111,7 @@ export function SimpleSelect({
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedLabel, setSelectedLabel] = React.useState<string | null>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const dropdownId = React.useId();
 
   // Close dropdown when clicking outside
   React.useEffect(() => {
@@ -167,11 +167,13 @@ export function SimpleSelect({
     >
       <div ref={containerRef} className={clx("relative", className)}>
         <button
-          ref={triggerRef}
           type="button"
           disabled={disabled}
-          onClick={() => !disabled && setIsOpen(!isOpen)}
+          onClick={() => !disabled && setIsOpen((prev) => !prev)}
           className={select_trigger_cva({ variant, size })}
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          aria-controls={dropdownId}
         >
           <span className="flex-1 min-w-0 truncate text-left">
             {selectedLabel || placeholder}
@@ -190,7 +192,11 @@ export function SimpleSelect({
         </button>
 
         {isOpen && (
-          <div className={select_content_cva({ size })}>
+          <div
+            id={dropdownId}
+            role="listbox"
+            className={select_content_cva({ size })}
+          >
             <div className="overflow-y-scroll show-scrollbar max-h-inherit">
               {children}
             </div>
@@ -219,6 +225,8 @@ export function SimpleSelectItem({ value, children }: SimpleSelectItemProps) {
 
   return (
     <div
+      role="option"
+      aria-selected={isSelected}
       onClick={handleClick}
       onMouseEnter={() => setIsHighlighted(true)}
       onMouseLeave={() => setIsHighlighted(false)}
