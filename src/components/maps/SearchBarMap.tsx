@@ -312,7 +312,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
             <div
               ref={listRef}
               onScroll={handleScroll}
-              className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1"
+              className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1 focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 "
             >
               {localSuggestions.length > 0 ? (
                 localSuggestions.map((school, idx) => (

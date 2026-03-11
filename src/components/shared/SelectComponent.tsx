@@ -5,8 +5,8 @@ import * as React from "react";
 
 const select_trigger_cva = cva(
   [
-    "group inline-flex select-none items-center outline-none rounded-md w-full text-txt-black-900",
-    "focus:ring focus:ring-fr-primary cursor-pointer",
+    "group inline-flex select-none items-center gap-1.5 outline-none rounded-md w-full text-txt-black-900",
+    "focus:ring focus:ring-fr-primary",
     "disabled:bg-bg-white-disabled disabled:text-txt-black-disabled disabled:border-transparent disabled:cursor-not-allowed",
   ],
   {
@@ -22,9 +22,9 @@ const select_trigger_cva = cva(
         ],
       },
       size: {
-        small: "py-1.5 px-2.5 text-body-sm gap-1.5",
-        medium: "py-2 px-3 text-body-md gap-2",
-        large: "py-2.5 px-4 text-body-lg gap-2",
+        small: "py-1.5 px-2.5 text-body-sm",
+        medium: "py-2 px-3 text-body-md",
+        large: "py-2.5 px-4 text-body-lg",
       },
     },
     defaultVariants: { variant: "outline", size: "small" },
@@ -33,8 +33,7 @@ const select_trigger_cva = cva(
 
 const select_content_cva = cva(
   [
-    "absolute z-[700] w-full mt-1 bg-bg-dialog rounded-md border border-otl-gray-200 shadow-context-menu",
-    "max-h-64 overflow-y-auto py-1",
+    "absolute z-[700] w-full mt-1 bg-bg-dialog rounded-md border border-otl-gray-200 shadow-context-menu overflow-hidden py-1",
   ],
   {
     variants: {
@@ -50,8 +49,8 @@ const select_content_cva = cva(
 
 const select_item_cva = cva(
   [
-    "flex items-center w-full cursor-pointer select-none py-1.5 px-2.5 font-medium outline-none text-txt-black-700",
-    "hover:bg-bg-washed transition-colors",
+    "flex items-center w-full cursor-default select-none py-1.5 gap-2 font-medium outline-none text-txt-black-700 rounded-xs mx-1",
+    "data-[highlighted]:bg-bg-washed",
   ],
   {
     variants: {
@@ -179,15 +178,19 @@ export function SimpleSelect({
           </span>
           <ChevronDownFillIcon
             className={clx(
-              "shrink-0 transition-transform",
-              size === "small" ? "size-4" : "size-5",
+              "text-txt-black-900 shrink-0 transition-transform",
+              size === "small" ? "size-4" : size === "medium" ? "size-5" : "size-5",
               isOpen && "rotate-180",
             )}
           />
         </button>
 
         {isOpen && (
-          <div className={select_content_cva({ size })}>{children}</div>
+          <div className={select_content_cva({ size })}>
+            <div className="overflow-y-scroll show-scrollbar max-h-inherit">
+              {children}
+            </div>
+          </div>
         )}
       </div>
     </SimpleSelectContext.Provider>
@@ -201,6 +204,7 @@ export function SimpleSelectItem({ value, children }: SimpleSelectItemProps) {
     size,
     closeDropdown,
   } = React.useContext(SimpleSelectContext);
+  const [isHighlighted, setIsHighlighted] = React.useState(false);
 
   const isSelected = selectedValue === value;
 
@@ -212,6 +216,9 @@ export function SimpleSelectItem({ value, children }: SimpleSelectItemProps) {
   return (
     <div
       onClick={handleClick}
+      onMouseEnter={() => setIsHighlighted(true)}
+      onMouseLeave={() => setIsHighlighted(false)}
+      data-highlighted={isHighlighted ? "" : undefined}
       className={select_item_cva({ size, selected: isSelected })}
     >
       {children}
