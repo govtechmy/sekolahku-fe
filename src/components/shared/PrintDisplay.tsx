@@ -1,34 +1,40 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 
-export default function PrintHeader({ children }: { children: React.ReactNode }) {
+export default function PrintHeader({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const footerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const updatePageNumbers = () => {
       if (footerRef.current) {
-        const pageNumberSpan = footerRef.current.querySelector('.page-number');
-        const totalPagesSpan = footerRef.current.querySelector('.total-pages');
-        
+        const pageNumberSpan = footerRef.current.querySelector(".page-number");
+        const totalPagesSpan = footerRef.current.querySelector(".total-pages");
+
         if (pageNumberSpan) {
-          pageNumberSpan.textContent = '1';
+          pageNumberSpan.textContent = "1";
         }
         if (totalPagesSpan) {
-          const contentHeight = document.querySelector('.print-content')?.scrollHeight || 0;
-          const pageHeight = 1122; 
+          const contentHeight =
+            document.querySelector(".print-content")?.scrollHeight || 0;
+          const pageHeight = 1122;
           const totalPages = Math.ceil(contentHeight / pageHeight);
-          totalPagesSpan.textContent = totalPages > 0 ? String(totalPages) : '1';
+          totalPagesSpan.textContent =
+            totalPages > 0 ? String(totalPages) : "1";
         }
       }
     };
 
     updatePageNumbers();
-    window.addEventListener('beforeprint', updatePageNumbers);
-    
-    const printMediaQuery = window.matchMedia('print');
+    window.addEventListener("beforeprint", updatePageNumbers);
+
+    const printMediaQuery = window.matchMedia("print");
     printMediaQuery.addListener(updatePageNumbers);
 
     return () => {
-      window.removeEventListener('beforeprint', updatePageNumbers);
+      window.removeEventListener("beforeprint", updatePageNumbers);
       printMediaQuery.removeListener(updatePageNumbers);
     };
   }, []);
@@ -70,18 +76,28 @@ export default function PrintHeader({ children }: { children: React.ReactNode })
           }
         }
       `}</style>
-      
-      <div className="print-content">
-        {children}
-      </div>
-      
+
+      <div className="print-content">{children}</div>
+
       <div className="print-footer" ref={footerRef}>
-        <p style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-          <img src="/JataNegara.svg" alt="Jata Negara" style={{ width: '1rem' }} /> 
+        <p
+          style={{
+            fontWeight: 600,
+            display: "flex",
+            alignItems: "center",
+            gap: "0.25rem",
+          }}
+        >
+          <img
+            src="/JataNegara.svg"
+            alt="Jata Negara"
+            style={{ width: "1rem" }}
+          />
           SekolahKu
         </p>
         <p>
-          Mukasurat <span className="page-number">1</span> / <span className="total-pages">1</span>
+          Mukasurat <span className="page-number">1</span> /{" "}
+          <span className="total-pages">1</span>
         </p>
       </div>
     </>

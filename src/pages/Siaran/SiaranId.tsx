@@ -74,12 +74,14 @@ export default function SiaranId() {
             <PrintDisplay>
               <div className="flex flex-col gap-3">
                 {contents.categoryInfo?.name && (
-                    <span
-                      className={clx("text-body-sm font-body font-semibold text-txt-primary")}
-                    >
-                      {contents.categoryInfo.name}
-                    </span>
-                  )}
+                  <span
+                    className={clx(
+                      "text-body-sm font-body font-semibold text-txt-primary",
+                    )}
+                  >
+                    {contents.categoryInfo.name}
+                  </span>
+                )}
                 {contents.title && (
                   <p className="text-2xl font-semibold font-body">
                     {contents.title}
