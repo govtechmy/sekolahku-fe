@@ -98,6 +98,21 @@ const SimpleSelectContext = React.createContext<SimpleSelectContextType>({
   closeDropdown: () => {},
 });
 
+// Helper function to extract text content from ReactNode (outside component)
+const extractTextContent = (node: React.ReactNode): string => {
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+  if (Array.isArray(node)) {
+    return node.map(extractTextContent).join("");
+  }
+  if (React.isValidElement(node)) {
+    const element = node as React.ReactElement<{ children?: React.ReactNode }>;
+    return extractTextContent(element.props.children);
+  }
+  return "";
+};
+
 export function SimpleSelect({
   value,
   onValueChange,
@@ -109,7 +124,6 @@ export function SimpleSelect({
   children,
 }: SimpleSelectProps) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedLabel, setSelectedLabel] = React.useState<string | null>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const dropdownId = React.useId();
 
@@ -133,30 +147,21 @@ export function SimpleSelect({
     };
   }, [isOpen]);
 
-  // Extract label from children based on value
-  React.useEffect(() => {
-    if (!value) {
-      setSelectedLabel(null);
-      return;
-    }
+  // Compute selected label directly using useMemo
+  const selectedLabel = React.useMemo(() => {
+    if (!value) return null;
 
-    const findLabel = (children: React.ReactNode): string | null => {
-      let label: string | null = null;
-      React.Children.forEach(children, (child) => {
-        if (
-          React.isValidElement<SimpleSelectItemProps>(child) &&
-          child.props.value === value
-        ) {
-          label =
-            typeof child.props.children === "string"
-              ? child.props.children
-              : value;
-        }
-      });
-      return label;
-    };
-
-    setSelectedLabel(findLabel(children));
+    let label: string | null = null;
+    React.Children.forEach(children, (child) => {
+      if (
+        React.isValidElement<SimpleSelectItemProps>(child) &&
+        child.props.value === value
+      ) {
+        const extractedText = extractTextContent(child.props.children);
+        label = extractedText || value;
+      }
+    });
+    return label;
   }, [value, children]);
 
   const closeDropdown = () => setIsOpen(false);
