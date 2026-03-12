@@ -10,7 +10,7 @@ export default function PrintDisplay({
       <style>{`
         @media print {
           @page {
-            margin: 0cm 2cm 2.5cm 2cm;
+            margin: 2cm 2cm 2.5cm 2cm;
             size: A4;
           }
 
