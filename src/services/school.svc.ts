@@ -27,7 +27,7 @@ export const getSchoolSuggestion = async (
   try {
     const [lat, lng] = initialLocationUser || [null, null];
     let LOCATION_PARAMS = ``;
-    if (lat!=null && lng!=null) {
+    if (lat != null && lng != null) {
       LOCATION_PARAMS = `latitude=${lat}&longitude=${lng}&`;
     }
     const SEARCH_PARAMS = `/search?${LOCATION_PARAMS}page=${pageNumber}&pageSize=12`;
