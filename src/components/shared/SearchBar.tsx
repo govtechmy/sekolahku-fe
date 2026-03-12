@@ -17,7 +17,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
-import { useMapViewStore } from "../../store/mapView";
 
 interface SearchBarHomeProps<T> {
   query?: string;
@@ -27,8 +26,12 @@ interface SearchBarHomeProps<T> {
   suggestions?: T[];
   getKey?: (item: T) => string;
   getLabel?: (item: T) => string;
+  getSubLabel?: (item: T) => string | undefined;
   onSelect?: (item: T) => void;
   searchBarTitle?: string;
+  onViewAll?: () => void;
+  singlePageTotal?: number;
+  dataTotal?: number;
 }
 
 export default function SearchBarHome<T>({
@@ -39,8 +42,12 @@ export default function SearchBarHome<T>({
   suggestions = [],
   getKey,
   getLabel,
+  getSubLabel,
   onSelect,
   searchBarTitle = "Carian",
+  onViewAll,
+  singlePageTotal,
+  dataTotal,
 }: SearchBarHomeProps<T>) {
   const [hasFocus, setHasFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -48,8 +55,6 @@ export default function SearchBarHome<T>({
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
   const location = useLocation();
-  const dataTotal = useMapViewStore((state) => state.dataTotal);
-  const singlePageTotal = useMapViewStore((state) => state.singlePageTotal);
 
   useEffect(() => {
     const handleSlashFocus = (e: KeyboardEvent) => {
@@ -107,7 +112,7 @@ export default function SearchBarHome<T>({
           })}
         />
       </SearchBarInputContainer>
-      <SearchBarResults open={hasQuery && hasFocus} className="p-0">
+      <SearchBarResults open={true} className="p-0">
         {/* open={hasQuery && hasFocus} */}
         {hasQuery && !(suggestions && suggestions.length) && (
           <p className="px-4 py-5 text-txt-black-900 text-center">
@@ -140,27 +145,25 @@ export default function SearchBarHome<T>({
                     setHasFocus(false);
                   }
                 }}
-                className="px-4 py-5 border-b border-otl-divider rounded-none"
+                className="px-4 py-5 border-b border-otl-divider rounded-none justify-between"
               >
-                <p className="line-clamp-1 flex-1 text-left">
-                  {getLabel?.(item)}
-                </p>
+                <div className="line-clamp-1 flex text-left gap-2">
+                  <div className="flex-1 line-clamp-2 max-sm:line-clamp-3 ">
+                    {" "}
+                    {getLabel?.(item)}{getSubLabel && getSubLabel(item) ? ` ${getSubLabel(item)}` : ""}
+                  </div>
+                </div>
                 <ChevronRightIcon />
               </SearchBarResultsItem>
             ))}
 
-            {hasQuery && (
+            {hasQuery && dataTotal && singlePageTotal && (
               <div className="p-4 rounded-lg text-body-sm text-txt-black-500 flex justify-between items-center">
                 Memaparkan {singlePageTotal} dari {dataTotal} jumlah carian.
                 <Button
                   variant={"primary-ghost"}
                   className="gap-2.5"
-                  onClick={() => navigate(`/${lang || "ms"}/carian-sekolah`)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      navigate(`/${lang || "ms"}/carian-sekolah`);
-                    }
-                  }}
+                  onClick={onViewAll}
                 >
                   Lihat Semua
                   <ButtonIcon>
