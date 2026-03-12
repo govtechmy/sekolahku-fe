@@ -19,11 +19,16 @@ export const getSchoolSuggestion = async (
   params?: schoolSearchModel,
   pageNumber: number = 1,
   initialLocationUser?: CenterCoord,
-): Promise<{ filteredData: ItemSekolahModel[]; totalSchool: number }> => {
+): Promise<{ filteredData: ItemSekolahModel[]; totalSchool: number, totalInSinglePage:number }> => {
   try {
     const [lat, lng] = initialLocationUser || [null, null];
+    let LOCATION_PARAMS = ``;
+    if (lat && lng) {
+      LOCATION_PARAMS = `latitude=${lat}&longitude=${lng}&`;
+    }
+    const SEARCH_PARAMS = `/search?${LOCATION_PARAMS}page=${pageNumber}&pageSize=12`;
     const response = await authAxios.get<APIResponse<ListSekolahModel>>(
-      `${BASE_URL}${SCHOOL_ENDPOINT}/search?latitude=${lat}&longitude=${lng}&page=${pageNumber}&pageSize=12`,
+      `${BASE_URL}${SCHOOL_ENDPOINT}${SEARCH_PARAMS}`,
       {
         params,
         paramsSerializer: { indexes: null },
@@ -37,8 +42,12 @@ export const getSchoolSuggestion = async (
         school.data.infoLokasi.koordinatXX != null,
     );
     const totalSchool = response.data.data?.totalRecords ?? 0;
+    const pageSize = response.data.data?.pageSize ?? 0;
+    const safeTotalSchool = isNaN(totalSchool) ? 0 : totalSchool;
+    const safePageSize = isNaN(pageSize) ? 0 : pageSize;
+    const totalInSinglePage = safeTotalSchool > safePageSize ? safePageSize : safeTotalSchool;
 
-    return { filteredData, totalSchool };
+    return { filteredData, totalSchool, totalInSinglePage };
   } catch (error) {
     console.error("Error fetching school suggestions:", error);
     throw error;

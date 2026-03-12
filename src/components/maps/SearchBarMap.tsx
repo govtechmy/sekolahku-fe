@@ -38,7 +38,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
     hasMoreLocalSuggestions,
     isLoadingLocalSuggestions,
     dataTotal,
-    setDataTotal,
+    setDataTotal, 
   } = useMapViewStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
