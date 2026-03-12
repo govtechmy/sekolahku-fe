@@ -14,7 +14,7 @@ import {
   ArrowOutgoingIcon,
   ChevronRightIcon,
 } from "@govtechmy/myds-react/icon";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 
@@ -29,7 +29,6 @@ interface SearchBarHomeProps<T> {
   getSubLabel?: (item: T) => string | undefined;
   onSelect?: (item: T) => void;
   searchBarTitle?: string;
-  onViewAll?: () => void;
   singlePageTotal?: number;
   dataTotal?: number;
 }
@@ -45,7 +44,6 @@ export default function SearchBarHome<T>({
   getSubLabel,
   onSelect,
   searchBarTitle = "Carian",
-  onViewAll,
   singlePageTotal,
   dataTotal,
 }: SearchBarHomeProps<T>) {
@@ -166,7 +164,18 @@ export default function SearchBarHome<T>({
                 <Button
                   variant={"primary-ghost"}
                   className="gap-2.5"
-                  onClick={onViewAll}
+                  onClick={() => {
+                    if (handleSearchEnter && inputRef.current) {
+                      const syntheticEvent = {
+                        key: "Enter",
+                        currentTarget: inputRef.current,
+                        target: inputRef.current,
+                        preventDefault: () => {},
+                        stopPropagation: () => {},
+                      } as unknown as React.KeyboardEvent<HTMLInputElement>;
+                      handleSearchEnter(syntheticEvent);
+                    }
+                  }}
                 >
                   Lihat Semua
                   <ButtonIcon>
