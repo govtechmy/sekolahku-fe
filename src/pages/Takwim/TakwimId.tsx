@@ -78,7 +78,7 @@ export default function TakwimId() {
                     {contents.title}
                   </p>
                 )}
-                <div className=" flex flex-row gap-2 text-bg-black-500">
+                <div className=" flex flex-row gap-2 text-txt-black-500">
                   {contents.articleDate && (
                     <div className="text-body-sm font-body font-normal pb-5">
                       {formatFullEventDate(contents.articleDate)}
@@ -133,7 +133,7 @@ export default function TakwimId() {
                 {contents.title}
               </p>
             )}
-            <div className=" flex flex-row gap-2 text-bg-black-500">
+            <div className=" flex flex-row gap-2 text-txt-black-500">
               {contents.articleDate && (
                 <div className="text-body-sm font-body font-normal">
                   {formatFullEventDate(contents.articleDate)}
