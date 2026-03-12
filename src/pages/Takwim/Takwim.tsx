@@ -1,16 +1,12 @@
 import Hero from "../../components/shared/Hero";
 import SearchBarMain from "../../components/shared/SearchBar";
-import { Tag } from "@govtechmy/myds-react/tag";
-import {
-  DateRangePicker,
-  type DateRange,
-} from "@govtechmy/myds-react/daterange-picker";
+import { type DateRange } from "@govtechmy/myds-react/daterange-picker";
 import { useNavigate, useParams } from "react-router-dom";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useEffect, useState, useRef } from "react";
 import { getAllTakwim, getSearchTakwim } from "../../services/takwim.svc";
 import type { TakwimItem } from "../../types/takwim";
-import { formatEventDay, formatEventDateMonth } from "../../utils/date";
+import SectionItemTakwim from "../../components/shared/SectionItemTakwim";
 
 export default function Takwim() {
   const navigate = useNavigate();
@@ -22,7 +18,8 @@ export default function Takwim() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
   const [searchSuggestions, setSearchSuggestions] = useState<TakwimItem[]>([]);
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+  //later can remove if finalize no more using date
+  const [dateRange] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,
   });
@@ -56,10 +53,12 @@ export default function Takwim() {
                   : undefined,
               )
             : await getAllTakwim(pageNumber);
-        setItems(response.items);
-        setPageNumber(response.pageNumber);
-        setPageSize(response.pageSize);
-        setTotalRecord(response.totalRecords);
+        if (response) {
+          setItems(response.items ?? []);
+          setPageNumber(response.pageNumber ?? 1);
+          setPageSize(response.pageSize ?? 12);
+          setTotalRecord(response.totalRecords ?? 0);
+        }
       } catch (error) {
         console.error("Error fetching takwim:", error);
       }
@@ -83,7 +82,7 @@ export default function Takwim() {
 
       try {
         const response = await getSearchTakwim(1, value);
-        setSearchSuggestions(response.items.slice(0, 5));
+        setSearchSuggestions(response?.items?.slice(0, 5) ?? []);
       } catch (error) {
         console.error("Error fetching search suggestions:", error);
         setSearchSuggestions([]);
@@ -108,9 +107,11 @@ export default function Takwim() {
             handleValueChange={handleSearchChange}
             suggestions={searchSuggestions}
             getKey={(item) => item._id}
-            getLabel={(item) => item.title}
+            getLabel={(item) => item.title ?? "Untitled"}
             onSelect={(item: TakwimItem) => {
-              navigate(`/${lang}/takwim/${item._id}`);
+              if (lang && item._id) {
+                navigate(`/${lang}/takwim/${item._id}`);
+              }
             }}
           />
         }
@@ -120,58 +121,11 @@ export default function Takwim() {
             <div className="hidden lg:block h-full w-full bg-[url('/utama/siaran/hero-banner/large-sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
           </>
         }
-        filters={
-          <DateRangePicker value={dateRange} onValueChange={setDateRange} />
-        }
       />
       <div className="mx-auto flex-1 px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1280px] py-16 flex flex-col">
         <div className="flex flex-col gap-8">
-          <div className="grid grid-cols-1 max-[400px]:grid-cols-1 max-sm:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {items?.map((item) => (
-              <div
-                key={item._id}
-                className="relative border border-otl-gray-200 rounded-lg h-[350px] flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow focus:outline-none focus:ring-[4px] focus:ring-fr-primary"
-                aria-label={item.title}
-                role="button"
-                tabIndex={0}
-                onClick={() => {
-                  navigate(`/${lang}/takwim/${item._id}`);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    navigate(`/${lang}/takwim/${item._id}`);
-                  }
-                }}
-              >
-                {/* Background image */}
-                {item.imageHero?.url && (
-                  <img
-                    src={item.imageHero.url}
-                    alt={item.imageHero.alt}
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                )}
-                {/* Background Layer (only half height) */}
-                <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-[linear-gradient(0deg,rgba(0,0,0,0.75)_0%,rgba(0,0,0,0)_100%)]"></div>
-                {/* Foreground content */}
-                <div className="relative z-10 flex flex-col justify-end h-full text-white p-4">
-                  {item.articleDate && (
-                    <Tag variant="primary" className="w-fit mb-3">
-                      <div>{formatEventDay(item.articleDate)}</div>
-                      <div> | </div>
-                      <div>{formatEventDateMonth(item.articleDate)}</div>
-                    </Tag>
-                  )}
-                  {item.title && (
-                    <div className="text-txt-white text-body-lg font-semibold">
-                      {item.title}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+          <SectionItemTakwim dataItemCalendar={items} lang={lang} />
+
           {/* Pagination */}
           <div className="flex justify-center mt-12">
             <AutoPagination

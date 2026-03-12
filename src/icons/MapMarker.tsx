@@ -10,6 +10,9 @@ const ICON_ANCHOR: [number, number] = [16, 32];
 const POPUP_ANCHOR: [number, number] = [0, -32];
 
 const sekolahMarkerHtml = renderToString(SekolahMarkerIcon());
+const selectedSekolahMarkerHtml = renderToString(
+  SekolahMarkerIcon(undefined, true),
+);
 const userMarkerHtml = renderToString(UserMarkerIcon());
 const parlimenMarkerHtml = (total?: number | string) =>
   renderToString(ParlimenMarkerIcon(String(total ?? "")));
@@ -27,6 +30,11 @@ const createDivIcon = (html: string, typeClass: string) =>
 
 export const sekolahMarkerIcon = createDivIcon(
   sekolahMarkerHtml,
+  "sekolah-marker-icon",
+);
+
+export const selectedSekolahMarkerIcon = createDivIcon(
+  selectedSekolahMarkerHtml,
   "sekolah-marker-icon",
 );
 

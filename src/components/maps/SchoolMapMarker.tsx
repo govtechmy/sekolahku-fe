@@ -2,6 +2,7 @@ import { Marker } from "react-leaflet";
 import type { SchoolMarkerInfo } from "../../types/maps";
 import {
   sekolahMarkerIcon,
+  selectedSekolahMarkerIcon,
   parlimenMarkerIcon,
   negeriMarkerIcon,
   userMarkerIcon,
@@ -10,9 +11,14 @@ import {
 type SchoolMapMarkerProps = {
   school: SchoolMarkerInfo;
   onClick: () => void;
+  isSelected?: boolean;
 };
 
-export function SchoolMapMarker({ school, onClick }: SchoolMapMarkerProps) {
+export function SchoolMapMarker({
+  school,
+  onClick,
+  isSelected = false,
+}: SchoolMapMarkerProps) {
   let icon;
 
   switch (school.markerType) {
@@ -20,7 +26,7 @@ export function SchoolMapMarker({ school, onClick }: SchoolMapMarkerProps) {
       icon = userMarkerIcon;
       break;
     case "INDIVIDUAL":
-      icon = sekolahMarkerIcon;
+      icon = isSelected ? selectedSekolahMarkerIcon : sekolahMarkerIcon;
       break;
     case "PARLIMEN":
       icon = parlimenMarkerIcon(school.total);
@@ -32,7 +38,7 @@ export function SchoolMapMarker({ school, onClick }: SchoolMapMarkerProps) {
       icon = negeriMarkerIcon(school.total);
       break;
     default:
-      icon = sekolahMarkerIcon;
+      icon = isSelected ? selectedSekolahMarkerIcon : sekolahMarkerIcon;
   }
 
   return (
