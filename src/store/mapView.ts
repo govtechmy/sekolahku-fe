@@ -134,30 +134,30 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
         pageNumber,
         initialLocationUser,
       );
-      
+
       // Store original API results count for pagination logic
       const apiResultsCount = results.filteredData.length;
       const apiHasMore = apiResultsCount >= 12; // API page size is 12
-      
+
       let dataResults = results.filteredData;
-      
+
       // Client-side filtering by peringkat (education level)
       if (params.peringkat && params.peringkat !== "ALL") {
         dataResults = dataResults.filter((school) => {
           const jenisLabel = school.data.infoSekolah.jenisLabel;
           const schoolLevels = SCHOOL_LEVEL[jenisLabel];
-          
+
           if (!schoolLevels || schoolLevels.length === 0) {
             return false;
           }
-          
+
           return schoolLevels.includes(params.peringkat!);
         });
       }
-      
+
       // set({ singlePageTotal: results.totalInSinglePage });
       // set({ dataTotal: results.totalSchool });
-      
+
       const transformed = dataResults.map(
         (school): SearchBarMapProps => ({
           namaSekolah: school.namaSekolah ?? "Sekolah Tidak Diketahui",
@@ -183,15 +183,17 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
           localSuggestions: newSuggestions,
           localSuggestionsPage: pageNumber,
           hasMoreLocalSuggestions: apiHasMore,
-          dataTotal: params.peringkat && params.peringkat !== "ALL"
-            ? newSuggestions.length
-            : results.totalSchool,
-          singlePageTotal: params.peringkat && params.peringkat !== "ALL"
-            ? newSuggestions.length
-            : results.totalInSinglePage,
+          dataTotal:
+            params.peringkat && params.peringkat !== "ALL"
+              ? newSuggestions.length
+              : results.totalSchool,
+          singlePageTotal:
+            params.peringkat && params.peringkat !== "ALL"
+              ? newSuggestions.length
+              : results.totalInSinglePage,
         };
       });
-      
+
       // set((state) => {
       //   const newSuggestions = append
       //     ? [...state.localSuggestions, ...transformed]
