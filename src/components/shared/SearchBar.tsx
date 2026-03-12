@@ -48,7 +48,8 @@ export default function SearchBarHome<T>({
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
   const location = useLocation();
-  const { dataTotal, singlePageTotal } = useMapViewStore();
+  const dataTotal = useMapViewStore((state) => state.dataTotal);
+  const singlePageTotal = useMapViewStore((state) => state.singlePageTotal);
 
   useEffect(() => {
     const handleSlashFocus = (e: KeyboardEvent) => {
