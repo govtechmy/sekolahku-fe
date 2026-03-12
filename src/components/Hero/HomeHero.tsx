@@ -14,6 +14,8 @@ export default function HomeHero() {
     localSuggestions,
     setLocalSuggestions,
   } = useMapViewStore();
+  const dataTotal = useMapViewStore((state) => state.dataTotal);
+  const singlePageTotal = useMapViewStore((state) => state.singlePageTotal);
   const debounceTimerRef = useRef<number | null>(null);
 
   const handleValueChange = (value: string) => {
@@ -58,11 +60,14 @@ export default function HomeHero() {
           suggestions={localSuggestions}
           getKey={(item) => item.kodSekolah ?? ""}
           getLabel={(item) => item.namaSekolah}
+          getSubLabel={(item) => item.kodSekolah}
           onSelect={(item) => {
             setQuery(item.namaSekolah ?? "");
             navigate(`/${lang || "ms"}/carian-sekolah`);
           }}
           searchBarTitle="Carian Sekolah"
+          singlePageTotal={singlePageTotal}
+          dataTotal={dataTotal}
         />
       }
       // links={[{ label: "Pautan Pintas", link: "#pautan" }]}

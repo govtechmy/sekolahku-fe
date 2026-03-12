@@ -23,8 +23,10 @@ interface MapViewState {
   query: string;
   statePolygons: Map<string, GeoJSONFeature>;
   dataTotal: number;
+  singlePageTotal: number;
   setCenter: (c: Center) => void;
   setDataTotal: (total: number) => void;
+  setSinglePageTotal: (total: number) => void;
   setRadius: (r: number) => void;
   setZoom: (z: number) => void;
   setInitialLocationSet: (v: boolean) => void;
@@ -53,6 +55,7 @@ interface MapViewState {
 
 export const useMapViewStore = create<MapViewState>((set, get) => ({
   dataTotal: 0,
+  singlePageTotal: 0,
   // initialLocationUser: [3.760115447396889, 108.46252441406251],
   center: [3.760115447396889, 108.46252441406251],
   zoom: 6,
@@ -69,6 +72,9 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   statePolygons: new Map<string, GeoJSONFeature>(),
   setDataTotal: (total) => {
     set({ dataTotal: total });
+  },
+  setSinglePageTotal: (total) => {
+    set({ singlePageTotal: total });
   },
   setCenter: (c) => {
     set(() => {
@@ -128,6 +134,8 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
       );
       const dataResults = results.filteredData;
       const dataTotal = results.totalSchool;
+      const singlePageTotal = results.totalInSinglePage;
+      set({ singlePageTotal });
       set({ dataTotal });
       const transformed = dataResults.map(
         (school): SearchBarMapProps => ({
