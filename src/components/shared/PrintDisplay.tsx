@@ -1,11 +1,13 @@
 import React from "react";
 
-export default function PrintDisplay({ children }: { children: React.ReactNode }) {
+export default function PrintDisplay({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <>
-      <div className="print-content">
-        {children}
-      </div>
+      <div className="print-content">{children}</div>
     </>
   );
 }
