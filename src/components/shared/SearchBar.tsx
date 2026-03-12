@@ -150,7 +150,10 @@ export default function SearchBarHome<T>({
                 <div className="line-clamp-1 flex text-left gap-2">
                   <div className="flex-1 line-clamp-2 max-sm:line-clamp-3 ">
                     {" "}
-                    {getLabel?.(item)}{getSubLabel && getSubLabel(item) ? ` ${getSubLabel(item)}` : ""}
+                    {getLabel?.(item)}
+                    {getSubLabel && getSubLabel(item)
+                      ? ` ${getSubLabel(item)}`
+                      : ""}
                   </div>
                 </div>
                 <ChevronRightIcon />
