@@ -1,5 +1,6 @@
 import underScoreRemover from "../../utils/underscoreRemover";
 import { SimpleSelect, SimpleSelectItem } from "../shared/SelectComponent";
+import { SCHOOL_TYPE_LABELS } from "../../constants/schoolTypes";
 
 /*
 import {
@@ -12,47 +13,29 @@ import {
 } from "../shared/SelectMydsFix";
 */
 
-const SCHOOL_TYPE_LABELS: Record<string, string> = {
-  K11: "Sekolah Model Khas Komprehensif 11",
-  K9: "Sekolah Model Khas Komprehensif 9",
-  KT6: "Kolej Tingkatan Enam",
-  KV: "Kolej Vokasional",
-  "MODEL KHAS": "Sekolah Model Khas",
-  SBJK: "Sekolah Bimbingan Jalinan Kasih",
-  SBP: "Sekolah Berasrama Penuh",
-  SENI: "Sekolah Seni Malaysia",
-  SJKC: "Sekolah Jenis Kebangsaan (Cina)",
-  SJKT: "Sekolah Jenis Kebangsaan (Tamil)",
-  SK: "Sekolah Kebangsaan",
-  "SK KHAS": "Sekolah Kebangsaan Pendidikan Khas",
-  "SM KHAS": "Sekolah Menengah Pendidikan Khas",
-  "SM SABK": "Sekolah Menengah Agama Bantuan Kerajaan",
-  SMK: "Sekolah Menengah Kebangsaan",
-  SMKA: "Sekolah Menengah Kebangsaan Agama",
-  SMT: "Sekolah Menengah Teknik",
-  "SR SABK": "Sekolah Rendah Agama Bantuan Kerajaan",
-  SUKAN: "Sekolah Sukan Malaysia",
-};
-
 type FilterDropdownsProps = {
   selectedNegeri: string;
   selectedJenis: string;
-  negeriList: (string | undefined)[];
-  jenisList: (string | undefined)[];
+  selectedPeringkat: string;
+  negeriList: (string | null)[];
+  jenisList: (string | null)[];
   setSelectedNegeri: (value: string) => void;
   setSelectedJenis: (value: string) => void;
+  setSelectedPeringkat: (value: string) => void;
 };
 
 export function FilterDropdowns({
   selectedNegeri,
   selectedJenis,
+  selectedPeringkat,
   negeriList,
   jenisList,
   setSelectedNegeri,
   setSelectedJenis,
+  setSelectedPeringkat,
 }: FilterDropdownsProps) {
   return (
-    <div className="px-3 py-4 border-t border-gray-200 flex gap-2 text-sm">
+    <div className="px-3 py-4 border-t border-gray-200 flex flex-wrap gap-2 text-sm">
       {/* NEW IMPLEMENTATION - SimpleSelect with built-in truncation */}
       <SimpleSelect
         size="small"
@@ -70,6 +53,19 @@ export function FilterDropdowns({
               {underScoreRemover(n)}
             </SimpleSelectItem>
           ))}
+      </SimpleSelect>
+
+      <SimpleSelect
+        size="small"
+        variant="outline"
+        onValueChange={setSelectedPeringkat}
+        value={selectedPeringkat ?? "ALL"}
+        placeholder="Peringkat"
+        className="w-[155px]"
+      >
+        <SimpleSelectItem value="ALL">Semua Peringkat</SimpleSelectItem>
+        <SimpleSelectItem value="MENENGAH">Menengah</SimpleSelectItem>
+        <SimpleSelectItem value="RENDAH">Rendah</SimpleSelectItem>
       </SimpleSelect>
 
       {/*
