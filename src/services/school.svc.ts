@@ -26,13 +26,13 @@ export const getSchoolSuggestion = async (
 }> => {
   try {
     const [lat, lng] = initialLocationUser || [null, null];
-    let LOCATION_PARAMS = ``;
+    let locationParams = ``;
     if (lat != null && lng != null) {
-      LOCATION_PARAMS = `latitude=${lat}&longitude=${lng}&`;
+      locationParams = `latitude=${lat}&longitude=${lng}&`;
     }
-    const SEARCH_PARAMS = `/search?${LOCATION_PARAMS}page=${pageNumber}&pageSize=12`;
+    const searchParams = `/search?${locationParams}page=${pageNumber}&pageSize=12`;
     const response = await authAxios.get<APIResponse<ListSekolahModel>>(
-      `${BASE_URL}${SCHOOL_ENDPOINT}${SEARCH_PARAMS}`,
+      `${BASE_URL}${SCHOOL_ENDPOINT}${searchParams}`,
       {
         params,
         paramsSerializer: { indexes: null },
