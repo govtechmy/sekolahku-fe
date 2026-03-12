@@ -48,10 +48,7 @@ export default function SearchBarHome<T>({
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
   const location = useLocation();
-    const {
-   dataTotal,
-   singlePageTotal
-  } = useMapViewStore();
+  const { dataTotal, singlePageTotal } = useMapViewStore();
 
   useEffect(() => {
     const handleSlashFocus = (e: KeyboardEvent) => {
@@ -112,7 +109,9 @@ export default function SearchBarHome<T>({
       <SearchBarResults open={hasQuery && hasFocus} className="p-0">
         {/* open={hasQuery && hasFocus} */}
         {hasQuery && !(suggestions && suggestions.length) && (
-          <p className="px-4 py-5 text-txt-black-900 text-center">Tiada hasil carian</p>
+          <p className="px-4 py-5 text-txt-black-900 text-center">
+            Tiada hasil carian
+          </p>
         )}
         {hasQuery && suggestions && suggestions.length > 0 && (
           <SearchBarResultsList className="max-h-[400px] overflow-y-auto focus-visible:outline-none">

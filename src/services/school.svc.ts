@@ -19,7 +19,11 @@ export const getSchoolSuggestion = async (
   params?: schoolSearchModel,
   pageNumber: number = 1,
   initialLocationUser?: CenterCoord,
-): Promise<{ filteredData: ItemSekolahModel[]; totalSchool: number, totalInSinglePage:number }> => {
+): Promise<{
+  filteredData: ItemSekolahModel[];
+  totalSchool: number;
+  totalInSinglePage: number;
+}> => {
   try {
     const [lat, lng] = initialLocationUser || [null, null];
     let LOCATION_PARAMS = ``;
@@ -45,7 +49,8 @@ export const getSchoolSuggestion = async (
     const pageSize = response.data.data?.pageSize ?? 0;
     const safeTotalSchool = isNaN(totalSchool) ? 0 : totalSchool;
     const safePageSize = isNaN(pageSize) ? 0 : pageSize;
-    const totalInSinglePage = safeTotalSchool > safePageSize ? safePageSize : safeTotalSchool;
+    const totalInSinglePage =
+      safeTotalSchool > safePageSize ? safePageSize : safeTotalSchool;
 
     return { filteredData, totalSchool, totalInSinglePage };
   } catch (error) {

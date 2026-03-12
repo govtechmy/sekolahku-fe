@@ -26,7 +26,7 @@ interface MapViewState {
   singlePageTotal: number;
   setCenter: (c: Center) => void;
   setDataTotal: (total: number) => void;
-  setSinglePageTotal : (total: number) => void;
+  setSinglePageTotal: (total: number) => void;
   setRadius: (r: number) => void;
   setZoom: (z: number) => void;
   setInitialLocationSet: (v: boolean) => void;
@@ -134,8 +134,8 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
       );
       const dataResults = results.filteredData;
       const dataTotal = results.totalSchool;
-      const singlePageTotal = results.totalInSinglePage
-      set({singlePageTotal})
+      const singlePageTotal = results.totalInSinglePage;
+      set({ singlePageTotal });
       set({ dataTotal });
       const transformed = dataResults.map(
         (school): SearchBarMapProps => ({
