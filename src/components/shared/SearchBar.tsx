@@ -112,7 +112,7 @@ export default function SearchBarHome<T>({
           })}
         />
       </SearchBarInputContainer>
-      <SearchBarResults open={true} className="p-0">
+      <SearchBarResults open={hasQuery && hasFocus} className="p-0">
         {/* open={hasQuery && hasFocus} */}
         {hasQuery && !(suggestions && suggestions.length) && (
           <p className="px-4 py-5 text-txt-black-900 text-center">
