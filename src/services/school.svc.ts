@@ -33,14 +33,14 @@ export const getSchoolSuggestion = async (
     }
     const searchParams = `/search?${locationParams}page=${pageNumber}&pageSize=12`;
 
-    if(params?.peringkat && params.peringkat !== "ALL"){
-      const schoolTypes = Object.keys(SCHOOL_LEVEL).filter(type => 
-        SCHOOL_LEVEL[type].includes(params!.peringkat!)
+    if (params?.peringkat && params.peringkat !== "ALL") {
+      const schoolTypes = Object.keys(SCHOOL_LEVEL).filter((type) =>
+        SCHOOL_LEVEL[type].includes(params!.peringkat!),
       );
-      const existingJenis = params.jenis ? params.jenis.split(',') : [];
+      const existingJenis = params.jenis ? params.jenis.split(",") : [];
       const allJenis = [...new Set([...existingJenis, ...schoolTypes])];
 
-      params = { ...params, jenis: allJenis.join(',') };
+      params = { ...params, jenis: allJenis.join(",") };
     }
 
     const response = await authAxios.get<APIResponse<ListSekolahModel>>(
