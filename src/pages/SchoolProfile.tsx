@@ -125,7 +125,8 @@ export default function SchoolProfile() {
                   icon={<UserIcon />}
                   label="Enrolmen Khas"
                   value={
-                    school?.data?.infoSekolah.jumlahPelajarEnrolmenKhas ?? "Tiada Maklumat"
+                    school?.data?.infoSekolah.jumlahPelajarEnrolmenKhas ??
+                    "Tiada Maklumat"
                   }
                 />
                 <StatCard
