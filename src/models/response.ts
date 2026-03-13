@@ -62,6 +62,7 @@ export interface SchoolInfoKomunikasi {
 }
 
 export interface SchoolInfoSekolah {
+  jumlahPelajarEnrolmenKhas: string;
   jenisLabel: string;
   jumlahPelajar: number;
   jumlahGuru: number;
