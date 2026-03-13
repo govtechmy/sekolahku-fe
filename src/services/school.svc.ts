@@ -8,6 +8,7 @@ import type {
   MarkerGroup,
 } from "../models/response";
 import { authAxios } from "./http";
+import { SCHOOL_LEVEL } from "../constants/schoolTypes";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const SCHOOL_ENDPOINT = "/schools";
@@ -31,6 +32,17 @@ export const getSchoolSuggestion = async (
       locationParams = `latitude=${lat}&longitude=${lng}&`;
     }
     const searchParams = `/search?${locationParams}page=${pageNumber}&pageSize=12`;
+
+    if(params?.peringkat && params.peringkat !== "ALL"){
+      const schoolTypes = Object.keys(SCHOOL_LEVEL).filter(type => 
+        SCHOOL_LEVEL[type].includes(params!.peringkat!)
+      );
+      const existingJenis = params.jenis ? params.jenis.split(',') : [];
+      const allJenis = [...new Set([...existingJenis, ...schoolTypes])];
+
+      params = { ...params, jenis: allJenis.join(',') };
+    }
+
     const response = await authAxios.get<APIResponse<ListSekolahModel>>(
       `${BASE_URL}${SCHOOL_ENDPOINT}${searchParams}`,
       {
