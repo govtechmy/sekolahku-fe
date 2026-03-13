@@ -1,7 +1,6 @@
 import {
   CrossIcon,
   EmailIcon,
-  OrgChartIcon,
   PhoneIcon,
   PinIcon,
 } from "@govtechmy/myds-react/icon";
@@ -31,6 +30,7 @@ export function SchoolInfoWindow({
   school,
   setSelected,
   mobile,
+  isFullScreen,
   onToggleFullScreen,
 }: SchoolInfoWindowProps) {
   const navigate = useNavigate();
@@ -45,28 +45,15 @@ export function SchoolInfoWindow({
 
   return (
     <div
-      className="relative bg-white rounded-b-xl"
-      onClick={() => {
-        if (onToggleFullScreen) {
-          onToggleFullScreen();
-        }
-      }}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          if (onToggleFullScreen) {
-            onToggleFullScreen();
-          }
-        }
-      }}
-      role="button"
-      aria-label="Toggle fullscreen school info window"
-      tabIndex={0}
+      className={`relative bg-white rounded-b-xl ${isFullScreen ? "min-h-full" : ""}`}
     >
       <div className="flex justify-center items-center h-48 bg-white rounded-t-xl relative">
         <div className="absolute top-2 right-2 z-10">
           <Button
-            onClick={() => setSelected(null)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelected(null);
+            }}
             variant={"default-outline"}
             className="p-1.5"
           >
@@ -74,8 +61,26 @@ export function SchoolInfoWindow({
           </Button>
         </div>
         {mobile && (
-          <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-10">
-            <div className="w-10 h-1 bg-gray-500 rounded-full cursor-pointer"></div>
+          <div
+            className="absolute top-2 left-1/2 transform -translate-x-1/2 z-10 cursor-pointer"
+            onClick={() => {
+              if (onToggleFullScreen) {
+                onToggleFullScreen();
+              }
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                if (onToggleFullScreen) {
+                  onToggleFullScreen();
+                }
+              }
+            }}
+            role="button"
+            aria-label="Toggle fullscreen school info window"
+            tabIndex={0}
+          >
+            <div className="w-10 h-1 bg-gray-500 rounded-full"></div>
           </div>
         )}
         <img
@@ -84,12 +89,25 @@ export function SchoolInfoWindow({
             school.data.infoPentadbiran.parlimen,
             school.kodSekolah,
           )}
-          alt={school?.namaSekolah || "Sekolah"}
+          alt={school?.namaSekolah ?? "Sekolah"}
           className="max-h-32 w-auto object-contain"
           onError={handleImageError}
         />
       </div>
-      {school.isSekolahAngkatMADANI && (
+      <div className="p-2 w-full">
+        <Button
+          variant="primary-outline"
+          className="w-full justify-center"
+          onClick={() => {
+            if (school?.kodSekolah) {
+              navigate(`/${lang}/halaman-sekolah/${school.kodSekolah}`);
+            }
+          }}
+        >
+          Lihat Laman Web
+        </Button>
+      </div>
+      {school?.isSekolahAngkatMADANI && (
         <div className="items-center justify-center flex pt-3">
           <SekolahAngkatMadaniImage />
         </div>
@@ -101,13 +119,9 @@ export function SchoolInfoWindow({
           </Tag>
         </div>
         <div className="text-body-md font-semibold font-body">
-          {school?.namaSekolah ?? ""}
+          {`${school?.namaSekolah ?? "Sekolah"} ${school?.kodSekolah ?? ""}`.trim()}
         </div>
         <div className="flex flex-col gap-2 text-txt-black-700">
-          <InfoIconRow
-            icon={<OrgChartIcon />}
-            value={school?.kodSekolah || "Tiada Maklumat"}
-          />
           <InfoIconRow
             icon={<PhoneIcon />}
             value={school?.data?.infoKomunikasi?.noTelefon || "Tiada Maklumat"}
@@ -122,28 +136,33 @@ export function SchoolInfoWindow({
           />
         </div>
       </div>
-      <div className="border-y border-otl-divider p-3 flex flex-col gap-2 ">
-        <div className="font-body text-body-xs font-semibold">JPN</div>
+
+      <div className="p-3 flex flex-col gap-2 border-t border-otl-divider">
         <div className="flex gap-1 flex-col">
+          <InfoRow
+            label="JPN"
+            value={
+              school?.data?.infoPentadbiran?.negeri
+                ? underScoreRemover("JPN " + school.data.infoPentadbiran.negeri)
+                : "Tiada Maklumat"
+            }
+          />
           <InfoRow
             label="Lokasi"
             value={
-              underScoreRemover(school?.data?.infoPentadbiran?.negeri) ||
-              "Tiada Maklumat"
+              school?.data?.infoPentadbiran?.negeri
+                ? underScoreRemover(school.data.infoPentadbiran.negeri)
+                : "Tiada Maklumat"
             }
           />
-          <InfoRow label="Status SKM" value={"Tiada Maklumat"} />
-          <InfoRow label="Kategori Pedalaman" value={"Tiada Maklumat"} />
-        </div>
-      </div>
-      <div className="p-3 flex flex-col gap-2 ">
-        <div className="font-body text-body-xs font-semibold">PPD</div>
-        <div className="flex gap-1 flex-col">
           <InfoRow
-            label="Daerah"
+            label="PPD"
             value={school?.data?.infoPentadbiran?.ppd || "Tiada Maklumat"}
           />
-          {/* <InfoRow label="Gred" value={"Tiada Maklumat"} /> */}
+          <InfoRow
+            label="Daerah"
+            value={school?.data?.infoKomunikasi.bandarSurat || "Tiada Maklumat"}
+          />
           <InfoRow
             label="Sesi"
             value={school?.data?.infoPentadbiran?.sesi || "Tiada Maklumat"}
@@ -152,21 +171,7 @@ export function SchoolInfoWindow({
             label="Jenis Bantuan"
             value={school?.data?.infoPentadbiran?.bantuan || "Tiada Maklumat"}
           />
-          <InfoRow label="Tarikh Tubuh" value={"Tiada Maklumat"} />
         </div>
-      </div>
-      <div className="p-2 w-full">
-        <Button
-          variant="primary-outline"
-          className="w-full justify-center"
-          onClick={() => {
-            if (school?.kodSekolah) {
-              navigate(`/${lang}/halaman-sekolah/${school.kodSekolah}`);
-            }
-          }}
-        >
-          Lihat Laman Web
-        </Button>
       </div>
     </div>
   );

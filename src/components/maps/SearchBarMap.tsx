@@ -335,7 +335,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                         </div>
 
                         <span className="text-base font-medium text-gray-900">
-                          {school.namaSekolah}
+                          {`${school?.namaSekolah ?? "Sekolah"} ${school?.kodSekolah ?? ""}`.trim()}
                         </span>
 
                         <span className="text-sm text-gray-500 pb-3">
@@ -399,10 +399,15 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
           <div
             className={clx(
               "md:hidden fixed inset-x-0 bottom-0 z-[60] flex flex-col",
-              isFullScreen ? "top-[30vh] max-h-screen" : "max-h-[40vh]",
+              isFullScreen ? "top-[31vh]" : "max-h-[40vh]",
             )}
           >
-            <div className="overflow-y-auto flex-1 overscroll-none">
+            <div
+              className={clx(
+                "overflow-y-auto overscroll-none",
+                isFullScreen ? "h-full" : "flex-1",
+              )}
+            >
               <SchoolInfoWindow
                 school={viewSchool}
                 setSelected={() => {
