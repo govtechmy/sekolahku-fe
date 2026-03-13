@@ -291,7 +291,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
               </SearchBarInputContainer>
             </SearchBar>
           </div>
-          
+
           {isExpanded && (
             <>
               <FilterDropdowns
