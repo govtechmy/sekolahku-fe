@@ -10,9 +10,13 @@ import {
   // SearchBarHint,
 } from "@govtechmy/myds-react/search-bar";
 // import { Pill } from "@govtechmy/myds-react/pill";
-import { ChevronRightIcon } from "@govtechmy/myds-react/icon";
-import { useEffect, useRef, useState } from "react";
+import {
+  ArrowOutgoingIcon,
+  ChevronRightIcon,
+} from "@govtechmy/myds-react/icon";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 
 interface SearchBarHomeProps<T> {
   query?: string;
@@ -22,8 +26,11 @@ interface SearchBarHomeProps<T> {
   suggestions?: T[];
   getKey?: (item: T) => string;
   getLabel?: (item: T) => string;
+  getSubLabel?: (item: T) => string | undefined;
   onSelect?: (item: T) => void;
   searchBarTitle?: string;
+  singlePageTotal?: number;
+  dataTotal?: number;
 }
 
 export default function SearchBarHome<T>({
@@ -34,8 +41,11 @@ export default function SearchBarHome<T>({
   suggestions = [],
   getKey,
   getLabel,
+  getSubLabel,
   onSelect,
   searchBarTitle = "Carian",
+  singlePageTotal,
+  dataTotal,
 }: SearchBarHomeProps<T>) {
   const [hasFocus, setHasFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -100,12 +110,15 @@ export default function SearchBarHome<T>({
           })}
         />
       </SearchBarInputContainer>
-      <SearchBarResults open={hasQuery && hasFocus}>
+      <SearchBarResults open={hasQuery && hasFocus} className="p-0">
+        {/* open={hasQuery && hasFocus} */}
         {hasQuery && !(suggestions && suggestions.length) && (
-          <p className="text-txt-black-900 text-center">No results found</p>
+          <p className="px-4 py-5 text-txt-black-900 text-center">
+            Tiada hasil carian
+          </p>
         )}
         {hasQuery && suggestions && suggestions.length > 0 && (
-          <SearchBarResultsList className="max-h-[400px] overflow-y-auto focus-visible:outline-none p-1">
+          <SearchBarResultsList className="max-h-[400px] overflow-y-auto focus-visible:outline-none">
             {suggestions.map((item) => (
               <SearchBarResultsItem
                 tabIndex={0}
@@ -130,13 +143,47 @@ export default function SearchBarHome<T>({
                     setHasFocus(false);
                   }
                 }}
+                className="px-4 py-5 border-b border-otl-divider rounded-none justify-between"
               >
-                <p className="line-clamp-1 flex-1 text-left">
-                  {getLabel?.(item)}
-                </p>
+                <div className="line-clamp-1 flex text-left gap-2">
+                  <div className="flex-1 line-clamp-2 max-sm:line-clamp-3 ">
+                    {" "}
+                    {getLabel?.(item)}
+                    {getSubLabel && getSubLabel(item)
+                      ? ` ${getSubLabel(item)}`
+                      : ""}
+                  </div>
+                </div>
                 <ChevronRightIcon />
               </SearchBarResultsItem>
             ))}
+
+            {hasQuery && dataTotal && singlePageTotal && (
+              <div className="p-4 rounded-lg text-body-sm text-txt-black-500 flex justify-between items-center">
+                Memaparkan {singlePageTotal} dari {dataTotal} jumlah carian.
+                <Button
+                  variant={"primary-ghost"}
+                  className="gap-2.5"
+                  onClick={() => {
+                    if (handleSearchEnter && inputRef.current) {
+                      const syntheticEvent = {
+                        key: "Enter",
+                        currentTarget: inputRef.current,
+                        target: inputRef.current,
+                        preventDefault: () => {},
+                        stopPropagation: () => {},
+                      } as unknown as React.KeyboardEvent<HTMLInputElement>;
+                      handleSearchEnter(syntheticEvent);
+                    }
+                  }}
+                >
+                  Lihat Semua
+                  <ButtonIcon>
+                    <ArrowOutgoingIcon className="size-4 " />
+                  </ButtonIcon>
+                </Button>
+              </div>
+            )}
           </SearchBarResultsList>
         )}
       </SearchBarResults>

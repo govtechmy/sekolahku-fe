@@ -30,7 +30,7 @@ const AccessGuard: React.FC<AccessGuardProps> = ({
       setError("");
       onAccessGranted();
     } else {
-      setError("Invalid access code");
+      setError("Kod Access Salah");
     }
   };
 
@@ -43,15 +43,15 @@ const AccessGuard: React.FC<AccessGuardProps> = ({
         {/* Logo */}
         <img src="/JataNegara.svg" className="mx-auto mb-6 w-20 h-auto" />
 
-        <h1 className="text-2xl font-semibold mb-2">Development Access</h1>
+        <h1 className="text-2xl font-semibold mb-2">Akses Pembangunan</h1>
         <p className="text-gray-600 text-sm mb-6">
-          This application is for development team access only.
+          Aplikasi ini hanya untuk akses pasukan pembangunan.
         </p>
 
         <form onSubmit={handleSubmit}>
           <input
             type="password"
-            placeholder="Enter access code"
+            placeholder="Masukkan kod akses"
             value={code}
             onChange={(e) => setCode(e.target.value)}
             className="w-full border border-gray-300 rounded-lg p-3 mb-4 
@@ -68,7 +68,7 @@ const AccessGuard: React.FC<AccessGuardProps> = ({
           >
             <div className="flex items-center w-full justify-center">
               <LockIcon />
-              <div className="pl-2">Access Application</div>
+              <div className="pl-2">Akses Aplikasi</div>
             </div>
           </Button>
         </form>

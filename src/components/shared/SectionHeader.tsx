@@ -10,6 +10,8 @@ type SectionHeaderProps = {
   ButtonClickHandler?: () => void;
   isLastSection?: boolean;
   classNameHeader?: string;
+  buttonLabelClassName?: string;
+  arrowIconDisplay?: boolean;
 };
 
 export default function SectionHeader({
@@ -20,6 +22,8 @@ export default function SectionHeader({
   ButtonClickHandler,
   isLastSection,
   classNameHeader,
+  buttonLabelClassName,
+  arrowIconDisplay = true,
 }: SectionHeaderProps) {
   return (
     <div
@@ -42,12 +46,14 @@ export default function SectionHeader({
       </div>
       {children}
       {ButtonLabel && (
-        <div className="pt-12">
+        <div className={clx("pt-12", buttonLabelClassName)}>
           <Button variant={"default-outline"} onClick={ButtonClickHandler}>
             {ButtonLabel}
-            <ButtonIcon>
-              <ArrowForwardIcon />
-            </ButtonIcon>
+            {arrowIconDisplay && (
+              <ButtonIcon>
+                <ArrowForwardIcon />
+              </ButtonIcon>
+            )}
           </Button>
         </div>
       )}

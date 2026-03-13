@@ -291,6 +291,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
               </SearchBarInputContainer>
             </SearchBar>
           </div>
+
           {isExpanded && (
             <>
               <FilterDropdowns
@@ -301,7 +302,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                 setSelectedNegeri={setSelectedNegeri}
                 setSelectedJenis={setSelectedJenis}
               />
-              {query.length > 1 && (
+              {dataTotal > 0 && (
                 <div className="p-4 pt-0 text-txt-black-500">
                   {dataTotal} buah sekolah ditemui berdasarkan carian anda
                 </div>
