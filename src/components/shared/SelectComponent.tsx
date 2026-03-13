@@ -33,7 +33,7 @@ const select_trigger_cva = cva(
 
 const select_content_cva = cva(
   [
-    "absolute z-[700] w-full mt-1 bg-bg-dialog rounded-md border border-otl-gray-200 shadow-context-menu overflow-hidden py-1",
+    "absolute z-[700] w-full mt-1 bg-bg-dialog rounded-md border border-otl-gray-200 shadow-context-menu py-1",
   ],
   {
     variants: {
@@ -200,11 +200,12 @@ export function SimpleSelect({
           <div
             id={dropdownId}
             role="listbox"
-            className={select_content_cva({ size })}
+            className={clx(
+              select_content_cva({ size }),
+              "overflow-y-auto show-scrollbar"
+            )}
           >
-            <div className="overflow-y-scroll show-scrollbar max-h-inherit">
-              {children}
-            </div>
+            {children}
           </div>
         )}
       </div>
