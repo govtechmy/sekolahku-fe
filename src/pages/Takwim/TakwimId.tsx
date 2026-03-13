@@ -18,7 +18,7 @@ import type { TakwimItem } from "../../types/takwim";
 import { getTakwimById } from "../../services/takwim.svc";
 import { formatFullEventDate } from "../../utils/date";
 import { RichText } from "@payloadcms/richtext-lexical/react";
-import PrintHeader from "../../components/shared/PrintHeader";
+import PrintDisplay from "../../components/shared/PrintDisplay";
 
 export default function TakwimId() {
   const { lang } = useParams<{ lang: string }>();
@@ -63,7 +63,54 @@ export default function TakwimId() {
     <div className="py-12 justify-center print:py-0 mx-auto px-4.5 flex w-full relative md:px-6 max-w-screen-xl">
       {contents && (
         <div className="flex flex-col gap-6 max-w-[825px] lg:min-w-[825px]">
-          <PrintHeader />
+          <div className="hidden print:block">
+            <PrintDisplay>
+              <div className="flex flex-col gap-3">
+                <span
+                  className={clx(
+                    "text-body-sm font-body font-semibold text-txt-primary",
+                  )}
+                >
+                  Takwim
+                </span>
+                {contents.title && (
+                  <p className="text-2xl font-semibold font-body">
+                    {contents.title}
+                  </p>
+                )}
+                <div className=" flex flex-row gap-2 text-txt-black-500">
+                  {contents.articleDate && (
+                    <div className="text-body-sm font-body font-normal pb-5">
+                      {formatFullEventDate(contents.articleDate)}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {contents.imageHero && (
+                <div className="flex flex-col gap-3 pb-5">
+                  <div className="flex justify-center">
+                    <img
+                      src={contents.imageHero.url}
+                      alt={contents.imageHero.alt || "Imej Event"}
+                      className="w-fit max-h-[415px] object-contain rounded-lg"
+                    />
+                  </div>
+                  {/* <span className="text-txt-black-500 text-center font-body font-normal text-sm">
+                    Image from{" "}
+                    <span className="italic">{contents.imageHero.url}</span>
+                  </span> */}
+                </div>
+              )}
+              {contents.content && (
+                <div className="text-xl text-justify font-normal md:px-10">
+                  <RichText
+                    className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
+                    data={contents.content}
+                  />
+                </div>
+              )}
+            </PrintDisplay>
+          </div>
           <Breadcrumb className="md:px-10 print:hidden">
             <BreadcrumbItem>
               <BreadcrumbLink href={`/${lang}/takwim`}>Takwim</BreadcrumbLink>
@@ -73,7 +120,7 @@ export default function TakwimId() {
               <BreadcrumbPage>{contents.title ?? ""}</BreadcrumbPage>
             </BreadcrumbItem>
           </Breadcrumb>
-          <div className="flex flex-col gap-3 md:px-10">
+          <div className="flex flex-col gap-3 md:px-10 print:hidden">
             <span
               className={clx(
                 "text-body-sm font-body font-semibold text-success-700",
@@ -86,7 +133,7 @@ export default function TakwimId() {
                 {contents.title}
               </p>
             )}
-            <div className=" flex flex-row gap-2 text-bg-black-500">
+            <div className=" flex flex-row gap-2 text-txt-black-500">
               {contents.articleDate && (
                 <div className="text-body-sm font-body font-normal">
                   {formatFullEventDate(contents.articleDate)}
@@ -112,7 +159,7 @@ export default function TakwimId() {
             </div>
           </div>
           {contents.imageHero && (
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 print:hidden">
               <div className="flex justify-center">
                 <img
                   src={contents.imageHero.url}
@@ -121,13 +168,13 @@ export default function TakwimId() {
                 />
               </div>
               {/* <span className="text-txt-black-500 text-center font-body font-normal text-sm">
-              Image from{" "}
-              <span className="italic">{contents.imageHero.url}</span>
-            </span> */}
+                    Image from{" "}
+                    <span className="italic">{contents.imageHero.url}</span>
+                  </span> */}
             </div>
           )}
           {contents.content && (
-            <div className="text-xl text-justify font-normal md:px-10">
+            <div className="text-xl text-justify font-normal md:px-10 print:hidden">
               <RichText
                 className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
                 data={contents.content}
@@ -135,7 +182,7 @@ export default function TakwimId() {
             </div>
           )}
           {contents.attachments && contents.attachments.length > 0 && (
-            <div className="md:px-10">
+            <div className="md:px-10 print:hidden">
               <div className="flex flex-col pt-6 border-t border-gray-200 gap-4">
                 {/* PDF/Document Attachments */}
                 {documentAttachments.length > 0 && (
