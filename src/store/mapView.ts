@@ -5,7 +5,6 @@ import type { ItemSekolahModel } from "../models/response";
 import { getSchoolSuggestion } from "../services/school.svc";
 import type { GeoJSONFeature } from "../types/polygon";
 import { useLocationSessionStore } from "./locationSession";
-import { SCHOOL_LEVEL } from "../constants/schoolTypes";
 
 type Center = [number, number];
 
@@ -134,30 +133,11 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
         pageNumber,
         initialLocationUser,
       );
-
-      // Store original API results count for pagination logic
-      const apiResultsCount = results.filteredData.length;
-      const apiHasMore = apiResultsCount >= 12; // API page size is 12
-
-      let dataResults = results.filteredData;
-
-      // Client-side filtering by peringkat (education level)
-      if (params.peringkat && params.peringkat !== "ALL") {
-        dataResults = dataResults.filter((school) => {
-          const jenisLabel = school.data.infoSekolah.jenisLabel;
-          const schoolLevels = SCHOOL_LEVEL[jenisLabel];
-
-          if (!schoolLevels || schoolLevels.length === 0) {
-            return false;
-          }
-
-          return schoolLevels.includes(params.peringkat!);
-        });
-      }
-
-      // set({ singlePageTotal: results.totalInSinglePage });
-      // set({ dataTotal: results.totalSchool });
-
+      const dataResults = results.filteredData;
+      const dataTotal = results.totalSchool;
+      const singlePageTotal = results.totalInSinglePage;
+      set({ singlePageTotal });
+      set({ dataTotal });
       const transformed = dataResults.map(
         (school): SearchBarMapProps => ({
           namaSekolah: school.namaSekolah ?? "Sekolah Tidak Diketahui",
@@ -182,28 +162,10 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
         return {
           localSuggestions: newSuggestions,
           localSuggestionsPage: pageNumber,
-          hasMoreLocalSuggestions: apiHasMore,
-          dataTotal:
-            params.peringkat && params.peringkat !== "ALL"
-              ? newSuggestions.length
-              : results.totalSchool,
-          singlePageTotal:
-            params.peringkat && params.peringkat !== "ALL"
-              ? newSuggestions.length
-              : results.totalInSinglePage,
+          //12 is page size returned from Backend. Atm not supported for changes.
+          hasMoreLocalSuggestions: transformed.length >= 12,
         };
       });
-
-      // set((state) => {
-      //   const newSuggestions = append
-      //     ? [...state.localSuggestions, ...transformed]
-      //     : transformed;
-      //   return {
-      //     localSuggestions: newSuggestions,
-      //     localSuggestionsPage: pageNumber,
-      //     hasMoreLocalSuggestions: transformed.length >= 12,
-      //   };
-      // });
 
       if (!append && transformed.length > 0) {
         const firstResult = transformed[0];
