@@ -37,11 +37,17 @@ export const getSchoolSuggestion = async (
       const schoolTypes = Object.keys(SCHOOL_LEVEL).filter((type) =>
         SCHOOL_LEVEL[type].includes(params!.peringkat!),
       );
-      const existingJenis = params.jenis ? params.jenis.split(",") : [];
-      const allJenis = [...new Set([...existingJenis, ...schoolTypes])];
-
-      params = { ...params, jenis: allJenis.join(",") };
+      
+      if (params.jenis && params.jenis !== "ALL") {
+        const existingJenis = params.jenis.split(",");
+        const allJenis = [...new Set([...existingJenis, ...schoolTypes])];
+        params = { ...params, jenis: allJenis.join(",") };
+      } else {
+        params = { ...params, jenis: schoolTypes.join(",") };
+      }
     }
+
+    console.log(params?.namaSekolah);
 
     const response = await authAxios.get<APIResponse<ListSekolahModel>>(
       `${BASE_URL}${SCHOOL_ENDPOINT}${searchParams}`,
