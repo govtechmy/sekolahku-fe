@@ -2,6 +2,7 @@ import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 import { ArrowForwardIcon, JataNegaraIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import { formatEventDateDDMMYY } from "../../utils/date";
+import { ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
 
 type SectionHeaderProps = {
   header: string;
@@ -50,7 +51,7 @@ export default function SectionHeader({
                   href="https://emisonline.moe.gov.my/risalahmap/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 border border-otl-gray-200 rounded-full px-4 py-1 hover:bg-bg-gray-50 hover:border-otl-gray-300 transition-colors focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2"
+                  className="group flex items-center gap-2 border border-otl-gray-200 rounded-full px-4 py-1 hover:bg-bg-gray-50 hover:border-otl-gray-300 transition-colors focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2"
                 >
                   <JataNegaraIcon className="size-8" />
                   <div className="flex flex-col">
@@ -59,6 +60,7 @@ export default function SectionHeader({
                     </span>
                     <span className="text-body-sm font-medium">RisalahMap</span>
                   </div>
+                  <ArrowOutgoingIcon className="size-6 hidden group-hover:block"/>
                 </a>
               )}
             </div>

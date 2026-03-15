@@ -99,7 +99,11 @@ export default function SectionItemAnalytics({
               Sekolah Mengikut Peringkat
             </h3>
 
-            <div className="flex bg-gray-200 rounded-md p-[2px] gap-1">
+            <div 
+              className="flex bg-gray-200 rounded-md p-[2px] gap-1"
+              role="radiogroup"
+              aria-label="Pilih peringkat sekolah"
+            >
               <button
                 onClick={() => setSelectedLevel("RENDAH")}
                 className={`px-5 py-2 text-sm font-medium rounded-md transition-all focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2
@@ -108,9 +112,9 @@ export default function SectionItemAnalytics({
                     ? "bg-white text-txt-black-900 shadow"
                     : "text-gray-500 hover:text-txt-black-700"
                 }`}
-                role="switch"
+                role="radio"
                 aria-checked={selectedLevel === "RENDAH"}
-                aria-label="Pilih peringkat rendah"
+                aria-label="Peringkat rendah"
               >
                 Rendah
               </button>
@@ -123,9 +127,9 @@ export default function SectionItemAnalytics({
                     ? "bg-white text-txt-black-900 shadow"
                     : "text-txt-black-500 hover:text-txt-black-700"
                 }`}
-                role="switch"
+                role="radio"
                 aria-checked={selectedLevel === "MENENGAH"}
-                aria-label="Pilih peringkat menengah"
+                aria-label="Peringkat menengah"
               >
                 Menengah
               </button>
