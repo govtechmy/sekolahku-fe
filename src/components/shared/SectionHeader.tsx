@@ -46,9 +46,9 @@ export default function SectionHeader({
             <div className="flex justify-between text-txt-black-900 font-heading font-semibold text-heading-sm">
               {title}
               {subTitle && (
-                <a 
-                  href="https://emisonline.moe.gov.my/risalahmap/" 
-                  target="_blank" 
+                <a
+                  href="https://emisonline.moe.gov.my/risalahmap/"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 border border-otl-gray-200 rounded-full px-4 py-1 hover:bg-bg-gray-50 hover:border-otl-gray-300 transition-colors focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2"
                 >
@@ -57,9 +57,7 @@ export default function SectionHeader({
                     <span className="text-txt-black-500 text-body-xs font-medium">
                       Sumber Data
                     </span>
-                    <span className="text-body-sm font-medium">
-                      RisalahMap
-                    </span>
+                    <span className="text-body-sm font-medium">RisalahMap</span>
                   </div>
                 </a>
               )}

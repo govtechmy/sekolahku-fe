@@ -98,7 +98,7 @@ export default function SectionItemAnalytics({
             <h3 className="text-lg font-semibold text-center">
               Sekolah Mengikut Peringkat
             </h3>
-            
+
             <div className="flex bg-gray-200 rounded-md p-[2px] gap-1">
               <button
                 onClick={() => setSelectedLevel("RENDAH")}
@@ -130,12 +130,9 @@ export default function SectionItemAnalytics({
                 Menengah
               </button>
             </div>
-            
+
             <div className="w-full">
-              <DoughnutChart
-                title=""
-                data={filteredJenisData}
-              />
+              <DoughnutChart title="" data={filteredJenisData} />
             </div>
           </div>
           <div className="p-6 border-t border-otl-gray-200 flex justify-center">

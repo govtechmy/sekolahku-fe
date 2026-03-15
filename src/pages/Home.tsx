@@ -131,12 +131,13 @@ export default function HomePage() {
         )} */}
 
         {/* design loading for this  */}
-        {analytics && (            <SectionHeader
-              header="ANALITIK"
-              title="Fakta Menarik Sekolah di Malaysia"
-              subTitle={analytics.lastUpdatedAt || "Tiada Maklumat"}
-              children={<SectionItemAnalytics analytics={analytics} />}
-            />
+        {analytics && (
+          <SectionHeader
+            header="ANALITIK"
+            title="Fakta Menarik Sekolah di Malaysia"
+            subTitle={analytics.lastUpdatedAt || "Tiada Maklumat"}
+            children={<SectionItemAnalytics analytics={analytics} />}
+          />
         )}
 
         <div id="pautan">

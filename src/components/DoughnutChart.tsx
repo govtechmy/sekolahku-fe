@@ -9,48 +9,48 @@ interface DoughnutChartProps {
 }
 
 const defaultColors = [
-  "#A8C5E8",  // lighter blue
-  "#FFB380",  // lighter orange
-  "#8CD49B",  // lighter green
-  "#F08A8A",  // lighter red
-  "#C5A8DE",  // lighter purple
-  "#C4A59A",  // lighter brown
-  "#F5B8E0",  // lighter pink
-  "#B3B3B3",  // lighter gray
-  "#E0E18C",  // lighter yellow-green
-  "#7DD9F0",  // lighter cyan
-  "#D6E5F5",  // very light blue
-  "#FFD9B3",  // very light orange
-  "#C9EFD1",  // very light green
-  "#FFC9C9",  // very light red
-  "#E0D5EC",  // very light purple
-  "#E0CEC7",  // very light brown
-  "#FAE0ED",  // very light pink
-  "#E0E0E0",  // very light gray
-  "#EDEDC4",  // very light yellow
+  "#A8C5E8", // lighter blue
+  "#FFB380", // lighter orange
+  "#8CD49B", // lighter green
+  "#F08A8A", // lighter red
+  "#C5A8DE", // lighter purple
+  "#C4A59A", // lighter brown
+  "#F5B8E0", // lighter pink
+  "#B3B3B3", // lighter gray
+  "#E0E18C", // lighter yellow-green
+  "#7DD9F0", // lighter cyan
+  "#D6E5F5", // very light blue
+  "#FFD9B3", // very light orange
+  "#C9EFD1", // very light green
+  "#FFC9C9", // very light red
+  "#E0D5EC", // very light purple
+  "#E0CEC7", // very light brown
+  "#FAE0ED", // very light pink
+  "#E0E0E0", // very light gray
+  "#EDEDC4", // very light yellow
 ];
 
 // Darker border colors corresponding to each fill color
 const borderColors = [
-  "#5A8BC4",  // darker blue
-  "#E67E22",  // darker orange
-  "#52A765",  // darker green
-  "#C0504D",  // darker red
-  "#8B6BB7",  // darker purple
-  "#8C564B",  // darker brown
-  "#D687B9",  // darker pink
-  "#666666",  // darker gray
-  "#A8A83A",  // darker yellow-green
-  "#3FA9C7",  // darker cyan
-  "#7AABDC",  // darker light blue
-  "#F5A76D",  // darker light orange
-  "#7DC993",  // darker light green
-  "#F09694",  // darker light red
-  "#B8A3D1",  // darker light purple
-  "#B8A199",  // darker light brown
-  "#E8BCD4",  // darker light pink
-  "#AAAAAA",  // darker light gray
-  "#C7C77D",  // darker light yellow
+  "#5A8BC4", // darker blue
+  "#E67E22", // darker orange
+  "#52A765", // darker green
+  "#C0504D", // darker red
+  "#8B6BB7", // darker purple
+  "#8C564B", // darker brown
+  "#D687B9", // darker pink
+  "#666666", // darker gray
+  "#A8A83A", // darker yellow-green
+  "#3FA9C7", // darker cyan
+  "#7AABDC", // darker light blue
+  "#F5A76D", // darker light orange
+  "#7DC993", // darker light green
+  "#F09694", // darker light red
+  "#B8A3D1", // darker light purple
+  "#B8A199", // darker light brown
+  "#E8BCD4", // darker light pink
+  "#AAAAAA", // darker light gray
+  "#C7C77D", // darker light yellow
 ];
 
 export default function DoughnutChart({
@@ -142,7 +142,7 @@ export default function DoughnutChart({
           {title}
         </h3>
       )}
-      
+
       <div className="flex flex-col lg:flex-row gap-6 items-center justify-center">
         {/* Pie Chart */}
         <div className="flex-shrink-0 w-full lg:w-auto flex justify-center">
@@ -172,7 +172,9 @@ export default function DoughnutChart({
                       stroke={chartBorderColors[index]}
                       strokeWidth={2}
                       opacity={
-                        activeIndex === undefined || activeIndex === index ? 1 : 0.6
+                        activeIndex === undefined || activeIndex === index
+                          ? 1
+                          : 0.6
                       }
                     />
                   ))}
