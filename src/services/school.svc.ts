@@ -37,7 +37,7 @@ export const getSchoolSuggestion = async (
       const schoolTypes = Object.keys(SCHOOL_LEVEL).filter((type) =>
         SCHOOL_LEVEL[type].includes(params!.peringkat!),
       );
-      
+
       if (params.jenis && params.jenis !== "ALL") {
         const existingJenis = params.jenis.split(",");
         const allJenis = [...new Set([...existingJenis, ...schoolTypes])];
