@@ -99,7 +99,7 @@ export default function SectionItemAnalytics({
               Sekolah Mengikut Peringkat
             </h3>
 
-            <div 
+            <div
               className="flex bg-gray-200 rounded-md p-[2px] gap-1"
               role="radiogroup"
               aria-label="Pilih peringkat sekolah"

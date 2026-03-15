@@ -60,7 +60,7 @@ export default function SectionHeader({
                     </span>
                     <span className="text-body-sm font-medium">RisalahMap</span>
                   </div>
-                  <ArrowOutgoingIcon className="size-6 hidden group-hover:block"/>
+                  <ArrowOutgoingIcon className="size-6 hidden group-hover:block" />
                 </a>
               )}
             </div>
