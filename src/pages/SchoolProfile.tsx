@@ -113,7 +113,7 @@ export default function SchoolProfile() {
         <>
           <div className="border-otl-divider border-y">
             <PageContainer>
-              <div className="grid grid-cols-3 xl:grid-cols-3 overflow-hidden border border-otl-divider border-y-0 divide-y md:divide-y-0 divide-x divide-otl-divider ">
+              <div className="grid grid-cols-1 md:grid-cols-3 overflow-hidden border border-otl-divider border-y-0 divide-y md:divide-y-0 md:divide-x divide-otl-divider ">
                 <StatCard
                   icon={<UserGroupIcon />}
                   label="PELAJAR"
