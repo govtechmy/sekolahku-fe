@@ -155,6 +155,7 @@ export interface AnalyticsModel {
   jumlahGuru: number;
   jumlahPelajar: number;
   data: AnalyticsData;
+  lastUpdatedAt?: string;
 }
 
 export interface SiaranContentNode {

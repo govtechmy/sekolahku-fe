@@ -9,25 +9,48 @@ interface DoughnutChartProps {
 }
 
 const defaultColors = [
-  "#1F77B4",
-  "#FF7F0E",
-  "#2CA02C",
-  "#D62728",
-  "#9467BD",
-  "#8C564B",
-  "#E377C2",
-  "#7F7F7F",
-  "#BCBD22",
-  "#17BECF",
-  "#AEC7E8",
-  "#FFBB78",
-  "#98DF8A",
-  "#FF9896",
-  "#C5B0D5",
-  "#C49C94",
-  "#F7B6D2",
-  "#C7C7C7",
-  "#DBDB8D",
+  "#A8C5E8",  // lighter blue
+  "#FFB380",  // lighter orange
+  "#8CD49B",  // lighter green
+  "#F08A8A",  // lighter red
+  "#C5A8DE",  // lighter purple
+  "#C4A59A",  // lighter brown
+  "#F5B8E0",  // lighter pink
+  "#B3B3B3",  // lighter gray
+  "#E0E18C",  // lighter yellow-green
+  "#7DD9F0",  // lighter cyan
+  "#D6E5F5",  // very light blue
+  "#FFD9B3",  // very light orange
+  "#C9EFD1",  // very light green
+  "#FFC9C9",  // very light red
+  "#E0D5EC",  // very light purple
+  "#E0CEC7",  // very light brown
+  "#FAE0ED",  // very light pink
+  "#E0E0E0",  // very light gray
+  "#EDEDC4",  // very light yellow
+];
+
+// Darker border colors corresponding to each fill color
+const borderColors = [
+  "#5A8BC4",  // darker blue
+  "#E67E22",  // darker orange
+  "#52A765",  // darker green
+  "#C0504D",  // darker red
+  "#8B6BB7",  // darker purple
+  "#8C564B",  // darker brown
+  "#D687B9",  // darker pink
+  "#666666",  // darker gray
+  "#A8A83A",  // darker yellow-green
+  "#3FA9C7",  // darker cyan
+  "#7AABDC",  // darker light blue
+  "#F5A76D",  // darker light orange
+  "#7DC993",  // darker light green
+  "#F09694",  // darker light red
+  "#B8A3D1",  // darker light purple
+  "#B8A199",  // darker light brown
+  "#E8BCD4",  // darker light pink
+  "#AAAAAA",  // darker light gray
+  "#C7C77D",  // darker light yellow
 ];
 
 export default function DoughnutChart({
@@ -37,6 +60,7 @@ export default function DoughnutChart({
 }: DoughnutChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
   const chartColors = colors || defaultColors.slice(0, data.length);
+  const chartBorderColors = borderColors.slice(0, data.length);
   const chartData = data.map((item) => ({
     name: item.jenis,
     value: item.total,
@@ -74,7 +98,7 @@ export default function DoughnutChart({
   };
   const renderLegend = () => {
     return (
-      <div className="grid grid-cols-2 gap-x-6 gap-y-6 mt-4 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
         {data.map((item, index) => (
           <div
             key={index}
@@ -108,49 +132,62 @@ export default function DoughnutChart({
 
   return (
     <div className="w-full h-full flex flex-col">
-      <h3
-        className="text-lg font-semibold mb-4 text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 rounded"
-        tabIndex={0}
-        role="button"
-        aria-label={title || "Chart title"}
-      >
-        {title}
-      </h3>
-      <div
-        tabIndex={-1}
-        style={{ outline: "none" }}
-        className="[&_*]:!outline-none"
-      >
-        <ResponsiveContainer width="100%" height={180}>
-          <PieChart tabIndex={-1}>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              innerRadius="50%"
-              outerRadius="100%"
-              paddingAngle={0}
-              dataKey="value"
-              onMouseEnter={onPieEnter}
-              onMouseLeave={onPieLeave}
-              tabIndex={-1}
-            >
-              {chartData.map((_entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={chartColors[index]}
-                  opacity={
-                    activeIndex === undefined || activeIndex === index ? 1 : 0.6
-                  }
-                />
-              ))}
-            </Pie>
-            <Tooltip content={<CustomTooltip />} />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+      {title && (
+        <h3
+          className="text-lg font-semibold mb-4 text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 rounded"
+          tabIndex={0}
+          role="button"
+          aria-label={title || "Chart title"}
+        >
+          {title}
+        </h3>
+      )}
+      
+      <div className="flex flex-col lg:flex-row gap-6 items-center justify-center">
+        {/* Pie Chart */}
+        <div className="flex-shrink-0 w-full lg:w-auto flex justify-center">
+          <div
+            tabIndex={-1}
+            style={{ outline: "none" }}
+            className="[&_*]:!outline-none"
+          >
+            <ResponsiveContainer width={280} height={280}>
+              <PieChart tabIndex={-1}>
+                <Pie
+                  data={chartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius="50%"
+                  outerRadius="100%"
+                  paddingAngle={0}
+                  dataKey="value"
+                  onMouseEnter={onPieEnter}
+                  onMouseLeave={onPieLeave}
+                  tabIndex={-1}
+                >
+                  {chartData.map((_entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={chartColors[index]}
+                      stroke={chartBorderColors[index]}
+                      strokeWidth={2}
+                      opacity={
+                        activeIndex === undefined || activeIndex === index ? 1 : 0.6
+                      }
+                    />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
 
-      {renderLegend()}
+        {/* Legend */}
+        <div className="w-full lg:w-auto lg:max-w-md flex items-center justify-center">
+          {renderLegend()}
+        </div>
+      </div>
     </div>
   );
 }

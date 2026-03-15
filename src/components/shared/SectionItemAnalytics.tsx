@@ -5,6 +5,9 @@ import {
   UserGroupIcon,
 } from "@govtechmy/myds-react/icon";
 import DoughnutChart from "../DoughnutChart";
+import { SCHOOL_LEVEL } from "../../constants/schoolTypes";
+import { useState, useMemo } from "react";
+
 interface SectionItemAnalyticsProps {
   analytics: AnalyticsModel;
 }
@@ -12,6 +15,22 @@ interface SectionItemAnalyticsProps {
 export default function SectionItemAnalytics({
   analytics,
 }: SectionItemAnalyticsProps) {
+  const [selectedLevel, setSelectedLevel] = useState<"RENDAH" | "MENENGAH">(
+    "RENDAH",
+  );
+
+  const filteredJenisData = useMemo(() => {
+    return (analytics?.data.jenisLabel || []).filter((item) => {
+      const schoolLevels = SCHOOL_LEVEL[item.jenis];
+      const isMatch = schoolLevels && schoolLevels.includes(selectedLevel);
+      return isMatch;
+    });
+  }, [analytics?.data.jenisLabel, selectedLevel]);
+
+  const filteredBantuanData = useMemo(() => {
+    return analytics?.data.bantuan || [];
+  }, [analytics?.data.bantuan]);
+
   return (
     <>
       <div className="border border-otl-gray-200 rounded-lg">
@@ -74,19 +93,53 @@ export default function SectionItemAnalytics({
           </div>
         </div>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2">
-          <div className="p-6 border-t border-otl-gray-200">
-            <DoughnutChart
-              title="Sekolah Mengikut Peringkat"
-              data={analytics?.data.jenisLabel}
-            />
+        <div className="flex flex-col">
+          <div className="p-6 border-t border-otl-gray-200 flex flex-col items-center gap-4">
+            <h3 className="text-lg font-semibold text-center">
+              Sekolah Mengikut Peringkat
+            </h3>
+            
+            <div className="flex bg-gray-200 rounded-md p-[2px] gap-1">
+              <button
+                onClick={() => setSelectedLevel("RENDAH")}
+                className={`px-5 py-2 text-sm font-medium rounded-md transition-all focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2
+                ${
+                  selectedLevel === "RENDAH"
+                    ? "bg-white text-txt-black-900 shadow"
+                    : "text-gray-500 hover:text-txt-black-700"
+                }`}
+                role="switch"
+                aria-checked={selectedLevel === "RENDAH"}
+                aria-label="Pilih peringkat rendah"
+              >
+                Rendah
+              </button>
+
+              <button
+                onClick={() => setSelectedLevel("MENENGAH")}
+                className={`px-5 py-2 text-sm font-medium rounded-md transition-all focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2
+                ${
+                  selectedLevel === "MENENGAH"
+                    ? "bg-white text-txt-black-900 shadow"
+                    : "text-txt-black-500 hover:text-txt-black-700"
+                }`}
+                role="switch"
+                aria-checked={selectedLevel === "MENENGAH"}
+                aria-label="Pilih peringkat menengah"
+              >
+                Menengah
+              </button>
+            </div>
+            
+            <div className="w-full">
+              <DoughnutChart
+                title=""
+                data={filteredJenisData}
+              />
+            </div>
           </div>
-          <div className="p-6 border-t border-otl-gray-200 lg:border-l">
-            <DoughnutChart
-              title="Jenis Bantuan"
-              data={analytics?.data.bantuan}
-            />
+          <div className="p-6 border-t border-otl-gray-200 flex justify-center">
+            <DoughnutChart title="Jenis Bantuan" data={filteredBantuanData} />
           </div>
         </div>
       </div>

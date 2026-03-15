@@ -1,7 +1,7 @@
 import SectionItemNews from "../components/shared/SectionItemNews";
 import SectionHeader from "../components/shared/SectionHeader";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
-import type { SiaranItem } from "../models/response";
+import type { AnalyticsModel, SiaranItem } from "../models/response";
 import { dataItemLinks } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
@@ -10,11 +10,13 @@ import type { TakwimItem } from "../types/takwim";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSiaranList } from "../services/siaran.svc";
 import SectionItemTakwim from "../components/shared/SectionItemTakwim";
+import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
+import { getAnalytics } from "../services/analytics.svc";
 
 //all statistic are commented out and removed the imported analytics, will add later once confirmed later,
 
 export default function HomePage() {
-  // const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
+  const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
   //later add loading for all , check design
   const [dataItemCalendar, setDataItemCalendar] = useState<TakwimItem[]>();
   const [dataItemNews, setDataItemNews] = useState<SiaranItem[]>();
@@ -23,14 +25,14 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // const fetchAnalytics = async () => {
-    //   try {
-    //     const data = await getAnalytics();
-    //     setAnalytics(data);
-    //   } catch (err) {
-    //     console.error("Error fetching analytics:", err);
-    //   }
-    // };
+    const fetchAnalytics = async () => {
+      try {
+        const data = await getAnalytics();
+        setAnalytics(data);
+      } catch (err) {
+        console.error("Error fetching analytics:", err);
+      }
+    };
 
     const fetchTakwim = async () => {
       try {
@@ -52,7 +54,7 @@ export default function HomePage() {
 
     fetchSiaran();
     fetchTakwim();
-    // fetchAnalytics();
+    fetchAnalytics();
   }, []);
 
   useEffect(() => {
@@ -129,13 +131,13 @@ export default function HomePage() {
         )} */}
 
         {/* design loading for this  */}
-        {/* {analytics && (
-          <SectionHeader
-            header="ANALITIK"
-            title="Fakta Menarik Sekolah di Malaysia"
-            children={<SectionItemAnalytics analytics={analytics} />}
-          />
-        )} */}
+        {analytics && (            <SectionHeader
+              header="ANALITIK"
+              title="Fakta Menarik Sekolah di Malaysia"
+              subTitle={analytics.lastUpdatedAt || "Tiada Maklumat"}
+              children={<SectionItemAnalytics analytics={analytics} />}
+            />
+        )}
 
         <div id="pautan">
           {/* design loading for this, hardcoded atm  */}
