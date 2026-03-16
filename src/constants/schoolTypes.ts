@@ -27,7 +27,7 @@ export const SCHOOL_LEVEL: Record<string, string[]> = {
   KV: ["MENENGAH"],
   "MODEL KHAS": ["RENDAH", "MENENGAH"],
   SBJK: ["RENDAH", "MENENGAH"],
-  SBK: ["RENDAH", "MENENGAH"],
+  //   SBK: ["RENDAH", "MENENGAH"], not exist in db check on 15/03/26
   SBP: ["MENENGAH"],
   SENI: ["MENENGAH"],
   SJKC: ["RENDAH"],

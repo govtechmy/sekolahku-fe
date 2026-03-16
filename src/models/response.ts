@@ -63,6 +63,7 @@ export interface SchoolInfoKomunikasi {
 }
 
 export interface SchoolInfoSekolah {
+  jumlahPelajarEnrolmenKhas: number;
   jenisLabel: string;
   jumlahPelajar: number;
   jumlahGuru: number;
@@ -150,6 +151,7 @@ export interface AnalyticsModel {
   jumlahGuru: number;
   jumlahPelajar: number;
   data: AnalyticsData;
+  lastUpdatedAt?: string;
 }
 
 export interface SiaranContentNode {
