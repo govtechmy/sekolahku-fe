@@ -4,6 +4,7 @@ import type { SearchBarMapProps } from "../types/maps";
 import type { ItemSekolahModel } from "../models/response";
 import { getSchoolSuggestion } from "../services/school.svc";
 import type { GeoJSONFeature } from "../types/polygon";
+import { useLocationSessionStore } from "./locationSession";
 
 type Center = [number, number];
 
@@ -22,8 +23,10 @@ interface MapViewState {
   query: string;
   statePolygons: Map<string, GeoJSONFeature>;
   dataTotal: number;
+  singlePageTotal: number;
   setCenter: (c: Center) => void;
   setDataTotal: (total: number) => void;
+  setSinglePageTotal: (total: number) => void;
   setRadius: (r: number) => void;
   setZoom: (z: number) => void;
   setInitialLocationSet: (v: boolean) => void;
@@ -40,6 +43,7 @@ interface MapViewState {
       namaSekolah?: string;
       negeri?: string;
       jenis?: string;
+      peringkat?: string;
     },
     pageNumber?: number,
     append?: boolean,
@@ -52,6 +56,7 @@ interface MapViewState {
 
 export const useMapViewStore = create<MapViewState>((set, get) => ({
   dataTotal: 0,
+  singlePageTotal: 0,
   // initialLocationUser: [3.760115447396889, 108.46252441406251],
   center: [3.760115447396889, 108.46252441406251],
   zoom: 6,
@@ -68,6 +73,9 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   statePolygons: new Map<string, GeoJSONFeature>(),
   setDataTotal: (total) => {
     set({ dataTotal: total });
+  },
+  setSinglePageTotal: (total) => {
+    set({ singlePageTotal: total });
   },
   setCenter: (c) => {
     set(() => {
@@ -118,9 +126,17 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
     }
     try {
       set({ isLoadingLocalSuggestions: true });
-      const results = await getSchoolSuggestion(params, pageNumber);
+      const initialLocationUser =
+        useLocationSessionStore.getState().initialLocationUser;
+      const results = await getSchoolSuggestion(
+        params,
+        pageNumber,
+        initialLocationUser,
+      );
       const dataResults = results.filteredData;
       const dataTotal = results.totalSchool;
+      const singlePageTotal = results.totalInSinglePage;
+      set({ singlePageTotal });
       set({ dataTotal });
       const transformed = dataResults.map(
         (school): SearchBarMapProps => ({

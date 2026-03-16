@@ -1,20 +1,22 @@
 import SectionItemNews from "../components/shared/SectionItemNews";
 import SectionHeader from "../components/shared/SectionHeader";
 import SectionItemLinks from "../components/shared/SectionItemLinks";
-import type { SiaranItem } from "../models/response";
+import type { AnalyticsModel, SiaranItem } from "../models/response";
 import { dataItemLinks } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
 import { getAllTakwim } from "../services/takwim.svc";
-import SectionItemCalendar from "../components/shared/SectionItemCalendar";
 import type { TakwimItem } from "../types/takwim";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSiaranList } from "../services/siaran.svc";
+import SectionItemTakwim from "../components/shared/SectionItemTakwim";
+import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
+import { getAnalytics } from "../services/analytics.svc";
 
 //all statistic are commented out and removed the imported analytics, will add later once confirmed later,
 
 export default function HomePage() {
-  // const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
+  const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
   //later add loading for all , check design
   const [dataItemCalendar, setDataItemCalendar] = useState<TakwimItem[]>();
   const [dataItemNews, setDataItemNews] = useState<SiaranItem[]>();
@@ -23,14 +25,14 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // const fetchAnalytics = async () => {
-    //   try {
-    //     const data = await getAnalytics();
-    //     setAnalytics(data);
-    //   } catch (err) {
-    //     console.error("Error fetching analytics:", err);
-    //   }
-    // };
+    const fetchAnalytics = async () => {
+      try {
+        const data = await getAnalytics();
+        setAnalytics(data);
+      } catch (err) {
+        console.error("Error fetching analytics:", err);
+      }
+    };
 
     const fetchTakwim = async () => {
       try {
@@ -52,7 +54,7 @@ export default function HomePage() {
 
     fetchSiaran();
     fetchTakwim();
-    // fetchAnalytics();
+    fetchAnalytics();
   }, []);
 
   useEffect(() => {
@@ -81,7 +83,7 @@ export default function HomePage() {
       <HomeHero />
       <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
         {/* design loading for this */}
-        {dataItemNews && (
+        {dataItemNews && dataItemNews.length > 0 && (
           <SectionHeader
             header="BERITA KPM"
             ButtonLabel="Semua Berita"
@@ -89,15 +91,31 @@ export default function HomePage() {
             children={
               <SectionItemNews
                 dataItemNews={dataItemNews}
-                mainTitle="Apa yang Sedang Berlaku di sekolah-sekolah Malaysia"
                 redirectDesc="Baca"
+                mainTitleClassName="mb-0"
               />
             }
           />
         )}
 
+        {dataItemCalendar && dataItemCalendar.length > 0 && (
+          <SectionHeader
+            header="TAKWIM/KALENDAR"
+            classNameHeader="mb-12"
+            ButtonLabel="Lihat Semua"
+            buttonLabelClassName="flex justify-end"
+            ButtonClickHandler={() => navigate(`/${lang}/takwim`)}
+            arrowIconDisplay={false}
+          >
+            <SectionItemTakwim
+              dataItemCalendar={dataItemCalendar}
+              lang={lang}
+            />
+          </SectionHeader>
+        )}
+
         {/* design loading for this  */}
-        {dataItemCalendar && (
+        {/* {dataItemCalendar && dataItemCalendar.length > 0 && (
           <SectionHeader
             header="TAKWIM"
             ButtonLabel="Semua Takwim"
@@ -110,16 +128,18 @@ export default function HomePage() {
               />
             }
           />
-        )}
+        )} */}
 
         {/* design loading for this  */}
-        {/* {analytics && (
+        {analytics && (
           <SectionHeader
             header="ANALITIK"
             title="Fakta Menarik Sekolah di Malaysia"
+            subTitle={analytics?.lastUpdatedAt || "Tiada Maklumat"}
+            sourceBtn={true}
             children={<SectionItemAnalytics analytics={analytics} />}
           />
-        )} */}
+        )}
 
         <div id="pautan">
           {/* design loading for this, hardcoded atm  */}

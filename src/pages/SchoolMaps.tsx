@@ -11,9 +11,11 @@ import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import { NEGERI_LIST } from "../contentData";
 import { useLocationSessionStore } from "../store/locationSession";
 import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
+import DisclaimerMap from "../components/maps/DisclaimerMap";
 
 export default function SchoolMaps() {
   const [schoolTypes, setSchoolTypes] = useState<string[]>([]);
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const {
     center,
     setCenter,
@@ -163,26 +165,26 @@ export default function SchoolMaps() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, initialLocationSet]);
 
-  // Close the location picker when query is set
-  useEffect(() => {
-    if (query && !initialLocationSet) {
-      setInitialLocationSet(true);
-      // set default Kuala Lumpur
-      setInitialLocationUser([3.2080597149999996, 101.72543377142858]);
-      setUserMarkers((prev) => {
-        const next = new Map(prev);
-        next.clear();
-        next.set("user", {
-          koordinatXX: 3.2080597149999996,
-          koordinatYY: 101.72543377142858,
-          dataUrl: "",
-          markerType: "USER",
-        });
-        return next;
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+  // // Close the location picker when query is set
+  // useEffect(() => {
+  //   if (query && !initialLocationSet) {
+  //     setInitialLocationSet(true);
+  //     // set default Kuala Lumpur
+  //     setInitialLocationUser([3.2080597149999996, 101.72543377142858]);
+  //     setUserMarkers((prev) => {
+  //       const next = new Map(prev);
+  //       next.clear();
+  //       next.set("user", {
+  //         koordinatXX: 3.2080597149999996,
+  //         koordinatYY: 101.72543377142858,
+  //         dataUrl: "",
+  //         markerType: "USER",
+  //       });
+  //       return next;
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [query]);
 
   return (
     <div className="h-full w-full flex relative">
@@ -192,7 +194,10 @@ export default function SchoolMaps() {
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
       />
-      {!initialLocationSet && <LocationPickerWindow />}
+      {!initialLocationSet && !disclaimerAccepted && (
+        <DisclaimerMap onAccept={() => setDisclaimerAccepted(true)} />
+      )}
+      {!initialLocationSet && disclaimerAccepted && <LocationPickerWindow />}
       {!initialLocationSet && (
         <div className="fixed inset-0 z-[800] bg-bg-black-900/40 backdrop-blur-sm pointer-events-auto" />
       )}

@@ -8,18 +8,47 @@ import type {
   MarkerGroup,
 } from "../models/response";
 import { authAxios } from "./http";
+import { SCHOOL_LEVEL } from "../constants/schoolTypes";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const SCHOOL_ENDPOINT = "/schools";
 export const DATA_BASE_URL = import.meta.env.VITE_DATA_BASE_URL;
 
+type CenterCoord = [number | null, number | null];
+
 export const getSchoolSuggestion = async (
   params?: schoolSearchModel,
   pageNumber: number = 1,
-): Promise<{ filteredData: ItemSekolahModel[]; totalSchool: number }> => {
+  initialLocationUser?: CenterCoord,
+): Promise<{
+  filteredData: ItemSekolahModel[];
+  totalSchool: number;
+  totalInSinglePage: number;
+}> => {
   try {
+    const [lat, lng] = initialLocationUser || [null, null];
+    let locationParams = ``;
+    if (lat != null && lng != null) {
+      locationParams = `latitude=${lat}&longitude=${lng}&`;
+    }
+    const searchParams = `/search?${locationParams}page=${pageNumber}&pageSize=12`;
+
+    if (params?.peringkat && params.peringkat !== "ALL") {
+      const schoolTypes = Object.keys(SCHOOL_LEVEL).filter((type) =>
+        SCHOOL_LEVEL[type].includes(params!.peringkat!),
+      );
+
+      if (params.jenis && params.jenis !== "ALL") {
+        const existingJenis = params.jenis.split(",");
+        const allJenis = [...new Set([...existingJenis, ...schoolTypes])];
+        params = { ...params, jenis: allJenis.join(",") };
+      } else {
+        params = { ...params, jenis: schoolTypes.join(",") };
+      }
+    }
+
     const response = await authAxios.get<APIResponse<ListSekolahModel>>(
-      `${BASE_URL}${SCHOOL_ENDPOINT}/search?page=${pageNumber}&pageSize=12`,
+      `${BASE_URL}${SCHOOL_ENDPOINT}${searchParams}`,
       {
         params,
         paramsSerializer: { indexes: null },
@@ -33,8 +62,13 @@ export const getSchoolSuggestion = async (
         school.data.infoLokasi.koordinatXX != null,
     );
     const totalSchool = response.data.data?.totalRecords ?? 0;
+    const pageSize = response.data.data?.pageSize ?? 0;
+    const safeTotalSchool = isNaN(totalSchool) ? 0 : totalSchool;
+    const safePageSize = isNaN(pageSize) ? 0 : pageSize;
+    const totalInSinglePage =
+      safeTotalSchool > safePageSize ? safePageSize : safeTotalSchool;
 
-    return { filteredData, totalSchool };
+    return { filteredData, totalSchool, totalInSinglePage };
   } catch (error) {
     console.error("Error fetching school suggestions:", error);
     throw error;

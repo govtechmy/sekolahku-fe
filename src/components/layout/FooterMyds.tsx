@@ -8,11 +8,26 @@ import {
 import { footerSocialLinks } from "../../contentData";
 import SocialLinks from "../shared/SocialLinks";
 import { SiteLink } from "@govtechmy/myds-react/footer";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getVisitorDaily, getVisitorOverall } from "../../services/visitor.svc";
 
 export default function FooterMyds() {
   const lang = localStorage.getItem("lang") || "ms";
   const navigate = useNavigate();
+  const [daily, setDaily] = useState<string>("—");
+  const [overall, setOverall] = useState<string>("—");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([getVisitorDaily(), getVisitorOverall()])
+      .then(([dailyCount, overallCount]) => {
+        setDaily(dailyCount.toLocaleString("ms-MY"));
+        setOverall(overallCount.toLocaleString("ms-MY"));
+      })
+      .catch((err) => console.error("Failed to fetch visitor counts:", err))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <Footer className="w-full max-md:px-0 md:px-0 gap-0">
@@ -41,7 +56,7 @@ export default function FooterMyds() {
               Kerajaan Persekutuan, 62604 W.P. Putrajaya, Malaysia
             </p>
             <p className="text-txt-black-900 text-body-sm font-semibold not-prose">
-              Follow Us
+              Ikuti Kami
             </p>
             <SocialLinks
               links={footerSocialLinks}
@@ -50,14 +65,14 @@ export default function FooterMyds() {
             />
           </SiteInfo>
         </div>
-        <div className="flex flex-col gap-3">
-          <SiteLinkGroup groupTitle="Open Source">
+        <div className="flex gap-6 lg:gap-8 flex-col lg:flex-row">
+          <SiteLinkGroup groupTitle="Sumber Terbuka" className="min-w-[193px]">
             <SiteLink
               href="https://github.com/govtechmy/sekolahku-fe"
               target="_blank"
               className="focus:outline-otl-primary-200"
             >
-              Github Repo
+              Repositori GitHub
             </SiteLink>
             <SiteLink
               href="https://www.figma.com/design/oDUTO2KqIfVDKGKQrur9FP/Sekolahku-UI"
@@ -66,6 +81,19 @@ export default function FooterMyds() {
             >
               Figma
             </SiteLink>
+          </SiteLinkGroup>
+
+          <SiteLinkGroup groupTitle="Bilangan Pelawat">
+            <div className="max-sm:flex">
+              <span className="text-sm">
+                Pelawat Hari Ini : {loading ? "—" : daily}
+              </span>
+            </div>
+            <div className="max-sm:flex">
+              <span className="text-sm">
+                Jumlah Pelawat : {loading ? "—" : overall}
+              </span>
+            </div>
           </SiteLinkGroup>
         </div>
       </FooterSection>

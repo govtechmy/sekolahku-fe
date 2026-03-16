@@ -1,15 +1,17 @@
+import { clx } from "@govtechmy/myds-react/utils";
 import type { ReactNode } from "react";
 
 interface StatCardProps {
   icon: ReactNode;
   label: string;
   value: string | number;
+  className?: string;
 }
 
-export const StatCard = ({ icon, label, value }: StatCardProps) => {
+export const StatCard = ({ icon, label, value, className }: StatCardProps) => {
   return (
     <div
-      className="gap-0.5 mt-0 focus:outline-primary-200"
+      className={clx("gap-0.5 mt-0 focus:outline-primary-200", className)}
       tabIndex={0}
       aria-label={`${label}: ${value}`}
     >

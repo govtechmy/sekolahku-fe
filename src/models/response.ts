@@ -28,6 +28,7 @@ export interface schoolSearchModel {
   negeri?: string;
   jenis?: string;
   namaSekolah?: string;
+  peringkat?: string;
 }
 
 export interface SchoolLocation {
@@ -62,6 +63,7 @@ export interface SchoolInfoKomunikasi {
 }
 
 export interface SchoolInfoSekolah {
+  jumlahPelajarEnrolmenKhas: number;
   jenisLabel: string;
   jumlahPelajar: number;
   jumlahGuru: number;
@@ -126,12 +128,6 @@ export interface NearbySchoolsParams {
   name?: string;
 }
 
-export interface schoolSearchModel {
-  negeri?: string;
-  jenis?: string;
-  namaSekolah?: string;
-}
-
 export interface S3JsonModel {
   dataUrl?: string;
   negeri?: string;
@@ -155,6 +151,7 @@ export interface AnalyticsModel {
   jumlahGuru: number;
   jumlahPelajar: number;
   data: AnalyticsData;
+  lastUpdatedAt?: string;
 }
 
 export interface SiaranContentNode {

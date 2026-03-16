@@ -10,16 +10,15 @@ import {
 import { PrinterIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import SocialLinks from "../../components/shared/SocialLinks";
+import ImageAttachmentItem from "../../components/shared/ImageAttachmentItem";
+import DownloadAttachmentItem from "../../components/shared/DownloadAttachmentItem";
 import { siaranSocialLinks } from "../../contentData";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type { TakwimItem } from "../../types/takwim";
 import { getTakwimById } from "../../services/takwim.svc";
-import { formatFullEventDate } from "../../utils/date";
+import { formatEventDateDDMMYY } from "../../utils/date";
 import { RichText } from "@payloadcms/richtext-lexical/react";
-import { getIcon } from "../../utils/getIconLogo";
-import { formatFileSize } from "../../utils/formatFileSize";
-import { downloadFile } from "../../services/download.svc";
-import PrintHeader from "../../components/shared/PrintHeader";
+import PrintDisplay from "../../components/shared/PrintDisplay";
 
 export default function TakwimId() {
   const { lang } = useParams<{ lang: string }>();
@@ -43,34 +42,103 @@ export default function TakwimId() {
     }
   }, [id]);
 
+  // Filter attachments once to avoid multiple iterations
+  const imageAttachments = useMemo(
+    () =>
+      contents?.attachments?.filter((att) =>
+        att?.mimeType?.startsWith("image/"),
+      ) ?? [],
+    [contents],
+  );
+
+  const documentAttachments = useMemo(
+    () =>
+      contents?.attachments?.filter(
+        (att) => !att?.mimeType?.startsWith("image/"),
+      ) ?? [],
+    [contents],
+  );
+
   return (
     <div className="py-12 justify-center print:py-0 mx-auto px-4.5 flex w-full relative md:px-6 max-w-screen-xl">
       {contents && (
         <div className="flex flex-col gap-6 max-w-[825px] lg:min-w-[825px]">
-          <PrintHeader />
+          <div className="hidden print:block">
+            <PrintDisplay>
+              <div className="flex flex-col gap-3">
+                <span
+                  className={clx(
+                    "text-body-sm font-body font-semibold text-txt-primary",
+                  )}
+                >
+                  Takwim
+                </span>
+                {contents.title && (
+                  <p className="text-2xl font-semibold font-body">
+                    {contents.title}
+                  </p>
+                )}
+                <div className=" flex flex-row gap-2 text-txt-black-500">
+                  {contents.articleDate && (
+                    <div className="text-body-sm font-body font-normal pb-5">
+                      {formatEventDateDDMMYY(contents.articleDate)}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {contents.imageHero && (
+                <div className="flex flex-col gap-3 pb-5">
+                  <div className="flex justify-center">
+                    <img
+                      src={contents.imageHero.url}
+                      alt={contents.imageHero.alt || "Imej Event"}
+                      className="w-fit max-h-[415px] object-contain rounded-lg"
+                    />
+                  </div>
+                  {/* <span className="text-txt-black-500 text-center font-body font-normal text-sm">
+                    Image from{" "}
+                    <span className="italic">{contents.imageHero.url}</span>
+                  </span> */}
+                </div>
+              )}
+              {contents.content && (
+                <div className="text-xl text-justify font-normal md:px-10">
+                  <RichText
+                    className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
+                    data={contents.content}
+                  />
+                </div>
+              )}
+            </PrintDisplay>
+          </div>
           <Breadcrumb className="md:px-10 print:hidden">
             <BreadcrumbItem>
               <BreadcrumbLink href={`/${lang}/takwim`}>Takwim</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{contents.title}</BreadcrumbPage>
+              <BreadcrumbPage>{contents.title ?? ""}</BreadcrumbPage>
             </BreadcrumbItem>
           </Breadcrumb>
-          <div className="flex flex-col gap-3 md:px-10">
+          <div className="flex flex-col gap-3 md:px-10 print:hidden">
             <span
               className={clx(
-                "text-body-sm font-body font-semibold text-success-700",
+                "text-body-sm font-body font-semibold text-txt-primary",
               )}
             >
               Takwim
             </span>
-            <p className="text-2xl font-semibold font-body">{contents.title}</p>
-
-            <div className=" flex flex-row gap-2 text-bg-black-500">
-              <div className="text-body-sm font-body font-normal">
-                {formatFullEventDate(contents.articleDate)}
-              </div>
+            {contents.title && (
+              <p className="text-2xl font-semibold font-body">
+                {contents.title}
+              </p>
+            )}
+            <div className=" flex flex-row gap-2 text-txt-black-500">
+              {contents.articleDate && (
+                <div className="text-body-sm font-body font-normal">
+                  {formatEventDateDDMMYY(contents.articleDate)}
+                </div>
+              )}
             </div>
           </div>
           <div className="md:px-10 print:hidden">
@@ -90,94 +158,57 @@ export default function TakwimId() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3">
-            <div className="flex justify-center">
-              <img
-                src={contents.imageHero.url}
-                alt={contents.imageHero.alt}
-                className="w-fit max-h-[415px] object-contain rounded-lg"
+          {contents.imageHero && (
+            <div className="flex flex-col gap-3 print:hidden">
+              <div className="flex justify-center">
+                <img
+                  src={contents.imageHero.url}
+                  alt={contents.imageHero.alt || "Imej Event"}
+                  className="w-fit max-h-[415px] object-contain rounded-lg"
+                />
+              </div>
+              {/* <span className="text-txt-black-500 text-center font-body font-normal text-sm">
+                    Image from{" "}
+                    <span className="italic">{contents.imageHero.url}</span>
+                  </span> */}
+            </div>
+          )}
+          {contents.content && (
+            <div className="text-xl text-justify font-normal md:px-10 print:hidden">
+              <RichText
+                className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
+                data={contents.content}
               />
             </div>
-            {/* <span className="text-txt-black-500 text-center font-body font-normal text-sm">
-              Image from{" "}
-              <span className="italic">{contents.imageHero.url}</span>
-            </span> */}
-          </div>
-          <div className="text-xl text-justify font-normal md:px-10">
-            <RichText
-              className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
-              data={contents.content}
-            />
-          </div>
-          {contents.attachments?.length > 0 && (
-            <div className="md:px-10">
-              <div className="flex flex-wrap pt-6 border-t border-gray-200 gap-2">
-                {contents.attachments?.map((attachment) => {
-                  const hasValidUrl = !!attachment.url;
-                  return (
-                    <div key={attachment.id}>
-                      {attachment.filename &&
-                        attachment.filesize &&
-                        attachment.url &&
-                        attachment.mimeType && (
-                          <div
-                            tabIndex={0}
-                            role="button"
-                            aria-label={attachment.filename}
-                            className={`border border-otl-gray-200 w-[217px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 ${hasValidUrl ? "cursor-pointer" : "cursor-default"}`}
-                            onClick={
-                              hasValidUrl
-                                ? () =>
-                                    downloadFile(
-                                      attachment.url,
-                                      attachment.filename,
-                                    )
-                                : undefined
-                            }
-                            onKeyDown={
-                              hasValidUrl
-                                ? (e) => {
-                                    if (e.key === "Enter" || e.key === " ") {
-                                      e.preventDefault();
-                                      downloadFile(
-                                        attachment.url,
-                                        attachment.filename,
-                                      );
-                                    }
-                                  }
-                                : undefined
-                            }
-                          >
-                            <div className="flex items-center gap-2 overflow-hidden">
-                              {getIcon(
-                                attachment.mimeType.split("/")[1],
-                                attachment.url,
-                              )}
-
-                              <div className="text-start overflow-hidden">
-                                <div className="flex items-center">
-                                  <div className="max-w-[95px] truncate">
-                                    {attachment.filename.includes(".")
-                                      ? attachment.filename.slice(
-                                          0,
-                                          attachment.filename.lastIndexOf("."),
-                                        )
-                                      : attachment.filename}
-                                  </div>
-                                  <div className="flex-shrink-0">
-                                    .{attachment.mimeType.split("/")[1]}
-                                  </div>
-                                </div>
-                                <div className="text-txt-black-500 text-body-xs font-normal">
-                                  {formatFileSize(attachment.filesize)}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
+          )}
+          {contents.attachments && contents.attachments.length > 0 && (
+            <div className="md:px-10 print:hidden">
+              <div className="flex flex-col pt-6 border-t border-gray-200 gap-4">
+                {/* PDF/Document Attachments */}
+                {documentAttachments.length > 0 && (
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-body-lg font-semibold font-body">
+                      Lampiran
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      <DownloadAttachmentItem
+                        attachments={documentAttachments}
+                      />
                     </div>
-                  );
-                })}
+                  </div>
+                )}
+
+                {/* Image Attachments */}
+                {imageAttachments.length > 0 && (
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-body-lg font-semibold font-body">
+                      Gambar
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      <ImageAttachmentItem attachments={imageAttachments} />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
