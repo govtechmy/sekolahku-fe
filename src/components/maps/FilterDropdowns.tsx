@@ -46,13 +46,14 @@ export function FilterDropdowns({
         className="w-[155px]"
       >
         <SimpleSelectItem value="ALL">Semua Negeri</SimpleSelectItem>
-        {negeriList && 
-          negeriList.filter((n): n is string => typeof n === "string")
-          .map((n, idx) => (
-            <SimpleSelectItem key={idx} value={n}>
-              {underScoreRemover(n)}
-            </SimpleSelectItem>
-          ))}
+        {negeriList &&
+          negeriList
+            .filter((n): n is string => typeof n === "string")
+            .map((n, idx) => (
+              <SimpleSelectItem key={idx} value={n}>
+                {underScoreRemover(n)}
+              </SimpleSelectItem>
+            ))}
       </SimpleSelect>
 
       <SimpleSelect
