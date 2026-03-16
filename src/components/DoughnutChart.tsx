@@ -65,7 +65,7 @@ const borderColors = [
 
 export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
-  
+
   // Graceful handling for invalid or empty data
   if (!data || !Array.isArray(data) || data.length === 0) {
     return (
@@ -79,14 +79,16 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
 
   // Filter out invalid entries and ensure valid data
   const validData = data.filter(
-    (item) => item && typeof item.total === 'number' && item.total > 0
+    (item) => item && typeof item.total === "number" && item.total > 0,
   );
 
   if (validData.length === 0) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <div className="text-center p-8">
-          <p className="text-txt-black-500 text-sm">Tiada data sah untuk dipaparkan</p>
+          <p className="text-txt-black-500 text-sm">
+            Tiada data sah untuk dipaparkan
+          </p>
         </div>
       </div>
     );
@@ -132,39 +134,42 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   function RenderLegend() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
-        {validData && validData.map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between gap-2 rounded-md p-2 -m-2 cursor-pointer
+        {validData &&
+          validData.map((item, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between gap-2 rounded-md p-2 -m-2 cursor-pointer
                        transition-colors focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2
                        hover:bg-bg-gray-50"
-            tabIndex={0}
-            role="button"
-            aria-label={`${item.jenis} ${item.jenis}: ${item.peratus}%`}
-            onMouseEnter={() => setActiveIndex(index)}
-            onMouseLeave={() => setActiveIndex(undefined)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                setActiveIndex(activeIndex === index ? undefined : index);
+              tabIndex={0}
+              role="button"
+              aria-label={`${item.jenis} ${item.jenis}: ${item.peratus}%`}
+              onMouseEnter={() => setActiveIndex(index)}
+              onMouseLeave={() => setActiveIndex(undefined)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setActiveIndex(activeIndex === index ? undefined : index);
+                }
+              }}
+              onClick={() =>
+                setActiveIndex(activeIndex === index ? undefined : index)
               }
-            }}
-            onClick={() =>
-              setActiveIndex(activeIndex === index ? undefined : index)
-            }
-          >
-            <div className="flex flex-row items-center gap-4">
-              <div
-                className="w-6 h-6 rounded-full flex-shrink-0"
-                style={{ backgroundColor: chartColors[index] }}
-                aria-hidden="true"
-              />
-              {item.jenis || "-"}
-            </div>
+            >
+              <div className="flex flex-row items-center gap-4">
+                <div
+                  className="w-6 h-6 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: chartColors[index] }}
+                  aria-hidden="true"
+                />
+                {item.jenis || "-"}
+              </div>
 
-            <div>{typeof item.peratus === 'number' ? item.peratus : "-"}%</div>
-          </div>
-        ))}
+              <div>
+                {typeof item.peratus === "number" ? item.peratus : "-"}%
+              </div>
+            </div>
+          ))}
       </div>
     );
   }
