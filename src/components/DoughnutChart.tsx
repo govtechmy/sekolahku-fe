@@ -134,7 +134,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
         ))}
       </div>
     );
-  };
+  }
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -177,7 +177,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
 
         {/* Legend */}
         <div className="w-full lg:w-auto lg:max-w-md flex items-center justify-center">
-          <RenderLegend/>
+          <RenderLegend />
         </div>
       </div>
     </div>
