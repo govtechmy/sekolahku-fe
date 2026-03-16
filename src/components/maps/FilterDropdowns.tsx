@@ -106,8 +106,8 @@ export function FilterDropdowns({
         className="w-[155px]"
       >
         <SimpleSelectItem value="ALL">Semua Jenis</SimpleSelectItem>
-        {jenisList
-          .filter((x): x is string => typeof x === "string")
+        {jenisList && 
+          jenisList.filter((x): x is string => typeof x === "string")
           .map((x) => (
             <SimpleSelectItem key={x} value={x}>
               {SCHOOL_TYPE_LABELS[x] ? `${SCHOOL_TYPE_LABELS[x]} (${x})` : x}

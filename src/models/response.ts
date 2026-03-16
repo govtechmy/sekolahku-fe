@@ -127,13 +127,6 @@ export interface NearbySchoolsParams {
   name?: string;
 }
 
-export interface schoolSearchModel {
-  negeri?: string;
-  jenis?: string;
-  namaSekolah?: string;
-  peringkat?: string;
-}
-
 export interface S3JsonModel {
   dataUrl?: string;
   negeri?: string;
