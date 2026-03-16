@@ -113,20 +113,33 @@ export default function SchoolProfile() {
         <>
           <div className="border-otl-divider border-y">
             <PageContainer>
-              <div className="grid grid-cols-2 xl:grid-cols-2 overflow-hidden border border-otl-divider border-y-0 divide-y md:divide-y-0 divide-x divide-otl-divider ">
+              <div className="flex flex-col md:flex-row overflow-hidden border border-otl-divider border-y-0 divide-y md:divide-y-0 md:divide-x divide-otl-divider ">
                 <StatCard
                   icon={<UserGroupIcon />}
                   label="PELAJAR"
                   value={
                     school?.data?.infoSekolah?.jumlahPelajar ?? "Tiada Maklumat"
                   }
+                  className="flex-1"
                 />
+                {school.data.infoSekolah.jumlahPelajarEnrolmenKhas > 0 && (
+                  <StatCard
+                    icon={<UserIcon />}
+                    label="ENROLMEN KHAS"
+                    value={
+                      school?.data?.infoSekolah?.jumlahPelajarEnrolmenKhas ??
+                      "Tiada Maklumat"
+                    }
+                    className="flex-1"
+                  />
+                )}
                 <StatCard
                   icon={<UserIcon />}
                   label="GURU"
                   value={
                     school?.data?.infoSekolah?.jumlahGuru ?? "Tiada Maklumat"
                   }
+                  className="flex-1"
                 />
               </div>
             </PageContainer>
