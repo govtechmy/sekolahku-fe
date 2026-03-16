@@ -43,6 +43,7 @@ interface MapViewState {
       namaSekolah?: string;
       negeri?: string;
       jenis?: string;
+      peringkat?: string;
     },
     pageNumber?: number,
     append?: boolean,

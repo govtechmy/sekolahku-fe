@@ -16,7 +16,6 @@ import {
 } from "@govtechmy/myds-react/search-bar";
 import { clx } from "@govtechmy/myds-react/utils";
 import { Button } from "@govtechmy/myds-react/button";
-// import { Pill } from "@govtechmy/myds-react/pill";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import { useMapViewStore } from "../../store/mapView";
 import { NEGERI_LIST } from "../../contentData";
@@ -44,6 +43,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
+  const [selectedPeringkat, setSelectedPeringkat] = useState("ALL");
   const debounceTimerRef = useRef<number | null>(null);
   const setCenter = useMapViewStore((s) => s.setCenter);
   const setZoom = useMapViewStore((s) => s.setZoom);
@@ -126,6 +126,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
           namaSekolah: query,
           negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
           jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+          peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
         }).then(() => {
           // After search completes, find exact match
           if (localSuggestions.length > 0) {
@@ -156,9 +157,10 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
       namaSekolah: query.trim().length >= 3 ? query : "",
       negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
       jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+      peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedJenis, selectedNegeri]);
+  }, [selectedJenis, selectedNegeri, selectedPeringkat]);
 
   const handleSelect = async (school: SearchBarMapProps) => {
     try {
@@ -201,6 +203,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
         namaSekolah: query,
         negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
         jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
+        peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : undefined,
       },
       (localSuggestionsPage || 1) + 1,
       true,
@@ -301,6 +304,8 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                 jenisList={schoolTypes}
                 setSelectedNegeri={setSelectedNegeri}
                 setSelectedJenis={setSelectedJenis}
+                selectedPeringkat={selectedPeringkat}
+                setSelectedPeringkat={setSelectedPeringkat}
               />
               {dataTotal > 0 && (
                 <div className="p-4 pt-0 text-txt-black-500">
@@ -314,7 +319,8 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
             <div
               ref={listRef}
               onScroll={handleScroll}
-              className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1"
+              tabIndex={0}
+              className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1 focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 "
             >
               {localSuggestions.length > 0 ? (
                 localSuggestions.map((school, idx) => (

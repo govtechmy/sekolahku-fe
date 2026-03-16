@@ -7,7 +7,6 @@ import {
   SearchBarResultsList,
   SearchBarResultsItem,
   SearchBarClearButton,
-  // SearchBarHint,
 } from "@govtechmy/myds-react/search-bar";
 // import { Pill } from "@govtechmy/myds-react/pill";
 import {

@@ -1,0 +1,261 @@
+import {
+  CheckCircleFillIcon,
+  ChevronDownFillIcon,
+} from "@govtechmy/myds-react/icon";
+import { clx } from "@govtechmy/myds-react/utils";
+import { cva } from "class-variance-authority";
+import * as React from "react";
+
+const select_trigger_cva = cva(
+  [
+    "group inline-flex select-none items-center gap-1.5 outline-none rounded-md w-full text-txt-black-900",
+    "focus:ring focus:ring-fr-primary",
+    "disabled:bg-bg-white-disabled disabled:text-txt-black-disabled disabled:border-transparent disabled:cursor-not-allowed",
+    "transition-colors duration-150",
+  ],
+  {
+    variants: {
+      variant: {
+        outline: [
+          "bg-bg-white border border-otl-gray-200 shadow-button",
+          "hover:bg-bg-white-hover hover:border-otl-gray-300",
+        ],
+        ghost: [
+          "bg-transparent border border-transparent",
+          "hover:bg-bg-white-hover",
+        ],
+      },
+      size: {
+        small: "py-1.5 px-2.5 text-body-sm",
+        medium: "py-2 px-3 text-body-md",
+        large: "py-2.5 px-4 text-body-lg",
+      },
+    },
+    defaultVariants: { variant: "outline", size: "small" },
+  },
+);
+
+const select_content_cva = cva(
+  [
+    "absolute z-[700] w-full mt-1 bg-bg-dialog rounded-md border border-otl-gray-200 shadow-context-menu py-1",
+    "animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-150",
+  ],
+  {
+    variants: {
+      size: {
+        small: "max-h-64",
+        medium: "max-h-72",
+        large: "max-h-80",
+      },
+    },
+    defaultVariants: { size: "small" },
+  },
+);
+
+const select_item_cva = cva(
+  [
+    "flex items-center w-full cursor-default select-none py-1.5 gap-2 font-medium outline-none text-txt-black-700 rounded-xs mx-1",
+    "data-[highlighted]:bg-bg-washed",
+    "transition-colors duration-100",
+  ],
+  {
+    variants: {
+      size: {
+        small: "text-body-xs px-2.5",
+        medium: "text-body-sm px-2.5",
+        large: "text-body-md px-2.5",
+      },
+      selected: {
+        true: "bg-bg-washed",
+        false: "",
+      },
+    },
+    defaultVariants: { size: "small", selected: false },
+  },
+);
+
+interface SimpleSelectProps {
+  value?: string;
+  onValueChange?: (value: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  variant?: "outline" | "ghost";
+  size?: "small" | "medium" | "large";
+  className?: string;
+  children: React.ReactNode;
+}
+
+interface SimpleSelectItemProps {
+  value: string;
+  children: React.ReactNode;
+}
+
+type SimpleSelectContextType = {
+  value?: string;
+  onValueChange?: (value: string) => void;
+  size?: "small" | "medium" | "large";
+  closeDropdown: () => void;
+};
+
+const SimpleSelectContext = React.createContext<SimpleSelectContextType>({
+  value: undefined,
+  onValueChange: undefined,
+  size: "small",
+  closeDropdown: () => {},
+});
+
+// Helper function to extract text content from ReactNode (outside component)
+const extractTextContent = (node: React.ReactNode): string => {
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+  if (Array.isArray(node)) {
+    return node.map(extractTextContent).join("");
+  }
+  if (React.isValidElement(node)) {
+    const element = node as React.ReactElement<{ children?: React.ReactNode }>;
+    return extractTextContent(element.props.children);
+  }
+  return "";
+};
+
+export function SimpleSelect({
+  value,
+  onValueChange,
+  placeholder = "Select...",
+  disabled = false,
+  variant = "outline",
+  size = "small",
+  className,
+  children,
+}: SimpleSelectProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const dropdownId = React.useId();
+
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  // Compute selected label directly using useMemo
+  const selectedLabel = React.useMemo(() => {
+    if (!value) return null;
+
+    let label: string | null = null;
+    React.Children.forEach(children, (child) => {
+      if (
+        React.isValidElement<SimpleSelectItemProps>(child) &&
+        child.props.value === value
+      ) {
+        const extractedText = extractTextContent(child.props.children);
+        label = extractedText || value;
+      }
+    });
+    return label;
+  }, [value, children]);
+
+  const closeDropdown = () => setIsOpen(false);
+
+  return (
+    <SimpleSelectContext.Provider
+      value={{ value, onValueChange, size, closeDropdown }}
+    >
+      <div ref={containerRef} className={clx("relative w-full", className)}>
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={() => !disabled && setIsOpen((prev) => !prev)}
+          className={select_trigger_cva({ variant, size })}
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          aria-controls={dropdownId}
+        >
+          <span className="flex-1 min-w-0 truncate text-left">
+            {selectedLabel || (
+              <span className="text-txt-black-500">{placeholder}</span>
+            )}
+          </span>
+          <ChevronDownFillIcon
+            className={clx(
+              "text-txt-black-900 shrink-0 transition-transform duration-200",
+              size === "small"
+                ? "size-4"
+                : size === "medium"
+                  ? "size-5"
+                  : "size-5",
+              isOpen && "rotate-180",
+            )}
+          />
+        </button>
+
+        {isOpen && (
+          <div
+            id={dropdownId}
+            role="listbox"
+            className={clx(
+              select_content_cva({ size }),
+              "overflow-y-auto overflow-x-hidden show-scrollbar pr-2",
+            )}
+          >
+            {children}
+          </div>
+        )}
+      </div>
+    </SimpleSelectContext.Provider>
+  );
+}
+
+export function SimpleSelectItem({ value, children }: SimpleSelectItemProps) {
+  const {
+    value: selectedValue,
+    onValueChange,
+    size,
+    closeDropdown,
+  } = React.useContext(SimpleSelectContext);
+  const [isHighlighted, setIsHighlighted] = React.useState(false);
+
+  const isSelected = selectedValue === value;
+
+  const handleClick = () => {
+    onValueChange?.(value);
+    closeDropdown();
+  };
+
+  return (
+    <div
+      role="option"
+      aria-selected={isSelected}
+      onClick={handleClick}
+      onMouseEnter={() => setIsHighlighted(true)}
+      onMouseLeave={() => setIsHighlighted(false)}
+      data-highlighted={isHighlighted ? "" : undefined}
+      className={select_item_cva({ size, selected: isSelected })}
+    >
+      <span className="flex-1">{children}</span>
+      {isSelected && (
+        <CheckCircleFillIcon
+          className={clx(
+            "text-primary-600 shrink-0",
+            size === "small" ? "size-4" : "size-5",
+          )}
+        />
+      )}
+    </div>
+  );
+}

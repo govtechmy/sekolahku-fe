@@ -28,6 +28,7 @@ export interface schoolSearchModel {
   negeri?: string;
   jenis?: string;
   namaSekolah?: string;
+  peringkat?: string;
 }
 
 export interface SchoolLocation {
@@ -125,12 +126,6 @@ export interface NearbySchoolsParams {
   radiusInMeter?: number;
   zoom?: number;
   name?: string;
-}
-
-export interface schoolSearchModel {
-  negeri?: string;
-  jenis?: string;
-  namaSekolah?: string;
 }
 
 export interface S3JsonModel {
