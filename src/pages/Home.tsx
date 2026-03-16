@@ -135,7 +135,7 @@ export default function HomePage() {
           <SectionHeader
             header="ANALITIK"
             title="Fakta Menarik Sekolah di Malaysia"
-            subTitle={analytics.lastUpdatedAt || "Tiada Maklumat"}
+            subTitle={analytics?.lastUpdatedAt || "Tiada Maklumat"}
             sourceBtn={true}
             children={<SectionItemAnalytics analytics={analytics} />}
           />
