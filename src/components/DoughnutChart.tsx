@@ -63,10 +63,7 @@ const borderColors = [
   "#5A8BC4", // fallback (cycling back to start)
 ];
 
-export default function DoughnutChart({
-  data,
-  colors,
-}: DoughnutChartProps) {
+export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
   const chartColors = colors || defaultColors.slice(0, data.length);
   const chartBorderColors = borderColors.slice(0, data.length);
@@ -144,9 +141,7 @@ export default function DoughnutChart({
       <div className="flex flex-col lg:flex-row gap-6 items-center justify-center">
         {/* Pie Chart */}
         <div className="flex-shrink-0 w-full lg:w-auto flex justify-center">
-          <div
-            className="[&_*]:!outline-none"
-          >
+          <div className="[&_*]:!outline-none">
             <ResponsiveContainer width={280} height={280}>
               <PieChart>
                 <Pie

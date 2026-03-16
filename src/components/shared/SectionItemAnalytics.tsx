@@ -95,9 +95,10 @@ export default function SectionItemAnalytics({
 
         <div className="flex flex-col">
           <div className="p-6 border-t border-otl-gray-200 flex flex-col items-center gap-4">
-            <h3 className="text-lg font-semibold text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2"
-            tabIndex={0}
-            aria-label="Sekolah Mengikut Peringkat"
+            <h3
+              className="text-lg font-semibold text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2"
+              tabIndex={0}
+              aria-label="Sekolah Mengikut Peringkat"
             >
               Sekolah Mengikut Peringkat
             </h3>
@@ -143,9 +144,10 @@ export default function SectionItemAnalytics({
             </div>
           </div>
           <div className="p-6 border-t border-otl-gray-200 flex flex-col items-center gap-4">
-            <h3 className="text-lg font-semibold text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2"
-            tabIndex={0}
-            aria-label="Jenis Bantuan"
+            <h3
+              className="text-lg font-semibold text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2"
+              tabIndex={0}
+              aria-label="Jenis Bantuan"
             >
               Jenis Bantuan
             </h3>

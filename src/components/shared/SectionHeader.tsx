@@ -18,7 +18,7 @@ type SectionHeaderProps = {
   buttonLabelClassName?: string;
   arrowIconDisplay?: boolean;
   subTitle?: string;
-  sourceBtn?:boolean
+  sourceBtn?: boolean;
 };
 
 export default function SectionHeader({
