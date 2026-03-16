@@ -11,8 +11,9 @@ export default function DisclaimerPage({ onAccept }: DisclaimerProps = {}) {
           className="text-txt-black-500 text-body-lg"
           {...{ "splwpk-privacy-policy": "splwpk-privacy-policy" }}
         >
-          Fungsi <i className="text-txt-black-700">Carian Sekolah</i> kini berada dalam fasa <i className="text-txt-black-700">Ujian Beta</i>. 
-          Kemungkinan terdapat beberapa pepijat atau isu teknikal. 
+          Fungsi <i className="text-txt-black-700">Carian Sekolah</i> kini
+          berada dalam fasa <i className="text-txt-black-700">Ujian Beta</i>.
+          Kemungkinan terdapat beberapa pepijat atau isu teknikal.
           Penambahbaikan akan dilakukan dari semasa ke semasa.
         </p>
         {onAccept && (

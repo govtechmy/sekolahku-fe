@@ -50,7 +50,7 @@ export default function SchoolMaps() {
   useEffect(() => {
     if (!initialLocationSet) {
       // do something here
-      
+
       const sessionInitialLocation = getSessionInitialLocation();
       if (sessionInitialLocation) {
         setInitialLocationSet(true);
