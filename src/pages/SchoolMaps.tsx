@@ -11,7 +11,7 @@ import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import { NEGERI_LIST } from "../contentData";
 import { useLocationSessionStore } from "../store/locationSession";
 import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
-import DisclaimerPage from "./Disclaimer";
+import DisclaimerMap from "../components/maps/DisclaimerMap";
 
 export default function SchoolMaps() {
   const [schoolTypes, setSchoolTypes] = useState<string[]>([]);
@@ -195,7 +195,7 @@ export default function SchoolMaps() {
         fetchNearbySchools={fetchNearbySchools}
       />
       {!initialLocationSet && !disclaimerAccepted && (
-        <DisclaimerPage onAccept={() => setDisclaimerAccepted(true)} />
+        <DisclaimerMap onAccept={() => setDisclaimerAccepted(true)} />
       )}
       {!initialLocationSet && disclaimerAccepted && <LocationPickerWindow />}
       {!initialLocationSet && (
