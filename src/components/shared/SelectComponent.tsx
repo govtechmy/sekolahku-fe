@@ -1,4 +1,7 @@
-import { ChevronDownFillIcon } from "@govtechmy/myds-react/icon";
+import {
+  CheckCircleFillIcon,
+  ChevronDownFillIcon,
+} from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
 import { cva } from "class-variance-authority";
 import * as React from "react";
@@ -8,6 +11,7 @@ const select_trigger_cva = cva(
     "group inline-flex select-none items-center gap-1.5 outline-none rounded-md w-full text-txt-black-900",
     "focus:ring focus:ring-fr-primary",
     "disabled:bg-bg-white-disabled disabled:text-txt-black-disabled disabled:border-transparent disabled:cursor-not-allowed",
+    "transition-colors duration-150",
   ],
   {
     variants: {
@@ -34,6 +38,7 @@ const select_trigger_cva = cva(
 const select_content_cva = cva(
   [
     "absolute z-[700] w-full mt-1 bg-bg-dialog rounded-md border border-otl-gray-200 shadow-context-menu py-1",
+    "animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-150",
   ],
   {
     variants: {
@@ -51,13 +56,14 @@ const select_item_cva = cva(
   [
     "flex items-center w-full cursor-default select-none py-1.5 gap-2 font-medium outline-none text-txt-black-700 rounded-xs mx-1",
     "data-[highlighted]:bg-bg-washed",
+    "transition-colors duration-100",
   ],
   {
     variants: {
       size: {
-        small: "text-body-xs",
-        medium: "text-body-sm",
-        large: "text-body-md",
+        small: "text-body-xs px-2.5",
+        medium: "text-body-sm px-2.5",
+        large: "text-body-md px-2.5",
       },
       selected: {
         true: "bg-bg-washed",
@@ -170,7 +176,7 @@ export function SimpleSelect({
     <SimpleSelectContext.Provider
       value={{ value, onValueChange, size, closeDropdown }}
     >
-      <div ref={containerRef} className={clx("relative", className)}>
+      <div ref={containerRef} className={clx("relative w-full", className)}>
         <button
           type="button"
           disabled={disabled}
@@ -181,11 +187,13 @@ export function SimpleSelect({
           aria-controls={dropdownId}
         >
           <span className="flex-1 min-w-0 truncate text-left">
-            {selectedLabel || placeholder}
+            {selectedLabel || (
+              <span className="text-txt-black-500">{placeholder}</span>
+            )}
           </span>
           <ChevronDownFillIcon
             className={clx(
-              "text-txt-black-900 shrink-0 transition-transform",
+              "text-txt-black-900 shrink-0 transition-transform duration-200",
               size === "small"
                 ? "size-4"
                 : size === "medium"
@@ -202,7 +210,7 @@ export function SimpleSelect({
             role="listbox"
             className={clx(
               select_content_cva({ size }),
-              "overflow-y-auto show-scrollbar",
+              "overflow-y-auto overflow-x-hidden show-scrollbar",
             )}
           >
             {children}
@@ -239,7 +247,15 @@ export function SimpleSelectItem({ value, children }: SimpleSelectItemProps) {
       data-highlighted={isHighlighted ? "" : undefined}
       className={select_item_cva({ size, selected: isSelected })}
     >
-      {children}
+      <span className="flex-1">{children}</span>
+      {isSelected && (
+        <CheckCircleFillIcon
+          className={clx(
+            "text-primary-600 shrink-0",
+            size === "small" ? "size-4" : "size-5",
+          )}
+        />
+      )}
     </div>
   );
 }

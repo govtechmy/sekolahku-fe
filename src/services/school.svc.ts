@@ -47,8 +47,6 @@ export const getSchoolSuggestion = async (
       }
     }
 
-    console.log(params?.namaSekolah);
-
     const response = await authAxios.get<APIResponse<ListSekolahModel>>(
       `${BASE_URL}${SCHOOL_ENDPOINT}${searchParams}`,
       {
