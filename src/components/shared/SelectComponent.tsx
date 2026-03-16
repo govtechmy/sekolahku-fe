@@ -210,7 +210,7 @@ export function SimpleSelect({
             role="listbox"
             className={clx(
               select_content_cva({ size }),
-              "overflow-y-auto overflow-x-hidden show-scrollbar",
+              "overflow-y-auto overflow-x-hidden show-scrollbar pr-2",
             )}
           >
             {children}
