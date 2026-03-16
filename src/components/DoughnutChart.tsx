@@ -65,12 +65,39 @@ const borderColors = [
 
 export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
-  const chartColors = colors || defaultColors.slice(0, data.length);
-  const chartBorderColors = borderColors.slice(0, data.length);
-  const chartData = data.map((item) => ({
-    name: item.jenis,
-    value: item.total,
-    percentage: item.peratus,
+  
+  // Graceful handling for invalid or empty data
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="text-center p-8">
+          <p className="text-txt-black-500 text-sm">Tiada data tersedia</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Filter out invalid entries and ensure valid data
+  const validData = data.filter(
+    (item) => item && typeof item.total === 'number' && item.total > 0
+  );
+
+  if (validData.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="text-center p-8">
+          <p className="text-txt-black-500 text-sm">Tiada data sah untuk dipaparkan</p>
+        </div>
+      </div>
+    );
+  }
+
+  const chartColors = colors || defaultColors.slice(0, validData.length);
+  const chartBorderColors = borderColors.slice(0, validData.length);
+  const chartData = validData.map((item) => ({
+    name: item.jenis || "-",
+    value: Math.max(0, item.total || 0), // Ensure non-negative values
+    percentage: Math.max(0, Math.min(100, item.peratus || 0)), // Clamp between 0-100
   }));
 
   const onPieEnter = (_: unknown, index: number) => {
@@ -105,7 +132,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   function RenderLegend() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
-        {data.map((item, index) => (
+        {validData && validData.map((item, index) => (
           <div
             key={index}
             className="flex items-center justify-between gap-2 rounded-md p-2 -m-2 cursor-pointer
@@ -113,9 +140,15 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                        hover:bg-bg-gray-50"
             tabIndex={0}
             role="button"
-            aria-label={`${item.jenis}: ${item.peratus}%`}
+            aria-label={`${item.jenis} ${item.jenis}: ${item.peratus}%`}
             onMouseEnter={() => setActiveIndex(index)}
             onMouseLeave={() => setActiveIndex(undefined)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setActiveIndex(activeIndex === index ? undefined : index);
+              }
+            }}
             onClick={() =>
               setActiveIndex(activeIndex === index ? undefined : index)
             }
@@ -126,10 +159,10 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                 style={{ backgroundColor: chartColors[index] }}
                 aria-hidden="true"
               />
-              {item.jenis}
+              {item.jenis || "-"}
             </div>
 
-            <div>{item.peratus}%</div>
+            <div>{typeof item.peratus === 'number' ? item.peratus : "-"}%</div>
           </div>
         ))}
       </div>
