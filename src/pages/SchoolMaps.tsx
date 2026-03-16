@@ -11,9 +11,11 @@ import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import { NEGERI_LIST } from "../contentData";
 import { useLocationSessionStore } from "../store/locationSession";
 import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
+import DisclaimerPage from "./Disclaimer";
 
 export default function SchoolMaps() {
   const [schoolTypes, setSchoolTypes] = useState<string[]>([]);
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const {
     center,
     setCenter,
@@ -47,6 +49,8 @@ export default function SchoolMaps() {
 
   useEffect(() => {
     if (!initialLocationSet) {
+      // do something here
+      
       const sessionInitialLocation = getSessionInitialLocation();
       if (sessionInitialLocation) {
         setInitialLocationSet(true);
@@ -192,7 +196,10 @@ export default function SchoolMaps() {
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
       />
-      {!initialLocationSet && <LocationPickerWindow />}
+      {!initialLocationSet && !disclaimerAccepted && (
+        <DisclaimerPage onAccept={() => setDisclaimerAccepted(true)} />
+      )}
+      {!initialLocationSet && disclaimerAccepted && <LocationPickerWindow />}
       {!initialLocationSet && (
         <div className="fixed inset-0 z-[800] bg-bg-black-900/40 backdrop-blur-sm pointer-events-auto" />
       )}
