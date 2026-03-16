@@ -64,7 +64,6 @@ const borderColors = [
 ];
 
 export default function DoughnutChart({
-  title,
   data,
   colors,
 }: DoughnutChartProps) {
@@ -142,27 +141,14 @@ export default function DoughnutChart({
 
   return (
     <div className="w-full h-full flex flex-col">
-      {title && (
-        <h3
-          className="text-lg font-semibold mb-4 text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 rounded"
-          tabIndex={0}
-          role="button"
-          aria-label={title || "Chart title"}
-        >
-          {title}
-        </h3>
-      )}
-
       <div className="flex flex-col lg:flex-row gap-6 items-center justify-center">
         {/* Pie Chart */}
         <div className="flex-shrink-0 w-full lg:w-auto flex justify-center">
           <div
-            tabIndex={-1}
-            style={{ outline: "none" }}
             className="[&_*]:!outline-none"
           >
             <ResponsiveContainer width={280} height={280}>
-              <PieChart tabIndex={-1}>
+              <PieChart>
                 <Pie
                   data={chartData}
                   cx="50%"
@@ -173,7 +159,6 @@ export default function DoughnutChart({
                   dataKey="value"
                   onMouseEnter={onPieEnter}
                   onMouseLeave={onPieLeave}
-                  tabIndex={-1}
                 >
                   {chartData.map((_entry, index) => (
                     <Cell

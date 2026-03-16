@@ -18,6 +18,7 @@ type SectionHeaderProps = {
   buttonLabelClassName?: string;
   arrowIconDisplay?: boolean;
   subTitle?: string;
+  sourceBtn?:boolean
 };
 
 export default function SectionHeader({
@@ -30,6 +31,7 @@ export default function SectionHeader({
   classNameHeader,
   buttonLabelClassName,
   arrowIconDisplay = true,
+  sourceBtn = false,
   subTitle,
 }: SectionHeaderProps) {
   return (
@@ -49,7 +51,7 @@ export default function SectionHeader({
           <>
             <div className="flex justify-between text-txt-black-900 font-heading font-semibold text-heading-sm">
               {title}
-              {subTitle && (
+              {sourceBtn && (
                 <a
                   href="https://emisonline.moe.gov.my/risalahmap/"
                   target="_blank"

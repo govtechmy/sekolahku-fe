@@ -136,7 +136,8 @@ export default function HomePage() {
             header="ANALITIK"
             title="Fakta Menarik Sekolah di Malaysia"
             subTitle={analytics.lastUpdatedAt || "Tiada Maklumat"}
-            children={<SectionItemAnalytics analytics={analytics} />}
+            sourceBtn={true}
+            children={<SectionItemAnalytics analytics={analytics}/>}
           />
         )}
 
