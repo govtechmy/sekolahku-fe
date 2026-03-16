@@ -3,7 +3,7 @@ import { Pie, PieChart, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import type { CategoryItem } from "../models/response";
 
 interface DoughnutChartProps {
-  title: string;
+  title?: string;
   data: CategoryItem[];
   colors?: string[];
 }
@@ -51,6 +51,16 @@ const borderColors = [
   "#E8BCD4", // darker light pink
   "#AAAAAA", // darker light gray
   "#C7C77D", // darker light yellow
+  "#94A9C7", // darker very light blue
+  "#D9A96F", // darker very light orange
+  "#8FC09B", // darker very light green
+  "#E09999", // darker very light red
+  "#B39DC4", // darker very light purple
+  "#B8A598", // darker very light brown
+  "#D9B0C7", // darker very light pink
+  "#B3B3B3", // darker very light gray
+  "#C4C48A", // darker very light yellow
+  "#5A8BC4", // fallback (cycling back to start)
 ];
 
 export default function DoughnutChart({
