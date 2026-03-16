@@ -1,3 +1,5 @@
+import { Button } from "@govtechmy/myds-react/button";
+
 interface DisclaimerProps {
   onAccept?: () => void;
 }
@@ -17,12 +19,13 @@ export default function DisclaimerPage({ onAccept }: DisclaimerProps = {}) {
           Penambahbaikan akan dilakukan dari semasa ke semasa.
         </p>
         {onAccept && (
-          <button
+          <Button
             onClick={onAccept}
-            className="mt-4 px-6 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors"
+            className="w-full items-center justify-center"
+            size={"large"}
           >
             Faham & Teruskan
-          </button>
+          </Button>
         )}
       </div>
     </div>
