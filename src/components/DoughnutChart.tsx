@@ -102,7 +102,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
     }
     return null;
   };
-  const renderLegend = () => {
+  function RenderLegend() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
         {data.map((item, index) => (
@@ -177,7 +177,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
 
         {/* Legend */}
         <div className="w-full lg:w-auto lg:max-w-md flex items-center justify-center">
-          {renderLegend()}
+          <RenderLegend/>
         </div>
       </div>
     </div>
