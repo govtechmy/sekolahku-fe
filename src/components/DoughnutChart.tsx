@@ -97,8 +97,8 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   const chartColors = colors || defaultColors.slice(0, validData.length);
   const chartBorderColors = borderColors.slice(0, validData.length);
   const chartData = validData.map((item) => ({
-    name: item.jenis || "-",
-    value: Math.max(0, item.total || 0), // Ensure non-negative values
+    name: item?.jenis ?? "-",
+    value: Math.max(0, item?.total ?? 0), // Ensure non-negative values
   }));
 
   const onPieEnter = (_: unknown, index: number) => {
@@ -120,8 +120,8 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 border border-otl-gray-200 rounded shadow-lg">
-          <p className="font-semibold text-txt-black-900">{payload[0].name}</p>
-          <p className="text-txt-black-700">Jumlah: {payload[0].value}</p>
+          <p className="font-semibold text-txt-black-900">{payload[0]?.name ?? "0"}</p>
+          <p className="text-txt-black-700">Jumlah: {payload[0]?.value ?? "0"}</p>
         </div>
       );
     }
@@ -139,8 +139,8 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                        hover:bg-bg-gray-50"
               tabIndex={0}
               role="button"
-              aria-label={`${item.jenis || "-"}. Jumlah: ${
-                typeof item.total === "number" ? item.total : "-"
+              aria-label={`${item?.jenis ?? "-"}. Jumlah: ${
+                typeof item?.total === "number" ? item.total : "0"
               }`}
               aria-pressed={activeIndex === index}
               onMouseEnter={() => setActiveIndex(index)}
@@ -158,13 +158,13 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
               <div className="flex flex-row items-center gap-4">
                 <div
                   className="w-6 h-6 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: chartColors[index] }}
+                  style={{ backgroundColor: chartColors[index] ?? "#CCCCCC" }}
                   aria-hidden="true"
                 />
-                {item.jenis || "-"}
+                {item?.jenis ?? "-"}
               </div>
 
-              <div>{item.total}</div>
+              <div>{item?.total ?? 0}</div>
             </div>
           ))}
       </div>
@@ -193,8 +193,8 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                   {chartData.map((_entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={chartColors[index]}
-                      stroke={chartBorderColors[index]}
+                      fill={chartColors[index] ?? "#CCCCCC"}
+                      stroke={chartBorderColors[index] ?? "#999999"}
                       strokeWidth={2}
                       opacity={
                         activeIndex === undefined || activeIndex === index
