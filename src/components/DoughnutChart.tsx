@@ -123,9 +123,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
       return (
         <div className="bg-white p-3 border border-otl-gray-200 rounded shadow-lg">
           <p className="font-semibold text-txt-black-900">{payload[0].name}</p>
-          <p className="text-txt-black-700">
-            Jumlah: {payload[0].value}
-          </p>
+          <p className="text-txt-black-700">Jumlah: {payload[0].value}</p>
         </div>
       );
     }
@@ -165,9 +163,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                 {item.jenis || "-"}
               </div>
 
-              <div>
-                {typeof item.total === "number" ? item.total : "-"}
-              </div>
+              <div>{typeof item.total === "number" ? item.total : "-"}</div>
             </div>
           ))}
       </div>
