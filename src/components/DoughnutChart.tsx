@@ -66,8 +66,6 @@ const borderColors = [
 export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
-  console.log(data);
-
   // Graceful handling for invalid or empty data
   if (!data || !Array.isArray(data) || data.length === 0) {
     return (
