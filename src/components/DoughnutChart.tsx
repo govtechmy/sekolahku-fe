@@ -139,7 +139,9 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                        hover:bg-bg-gray-50"
               tabIndex={0}
               role="button"
-              aria-label={`${item.jenis}: ${item.total}`}
+              aria-label={`${item.jenis || "-"}. Jumlah: ${
+                typeof item.total === "number" ? item.total : "-"
+              }`}
               onMouseEnter={() => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(undefined)}
               onKeyDown={(e) => {
@@ -161,7 +163,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                 {item.jenis || "-"}
               </div>
 
-              <div>{typeof item.total === "number" ? item.total : "-"}</div>
+              <div>{item.total}</div>
             </div>
           ))}
       </div>
