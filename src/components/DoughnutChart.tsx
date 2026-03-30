@@ -142,6 +142,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
               aria-label={`${item.jenis || "-"}. Jumlah: ${
                 typeof item.total === "number" ? item.total : "-"
               }`}
+              aria-pressed={activeIndex === index}
               onMouseEnter={() => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(undefined)}
               onKeyDown={(e) => {
