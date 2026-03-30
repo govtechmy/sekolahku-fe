@@ -120,8 +120,12 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 border border-otl-gray-200 rounded shadow-lg">
-          <p className="font-semibold text-txt-black-900">{payload[0]?.name ?? "0"}</p>
-          <p className="text-txt-black-700">Jumlah: {payload[0]?.value ?? "0"}</p>
+          <p className="font-semibold text-txt-black-900">
+            {payload[0]?.name ?? "0"}
+          </p>
+          <p className="text-txt-black-700">
+            Jumlah: {payload[0]?.value ?? "0"}
+          </p>
         </div>
       );
     }
