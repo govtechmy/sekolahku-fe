@@ -66,6 +66,8 @@ const borderColors = [
 export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
+  console.log(data);
+
   // Graceful handling for invalid or empty data
   if (!data || !Array.isArray(data) || data.length === 0) {
     return (
@@ -99,7 +101,6 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   const chartData = validData.map((item) => ({
     name: item.jenis || "-",
     value: Math.max(0, item.total || 0), // Ensure non-negative values
-    percentage: Math.max(0, Math.min(100, item.peratus || 0)), // Clamp between 0-100
   }));
 
   const onPieEnter = (_: unknown, index: number) => {
@@ -116,7 +117,6 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
     payload?: Array<{
       name: string;
       value: number;
-      payload: { percentage: number };
     }>;
   }) => {
     if (active && payload && payload.length) {
@@ -124,7 +124,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
         <div className="bg-white p-3 border border-otl-gray-200 rounded shadow-lg">
           <p className="font-semibold text-txt-black-900">{payload[0].name}</p>
           <p className="text-txt-black-700">
-            Peratus: {payload[0].payload.percentage}%
+            Jumlah: {payload[0].value}
           </p>
         </div>
       );
@@ -143,7 +143,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                        hover:bg-bg-gray-50"
               tabIndex={0}
               role="button"
-              aria-label={`${item.jenis} ${item.jenis}: ${item.peratus}%`}
+              aria-label={`${item.jenis}: ${item.total}`}
               onMouseEnter={() => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(undefined)}
               onKeyDown={(e) => {
@@ -166,7 +166,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
               </div>
 
               <div>
-                {typeof item.peratus === "number" ? item.peratus : "-"}%
+                {typeof item.total === "number" ? item.total : "-"}
               </div>
             </div>
           ))}
