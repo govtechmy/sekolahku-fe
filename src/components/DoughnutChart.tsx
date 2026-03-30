@@ -97,9 +97,8 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   const chartColors = colors || defaultColors.slice(0, validData.length);
   const chartBorderColors = borderColors.slice(0, validData.length);
   const chartData = validData.map((item) => ({
-    name: item.jenis || "-",
-    value: Math.max(0, item.total || 0), // Ensure non-negative values
-    percentage: Math.max(0, Math.min(100, item.peratus || 0)), // Clamp between 0-100
+    name: item?.jenis ?? "-",
+    value: Math.max(0, item?.total ?? 0), // Ensure non-negative values
   }));
 
   const onPieEnter = (_: unknown, index: number) => {
@@ -116,15 +115,16 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
     payload?: Array<{
       name: string;
       value: number;
-      payload: { percentage: number };
     }>;
   }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 border border-otl-gray-200 rounded shadow-lg">
-          <p className="font-semibold text-txt-black-900">{payload[0].name}</p>
+          <p className="font-semibold text-txt-black-900">
+            {payload[0]?.name ?? "0"}
+          </p>
           <p className="text-txt-black-700">
-            Peratus: {payload[0].payload.percentage}%
+            Jumlah: {payload[0]?.value ?? "0"}
           </p>
         </div>
       );
@@ -143,7 +143,10 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                        hover:bg-bg-gray-50"
               tabIndex={0}
               role="button"
-              aria-label={`${item.jenis} ${item.jenis}: ${item.peratus}%`}
+              aria-label={`${item?.jenis ?? "-"}. Jumlah: ${
+                typeof item?.total === "number" ? item.total : "0"
+              }`}
+              aria-pressed={activeIndex === index}
               onMouseEnter={() => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(undefined)}
               onKeyDown={(e) => {
@@ -159,15 +162,13 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
               <div className="flex flex-row items-center gap-4">
                 <div
                   className="w-6 h-6 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: chartColors[index] }}
+                  style={{ backgroundColor: chartColors[index] ?? "#CCCCCC" }}
                   aria-hidden="true"
                 />
-                {item.jenis || "-"}
+                {item?.jenis ?? "-"}
               </div>
 
-              <div>
-                {typeof item.peratus === "number" ? item.peratus : "-"}%
-              </div>
+              <div>{item?.total ?? 0}</div>
             </div>
           ))}
       </div>
@@ -196,8 +197,8 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                   {chartData.map((_entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={chartColors[index]}
-                      stroke={chartBorderColors[index]}
+                      fill={chartColors[index] ?? "#CCCCCC"}
+                      stroke={chartBorderColors[index] ?? "#999999"}
                       strokeWidth={2}
                       opacity={
                         activeIndex === undefined || activeIndex === index
