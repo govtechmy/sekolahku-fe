@@ -66,7 +66,11 @@ const borderColors = [
   "#5A8BC4", // fallback (cycling back to start)
 ];
 
-export default function DoughnutChart({ data, colors, className }: DoughnutChartProps) {
+export default function DoughnutChart({
+  data,
+  colors,
+  className,
+}: DoughnutChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
   // Graceful handling for invalid or empty data
@@ -141,7 +145,12 @@ export default function DoughnutChart({ data, colors, className }: DoughnutChart
   };
   function RenderLegend() {
     return (
-      <div className={clx("w-full grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm",className)}>
+      <div
+        className={clx(
+          "w-full grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm",
+          className,
+        )}
+      >
         {validData &&
           validData.map((item, index) => (
             <div
@@ -174,10 +183,14 @@ export default function DoughnutChart({ data, colors, className }: DoughnutChart
                   aria-hidden="true"
                 />
 
-                <div className="text-txt-black-900 font-medium">{SCHOOL_TYPE_LABELS[item?.jenis ?? ""] ?? item?.jenis ?? "-"}</div>
+                <div className="text-txt-black-900 font-medium">
+                  {SCHOOL_TYPE_LABELS[item?.jenis ?? ""] ?? item?.jenis ?? "-"}
+                </div>
               </div>
 
-              <div className="text-txt-black-500 font-normal">{item?.total ?? 0}</div>
+              <div className="text-txt-black-500 font-normal">
+                {item?.total ?? 0}
+              </div>
             </div>
           ))}
       </div>

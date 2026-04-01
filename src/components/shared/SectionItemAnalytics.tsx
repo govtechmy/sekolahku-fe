@@ -152,7 +152,14 @@ export default function SectionItemAnalytics({
               Jenis Bantuan
             </h3>
             <div className="p-6 flex justify-center">
-              <DoughnutChart data={filteredBantuanData} className={filteredBantuanData.length === 3 ? "grid-cols-1 sm:grid-cols-1" : undefined} />
+              <DoughnutChart
+                data={filteredBantuanData}
+                className={
+                  filteredBantuanData.length === 3
+                    ? "grid-cols-1 sm:grid-cols-1"
+                    : undefined
+                }
+              />
               {/* just based on design of no data */}
             </div>
           </div>
