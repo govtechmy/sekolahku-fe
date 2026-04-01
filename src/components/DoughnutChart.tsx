@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Pie, PieChart, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import type { CategoryItem } from "../models/response";
+import { SCHOOL_TYPE_LABELS } from "../constants/schoolTypes";
+import { clx } from "@govtechmy/myds-react/utils";
 
 interface DoughnutChartProps {
   title?: string;
   data: CategoryItem[];
   colors?: string[];
+  className?: string;
 }
 
 const defaultColors = [
@@ -63,7 +66,11 @@ const borderColors = [
   "#5A8BC4", // fallback (cycling back to start)
 ];
 
-export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
+export default function DoughnutChart({
+  data,
+  colors,
+  className,
+}: DoughnutChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
   // Graceful handling for invalid or empty data
@@ -77,9 +84,14 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
     );
   }
 
-  // Filter out invalid entries and ensure valid data
+  // Filter out invalid entries, ensure valid data, and only include known school types
   const validData = data.filter(
-    (item) => item && typeof item.total === "number" && item.total > 0,
+    (item) =>
+      item &&
+      typeof item.total === "number" &&
+      item.total > 0 &&
+      item.jenis != null &&
+      item.jenis in SCHOOL_TYPE_LABELS,
   );
 
   if (validData.length === 0) {
@@ -97,7 +109,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   const chartColors = colors || defaultColors.slice(0, validData.length);
   const chartBorderColors = borderColors.slice(0, validData.length);
   const chartData = validData.map((item) => ({
-    name: item?.jenis ?? "-",
+    name: SCHOOL_TYPE_LABELS[item?.jenis ?? ""] ?? item?.jenis ?? "-",
     value: Math.max(0, item?.total ?? 0), // Ensure non-negative values
   }));
 
@@ -133,7 +145,12 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
   };
   function RenderLegend() {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+      <div
+        className={clx(
+          "w-full grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm",
+          className,
+        )}
+      >
         {validData &&
           validData.map((item, index) => (
             <div
@@ -143,7 +160,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                        hover:bg-bg-gray-50"
               tabIndex={0}
               role="button"
-              aria-label={`${item?.jenis ?? "-"}. Jumlah: ${
+              aria-label={`${SCHOOL_TYPE_LABELS[item?.jenis ?? ""] ?? item?.jenis ?? "-"}. Jumlah: ${
                 typeof item?.total === "number" ? item.total : "0"
               }`}
               aria-pressed={activeIndex === index}
@@ -165,10 +182,15 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
                   style={{ backgroundColor: chartColors[index] ?? "#CCCCCC" }}
                   aria-hidden="true"
                 />
-                {item?.jenis ?? "-"}
+
+                <div className="text-txt-black-900 font-medium">
+                  {SCHOOL_TYPE_LABELS[item?.jenis ?? ""] ?? item?.jenis ?? "-"}
+                </div>
               </div>
 
-              <div>{item?.total ?? 0}</div>
+              <div className="text-txt-black-500 font-normal">
+                {item?.total ?? 0}
+              </div>
             </div>
           ))}
       </div>
@@ -177,9 +199,9 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="flex flex-col lg:flex-row gap-6 items-center justify-center">
+      <div className="flex flex-col gap-6 items-center justify-center flex-1 h-full">
         {/* Pie Chart */}
-        <div className="flex-shrink-0 w-full lg:w-auto flex justify-center">
+        <div className="flex-shrink-0 w-full flex justify-center">
           <div className="[&_*]:!outline-none">
             <ResponsiveContainer width={280} height={280}>
               <PieChart>
@@ -215,7 +237,7 @@ export default function DoughnutChart({ data, colors }: DoughnutChartProps) {
         </div>
 
         {/* Legend */}
-        <div className="w-full lg:w-auto lg:max-w-md flex items-center justify-center">
+        <div className="w-full flex-grow flex items-center justify-center lg:justify-between">
           <RenderLegend />
         </div>
       </div>
