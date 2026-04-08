@@ -48,33 +48,40 @@ export default function SectionHeader({
           {header}
         </div>
         {title && (
-          <>
-            <div className="flex justify-between text-txt-black-900 font-heading font-semibold text-heading-sm">
-              {title}
-              {sourceBtn && (
-                <a
-                  href="https://emisonline.moe.gov.my/risalahmap/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-2 border border-otl-gray-200 rounded-full px-4 py-1 hover:bg-bg-gray-50 hover:border-otl-gray-300 transition-colors focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2"
-                >
-                  <JataNegaraIcon className="size-8" />
-                  <div className="flex flex-col">
-                    <span className="text-txt-black-500 text-body-xs font-medium">
-                      Sumber Data
-                    </span>
-                    <span className="text-body-sm font-medium">RisalahMap</span>
-                  </div>
-                  <ArrowOutgoingIcon className="size-6 hidden group-hover:block" />
-                </a>
+          <div
+            className={clx(
+              "flex justify-between items-center",
+              subTitle && "pb-12",
+            )}
+          >
+            <div className="flex flex-col gap-1">
+              <div className="text-txt-black-900 font-heading font-semibold text-heading-sm">
+                {title}
+              </div>
+              {subTitle && (
+                <span className="text-txt-black-500 text-body-sm font-normal">
+                  Data sehingga {formatEventDateDDMMYY(subTitle)}
+                </span>
               )}
             </div>
-            {subTitle && (
-              <span className="text-txt-black-500 text-body-sm font-normal pb-12">
-                Data setakat {formatEventDateDDMMYY(subTitle)}
-              </span>
+            {sourceBtn && (
+              <a
+                href="https://emisonline.moe.gov.my/risalahmap/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2 border border-otl-gray-200 rounded-full px-4 py-1 hover:bg-bg-gray-50 hover:border-otl-gray-300 transition-colors focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2"
+              >
+                <JataNegaraIcon className="size-8" />
+                <div className="flex flex-col">
+                  <span className="text-txt-black-500 text-body-xs font-medium">
+                    Sumber Data
+                  </span>
+                  <span className="text-body-sm font-medium">RisalahMap</span>
+                </div>
+                <ArrowOutgoingIcon className="size-6 hidden group-hover:block" />
+              </a>
             )}
-          </>
+          </div>
         )}
       </div>
       {children}
