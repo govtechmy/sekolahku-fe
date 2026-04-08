@@ -1,4 +1,4 @@
-import { SearchIcon } from "@govtechmy/myds-react/icon";
+import { DocumentFilledIcon } from "@govtechmy/myds-react/icon";
 import { Tag } from "@govtechmy/myds-react/tag";
 import PdfIconTakwim from "../../icons/pdfIconTakwim";
 import type { TakwimItem } from "../../types/takwim";
@@ -57,18 +57,18 @@ export default function SectionItemTakwim({
             </div>
             <div className="items-center flex max-sm:hidden !w-[161px] flex-shrink-0">
               <div className="border border-otl-gray-200 flex px-2.5 py-1.5 rounded-md gap-1.5 items-center flex-shrink-0 shadow-button hover:bg-bg-gray-50">
-                <SearchIcon className="size-4" />
+                <DocumentFilledIcon className="size-4" />
                 <div className="text-body-sm font-medium text-txt-black-700">
-                  Semak Takwim
+                  Lihat Butiran
                 </div>
               </div>
             </div>
           </div>
           <div className="items-center flex sm:hidden pl-[80px] mb-3">
             <div className="border border-otl-gray-200 flex px-2.5 py-1.5 rounded-md gap-1.5 items-center flex-shrink-0 shadow-button hover:bg-bg-gray-50">
-              <SearchIcon className="size-4" />
+              <DocumentFilledIcon className="size-4" />
               <div className="text-body-sm font-medium text-txt-black-700">
-                Semak Takwim
+                Lihat Butiran
               </div>
             </div>
           </div>
