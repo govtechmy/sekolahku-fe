@@ -40,7 +40,7 @@ export const getSchoolSuggestion = async (
 
       if (params.jenis && params.jenis !== "ALL") {
         const existingJenis = params.jenis.split(",");
-        const allJenis = [...new Set([...existingJenis, ...schoolTypes])];
+        const allJenis = [...new Set([...existingJenis])];
         params = { ...params, jenis: allJenis.join(",") };
       } else {
         params = { ...params, jenis: schoolTypes.join(",") };
