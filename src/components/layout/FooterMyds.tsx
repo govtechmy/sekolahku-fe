@@ -66,7 +66,8 @@ export default function FooterMyds() {
           </SiteInfo>
         </div>
         <div className="flex gap-6 lg:gap-8 flex-col lg:flex-row">
-          <SiteLinkGroup groupTitle="Sumber Terbuka" className="min-w-[193px]">
+          {/* requirement removal from 2nd UAT */}
+          {/* <SiteLinkGroup groupTitle="Sumber Terbuka" className="min-w-[193px]">
             <SiteLink
               href="https://github.com/govtechmy/sekolahku-fe"
               target="_blank"
@@ -81,7 +82,7 @@ export default function FooterMyds() {
             >
               Figma
             </SiteLink>
-          </SiteLinkGroup>
+          </SiteLinkGroup> */}
 
           <SiteLinkGroup groupTitle="Bilangan Pelawat">
             <div className="max-sm:flex">
