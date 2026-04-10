@@ -237,6 +237,7 @@ export default function SchoolProfile() {
                   <InfoGridItem
                     label="BIL SESI"
                     value={school.data.infoPentadbiran.bilSesi.toUpperCase()}
+                    note={school.data.infoPentadbiran.sesi.toUpperCase()}
                   />
                 )}
 
