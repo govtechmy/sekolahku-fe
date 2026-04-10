@@ -15,6 +15,7 @@ import {
   formatSchoolAddress,
   getSchoolLogoUrl,
 } from "../../utils/schoolHelpers";
+import { removePPD } from "../../utils/ppdRemover";
 import underScoreRemover from "../../utils/underscoreRemover";
 import SekolahAngkatMadaniImage from "../../icons/SekolahAngkatMadaniImage";
 
@@ -35,7 +36,6 @@ export function SchoolInfoWindow({
 }: SchoolInfoWindowProps) {
   const navigate = useNavigate();
   const lang = localStorage.getItem("lang") || "ms";
-
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
@@ -157,7 +157,7 @@ export function SchoolInfoWindow({
           />
           <InfoRow
             label="PPD"
-            value={school?.data?.infoPentadbiran?.ppd || "Tiada Maklumat"}
+            value={  removePPD(school?.data?.infoPentadbiran?.ppd) || "Tiada Maklumat"}
           />
           <InfoRow
             label="Daerah"

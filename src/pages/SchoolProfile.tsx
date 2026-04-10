@@ -212,7 +212,11 @@ export default function SchoolProfile() {
                 {school.data.infoPentadbiran?.ppd && (
                   <InfoGridItem
                     label="PPD"
-                    value={"PPD " + removePPD(school.data.infoPentadbiran.ppd)}
+                    value={
+                      removePPD(school.data.infoPentadbiran.ppd)
+                        ? `${removePPD(school.data.infoPentadbiran.ppd)}`
+                        : "Tiada Maklumat"
+                    }
                   />
                 )}
                 {school.data.infoPentadbiran?.parlimen && (
