@@ -115,7 +115,7 @@ export default function SchoolProfile() {
               <div className="flex flex-col md:flex-row overflow-hidden border border-otl-divider border-y-0 divide-y md:divide-y-0 md:divide-x divide-otl-divider ">
                 <StatCard
                   icon={<UserGroupIcon />}
-                  label="PELAJAR"
+                  label="MURID"
                   value={
                     school?.data?.infoSekolah?.jumlahPelajar ?? "Tiada Maklumat"
                   }
