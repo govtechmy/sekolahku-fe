@@ -84,17 +84,36 @@ export default function DoughnutChart({
     );
   }
 
-  // Filter out invalid entries, ensure valid data, and only include known school types
-  const validData = data.filter(
-    (item) =>
-      item &&
-      typeof item.total === "number" &&
-      item.total > 0 &&
-      item.jenis != null &&
-      item.jenis in SCHOOL_TYPE_LABELS,
-  );
+  // Accept generic categories (including unknown jenis keys) and normalize numbers.
+  const validData = data
+    .filter((item) => item && item.jenis != null)
+    .map((item) => ({
+      jenis: String(item.jenis),
+      total:
+        typeof item.total === "number"
+          ? item.total
+          : Number.parseFloat(String(item.total)) || 0,
+      peratus:
+        typeof item.peratus === "number"
+          ? item.peratus
+          : Number.parseFloat(String(item.peratus)) || 0,
+    }));
 
   if (validData.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="text-center p-8">
+          <p className="text-txt-black-500 text-sm">
+            Tiada data sah untuk dipaparkan
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const hasPositiveData = validData.some((item) => item.total > 0);
+
+  if (!hasPositiveData) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <div className="text-center p-8">

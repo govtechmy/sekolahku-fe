@@ -28,7 +28,7 @@ export default function SectionItemAnalytics({
   }, [analytics?.data.jenisLabel, selectedLevel]);
 
   const filteredBantuanData = useMemo(() => {
-    return analytics?.data.bantuan || [];
+    return (analytics?.data.bantuan || []).filter((item) => item.total > 0);
   }, [analytics?.data.bantuan]);
 
   return (
@@ -160,6 +160,7 @@ export default function SectionItemAnalytics({
                     : undefined
                 }
               />
+
               {/* just based on design of no data */}
             </div>
           </div>
