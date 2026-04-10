@@ -157,7 +157,9 @@ export function SchoolInfoWindow({
           />
           <InfoRow
             label="PPD"
-            value={  removePPD(school?.data?.infoPentadbiran?.ppd) || "Tiada Maklumat"}
+            value={
+              removePPD(school?.data?.infoPentadbiran?.ppd) || "Tiada Maklumat"
+            }
           />
           <InfoRow
             label="Daerah"
