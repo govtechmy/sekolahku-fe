@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Pie, PieChart, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import type { CategoryItem } from "../models/response";
-import { SCHOOL_JENIS_BANTUAN, SCHOOL_TYPE_LABELS } from "../constants/schoolTypes";
+import {
+  SCHOOL_JENIS_BANTUAN,
+  SCHOOL_TYPE_LABELS,
+} from "../constants/schoolTypes";
 import { clx } from "@govtechmy/myds-react/utils";
 
 interface DoughnutChartProps {
