@@ -2,7 +2,6 @@ import Hero from "../shared/Hero";
 import BgSchoolProfile from "../../asset/BgSchoolProfile";
 import type { ItemSekolahModel } from "../../models/response";
 import { useState } from "react";
-import caseConverter from "../../utils/caseConverter";
 import BgSchoolProfileNoLogo from "../../asset/BgSchoolProfileNoLogo";
 
 interface SchoolProfileHeroProps {
@@ -42,7 +41,7 @@ export default function SchoolProfileHero({
                   </div>
                   <div className="text-txt-black-900 text-heading-md max-md:text-heading-sm font-semibold gap-7 pb-7 max-w-[495px]">
                     {school?.namaSekolah
-                      ? caseConverter(school.namaSekolah)
+                      ? school.namaSekolah
                       : ""}
                   </div>
                   <div className="text-txt-primary font-semibold">

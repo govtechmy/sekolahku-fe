@@ -21,7 +21,6 @@ import {
 } from "../components/SchoolProfile";
 import { formatSchoolAddress, getSchoolLogoUrl } from "../utils/schoolHelpers";
 import underScoreRemover from "../utils/underscoreRemover";
-import caseConverter from "../utils/caseConverter";
 import PageContainer from "../components/layout/PageContainer";
 import { removePPD } from "../utils/ppdRemover";
 
@@ -160,7 +159,7 @@ export default function SchoolProfile() {
                   {school.namaSekolah && (
                     <InfoRow
                       icon={<GovtOfficeIcon width={24} height={24} />}
-                      text={caseConverter(school.namaSekolah)}
+                      text={school.namaSekolah}
                     />
                   )}
                   {school.data.infoKomunikasi?.noTelefon && (
@@ -183,9 +182,9 @@ export default function SchoolProfile() {
                   )}
                   <InfoRow
                     icon={<PinIcon width={24} height={24} />}
-                    text={caseConverter(
-                      underScoreRemover(formatSchoolAddress(school)),
-                    )}
+                    text={
+                      underScoreRemover(formatSchoolAddress(school))
+                    }
                   />
                 </div>
                 <div>
@@ -207,9 +206,8 @@ export default function SchoolProfile() {
                 {school.data.infoPentadbiran?.negeri && (
                   <InfoGridItem
                     label="NEGERI"
-                    value={caseConverter(
-                      underScoreRemover(school.data.infoPentadbiran.negeri),
-                    )}
+                    value={
+                      underScoreRemover(school.data.infoPentadbiran.negeri)}
                   />
                 )}
                 {school.data.infoPentadbiran?.ppd && (
@@ -217,16 +215,16 @@ export default function SchoolProfile() {
                     label="PPD"
                     value={
                       "PPD " +
-                      caseConverter(removePPD(school.data.infoPentadbiran.ppd))
+                      removePPD(school.data.infoPentadbiran.ppd)
                     }
                   />
                 )}
                 {school.data.infoPentadbiran?.parlimen && (
                   <InfoGridItem
                     label="PARLIMEN"
-                    value={caseConverter(
-                      underScoreRemover(school.data.infoPentadbiran.parlimen),
-                    )}
+                    value={
+                      underScoreRemover(school.data.infoPentadbiran.parlimen)
+                    }
                   />
                 )}
                 {school.data.infoPentadbiran?.bantuan && (
@@ -238,7 +236,7 @@ export default function SchoolProfile() {
                 {school.data.infoPentadbiran?.bilSesi && (
                   <InfoGridItem
                     label="BIL SESI"
-                    value={caseConverter(school.data.infoPentadbiran.bilSesi)}
+                    value={(school.data.infoPentadbiran.bilSesi).toUpperCase()}
                   />
                 )}
 
