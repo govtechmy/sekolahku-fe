@@ -40,9 +40,7 @@ export default function SchoolProfileHero({
                     NAMA SEKOLAH
                   </div>
                   <div className="text-txt-black-900 text-heading-md max-md:text-heading-sm font-semibold gap-7 pb-7 max-w-[495px]">
-                    {school?.namaSekolah
-                      ? school.namaSekolah
-                      : ""}
+                    {school?.namaSekolah ? school.namaSekolah : ""}
                   </div>
                   <div className="text-txt-primary font-semibold">
                     JENIS SEKOLAH

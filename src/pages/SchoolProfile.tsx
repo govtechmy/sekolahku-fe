@@ -182,9 +182,7 @@ export default function SchoolProfile() {
                   )}
                   <InfoRow
                     icon={<PinIcon width={24} height={24} />}
-                    text={
-                      underScoreRemover(formatSchoolAddress(school))
-                    }
+                    text={underScoreRemover(formatSchoolAddress(school))}
                   />
                 </div>
                 <div>
@@ -206,25 +204,23 @@ export default function SchoolProfile() {
                 {school.data.infoPentadbiran?.negeri && (
                   <InfoGridItem
                     label="NEGERI"
-                    value={
-                      underScoreRemover(school.data.infoPentadbiran.negeri)}
+                    value={underScoreRemover(
+                      school.data.infoPentadbiran.negeri,
+                    )}
                   />
                 )}
                 {school.data.infoPentadbiran?.ppd && (
                   <InfoGridItem
                     label="PPD"
-                    value={
-                      "PPD " +
-                      removePPD(school.data.infoPentadbiran.ppd)
-                    }
+                    value={"PPD " + removePPD(school.data.infoPentadbiran.ppd)}
                   />
                 )}
                 {school.data.infoPentadbiran?.parlimen && (
                   <InfoGridItem
                     label="PARLIMEN"
-                    value={
-                      underScoreRemover(school.data.infoPentadbiran.parlimen)
-                    }
+                    value={underScoreRemover(
+                      school.data.infoPentadbiran.parlimen,
+                    )}
                   />
                 )}
                 {school.data.infoPentadbiran?.bantuan && (
@@ -236,7 +232,7 @@ export default function SchoolProfile() {
                 {school.data.infoPentadbiran?.bilSesi && (
                   <InfoGridItem
                     label="BIL SESI"
-                    value={(school.data.infoPentadbiran.bilSesi).toUpperCase()}
+                    value={school.data.infoPentadbiran.bilSesi.toUpperCase()}
                   />
                 )}
 
