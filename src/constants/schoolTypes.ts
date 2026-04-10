@@ -21,12 +21,12 @@ export const SCHOOL_TYPE_LABELS: Record<string, string> = {
 };
 
 export const SCHOOL_LEVEL: Record<string, string[]> = {
-  K11: ["RENDAH", "MENENGAH"],
-  K9: ["RENDAH", "MENENGAH"],
+  K11: ["MENENGAH"],
+  K9: ["RENDAH"],
   KT6: ["MENENGAH"],
   KV: ["MENENGAH"],
-  "MODEL KHAS": ["RENDAH", "MENENGAH"],
-  SBJK: ["RENDAH", "MENENGAH"],
+  "MODEL KHAS": ["MENENGAH"],
+  SBJK: ["MENENGAH"],
   //   SBK: ["RENDAH", "MENENGAH"], not exist in db check on 15/03/26
   SBP: ["MENENGAH"],
   SENI: ["MENENGAH"],
@@ -40,5 +40,5 @@ export const SCHOOL_LEVEL: Record<string, string[]> = {
   SMKA: ["MENENGAH"],
   SMT: ["MENENGAH"],
   "SR SABK": ["RENDAH"],
-  SUKAN: ["RENDAH", "MENENGAH"],
+  SUKAN: ["MENENGAH"],
 };
