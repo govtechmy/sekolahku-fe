@@ -80,8 +80,8 @@ export default function SchoolMaps() {
         geolocationRequestedRef.current = true;
         const options: PositionOptions = {
           enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0,
+          timeout: 12000,
+          maximumAge: 600000,
         };
 
         navigator.geolocation.getCurrentPosition(
