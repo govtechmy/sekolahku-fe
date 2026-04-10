@@ -159,6 +159,7 @@ export default function SectionItemAnalytics({
                     ? "grid-cols-1 sm:grid-cols-1"
                     : undefined
                 }
+                type="SCHOOL_JENIS_BANTUAN"
               />
 
               {/* just based on design of no data */}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pie, PieChart, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import type { CategoryItem } from "../models/response";
-import { SCHOOL_TYPE_LABELS } from "../constants/schoolTypes";
+import { SCHOOL_JENIS_BANTUAN, SCHOOL_TYPE_LABELS } from "../constants/schoolTypes";
 import { clx } from "@govtechmy/myds-react/utils";
 
 interface DoughnutChartProps {
@@ -9,6 +9,7 @@ interface DoughnutChartProps {
   data: CategoryItem[];
   colors?: string[];
   className?: string;
+  type?: "SCHOOL_TYPE" | "SCHOOL_JENIS_BANTUAN";
 }
 
 const defaultColors = [
@@ -70,6 +71,7 @@ export default function DoughnutChart({
   data,
   colors,
   className,
+  type = "SCHOOL_TYPE",
 }: DoughnutChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
@@ -127,8 +129,17 @@ export default function DoughnutChart({
 
   const chartColors = colors || defaultColors.slice(0, validData.length);
   const chartBorderColors = borderColors.slice(0, validData.length);
+
+  const getCategoryLabel = (jenis?: string) => {
+    const key = jenis ?? "";
+    if (type === "SCHOOL_TYPE") {
+      return SCHOOL_TYPE_LABELS[key] ?? jenis ?? "-";
+    }
+    return SCHOOL_JENIS_BANTUAN[key] ?? jenis ?? "-";
+  };
+
   const chartData = validData.map((item) => ({
-    name: SCHOOL_TYPE_LABELS[item?.jenis ?? ""] ?? item?.jenis ?? "-",
+    name: getCategoryLabel(item.jenis),
     value: Math.max(0, item?.total ?? 0), // Ensure non-negative values
   }));
 
@@ -179,7 +190,7 @@ export default function DoughnutChart({
                        hover:bg-bg-gray-50"
               tabIndex={0}
               role="button"
-              aria-label={`${SCHOOL_TYPE_LABELS[item?.jenis ?? ""] ?? item?.jenis ?? "-"}. Jumlah: ${
+              aria-label={`${getCategoryLabel(item.jenis)}. Jumlah: ${
                 typeof item?.total === "number" ? item.total : "0"
               }`}
               aria-pressed={activeIndex === index}
@@ -203,7 +214,7 @@ export default function DoughnutChart({
                 />
 
                 <div className="text-txt-black-900 font-medium">
-                  {SCHOOL_TYPE_LABELS[item?.jenis ?? ""] ?? item?.jenis ?? "-"}
+                  {getCategoryLabel(item.jenis)}
                 </div>
               </div>
 
