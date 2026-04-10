@@ -210,7 +210,6 @@ export default function SiaranId() {
           {contents.attachments && contents.attachments.length > 0 && (
             <div className="md:px-10 print:hidden">
               <div className="flex flex-col pt-6 border-t border-gray-200 gap-4">
-              
                 {/* PDF/Document Attachments */}
                 {documentAttachments.length > 0 && (
                   <div className="flex flex-col gap-2">

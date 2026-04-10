@@ -12,9 +12,7 @@ export default function DownloadAttachmentItem({
 }: DownloadAttachmentItemProps) {
   const validAttachments = attachments.filter(
     (attachment) =>
-      attachment.filename &&
-      attachment.filesize != null &&
-      attachment.url,
+      attachment.filename && attachment.filesize != null && attachment.url,
   );
 
   if (validAttachments.length === 0) {
