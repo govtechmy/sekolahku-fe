@@ -61,7 +61,9 @@ export default function SiaranId() {
   const documentAttachments = useMemo(
     () =>
       contents?.attachments?.filter(
-        (att) => !att?.mimeType?.startsWith("image/"),
+        (att) =>
+          Boolean(att?.filename && att?.url && att?.filesize != null) &&
+          !att?.mimeType?.startsWith("image/"),
       ) ?? [],
     [contents],
   );

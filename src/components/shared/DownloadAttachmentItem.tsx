@@ -10,17 +10,27 @@ interface DownloadAttachmentItemProps {
 export default function DownloadAttachmentItem({
   attachments,
 }: DownloadAttachmentItemProps) {
+  const validAttachments = attachments.filter(
+    (attachment) =>
+      attachment.filename && attachment.filesize != null && attachment.url,
+  );
+
+  if (validAttachments.length === 0) {
+    return null;
+  }
+
   return (
     <>
-      {attachments.map((attachment) => {
-        if (
-          !attachment.filename ||
-          attachment.filesize == null ||
-          !attachment.url ||
-          !attachment.mimeType
-        ) {
-          return null;
-        }
+      {validAttachments.map((attachment) => {
+        const extensionFromFilename = attachment.filename.includes(".")
+          ? attachment.filename
+              .slice(attachment.filename.lastIndexOf(".") + 1)
+              .toLowerCase()
+          : "";
+        const extensionFromMimeType = attachment.mimeType?.includes("/")
+          ? attachment.mimeType.split("/")[1]
+          : "file";
+        const extension = extensionFromFilename || extensionFromMimeType;
 
         return (
           <button
@@ -31,14 +41,7 @@ export default function DownloadAttachmentItem({
             onClick={() => downloadFile(attachment.url, attachment.filename)}
           >
             <div className="flex items-center gap-2 overflow-hidden">
-              {getIcon(
-                attachment.filename.includes(".")
-                  ? attachment.filename
-                      .slice(attachment.filename.lastIndexOf(".") + 1)
-                      .toLowerCase()
-                  : attachment.mimeType.split("/")[1],
-                attachment.url,
-              )}
+              {getIcon(extension, attachment.url)}
               <div className="text-start overflow-hidden">
                 <div className="flex items-center">
                   <div className="max-w-[95px] truncate">
@@ -53,7 +56,7 @@ export default function DownloadAttachmentItem({
                     .
                     {attachment.filename.includes(".")
                       ? attachment.filename.split(".").pop()
-                      : attachment.mimeType.split("/")[1]}
+                      : extension}
                   </div>
                 </div>
                 <div className="text-txt-black-500 text-body-xs font-normal">
