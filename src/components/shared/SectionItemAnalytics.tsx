@@ -147,9 +147,9 @@ export default function SectionItemAnalytics({
             <h3
               className="text-lg font-semibold text-center focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2"
               tabIndex={0}
-              aria-label="Jenis Bantuan"
+              aria-label="Bantuan"
             >
-              Jenis Bantuan
+              Bantuan
             </h3>
             <div className="p-6 flex justify-center">
               <DoughnutChart

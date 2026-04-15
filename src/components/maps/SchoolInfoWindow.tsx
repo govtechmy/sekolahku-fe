@@ -170,7 +170,7 @@ export function SchoolInfoWindow({
             value={school?.data?.infoPentadbiran?.sesi || "Tiada Maklumat"}
           />
           <InfoRow
-            label="Jenis Bantuan"
+            label="Bantuan"
             value={school?.data?.infoPentadbiran?.bantuan || "Tiada Maklumat"}
           />
         </div>
