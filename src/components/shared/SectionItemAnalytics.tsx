@@ -5,7 +5,6 @@ import {
   UserGroupIcon,
 } from "@govtechmy/myds-react/icon";
 import DoughnutChart from "../DoughnutChart";
-import { SCHOOL_LEVEL } from "../../constants/schoolTypes";
 import { useState, useMemo } from "react";
 
 interface SectionItemAnalyticsProps {
@@ -20,11 +19,16 @@ export default function SectionItemAnalytics({
   );
 
   const filteredJenisData = useMemo(() => {
-    return (analytics?.data.jenisLabel || []).filter((item) => {
-      const schoolLevels = SCHOOL_LEVEL[item.jenis];
-      const isMatch = schoolLevels && schoolLevels.includes(selectedLevel);
-      return isMatch;
-    });
+    return (analytics?.data.jenisLabel || [])
+      .filter((item) =>
+        item.peringkatBreakdown?.some((b) => b.peringkat === selectedLevel),
+      )
+      .map((item) => {
+        const breakdown = item.peringkatBreakdown?.find(
+          (b) => b.peringkat === selectedLevel,
+        );
+        return { ...item, total: breakdown?.total ?? item.total };
+      });
   }, [analytics?.data.jenisLabel, selectedLevel]);
 
   const filteredBantuanData = useMemo(() => {
