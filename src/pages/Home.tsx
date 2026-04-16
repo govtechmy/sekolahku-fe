@@ -107,9 +107,7 @@ export default function HomePage() {
             ButtonClickHandler={() => navigate(`/${lang}/takwim`)}
             arrowIconDisplay={false}
           >
-            <SectionItemTakwim
-              dataItemCalendar={dataItemCalendar}
-            />
+            <SectionItemTakwim dataItemCalendar={dataItemCalendar} />
           </SectionHeader>
         )}
 
