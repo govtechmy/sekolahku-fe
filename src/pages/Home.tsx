@@ -109,7 +109,6 @@ export default function HomePage() {
           >
             <SectionItemTakwim
               dataItemCalendar={dataItemCalendar}
-              lang={lang}
             />
           </SectionHeader>
         )}

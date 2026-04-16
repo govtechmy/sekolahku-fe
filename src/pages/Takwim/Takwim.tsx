@@ -1,16 +1,14 @@
 import Hero from "../../components/shared/Hero";
 import SearchBarMain from "../../components/shared/SearchBar";
 import { type DateRange } from "@govtechmy/myds-react/daterange-picker";
-import { useNavigate, useParams } from "react-router-dom";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useEffect, useState, useRef } from "react";
 import { getAllTakwim, getSearchTakwim } from "../../services/takwim.svc";
 import type { TakwimItem } from "../../types/takwim";
 import SectionItemTakwim from "../../components/shared/SectionItemTakwim";
+import { getTakwimAttachmentUrl } from "../../utils/takwimAttachment";
 
 export default function Takwim() {
-  const navigate = useNavigate();
-  const { lang } = useParams<{ lang: string }>();
   const [items, setItems] = useState<TakwimItem[]>([]);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(12);
@@ -94,6 +92,16 @@ export default function Takwim() {
     }
   };
 
+  const handleOpenTakwimAttachment = (item: TakwimItem) => {
+    const attachmentUrl = getTakwimAttachmentUrl(item);
+
+    if (!attachmentUrl) {
+      return;
+    }
+
+    window.open(attachmentUrl, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <>
       <Hero
@@ -109,9 +117,7 @@ export default function Takwim() {
             getKey={(item) => item._id}
             getLabel={(item) => item.title ?? "Untitled"}
             onSelect={(item: TakwimItem) => {
-              if (lang && item._id) {
-                navigate(`/${lang}/takwim/${item._id}`);
-              }
+              handleOpenTakwimAttachment(item);
             }}
           />
         }
@@ -124,7 +130,7 @@ export default function Takwim() {
       />
       <div className="mx-auto flex-1 px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1280px] py-16 flex flex-col">
         <div className="flex flex-col gap-8">
-          <SectionItemTakwim dataItemCalendar={items} lang={lang} />
+          <SectionItemTakwim dataItemCalendar={items} />
 
           {/* Pagination */}
           <div className="flex justify-center mt-12">

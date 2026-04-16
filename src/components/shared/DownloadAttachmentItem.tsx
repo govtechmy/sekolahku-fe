@@ -2,13 +2,18 @@ import { formatFileSize } from "../../utils/formatFileSize";
 import { getIcon } from "../../utils/getIconLogo";
 import { downloadFile } from "../../services/download.svc";
 import type { Attachment } from "../../types/takwim";
+import { clx } from "@govtechmy/myds-react/utils";
 
 interface DownloadAttachmentItemProps {
   attachments: Attachment[];
+  classNameButton?: string;
+  classNameButtonString?: string;
 }
 
 export default function DownloadAttachmentItem({
   attachments,
+  classNameButton,
+  classNameButtonString,
 }: DownloadAttachmentItemProps) {
   const validAttachments = attachments.filter(
     (attachment) =>
@@ -37,14 +42,22 @@ export default function DownloadAttachmentItem({
             key={attachment.id}
             type="button"
             aria-label={attachment.filename}
-            className="border border-otl-gray-200 w-[204px] h-[54px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 cursor-pointer"
+            className={clx(
+              "border border-otl-gray-200 w-[204px] h-[54px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 cursor-pointer",
+              classNameButton,
+            )}
             onClick={() => downloadFile(attachment.url, attachment.filename)}
           >
             <div className="flex items-center gap-2 overflow-hidden">
               {getIcon(extension, attachment.url)}
               <div className="text-start overflow-hidden">
                 <div className="flex items-center">
-                  <div className="max-w-[95px] truncate">
+                  <div
+                    className={clx(
+                      "max-w-[95px] truncate",
+                      classNameButtonString,
+                    )}
+                  >
                     {attachment.filename.includes(".")
                       ? attachment.filename.slice(
                           0,
