@@ -28,7 +28,7 @@ export const getSchoolSuggestion = async (
     if (params?.namaSekolah) {
       params = {
         ...params,
-        namaSekolah: params.namaSekolah.replace(/\s+/g, ""),
+        namaSekolah: params.namaSekolah.trim().replace(/\s+/g, " "),
       };
     }
 

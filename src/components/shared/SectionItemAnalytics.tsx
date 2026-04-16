@@ -20,15 +20,15 @@ export default function SectionItemAnalytics({
 
   const filteredJenisData = useMemo(() => {
     return (analytics?.data.jenisLabel || [])
-      .filter((item) =>
-        item.peringkatBreakdown?.some((b) => b.peringkat === selectedLevel),
-      )
       .map((item) => {
         const breakdown = item.peringkatBreakdown?.find(
           (b) => b.peringkat === selectedLevel,
         );
-        return { ...item, total: breakdown?.total ?? item.total };
-      });
+        const total =
+          breakdown?.total ?? (item.peringkatBreakdown ? 0 : item.total);
+        return { ...item, total };
+      })
+      .filter((item) => item.total > 0);
   }, [analytics?.data.jenisLabel, selectedLevel]);
 
   const filteredBantuanData = useMemo(() => {
