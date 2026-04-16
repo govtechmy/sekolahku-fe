@@ -26,7 +26,10 @@ export const getSchoolSuggestion = async (
 }> => {
   try {
     if (params?.namaSekolah) {
-      params = { ...params, namaSekolah: params.namaSekolah.replace(/\s+/g, "") };
+      params = {
+        ...params,
+        namaSekolah: params.namaSekolah.replace(/\s+/g, ""),
+      };
     }
 
     const [lat, lng] = initialLocationUser || [null, null];
