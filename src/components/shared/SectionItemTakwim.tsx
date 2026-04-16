@@ -16,7 +16,7 @@ export default function SectionItemTakwim({
       return;
     }
 
-    window.open(attachmentUrl, "_blank", "noopener,noreferrer");
+    // window.open(attachmentUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -38,22 +38,22 @@ export default function SectionItemTakwim({
           role="button"
           aria-label={item.title ? `${item.title}` : "View event"}
         >
-          <div className="flex flex-col items-center justify-center w-[55px]">
-            <div className="text-body-xs font-medium text-txt-danger">FEB</div>
-            <div className="text-body-xl font-semibold">20</div>
+          <div className="flex flex-col items-center justify-center w-[55px] flex-shrink-0">
+            <div className="text-body-xs font-medium text-txt-danger">{item.createdAt ? new Date(item.createdAt).toLocaleString('default', { month: 'short' }).toUpperCase() : "Unknown"}</div>
+            <div className="text-body-xl font-semibold">{item.createdAt ? new Date(item.createdAt).getDate() : "Unknown"}</div>
             <div className="text-body-xs font-medium text-txt-black-500">
-              2025
+              {item.createdAt ? new Date(item.createdAt).getFullYear() : "Unknown"}
             </div>
           </div>
-          <div className="border-r order-otl-gray-200"></div>
-          <div>
+          <div className="border-r order-otl-gray-200 flex-shrink-0"></div>
+          <div className="flex-1 min-w-0 w-full">
             <div className="text-txt-black-700 text-body-lg font-semibold pb-2">
-              Hari Sukan Malaysia 2025
+              {item.title ? item.title : "Untitled"}
             </div>
-            <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
               <DownloadAttachmentItem
-                classNameButton={"w-[234px]"}
-                classNameButtonString="max-w-[145px]"
+                classNameButton={"w-full"}
+                // classNameButtonString="max-w-[145px]"
                 attachments={item.attachments ?? []}
               />
             </div>
