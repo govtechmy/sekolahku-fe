@@ -137,7 +137,9 @@ export default function HomePage() {
             title="Fakta Menarik Sekolah di Malaysia"
             subTitle={
               analytics?.fileVersion
-                ? analytics.fileVersion.slice(0, -4) + " " + analytics.fileVersion.slice(-4)
+                ? analytics.fileVersion.slice(0, -4) +
+                  " " +
+                  analytics.fileVersion.slice(-4)
                 : "Tiada Maklumat"
             }
             sourceBtn={true}
