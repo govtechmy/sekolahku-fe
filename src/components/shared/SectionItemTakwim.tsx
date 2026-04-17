@@ -36,11 +36,15 @@ export default function SectionItemTakwim({
           aria-label={item.title ? `${item.title}` : "View event"}
         >
           <div className="flex flex-col items-center justify-center w-[55px] flex-shrink-0">
-            <div className="text-body-xs font-medium text-txt-danger">{item.createdAt ? new Date(item.createdAt).toLocaleString('default', { month: 'short' }).toUpperCase() : "Unknown"}</div>
-            <div className="text-body-xl font-semibold">{item.createdAt ? new Date(item.createdAt).getDate() : "Unknown"}</div>
+            
+            {item.createdAt && (<>
+              <div className="text-body-xs font-medium text-txt-danger">{item.createdAt ? new Date(item.createdAt).toLocaleString('default', { month: 'short' }).toUpperCase() : ""}</div>
+            <div className="text-body-xl font-semibold">{item.createdAt.slice(8, 10)}</div>
             <div className="text-body-xs font-medium text-txt-black-500">
-              {item.createdAt ? new Date(item.createdAt).getFullYear() : "Unknown"}
+              {item.createdAt.slice(0, 4)}
             </div>
+            </>
+            )}
           </div>
           <div className="border-r order-otl-gray-200 flex-shrink-0"></div>
           <div className="flex-1 min-w-0 w-full">
