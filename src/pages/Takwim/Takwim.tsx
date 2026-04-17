@@ -6,7 +6,7 @@ import { useEffect, useState, useRef } from "react";
 import { getAllTakwim, getSearchTakwim } from "../../services/takwim.svc";
 import type { TakwimItem } from "../../types/takwim";
 import SectionItemTakwim from "../../components/shared/SectionItemTakwim";
-import { getTakwimAttachmentUrl } from "../../utils/takwimAttachment";
+// import { getTakwimAttachmentUrl } from "../../utils/takwimAttachment";
 
 export default function Takwim() {
   const [items, setItems] = useState<TakwimItem[]>([]);
@@ -37,19 +37,19 @@ export default function Takwim() {
       try {
         const response =
           debouncedSearchQuery ||
-          (dateRange?.from != undefined && dateRange?.to != undefined)
+            (dateRange?.from != undefined && dateRange?.to != undefined)
             ? await getSearchTakwim(
-                pageNumber,
-                debouncedSearchQuery,
-                dateRange?.from ? dateRange.from.toISOString() : undefined,
-                dateRange?.to
-                  ? (() => {
-                      const endDate = new Date(dateRange.to);
-                      endDate.setHours(23, 59, 59, 999);
-                      return endDate.toISOString();
-                    })()
-                  : undefined,
-              )
+              pageNumber,
+              debouncedSearchQuery,
+              dateRange?.from ? dateRange.from.toISOString() : undefined,
+              dateRange?.to
+                ? (() => {
+                  const endDate = new Date(dateRange.to);
+                  endDate.setHours(23, 59, 59, 999);
+                  return endDate.toISOString();
+                })()
+                : undefined,
+            )
             : await getAllTakwim(pageNumber);
         if (response) {
           setItems(response.items ?? []);
@@ -92,15 +92,15 @@ export default function Takwim() {
     }
   };
 
-  const handleOpenTakwimAttachment = (item: TakwimItem) => {
-    const attachmentUrl = getTakwimAttachmentUrl(item);
+  // const handleOpenTakwimAttachment = (item: TakwimItem) => {
+  //   const attachmentUrl = getTakwimAttachmentUrl(item);
 
-    if (!attachmentUrl) {
-      return;
-    }
+  //   if (!attachmentUrl) {
+  //     return;
+  //   }
 
-    window.open(attachmentUrl, "_blank", "noopener,noreferrer");
-  };
+  //   window.open(attachmentUrl, "_blank", "noopener,noreferrer");
+  // };
 
   return (
     <>
@@ -116,9 +116,9 @@ export default function Takwim() {
             suggestions={searchSuggestions}
             getKey={(item) => item._id}
             getLabel={(item) => item.title ?? "Untitled"}
-            onSelect={(item: TakwimItem) => {
-              handleOpenTakwimAttachment(item);
-            }}
+          // onSelect={(item: TakwimItem) => {
+          //   handleOpenTakwimAttachment(item);
+          // }}
           />
         }
         background={
