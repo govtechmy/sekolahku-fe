@@ -12,13 +12,7 @@ import { getSiaranList } from "../services/siaran.svc";
 import SectionItemTakwim from "../components/shared/SectionItemTakwim";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import { getAnalytics } from "../services/analytics.svc";
-
-//all statistic are commented out and removed the imported analytics, will add later once confirmed later,
-
-const formatFileVersion = (version?: string): string => {
-  if (!version || version.length <= 4) return version ?? "Tiada Maklumat";
-  return `${version.slice(0, -4)} ${version.slice(-4)}`;
-};
+import { formatFileVersion } from "../utils/fileVersionFormat";
 
 export default function HomePage() {
   const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
