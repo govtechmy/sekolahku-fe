@@ -16,7 +16,7 @@ export default function SectionItemTakwim({
       return;
     }
 
-    // window.open(attachmentUrl, "_blank", "noopener,noreferrer");
+    window.open(attachmentUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -25,9 +25,6 @@ export default function SectionItemTakwim({
         <div
           key={index}
           className="flex gap-3 w-full border border-otl-gray-200  p-3 rounded-lg cursor-pointer focus:outline-primary-200 hover:bg-bg-gray-50"
-          onClick={() => {
-            openAttachment(item);
-          }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
