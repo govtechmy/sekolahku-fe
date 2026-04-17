@@ -147,7 +147,7 @@ export interface AnalyticsData {
 }
 
 export interface AnalyticsModel {
-  fileVersion: string;
+  fileVersion?: string;
   jumlahSekolah: number;
   jumlahGuru: number;
   jumlahPelajar: number;

@@ -15,6 +15,11 @@ import { getAnalytics } from "../services/analytics.svc";
 
 //all statistic are commented out and removed the imported analytics, will add later once confirmed later,
 
+const formatFileVersion = (version?: string): string => {
+  if (!version || version.length <= 4) return version ?? "Tiada Maklumat";
+  return `${version.slice(0, -4)} ${version.slice(-4)}`;
+};
+
 export default function HomePage() {
   const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
   //later add loading for all , check design
@@ -135,13 +140,7 @@ export default function HomePage() {
           <SectionHeader
             header="ANALITIK"
             title="Fakta Menarik Sekolah di Malaysia"
-            subTitle={
-              analytics?.fileVersion
-                ? analytics.fileVersion.slice(0, -4) +
-                  " " +
-                  analytics.fileVersion.slice(-4)
-                : "Tiada Maklumat"
-            }
+            subTitle={formatFileVersion(analytics?.fileVersion)}
             sourceBtn={true}
             children={<SectionItemAnalytics analytics={analytics} />}
           />
