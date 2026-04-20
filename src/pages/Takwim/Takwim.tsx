@@ -28,13 +28,9 @@ export default function Takwim() {
   useEffect(() => {
     const fetchAcara = async () => {
       try {
-        const response =
-          debouncedSearchQuery 
-            ? await getSearchTakwim(
-              pageNumber,
-              debouncedSearchQuery,
-            )
-            : await getAllTakwim(pageNumber);
+        const response = debouncedSearchQuery
+          ? await getSearchTakwim(pageNumber, debouncedSearchQuery)
+          : await getAllTakwim(pageNumber);
         if (response) {
           setItems(response.items ?? []);
           setPageNumber(response.pageNumber ?? 1);

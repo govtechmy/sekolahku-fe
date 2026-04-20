@@ -49,22 +49,19 @@ export default function DownloadAttachmentItem({
             tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-             window.open(attachment.url, "_blank", "noopener,noreferrer") // Open in new tab instead of downloading
-
+                e.preventDefault();
+                window.open(attachment.url, "_blank", "noopener,noreferrer"); // Open in new tab instead of downloading
+              }
+            }}
+            onClick={() =>
+              window.open(attachment.url, "_blank", "noopener,noreferrer")
             }
-            }} 
-            onClick={() => window.open(attachment.url, "_blank", "noopener,noreferrer")}         >
+          >
             <div className="flex items-center gap-2 overflow-hidden">
               {getIcon(extension, attachment.url)}
               <div className="text-start overflow-hidden">
                 <div className="flex items-center">
-                  <div
-                    className={clx(
-                      "truncate",
-                      classNameButtonString,
-                    )}
-                  >
+                  <div className={clx("truncate", classNameButtonString)}>
                     {attachment.filename.includes(".")
                       ? attachment.filename.slice(
                           0,

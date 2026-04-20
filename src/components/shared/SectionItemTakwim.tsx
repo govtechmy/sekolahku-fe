@@ -35,8 +35,8 @@ export default function SectionItemTakwim({
                 <div className="text-body-xs font-medium text-txt-danger">
                   {item.createdAt
                     ? new Date(item.createdAt)
-                      .toLocaleString("default", { month: "short" })
-                      .toUpperCase()
+                        .toLocaleString("default", { month: "short" })
+                        .toUpperCase()
                     : ""}
                 </div>
                 <div className="text-body-xl font-semibold">
@@ -50,9 +50,11 @@ export default function SectionItemTakwim({
           </div>
           <div className="border-r border-otl-gray-200 flex-shrink-0"></div>
           <div className="flex-1 min-w-0 w-full">
-            {item.title && <div className="text-txt-black-700 text-body-lg font-semibold pb-2">
-              {item.title}
-            </div>}
+            {item.title && (
+              <div className="text-txt-black-700 text-body-lg font-semibold pb-2">
+                {item.title}
+              </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
               <DownloadAttachmentItem
                 classNameButton={"w-full"}
