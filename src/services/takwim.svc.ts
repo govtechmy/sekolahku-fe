@@ -39,14 +39,3 @@ export const getSearchTakwim = async (
     throw error;
   }
 };
-
-export const getTakwimById = async (id: string) => {
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  try {
-    const response = await authAxios.get(`${BASE_URL}/takwim/${id}`);
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching acara by id", error);
-    throw error;
-  }
-};

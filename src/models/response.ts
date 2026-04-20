@@ -135,10 +135,16 @@ export interface S3JsonModel {
   kodSekolah?: string;
 }
 
+export interface PeringkatBreakdown {
+  peringkat: string;
+  total: number;
+}
+
 export interface CategoryItem {
   jenis: string;
   peratus: number;
   total: number;
+  peringkatBreakdown?: PeringkatBreakdown[];
 }
 
 export interface AnalyticsData {
@@ -147,6 +153,7 @@ export interface AnalyticsData {
 }
 
 export interface AnalyticsModel {
+  fileVersion?: string;
   jumlahSekolah: number;
   jumlahGuru: number;
   jumlahPelajar: number;

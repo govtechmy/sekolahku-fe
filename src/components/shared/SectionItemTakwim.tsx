@@ -1,75 +1,66 @@
-import { DocumentFilledIcon } from "@govtechmy/myds-react/icon";
-import { Tag } from "@govtechmy/myds-react/tag";
-import PdfIconTakwim from "../../icons/pdfIconTakwim";
 import type { TakwimItem } from "../../types/takwim";
-import { formatEventDateMonth, formatEventDay } from "../../utils/date";
-import { useNavigate } from "react-router-dom";
+// import { getTakwimAttachmentUrl } from "../../utils/takwimAttachment";
+import DownloadAttachmentItem from "./DownloadAttachmentItem";
 
 type SectionItemTakwimProps = {
   dataItemCalendar: TakwimItem[];
-  lang: string | undefined;
 };
 
 export default function SectionItemTakwim({
   dataItemCalendar,
-  lang,
 }: SectionItemTakwimProps) {
-  const navigate = useNavigate();
+  // const openAttachment = (item: TakwimItem) => {
+  //   const attachmentUrl = getTakwimAttachmentUrl(item);
+
+  //   if (!attachmentUrl) {
+  //     return;
+  //   }
+
+  //   window.open(attachmentUrl, "_blank", "noopener,noreferrer");
+  // };
+
   return (
     <div className="flex flex-col gap-6">
       {dataItemCalendar.map((item, index) => (
         <div
           key={index}
-          className="w-full border border-otl-gray-200 rounded-lg cursor-pointer focus:outline-primary-200 hover:bg-bg-gray-50"
-          onClick={() => {
-            navigate(`/${lang}/takwim/${item._id}`);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              navigate(`/${lang}/takwim/${item._id}`);
-            }
-          }}
+          className="flex gap-3 w-full border border-otl-gray-200  p-3 rounded-lg cursor-pointer focus:outline-primary-200 hover:bg-bg-gray-50"
           tabIndex={0}
           role="button"
           aria-label={item.title ? `${item.title}` : "View event"}
         >
-          <div className="flex p-3 gap-2">
-            <PdfIconTakwim className="size-[60px] flex-shrink-0" />
-            <div className="grow gap-2 flex flex-col min-w-0">
-              <div>
-                {item.articleDate && (
-                  <Tag mode="pill" variant="primary">
-                    <div>{formatEventDay(item.articleDate).toUpperCase()}</div>
-                    <div> | </div>
-                    <div>
-                      {formatEventDateMonth(item.articleDate).toUpperCase()}
-                    </div>
-                  </Tag>
-                )}
-              </div>
-
-              {item.title && (
-                <div className="text-txt-black-700 text-body-lg font-semibold">
-                  {item.title}
+          <div className="flex flex-col items-center justify-center w-[55px] flex-shrink-0">
+            {item.createdAt && (
+              <>
+                <div className="text-body-xs font-medium text-txt-danger">
+                  {item.createdAt
+                    ? new Date(item.createdAt)
+                        .toLocaleString("default", { month: "short" })
+                        .toUpperCase()
+                    : ""}
                 </div>
-              )}
-            </div>
-            <div className="items-center flex max-sm:hidden !w-[161px] flex-shrink-0">
-              <div className="border border-otl-gray-200 flex px-2.5 py-1.5 rounded-md gap-1.5 items-center flex-shrink-0 shadow-button hover:bg-bg-gray-50">
-                <DocumentFilledIcon className="size-4" />
-                <div className="text-body-sm font-medium text-txt-black-700">
-                  Lihat Butiran
+                <div className="text-body-xl font-semibold">
+                  {item.createdAt.slice(8, 10)}
                 </div>
-              </div>
-            </div>
+                <div className="text-body-xs font-medium text-txt-black-500">
+                  {item.createdAt.slice(0, 4)}
+                </div>
+              </>
+            )}
           </div>
-          <div className="items-center flex sm:hidden pl-[80px] mb-3">
-            <div className="border border-otl-gray-200 flex px-2.5 py-1.5 rounded-md gap-1.5 items-center flex-shrink-0 shadow-button hover:bg-bg-gray-50">
-              <DocumentFilledIcon className="size-4" />
-              <div className="text-body-sm font-medium text-txt-black-700">
-                Lihat Butiran
+          <div className="border-r border-otl-gray-200 flex-shrink-0"></div>
+          <div className="flex-1 min-w-0 w-full">
+            {item.title && (
+              <div className="text-txt-black-700 text-body-lg font-semibold pb-2">
+                {item.title}
               </div>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+              <DownloadAttachmentItem
+                classNameButton={"w-full"}
+                // classNameButtonString="max-w-[145px]"
+                attachments={item.attachments ?? []}
+              />
             </div>
           </div>
         </div>
