@@ -37,7 +37,7 @@ export default function HomePage() {
     const fetchTakwim = async () => {
       try {
         const data = await getAllTakwim();
-        setDataItemCalendar(data.items);
+        setDataItemCalendar(data.items.slice(0, 5)); // Get only the first 5 items for the homepage
       } catch (error) {
         console.error("Error fetching Takwim:", error);
       }
@@ -107,10 +107,7 @@ export default function HomePage() {
             ButtonClickHandler={() => navigate(`/${lang}/takwim`)}
             arrowIconDisplay={false}
           >
-            <SectionItemTakwim
-              dataItemCalendar={dataItemCalendar}
-              lang={lang}
-            />
+            <SectionItemTakwim dataItemCalendar={dataItemCalendar} />
           </SectionHeader>
         )}
 
