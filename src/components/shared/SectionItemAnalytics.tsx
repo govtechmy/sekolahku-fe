@@ -19,7 +19,7 @@ export default function SectionItemAnalytics({
   );
 
   const filteredJenisData = useMemo(() => {
-    return (analytics?.data.jenisLabel || [])
+    return (analytics?.data?.jenisLabel || [])
       .map((item) => {
         const breakdown = item.peringkatBreakdown?.find(
           (b) => b.peringkat === selectedLevel,
@@ -29,11 +29,11 @@ export default function SectionItemAnalytics({
         return { ...item, total };
       })
       .filter((item) => item.total > 0);
-  }, [analytics?.data.jenisLabel, selectedLevel]);
+  }, [analytics?.data?.jenisLabel, selectedLevel]);
 
   const filteredBantuanData = useMemo(() => {
-    return (analytics?.data.bantuan || []).filter((item) => item.total > 0);
-  }, [analytics?.data.bantuan]);
+    return (analytics?.data?.bantuan || []).filter((item) => item.total > 0);
+  }, [analytics?.data?.bantuan]);
 
   return (
     <>
