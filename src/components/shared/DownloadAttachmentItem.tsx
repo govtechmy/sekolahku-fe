@@ -46,9 +46,15 @@ export default function DownloadAttachmentItem({
               "border border-otl-gray-200 w-[204px] h-[54px] rounded-lg flex items-center justify-between focus:outline focus:outline-2 focus:outline-primary-200 p-2 gap-2 cursor-pointer",
               classNameButton,
             )}
-            // onClick={() => downloadFile(attachment.url, attachment.filename)}
-            onClick={() => window.open(attachment.url, "_blank", "noopener,noreferrer")} // Open in new tab instead of downloading
-          >
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+             window.open(attachment.url, "_blank", "noopener,noreferrer") // Open in new tab instead of downloading
+
+            }
+            }} 
+            onClick={() => window.open(attachment.url, "_blank", "noopener,noreferrer")}         >
             <div className="flex items-center gap-2 overflow-hidden">
               {getIcon(extension, attachment.url)}
               <div className="text-start overflow-hidden">

@@ -1,12 +1,10 @@
 import Hero from "../../components/shared/Hero";
 import SearchBarMain from "../../components/shared/SearchBar";
-import { type DateRange } from "@govtechmy/myds-react/daterange-picker";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useEffect, useState, useRef } from "react";
 import { getAllTakwim, getSearchTakwim } from "../../services/takwim.svc";
 import type { TakwimItem } from "../../types/takwim";
 import SectionItemTakwim from "../../components/shared/SectionItemTakwim";
-// import { getTakwimAttachmentUrl } from "../../utils/takwimAttachment";
 
 export default function Takwim() {
   const [items, setItems] = useState<TakwimItem[]>([]);
@@ -16,11 +14,6 @@ export default function Takwim() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
   const [searchSuggestions, setSearchSuggestions] = useState<TakwimItem[]>([]);
-  //later can remove if finalize no more using date
-  const [dateRange] = useState<DateRange | undefined>({
-    from: undefined,
-    to: undefined,
-  });
   const debounceTimerRef = useRef<number | null>(null);
 
   // Cleanup timer on unmount
@@ -36,19 +29,10 @@ export default function Takwim() {
     const fetchAcara = async () => {
       try {
         const response =
-          debouncedSearchQuery ||
-            (dateRange?.from != undefined && dateRange?.to != undefined)
+          debouncedSearchQuery 
             ? await getSearchTakwim(
               pageNumber,
               debouncedSearchQuery,
-              dateRange?.from ? dateRange.from.toISOString() : undefined,
-              dateRange?.to
-                ? (() => {
-                  const endDate = new Date(dateRange.to);
-                  endDate.setHours(23, 59, 59, 999);
-                  return endDate.toISOString();
-                })()
-                : undefined,
             )
             : await getAllTakwim(pageNumber);
         if (response) {
@@ -63,7 +47,7 @@ export default function Takwim() {
     };
 
     fetchAcara();
-  }, [pageNumber, debouncedSearchQuery, dateRange]);
+  }, [pageNumber, debouncedSearchQuery]);
 
   const handleSearchChange = async (value: string) => {
     setSearchQuery(value);
@@ -92,16 +76,6 @@ export default function Takwim() {
     }
   };
 
-  // const handleOpenTakwimAttachment = (item: TakwimItem) => {
-  //   const attachmentUrl = getTakwimAttachmentUrl(item);
-
-  //   if (!attachmentUrl) {
-  //     return;
-  //   }
-
-  //   window.open(attachmentUrl, "_blank", "noopener,noreferrer");
-  // };
-
   return (
     <>
       <Hero
@@ -116,9 +90,6 @@ export default function Takwim() {
             suggestions={searchSuggestions}
             getKey={(item) => item._id}
             getLabel={(item) => item.title ?? "Untitled"}
-          // onSelect={(item: TakwimItem) => {
-          //   handleOpenTakwimAttachment(item);
-          // }}
           />
         }
         background={

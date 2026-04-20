@@ -1,5 +1,5 @@
 import type { TakwimItem } from "../../types/takwim";
-import { getTakwimAttachmentUrl } from "../../utils/takwimAttachment";
+// import { getTakwimAttachmentUrl } from "../../utils/takwimAttachment";
 import DownloadAttachmentItem from "./DownloadAttachmentItem";
 
 type SectionItemTakwimProps = {
@@ -9,15 +9,15 @@ type SectionItemTakwimProps = {
 export default function SectionItemTakwim({
   dataItemCalendar,
 }: SectionItemTakwimProps) {
-  const openAttachment = (item: TakwimItem) => {
-    const attachmentUrl = getTakwimAttachmentUrl(item);
+  // const openAttachment = (item: TakwimItem) => {
+  //   const attachmentUrl = getTakwimAttachmentUrl(item);
 
-    if (!attachmentUrl) {
-      return;
-    }
+  //   if (!attachmentUrl) {
+  //     return;
+  //   }
 
-    window.open(attachmentUrl, "_blank", "noopener,noreferrer");
-  };
+  //   window.open(attachmentUrl, "_blank", "noopener,noreferrer");
+  // };
 
   return (
     <div className="flex flex-col gap-6">
@@ -25,12 +25,6 @@ export default function SectionItemTakwim({
         <div
           key={index}
           className="flex gap-3 w-full border border-otl-gray-200  p-3 rounded-lg cursor-pointer focus:outline-primary-200 hover:bg-bg-gray-50"
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              openAttachment(item);
-            }
-          }}
           tabIndex={0}
           role="button"
           aria-label={item.title ? `${item.title}` : "View event"}
