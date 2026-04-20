@@ -5,7 +5,7 @@
 # ─────────────────────────────────────────
 # Check / update the version below before running:
 # 8 April 2025
-VERSION="v1.1.3"   # <── change this version before running
+VERSION="v1.1.4"   # <── change this version before running
 # ─────────────────────────────────────────
 
 set -euo pipefail
