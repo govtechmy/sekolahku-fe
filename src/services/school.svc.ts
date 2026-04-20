@@ -8,7 +8,6 @@ import type {
   MarkerGroup,
 } from "../models/response";
 import { authAxios } from "./http";
-import { SCHOOL_LEVEL } from "../constants/schoolTypes";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const SCHOOL_ENDPOINT = "/schools";
@@ -26,6 +25,13 @@ export const getSchoolSuggestion = async (
   totalInSinglePage: number;
 }> => {
   try {
+    if (params?.namaSekolah) {
+      params = {
+        ...params,
+        namaSekolah: params.namaSekolah.trim().replace(/\s+/g, " "),
+      };
+    }
+
     const [lat, lng] = initialLocationUser || [null, null];
     let locationParams = ``;
     if (lat != null && lng != null) {
@@ -34,16 +40,17 @@ export const getSchoolSuggestion = async (
     const searchParams = `/search?${locationParams}page=${pageNumber}&pageSize=12`;
 
     if (params?.peringkat && params.peringkat !== "ALL") {
-      const schoolTypes = Object.keys(SCHOOL_LEVEL).filter((type) =>
-        SCHOOL_LEVEL[type].includes(params!.peringkat!),
-      );
-
+      // peringkat is now a direct field on the school — pass it as-is to the API.
+      // Only strip jenis if it wasn't explicitly set.
       if (params.jenis && params.jenis !== "ALL") {
         const existingJenis = params.jenis.split(",");
         const allJenis = [...new Set([...existingJenis])];
         params = { ...params, jenis: allJenis.join(",") };
       } else {
-        params = { ...params, jenis: schoolTypes.join(",") };
+        // Remove jenis so the API filters purely by peringkat
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { jenis: _jenis, ...rest } = params;
+        params = rest;
       }
     }
 
