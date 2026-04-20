@@ -5,7 +5,6 @@ import {
   ArrowOutgoingIcon,
 } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
-import { formatEventDateDDMMYY } from "../../utils/date";
 
 type SectionHeaderProps = {
   header: string;
@@ -60,7 +59,7 @@ export default function SectionHeader({
               </div>
               {subTitle && (
                 <span className="text-txt-black-500 text-body-sm font-normal">
-                  Data sehingga {formatEventDateDDMMYY(subTitle)}
+                  Data sehingga {subTitle}
                 </span>
               )}
             </div>

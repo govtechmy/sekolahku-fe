@@ -12,8 +12,7 @@ import { getSiaranList } from "../services/siaran.svc";
 import SectionItemTakwim from "../components/shared/SectionItemTakwim";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import { getAnalytics } from "../services/analytics.svc";
-
-//all statistic are commented out and removed the imported analytics, will add later once confirmed later,
+import { formatFileVersion } from "../utils/fileVersionFormat";
 
 export default function HomePage() {
   const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
@@ -132,7 +131,7 @@ export default function HomePage() {
           <SectionHeader
             header="ANALITIK"
             title="Fakta Menarik Sekolah di Malaysia"
-            subTitle={analytics?.lastUpdatedAt || "Tiada Maklumat"}
+            subTitle={formatFileVersion(analytics?.fileVersion)}
             sourceBtn={true}
             children={<SectionItemAnalytics analytics={analytics} />}
           />
