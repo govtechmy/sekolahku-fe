@@ -257,13 +257,15 @@ interface SchoolTypeItem {
 
 export const getSchoolTypes = async (peringkat?: string): Promise<string[]> => {
   try {
-     const response = await authAxios.get<APIResponse<SchoolTypeItem[]>>(
-       `${BASE_URL}/analitik/filter/school`,
-       {
-         params:
-           peringkat && peringkat !== "ALL" ? { peringkat } : undefined,
-       },
-     );
+    const params: Record<string, string> = {};
+    if (peringkat && peringkat !== "ALL") {
+      params.peringkat = peringkat;
+    }
+
+    const response = await authAxios.get<APIResponse<SchoolTypeItem[]>>(
+      `${BASE_URL}/analitik/filter/school`,
+      { params },
+    );
     const data = response.data.data || [];
     return data
       .filter((item) => item.jenis !== "TIADA MAKLUMAT")

@@ -119,17 +119,6 @@ export default function SchoolMaps() {
       }
     }
 
-    const fetchSchoolTypes = async () => {
-      try {
-        const types = await getSchoolTypes();
-        setSchoolTypes(types);
-      } catch (error) {
-        console.error("Error fetching school types:", error);
-        setSchoolTypes([]);
-      }
-    };
-    fetchSchoolTypes();
-
     const fetchSchoolPeringkat = async () => {
       try {
         const peringkat = await getSchoolPeringkat();
