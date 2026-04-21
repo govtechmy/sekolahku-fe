@@ -66,6 +66,13 @@ export function SearchBarMap({
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
 
+  // Reset selectedJenis to "ALL" if current selection is no longer valid after schoolTypes changes
+  useEffect(() => {
+    if (selectedJenis !== "ALL" && !schoolTypes.includes(selectedJenis)) {
+      setSelectedJenis("ALL");
+    }
+  }, [schoolTypes, selectedJenis]);
+
   // Handler for MyDS SearchBar onValueChange
   const handleValueChange = (value: string) => {
     setQuery(value);
