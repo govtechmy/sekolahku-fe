@@ -23,7 +23,19 @@ import { calculateDistance } from "../../utils/calculateDistance";
 import { useLocationSessionStore } from "../../store/locationSession";
 import SekolahAngkatMadaniIcon from "../../icons/SekolahAngkatMadaniIcon";
 
-export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
+interface SearchBarMapComponentProps {
+  schoolTypes: string[];
+  schoolPeringkat: string[];
+  selectedPeringkat: string;
+  setSelectedPeringkat: (value: string) => void;
+}
+
+export function SearchBarMap({
+  schoolTypes,
+  schoolPeringkat,
+  selectedPeringkat,
+  setSelectedPeringkat,
+}: SearchBarMapComponentProps) {
   const {
     initialLocationSet,
     viewSchool,
@@ -43,7 +55,6 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
-  const [selectedPeringkat, setSelectedPeringkat] = useState("ALL");
   const debounceTimerRef = useRef<number | null>(null);
   const setCenter = useMapViewStore((s) => s.setCenter);
   const setZoom = useMapViewStore((s) => s.setZoom);
@@ -302,6 +313,7 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
                 selectedJenis={selectedJenis}
                 negeriList={negeriList}
                 jenisList={schoolTypes}
+                peringkatList={schoolPeringkat}
                 setSelectedNegeri={setSelectedNegeri}
                 setSelectedJenis={setSelectedJenis}
                 selectedPeringkat={selectedPeringkat}

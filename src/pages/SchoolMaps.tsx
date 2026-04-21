@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import type { Coordinates } from "../types/maps";
-import { fetchNearbySchools, getSchoolTypes } from "../services/school.svc";
+import { fetchNearbySchools, getSchoolPeringkat, getSchoolTypes } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
@@ -15,6 +15,8 @@ import DisclaimerMap from "../components/maps/DisclaimerMap";
 
 export default function SchoolMaps() {
   const [schoolTypes, setSchoolTypes] = useState<string[]>([]);
+  const [schoolPeringkat, setSchoolPeringkat] = useState<string[]>([]);
+  const [selectedPeringkat, setSelectedPeringkat] = useState<string>("ALL");
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const {
     center,
@@ -124,6 +126,17 @@ export default function SchoolMaps() {
     };
     fetchSchoolTypes();
 
+    const fetchSchoolPeringkat = async () => {
+      try{
+        const peringkat = await getSchoolPeringkat();
+        setSchoolPeringkat(peringkat);
+      } catch (error) {
+        console.error("Error fetching school peringkat:", error);
+        setSchoolPeringkat([]);
+      }
+    }
+    fetchSchoolPeringkat();
+
     // Fetch all state polygons on mount
     const fetchAllStatePolygons = async () => {
       if (polygonsFetchedRef.current) return;
@@ -144,6 +157,19 @@ export default function SchoolMaps() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const fetchSchoolTypesByPeringkat = async () => {
+      try {
+        const types = await getSchoolTypes(selectedPeringkat);
+        setSchoolTypes(types);
+      } catch (error) {
+        console.error("Error fetching school types:", error);
+        setSchoolTypes([]);
+      }
+    };
+    fetchSchoolTypesByPeringkat();
+  }, [selectedPeringkat]);
 
   useEffect(() => {
     if (initialLocationSet) {
@@ -188,7 +214,12 @@ export default function SchoolMaps() {
 
   return (
     <div className="h-full w-full flex relative">
-      <SearchBarMap schoolTypes={schoolTypes} />
+      <SearchBarMap
+        schoolTypes={schoolTypes}
+        schoolPeringkat={schoolPeringkat}
+        selectedPeringkat={selectedPeringkat}
+        setSelectedPeringkat={setSelectedPeringkat}
+      />
       <MapContainerComponent
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}

@@ -20,6 +20,11 @@ export const SCHOOL_TYPE_LABELS: Record<string, string> = {
   SUKAN: "Sekolah Sukan Malaysia",
 };
 
+export const SCHOOL_PERINGKAT: Record<string, string> = {
+  RENDAH: "Rendah",
+  MENENGAH: "Menengah"
+}
+
 export const SCHOOL_LEVEL: Record<string, string[]> = {
   K11: ["MENENGAH"],
   K9: ["RENDAH"],
