@@ -257,9 +257,10 @@ interface SchoolTypeItem {
 
 export const getSchoolTypes = async (peringkat?: string): Promise<string[]> => {
   try {
-    const url = peringkat && peringkat !== "ALL"
-      ? `${BASE_URL}/analitik/filter/school?peringkat=${peringkat}`
-      : `${BASE_URL}/analitik/filter/school`;
+    const url =
+      peringkat && peringkat !== "ALL"
+        ? `${BASE_URL}/analitik/filter/school?peringkat=${peringkat}`
+        : `${BASE_URL}/analitik/filter/school`;
     const response = await authAxios.get<APIResponse<SchoolTypeItem[]>>(url);
     const data = response.data.data || [];
     return data.map((item) => item.jenis);
@@ -275,8 +276,8 @@ export const getSchoolPeringkat = async (): Promise<string[]> => {
       `${BASE_URL}${SCHOOL_ENDPOINT}/filter/peringkat`,
     );
     return response.data.data || [];
-  } catch(error){
+  } catch (error) {
     console.error("Error fetching school peringkat:", error);
     throw error;
   }
-}
+};

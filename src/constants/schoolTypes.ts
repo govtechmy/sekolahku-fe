@@ -22,8 +22,8 @@ export const SCHOOL_TYPE_LABELS: Record<string, string> = {
 
 export const SCHOOL_PERINGKAT: Record<string, string> = {
   RENDAH: "Rendah",
-  MENENGAH: "Menengah"
-}
+  MENENGAH: "Menengah",
+};
 
 export const SCHOOL_LEVEL: Record<string, string[]> = {
   K11: ["MENENGAH"],

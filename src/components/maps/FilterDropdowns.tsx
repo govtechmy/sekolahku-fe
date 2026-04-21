@@ -1,6 +1,9 @@
 import underScoreRemover from "../../utils/underscoreRemover";
 import { SimpleSelect, SimpleSelectItem } from "../shared/SelectComponent";
-import { SCHOOL_TYPE_LABELS, SCHOOL_PERINGKAT } from "../../constants/schoolTypes";
+import {
+  SCHOOL_TYPE_LABELS,
+  SCHOOL_PERINGKAT,
+} from "../../constants/schoolTypes";
 
 /*
 import {

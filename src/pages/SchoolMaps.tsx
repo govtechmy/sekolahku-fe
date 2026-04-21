@@ -1,6 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import type { Coordinates } from "../types/maps";
-import { fetchNearbySchools, getSchoolPeringkat, getSchoolTypes } from "../services/school.svc";
+import {
+  fetchNearbySchools,
+  getSchoolPeringkat,
+  getSchoolTypes,
+} from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
@@ -127,14 +131,14 @@ export default function SchoolMaps() {
     fetchSchoolTypes();
 
     const fetchSchoolPeringkat = async () => {
-      try{
+      try {
         const peringkat = await getSchoolPeringkat();
         setSchoolPeringkat(peringkat);
       } catch (error) {
         console.error("Error fetching school peringkat:", error);
         setSchoolPeringkat([]);
       }
-    }
+    };
     fetchSchoolPeringkat();
 
     // Fetch all state polygons on mount
