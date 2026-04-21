@@ -15,13 +15,13 @@ import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import { NEGERI_LIST } from "../contentData";
 import { useLocationSessionStore } from "../store/locationSession";
 import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
-import DisclaimerMap from "../components/maps/DisclaimerMap";
+// import DisclaimerMap from "../components/maps/DisclaimerMap";
 
 export default function SchoolMaps() {
   const [schoolTypes, setSchoolTypes] = useState<string[]>([]);
   const [schoolPeringkat, setSchoolPeringkat] = useState<string[]>([]);
   const [selectedPeringkat, setSelectedPeringkat] = useState<string>("ALL");
-  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+  // const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const {
     center,
     setCenter,
@@ -229,10 +229,11 @@ export default function SchoolMaps() {
         setDragStartPos={setDragStartPos}
         fetchNearbySchools={fetchNearbySchools}
       />
-      {!initialLocationSet && !disclaimerAccepted && (
+      {/* {!initialLocationSet && !disclaimerAccepted && (
         <DisclaimerMap onAccept={() => setDisclaimerAccepted(true)} />
-      )}
-      {!initialLocationSet && disclaimerAccepted && <LocationPickerWindow />}
+      )} */}
+      {/* {!initialLocationSet && disclaimerAccepted && <LocationPickerWindow />} */}
+      {!initialLocationSet && <LocationPickerWindow />}
       {!initialLocationSet && (
         <div className="fixed inset-0 z-[800] bg-bg-black-900/40 backdrop-blur-sm pointer-events-auto" />
       )}
