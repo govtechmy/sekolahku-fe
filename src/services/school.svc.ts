@@ -250,11 +250,6 @@ export const getSchoolId = async (
   }
 };
 
-interface SchoolTypeItem {
-  jenis: string;
-  peringkatBreakdown: { peringkat: string }[];
-}
-
 export const getSchoolTypes = async (peringkat?: string): Promise<string[]> => {
   try {
     const params: Record<string, string> = {};
@@ -262,14 +257,12 @@ export const getSchoolTypes = async (peringkat?: string): Promise<string[]> => {
       params.peringkat = peringkat;
     }
 
-    const response = await authAxios.get<APIResponse<SchoolTypeItem[]>>(
-      `${BASE_URL}/analitik/filter/school`,
+    const response = await authAxios.get<APIResponse<string[]>>(
+      `${BASE_URL}${SCHOOL_ENDPOINT}/filter/school-type`,
       { params },
     );
     const data = response.data.data || [];
-    return data
-      .filter((item) => item.jenis !== "TIADA MAKLUMAT")
-      .map((item) => item.jenis);
+    return data.filter((item) => item !== "TIADA MAKLUMAT");
   } catch (error) {
     console.error("Error fetching school types:", error);
     throw error;
