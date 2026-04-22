@@ -240,9 +240,10 @@ export function SearchBarMap({
 
     handleSearch(
       {
-        namaSekolah: query,
-        negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
-        jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
+        namaSekolah: query.trim().length >= 3 ? query : "",
+        negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+        jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+        peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
       },
       (localSuggestionsPage || 1) + 1,
       true,
