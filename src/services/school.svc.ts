@@ -250,14 +250,33 @@ export const getSchoolId = async (
   }
 };
 
-export const getSchoolTypes = async (): Promise<string[]> => {
+export const getSchoolTypes = async (peringkat?: string): Promise<string[]> => {
   try {
+    const params: Record<string, string> = {};
+    if (peringkat && peringkat !== "ALL") {
+      params.peringkat = peringkat;
+    }
+
     const response = await authAxios.get<APIResponse<string[]>>(
       `${BASE_URL}${SCHOOL_ENDPOINT}/filter/school-type`,
+      { params },
+    );
+    const data = response.data.data || [];
+    return data.filter((item) => item !== "TIADA MAKLUMAT");
+  } catch (error) {
+    console.error("Error fetching school types:", error);
+    throw error;
+  }
+};
+
+export const getSchoolPeringkat = async (): Promise<string[]> => {
+  try {
+    const response = await authAxios.get<APIResponse<string[]>>(
+      `${BASE_URL}${SCHOOL_ENDPOINT}/filter/peringkat`,
     );
     return response.data.data || [];
   } catch (error) {
-    console.error("Error fetching school types:", error);
+    console.error("Error fetching school peringkat:", error);
     throw error;
   }
 };
