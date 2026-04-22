@@ -1,9 +1,6 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import type { Coordinates } from "../types/maps";
-import {
-  fetchNearbySchools,
-  getSchoolTypes,
-} from "../services/school.svc";
+import { fetchNearbySchools, getSchoolTypes } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerComponent } from "../components/maps/MapContainerComponents";
 import { LocationPickerWindow } from "../components/maps";
