@@ -59,10 +59,10 @@ export function FilterDropdowns({
       <SimpleSelect
         size="small"
         variant="outline"
-        onValueChange={setSelectedPeringkat}
-        value={selectedPeringkat ?? "ALL"}
         placeholder="Peringkat"
         className="w-[155px]"
+        value={selectedPeringkat ?? "ALL"}
+        onValueChange={setSelectedPeringkat}
       >
         <SimpleSelectItem value="ALL">Semua Peringkat</SimpleSelectItem>
         <SimpleSelectItem value="MENENGAH">Menengah</SimpleSelectItem>
@@ -109,6 +109,11 @@ export function FilterDropdowns({
         {jenisList &&
           jenisList
             .filter((x): x is string => typeof x === "string")
+            .sort((a, b) => {
+              const labelA = SCHOOL_TYPE_LABELS[a] || a;
+              const labelB = SCHOOL_TYPE_LABELS[b] || b;
+              return labelA.localeCompare(labelB);
+            })
             .map((x) => (
               <SimpleSelectItem key={x} value={x}>
                 {SCHOOL_TYPE_LABELS[x] ? `${SCHOOL_TYPE_LABELS[x]} (${x})` : x}

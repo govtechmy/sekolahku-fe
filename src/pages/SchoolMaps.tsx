@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import type { Coordinates } from "../types/maps";
 import { fetchNearbySchools, getSchoolTypes } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
@@ -14,7 +14,9 @@ import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
 // import DisclaimerMap from "../components/maps/DisclaimerMap";
 
 export default function SchoolMaps() {
-  const [schoolTypes, setSchoolTypes] = useState<string[]>([]);
+  const [schoolTypesMenengah, setSchoolTypesMenengah] = useState<string[]>([]);
+  const [schoolTypesRendah, setSchoolTypesRendah] = useState<string[]>([]);
+  const [selectedPeringkat, setSelectedPeringkat] = useState<string>("ALL");
   // const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const {
     center,
@@ -113,16 +115,20 @@ export default function SchoolMaps() {
       }
     }
 
-    const fetchSchoolTypes = async () => {
+    // Fetch both MENENGAH and RENDAH school types in parallel on mount
+    const fetchAllSchoolTypes = async () => {
       try {
-        const types = await getSchoolTypes();
-        setSchoolTypes(types);
+        const [menengah, rendah] = await Promise.all([
+          getSchoolTypes("MENENGAH"),
+          getSchoolTypes("RENDAH"),
+        ]);
+        setSchoolTypesMenengah(menengah);
+        setSchoolTypesRendah(rendah);
       } catch (error) {
         console.error("Error fetching school types:", error);
-        setSchoolTypes([]);
       }
     };
-    fetchSchoolTypes();
+    fetchAllSchoolTypes();
 
     // Fetch all state polygons on mount
     const fetchAllStatePolygons = async () => {
@@ -144,6 +150,18 @@ export default function SchoolMaps() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Compute filtered school types based on selectedPeringkat
+  const schoolTypes = useMemo(() => {
+    if (selectedPeringkat === "MENENGAH") {
+      return schoolTypesMenengah;
+    }
+    if (selectedPeringkat === "RENDAH") {
+      return schoolTypesRendah;
+    }
+    // ALL - combine both and remove duplicates
+    return [...new Set([...schoolTypesMenengah, ...schoolTypesRendah])];
+  }, [selectedPeringkat, schoolTypesMenengah, schoolTypesRendah]);
 
   useEffect(() => {
     if (initialLocationSet) {
@@ -188,7 +206,11 @@ export default function SchoolMaps() {
 
   return (
     <div className="h-full w-full flex relative">
-      <SearchBarMap schoolTypes={schoolTypes} />
+      <SearchBarMap
+        schoolTypes={schoolTypes}
+        selectedPeringkat={selectedPeringkat}
+        setSelectedPeringkat={setSelectedPeringkat}
+      />
       <MapContainerComponent
         dragStartPos={dragStartPos}
         setDragStartPos={setDragStartPos}

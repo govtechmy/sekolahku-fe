@@ -23,7 +23,17 @@ import { calculateDistance } from "../../utils/calculateDistance";
 import { useLocationSessionStore } from "../../store/locationSession";
 import SekolahAngkatMadaniIcon from "../../icons/SekolahAngkatMadaniIcon";
 
-export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
+type SearchBarMapComponentProps = {
+  schoolTypes: string[];
+  selectedPeringkat: string;
+  setSelectedPeringkat: (value: string) => void;
+};
+
+export function SearchBarMap({
+  schoolTypes,
+  selectedPeringkat,
+  setSelectedPeringkat,
+}: SearchBarMapComponentProps) {
   const {
     initialLocationSet,
     viewSchool,
@@ -43,7 +53,6 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
-  const [selectedPeringkat, setSelectedPeringkat] = useState("ALL");
   const debounceTimerRef = useRef<number | null>(null);
   const setCenter = useMapViewStore((s) => s.setCenter);
   const setZoom = useMapViewStore((s) => s.setZoom);
@@ -54,6 +63,36 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
+  const prevPeringkatRef = useRef(selectedPeringkat);
+
+  // Reset selectedJenis to ALL when peringkat changes, then trigger search
+  useEffect(() => {
+    if (prevPeringkatRef.current !== selectedPeringkat) {
+      prevPeringkatRef.current = selectedPeringkat;
+      // Reset jenis when peringkat changes - this will trigger the search via selectedJenis change
+      if (selectedJenis !== "ALL") {
+        setSelectedJenis("ALL");
+      } else {
+        // If jenis is already ALL, manually trigger search since selectedJenis won't change
+        if (initialLocationSet) {
+          handleSearch({
+            namaSekolah: query.trim().length >= 3 ? query : "",
+            negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+            jenis: "ALL",
+            peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
+          });
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPeringkat]);
+
+  // Also reset if the current jenis is not valid for the new schoolTypes list
+  useEffect(() => {
+    if (selectedJenis !== "ALL" && !schoolTypes.includes(selectedJenis)) {
+      setSelectedJenis("ALL");
+    }
+  }, [schoolTypes, selectedJenis]);
 
   // Handler for MyDS SearchBar onValueChange
   const handleValueChange = (value: string) => {
@@ -159,8 +198,9 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
       jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
       peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
     });
+    // Note: selectedPeringkat change is handled separately to reset jenis first
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedJenis, selectedNegeri, selectedPeringkat]);
+  }, [selectedJenis, selectedNegeri]);
 
   const handleSelect = async (school: SearchBarMapProps) => {
     try {
@@ -200,10 +240,10 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
 
     handleSearch(
       {
-        namaSekolah: query,
-        negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
-        jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
-        peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : undefined,
+        namaSekolah: query.trim().length >= 3 ? query : "",
+        negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+        jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+        peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
       },
       (localSuggestionsPage || 1) + 1,
       true,
@@ -300,11 +340,11 @@ export function SearchBarMap({ schoolTypes }: { schoolTypes: string[] }) {
               <FilterDropdowns
                 selectedNegeri={selectedNegeri}
                 selectedJenis={selectedJenis}
+                selectedPeringkat={selectedPeringkat}
                 negeriList={negeriList}
                 jenisList={schoolTypes}
                 setSelectedNegeri={setSelectedNegeri}
                 setSelectedJenis={setSelectedJenis}
-                selectedPeringkat={selectedPeringkat}
                 setSelectedPeringkat={setSelectedPeringkat}
               />
               {dataTotal > 0 && (
