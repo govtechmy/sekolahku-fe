@@ -1,8 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import type { Coordinates } from "../types/maps";
 import {
   fetchNearbySchools,
-  getSchoolPeringkat,
   getSchoolTypes,
 } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
@@ -18,8 +17,8 @@ import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
 // import DisclaimerMap from "../components/maps/DisclaimerMap";
 
 export default function SchoolMaps() {
-  const [schoolTypes, setSchoolTypes] = useState<string[]>([]);
-  const [schoolPeringkat, setSchoolPeringkat] = useState<string[]>([]);
+  const [schoolTypesMenengah, setSchoolTypesMenengah] = useState<string[]>([]);
+  const [schoolTypesRendah, setSchoolTypesRendah] = useState<string[]>([]);
   const [selectedPeringkat, setSelectedPeringkat] = useState<string>("ALL");
   // const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const {
@@ -119,16 +118,20 @@ export default function SchoolMaps() {
       }
     }
 
-    const fetchSchoolPeringkat = async () => {
+    // Fetch both MENENGAH and RENDAH school types in parallel on mount
+    const fetchAllSchoolTypes = async () => {
       try {
-        const peringkat = await getSchoolPeringkat();
-        setSchoolPeringkat(peringkat);
+        const [menengah, rendah] = await Promise.all([
+          getSchoolTypes("MENENGAH"),
+          getSchoolTypes("RENDAH"),
+        ]);
+        setSchoolTypesMenengah(menengah);
+        setSchoolTypesRendah(rendah);
       } catch (error) {
-        console.error("Error fetching school peringkat:", error);
-        setSchoolPeringkat([]);
+        console.error("Error fetching school types:", error);
       }
     };
-    fetchSchoolPeringkat();
+    fetchAllSchoolTypes();
 
     // Fetch all state polygons on mount
     const fetchAllStatePolygons = async () => {
@@ -151,18 +154,17 @@ export default function SchoolMaps() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const fetchSchoolTypesByPeringkat = async () => {
-      try {
-        const types = await getSchoolTypes(selectedPeringkat);
-        setSchoolTypes(types);
-      } catch (error) {
-        console.error("Error fetching school types:", error);
-        setSchoolTypes([]);
-      }
-    };
-    fetchSchoolTypesByPeringkat();
-  }, [selectedPeringkat]);
+  // Compute filtered school types based on selectedPeringkat
+  const schoolTypes = useMemo(() => {
+    if (selectedPeringkat === "MENENGAH") {
+      return schoolTypesMenengah;
+    }
+    if (selectedPeringkat === "RENDAH") {
+      return schoolTypesRendah;
+    }
+    // ALL - combine both and remove duplicates
+    return [...new Set([...schoolTypesMenengah, ...schoolTypesRendah])];
+  }, [selectedPeringkat, schoolTypesMenengah, schoolTypesRendah]);
 
   useEffect(() => {
     if (initialLocationSet) {
@@ -209,7 +211,6 @@ export default function SchoolMaps() {
     <div className="h-full w-full flex relative">
       <SearchBarMap
         schoolTypes={schoolTypes}
-        schoolPeringkat={schoolPeringkat}
         selectedPeringkat={selectedPeringkat}
         setSelectedPeringkat={setSelectedPeringkat}
       />

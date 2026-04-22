@@ -23,16 +23,14 @@ import { calculateDistance } from "../../utils/calculateDistance";
 import { useLocationSessionStore } from "../../store/locationSession";
 import SekolahAngkatMadaniIcon from "../../icons/SekolahAngkatMadaniIcon";
 
-interface SearchBarMapComponentProps {
+type SearchBarMapComponentProps = {
   schoolTypes: string[];
-  schoolPeringkat: string[];
   selectedPeringkat: string;
   setSelectedPeringkat: (value: string) => void;
-}
+};
 
 export function SearchBarMap({
   schoolTypes,
-  schoolPeringkat,
   selectedPeringkat,
   setSelectedPeringkat,
 }: SearchBarMapComponentProps) {
@@ -65,7 +63,31 @@ export function SearchBarMap({
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
+  const prevPeringkatRef = useRef(selectedPeringkat);
 
+  // Reset selectedJenis to ALL when peringkat changes, then trigger search
+  useEffect(() => {
+    if (prevPeringkatRef.current !== selectedPeringkat) {
+      prevPeringkatRef.current = selectedPeringkat;
+      // Reset jenis when peringkat changes - this will trigger the search via selectedJenis change
+      if (selectedJenis !== "ALL") {
+        setSelectedJenis("ALL");
+      } else {
+        // If jenis is already ALL, manually trigger search since selectedJenis won't change
+        if (initialLocationSet) {
+          handleSearch({
+            namaSekolah: query.trim().length >= 3 ? query : "",
+            negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+            jenis: "ALL",
+            peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
+          });
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPeringkat]);
+
+  // Also reset if the current jenis is not valid for the new schoolTypes list
   useEffect(() => {
     if (selectedJenis !== "ALL" && !schoolTypes.includes(selectedJenis)) {
       setSelectedJenis("ALL");
@@ -176,8 +198,9 @@ export function SearchBarMap({
       jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
       peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
     });
+    // Note: selectedPeringkat change is handled separately to reset jenis first
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedJenis, selectedNegeri, selectedPeringkat]);
+  }, [selectedJenis, selectedNegeri]);
 
   const handleSelect = async (school: SearchBarMapProps) => {
     try {
@@ -220,7 +243,6 @@ export function SearchBarMap({
         namaSekolah: query,
         negeri: selectedNegeri !== "ALL" ? selectedNegeri : undefined,
         jenis: selectedJenis !== "ALL" ? selectedJenis : undefined,
-        peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : undefined,
       },
       (localSuggestionsPage || 1) + 1,
       true,
@@ -317,12 +339,11 @@ export function SearchBarMap({
               <FilterDropdowns
                 selectedNegeri={selectedNegeri}
                 selectedJenis={selectedJenis}
+                selectedPeringkat={selectedPeringkat}
                 negeriList={negeriList}
                 jenisList={schoolTypes}
-                peringkatList={schoolPeringkat}
                 setSelectedNegeri={setSelectedNegeri}
                 setSelectedJenis={setSelectedJenis}
-                selectedPeringkat={selectedPeringkat}
                 setSelectedPeringkat={setSelectedPeringkat}
               />
               {dataTotal > 0 && (

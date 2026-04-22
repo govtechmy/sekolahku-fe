@@ -2,7 +2,6 @@ import underScoreRemover from "../../utils/underscoreRemover";
 import { SimpleSelect, SimpleSelectItem } from "../shared/SelectComponent";
 import {
   SCHOOL_TYPE_LABELS,
-  SCHOOL_PERINGKAT,
 } from "../../constants/schoolTypes";
 
 /*
@@ -22,7 +21,6 @@ type FilterDropdownsProps = {
   selectedPeringkat: string;
   negeriList: (string | null)[];
   jenisList: (string | null)[];
-  peringkatList: (string | null)[];
   setSelectedNegeri: (value: string) => void;
   setSelectedJenis: (value: string) => void;
   setSelectedPeringkat: (value: string) => void;
@@ -34,7 +32,6 @@ export function FilterDropdowns({
   selectedPeringkat,
   negeriList,
   jenisList,
-  peringkatList,
   setSelectedNegeri,
   setSelectedJenis,
   setSelectedPeringkat,
@@ -64,20 +61,14 @@ export function FilterDropdowns({
       <SimpleSelect
         size="small"
         variant="outline"
-        onValueChange={setSelectedPeringkat}
-        value={selectedPeringkat ?? "ALL"}
         placeholder="Peringkat"
         className="w-[155px]"
+        value={selectedPeringkat ?? "ALL"}
+        onValueChange={setSelectedPeringkat}
       >
         <SimpleSelectItem value="ALL">Semua Peringkat</SimpleSelectItem>
-        {peringkatList &&
-          peringkatList
-            .filter((x): x is string => typeof x === "string")
-            .map((x) => (
-              <SimpleSelectItem key={x} value={x}>
-                {SCHOOL_PERINGKAT[x] || x}
-              </SimpleSelectItem>
-            ))}
+        <SimpleSelectItem value="MENENGAH">Menengah</SimpleSelectItem>
+        <SimpleSelectItem value="RENDAH">Rendah</SimpleSelectItem>
       </SimpleSelect>
 
       {/*
