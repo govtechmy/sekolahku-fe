@@ -40,6 +40,7 @@ export default function SchoolMaps() {
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
   const polygonsFetchedRef = useRef(false);
+  const [isGeolocating, setIsGeolocating] = useState(false);
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
     schoolMarkers,
@@ -80,6 +81,7 @@ export default function SchoolMaps() {
           return;
         }
         geolocationRequestedRef.current = true;
+        setIsGeolocating(true);
         const options: PositionOptions = {
           enableHighAccuracy: true,
           timeout: 600000,
@@ -104,11 +106,13 @@ export default function SchoolMaps() {
               return next;
             });
             setInitialLocationSet(true);
+            setIsGeolocating(false);
           },
           (error) => {
             if (error) {
               console.error(error);
             }
+            setIsGeolocating(false);
           },
           options,
         );
@@ -220,8 +224,8 @@ export default function SchoolMaps() {
         <DisclaimerMap onAccept={() => setDisclaimerAccepted(true)} />
       )} */}
       {/* {!initialLocationSet && disclaimerAccepted && <LocationPickerWindow />} */}
-      {!initialLocationSet && <LocationPickerWindow />}
-      {!initialLocationSet && (
+      {!initialLocationSet && !isGeolocating && <LocationPickerWindow />}
+      {(!initialLocationSet || isGeolocating) && (
         <div className="fixed inset-0 z-[800] bg-bg-black-900/40 backdrop-blur-sm pointer-events-auto" />
       )}
     </div>
