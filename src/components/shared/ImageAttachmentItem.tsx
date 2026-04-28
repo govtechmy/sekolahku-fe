@@ -6,7 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@govtechmy/myds-react/dialog";
-import { formatFileSize } from "../../utils/formatFileSize";
 import { useState } from "react";
 import type { Attachment } from "../../types/takwim";
 
