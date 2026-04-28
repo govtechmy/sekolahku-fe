@@ -226,7 +226,7 @@ export default function SiaranId() {
 
                 {/* Image Attachments */}
                 {imageAttachments.length > 0 && (
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-4">
                     <h3 className="text-body-lg font-semibold font-body">
                       Gambar
                     </h3>
