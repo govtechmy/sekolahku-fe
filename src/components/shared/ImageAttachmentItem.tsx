@@ -44,17 +44,17 @@ export default function ImageAttachmentItem({
           key={attachment.id}
           type="button"
           aria-label={attachment.filename}
-          className="border border-otl-gray-200 w-[202px] h-[248px] rounded-lg flex flex-col items-center focus:outline focus:outline-2 focus:outline-primary-200 cursor-pointer overflow-hidden"
+          className="group border border-otl-gray-200 rounded-lg flex flex-col items-center focus:outline focus:outline-2 focus:outline-primary-200 cursor-pointer overflow-hidden transition-all duration-200 hover:border-otl-gray-300 hover:shadow-md"
           onClick={() => handleOpenDialog(index)}
         >
-          <div className="h-[186px] w-[186px] flex items-center justify-center overflow-hidden py-2">
+          <div className="h-[186px] w-[186px] flex items-center justify-center overflow-hidden relative">
             <img
               src={attachment.url}
               alt={attachment.filename}
-              className="w-full h-full object-cover rounded-md"
+              className="w-full h-full object-cover rounded-md transition-transform duration-300 group-hover:scale-105"
             />
           </div>
-          <div className="p-2 text-start border-t border-otl-gray-200 w-full">
+          {/* <div className="p-2 text-start border-t border-otl-gray-200 w-full">
             <div className="flex items-center">
               <div className="max-w-[150px] truncate text-body-sm">
                 {attachment.filename.includes(".")
@@ -73,7 +73,7 @@ export default function ImageAttachmentItem({
             <div className="text-txt-black-500 text-body-xs font-normal">
               {formatFileSize(attachment.filesize)}
             </div>
-          </div>
+          </div> */}
         </button>
       ))}
 
