@@ -183,9 +183,16 @@ export function SearchBarMap({
           }
         });
       }, 250);
-    } else if (trimmedQuery.length < 3) {
+    } else if (trimmedQuery.length < 3 && initialLocationSet) {
       setLocalSuggestions([]);
       setDataTotal(0);
+      // No query — fetch all with current filters
+      handleSearch({
+        namaSekolah: "",
+        negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
+        jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
+        peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, initialLocationSet]);
@@ -234,9 +241,6 @@ export function SearchBarMap({
 
   const loadMoreSuggestions = () => {
     if (isLoadingLocalSuggestions || !hasMoreLocalSuggestions) return;
-
-    // Keep lazy-loading consistent with search bar: only load more when query has at least 3 characters
-    if (query.trim().length < 3) return;
 
     handleSearch(
       {
