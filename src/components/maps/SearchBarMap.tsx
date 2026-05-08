@@ -22,6 +22,7 @@ import { NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
 import { useLocationSessionStore } from "../../store/locationSession";
 import SekolahAngkatMadaniIcon from "../../icons/SekolahAngkatMadaniIcon";
+import underScoreRemover from "../../utils/underscoreRemover";
 
 type SearchBarMapComponentProps = {
   schoolTypes: string[];
@@ -389,7 +390,8 @@ export function SearchBarMap({
                         </span>
 
                         <span className="text-sm text-gray-500 pb-3">
-                          {school.bandarSurat}, {school.negeri}
+                          {underScoreRemover(school.bandarSurat ?? "")},{" "}
+                          {underScoreRemover(school.negeri ?? "")}
                         </span>
 
                         <span className="mt-1 flex items-center text-sm text-primary-600 gap-1">
