@@ -124,6 +124,7 @@ export default function Siaran() {
             value={dateRange}
             onValueChange={setDateRange}
             locale="ms"
+            placeholder="Pilih Tarikh"
           />
         }
       />
