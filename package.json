@@ -59,7 +59,7 @@
     "vite": "^7.1.2"
   },
   "pnpm": {
-    "ignoredBuiltDependencies": [
+    "onlyBuiltDependencies": [
       "esbuild",
       "sharp"
     ]
