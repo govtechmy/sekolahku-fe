@@ -1,7 +1,7 @@
 import { Button } from "@govtechmy/myds-react/button";
 import { FilterAscIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
-import HomeArrowIcon from "../../asset/home-arrow-icon";
+// import HomeArrowIcon from "../../asset/home-arrow-icon";
 
 interface HeroBanner {
   "top-gradient": string;
