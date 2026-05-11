@@ -121,7 +121,7 @@ export default function Hero({
                     <HomeUnderlineIcon className="w-[155px]"></HomeUnderlineIcon>
                   </div> */}
                   <div className="absolute bottom-[-20px] right-[-50px] max-[350px]:hidden">
-                    <HomeArrowIcon></HomeArrowIcon>
+                    {/* <HomeArrowIcon></HomeArrowIcon> */}
                   </div>
                 </div>
               )}
