@@ -47,9 +47,11 @@ export default function HomeHero() {
   };
 
   return (
+    // title="Selamat Datang Ke"
+    //   homeTitle="Portal Sekolahku"
     <Hero
-      title="Selamat Datang Ke"
-      homeTitle="Portal Sekolahku"
+      title=""
+      homeTitle=""
       variant="full"
       search={
         <SearchBar
@@ -71,11 +73,12 @@ export default function HomeHero() {
         />
       }
       // links={[{ label: "Pautan Pintas", link: "#pautan" }]}
-      HeroclassName="bg-gradient-to-b from-[#E6F0FF] via-[#F2F7FF] to-[#FFFFFF]"
+      // HeroclassName="bg-gradient-to-b from-[#3E7893] via-[#50A1D5] to-[#52A5D6]"
+      HeroclassName=""
       background={
         <>
-          <div className="block lg:hidden h-full w-full bg-[url('/utama/home-hero-mobile.svg')] bg-cover bg-center bg-no-repeat" />
-          <div className="hidden lg:block h-full w-full bg-[url('/utama/sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
+          <div className="block lg:hidden h-full w-full bg-[url('/utama/kpm-hero-mobile.jpg')] bg-contain bg-center bg-no-repeat" />
+          <div className="hidden lg:block h-full w-full bg-[url('/utama/kpm-hero.jpg')] bg-contain bg-center bg-no-repeat" />
         </>
       }
     />

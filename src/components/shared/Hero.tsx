@@ -1,7 +1,7 @@
 import { Button } from "@govtechmy/myds-react/button";
 import { FilterAscIcon } from "@govtechmy/myds-react/icon";
 import { clx } from "@govtechmy/myds-react/utils";
-import HomeArrowIcon from "../../asset/home-arrow-icon";
+// import HomeArrowIcon from "../../asset/home-arrow-icon";
 
 interface HeroBanner {
   "top-gradient": string;
@@ -57,7 +57,7 @@ export default function Hero({
     <section
       className={clx(
         "relative border-b border-outline-200",
-        fullHeight ? "min-h-[calc(100vh-450px)]" : "h-[515px]",
+        fullHeight ? "min-h-[calc(100vh-450px)]" : "h-[520px]",
         variant === "side" ? "" : "",
         className,
       )}
@@ -121,7 +121,7 @@ export default function Hero({
                     <HomeUnderlineIcon className="w-[155px]"></HomeUnderlineIcon>
                   </div> */}
                   <div className="absolute bottom-[-20px] right-[-50px] max-[350px]:hidden">
-                    <HomeArrowIcon></HomeArrowIcon>
+                    {/* <HomeArrowIcon></HomeArrowIcon> */}
                   </div>
                 </div>
               )}
