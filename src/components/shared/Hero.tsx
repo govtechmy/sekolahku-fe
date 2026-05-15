@@ -57,7 +57,7 @@ export default function Hero({
     <section
       className={clx(
         "relative border-b border-outline-200",
-        fullHeight ? "min-h-[calc(100vh-450px)]" : "h-[515px]",
+        fullHeight ? "min-h-[calc(100vh-450px)]" : "h-[520px]",
         variant === "side" ? "" : "",
         className,
       )}
