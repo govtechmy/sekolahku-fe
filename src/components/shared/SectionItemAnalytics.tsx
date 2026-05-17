@@ -155,7 +155,7 @@ export default function SectionItemAnalytics({
             >
               Bantuan
             </h3>
-            <div className="p-6 flex justify-center">
+            <div className="p-6 flex justify-center w-full">
               <DoughnutChart
                 data={filteredBantuanData}
                 className={
