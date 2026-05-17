@@ -180,7 +180,7 @@ export default function DoughnutChart({
     return (
       <div
         className={clx(
-          "w-full grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm",
+          "w-full grid grid-cols-1 gap-x-6 gap-y-3 text-sm",
           className,
         )}
       >
@@ -232,9 +232,9 @@ export default function DoughnutChart({
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="flex flex-col gap-6 items-center justify-center flex-1 h-full">
+      <div className="flex flex-col gap-6 items-center justify-center flex-1 h-full lg:flex-row">
         {/* Pie Chart */}
-        <div className="flex-shrink-0 w-full flex justify-center">
+        <div className="flex w-full justify-center lg:w-1/2 lg:flex-none">
           <div className="[&_*]:!outline-none">
             <ResponsiveContainer width={280} height={280}>
               <PieChart>
@@ -270,7 +270,7 @@ export default function DoughnutChart({
         </div>
 
         {/* Legend */}
-        <div className="w-full flex-grow flex items-center justify-center lg:justify-between">
+        <div className="flex w-full h-full items-center justify-center lg:w-1/2 lg:flex-none lg:justify-between">
           <RenderLegend />
         </div>
       </div>
