@@ -130,7 +130,7 @@ export default function HomePage() {
         {analytics && (
           <SectionHeader
             header="ANALITIK"
-            title="Fakta Menarik Sekolah di Malaysia"
+            title="Statistik Sekolah di Malaysia"
             subTitle={formatFileVersion(analytics?.fileVersion)}
             sourceBtn={true}
             children={<SectionItemAnalytics analytics={analytics} />}
