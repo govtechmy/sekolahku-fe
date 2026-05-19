@@ -11,9 +11,9 @@ export default function DisclaimerPage() {
           tujuan maklumat sahaja.
         </p>
         <p>
-          Kementerian Pendidikan (KPM) tidak bertanggungjawab terhadap
-          sebarang kehilangan atau kerosakan yang dialami kerana menggunakan
-          maklumat dalam portal ini.
+          Kementerian Pendidikan (KPM) tidak bertanggungjawab terhadap sebarang
+          kehilangan atau kerosakan yang dialami kerana menggunakan maklumat
+          dalam portal ini.
         </p>
       </div>
     </div>
