@@ -50,19 +50,16 @@ function App() {
   const devCode = "dev1234";
 
   return (
-    // Temporarily used
-    <>
+    <BrowserRouter>
       {!isAllowed && !isProduction ? (
         <AccessGuard
           correctCode={devCode}
           onAccessGranted={() => setIsAllowed(true)}
         />
       ) : (
-        <BrowserRouter>
-          <AppRoutes></AppRoutes>
-        </BrowserRouter>
+        <AppRoutes></AppRoutes>
       )}
-    </>
+    </BrowserRouter>
   );
 }
 export default App;
