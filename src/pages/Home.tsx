@@ -13,6 +13,7 @@ import SectionItemTakwim from "../components/shared/SectionItemTakwim";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import { getAnalytics } from "../services/analytics.svc";
 import { formatFileVersion } from "../utils/fileVersionFormat";
+import HelmetMeta from "../seo/HelmetMeta";
 
 export default function HomePage() {
   const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
@@ -77,8 +78,15 @@ export default function HomePage() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
+  const domain = import.meta.env.VITE_DOMAIN_NAME;
+
   return (
     <div>
+      <HelmetMeta
+        title="SekolahKu - Portal Maklumat Sekolah Malaysia"
+        description="Portal rasmi untuk maklumat sekolah di seluruh Malaysia. Cari sekolah, lihat berita KPM, dan akses takwim pendidikan."
+        canonical={`${domain}/${lang}/home`}
+      />
       <HomeHero />
       <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] py-16 flex flex-col">
         {/* design loading for this */}

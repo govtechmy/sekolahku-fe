@@ -11,6 +11,8 @@ import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import { NEGERI_LIST } from "../contentData";
 import { useLocationSessionStore } from "../store/locationSession";
 import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
+import HelmetMeta from "../seo/HelmetMeta";
+import { useParams } from "react-router-dom";
 // import DisclaimerMap from "../components/maps/DisclaimerMap";
 
 export default function SchoolMaps() {
@@ -208,8 +210,16 @@ export default function SchoolMaps() {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [query]);
 
+  const { lang } = useParams<{ lang: string }>();
+  const domain = import.meta.env.VITE_DOMAIN_NAME;
+
   return (
     <div className="h-full w-full flex relative">
+      <HelmetMeta
+        title="Carian Sekolah - SekolahKu"
+        description="Cari sekolah berhampiran anda. Gunakan peta interaktif untuk mencari maklumat sekolah di seluruh Malaysia."
+        canonical={`${domain}/${lang}/carian-sekolah`}
+      />
       <SearchBarMap
         schoolTypes={schoolTypes}
         selectedPeringkat={selectedPeringkat}

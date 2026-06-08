@@ -5,6 +5,8 @@ import { useEffect, useState, useRef } from "react";
 import { getAllTakwim, getSearchTakwim } from "../../services/takwim.svc";
 import type { TakwimItem } from "../../types/takwim";
 import SectionItemTakwim from "../../components/shared/SectionItemTakwim";
+import HelmetMeta from "../../seo/HelmetMeta";
+import { useParams } from "react-router-dom";
 
 export default function Takwim() {
   const [items, setItems] = useState<TakwimItem[]>([]);
@@ -72,8 +74,16 @@ export default function Takwim() {
     }
   };
 
+  const { lang } = useParams<{ lang: string }>();
+  const domain = import.meta.env.VITE_DOMAIN_NAME;
+
   return (
     <>
+      <HelmetMeta
+        title="Takwim Pendidikan - SekolahKu"
+        description="Takwim dan kalendar pendidikan Malaysia. Semak tarikh penting dan acara sekolah."
+        canonical={`${domain}/${lang}/takwim`}
+      />
       <Hero
         title=""
         className="h-[350px]"
