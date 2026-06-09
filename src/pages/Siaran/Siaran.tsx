@@ -11,6 +11,7 @@ import { getSiaranList, getSearchSiaran } from "../../services/siaran.svc";
 import type { SiaranItem } from "../../models/response";
 import Card from "../../components/shared/Cards";
 import { formatDate } from "../../utils/dateFormatter";
+import HelmetMeta from "../../seo/HelmetMeta";
 
 export default function Siaran() {
   const navigate = useNavigate();
@@ -94,8 +95,15 @@ export default function Siaran() {
     }
   };
 
+  const domain = import.meta.env.VITE_DOMAIN_NAME;
+
   return (
     <>
+      <HelmetMeta
+        title="Berita KPM - SekolahKu"
+        description="Berita dan siaran terkini daripada Kementerian Pendidikan Malaysia."
+        canonical={`${domain}/${lang}/berita-kpm`}
+      />
       <Hero
         title="&nbsp;"
         variant="full"

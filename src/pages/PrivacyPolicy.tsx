@@ -1,6 +1,17 @@
+import HelmetMeta from "../seo/HelmetMeta";
+import { useParams } from "react-router-dom";
+
 export default function PrivacyPolicyPage() {
+  const { lang } = useParams<{ lang: string }>();
+  const domain = import.meta.env.VITE_DOMAIN_NAME;
+
   return (
     <div className=" py-12 px-[18px] md:px-20 md:flex md:justify-center print:py-0">
+      <HelmetMeta
+        title="Dasar Privasi - SekolahKu"
+        description="Dasar privasi portal SekolahKu."
+        canonical={`${domain}/${lang}/privacy-policy`}
+      />
       <div className="flex flex-col gap-6 max-w-[825px]">
         <p className="text-2xl font-bold font-body"> Dasar Privasi </p>
         <p

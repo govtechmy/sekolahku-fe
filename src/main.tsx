@@ -7,12 +7,12 @@ import { HelmetProvider } from "react-helmet-async";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider>
-      <Suspense fallback={<div>Loading...</div>}>
-        <HelmetProvider>
+    <HelmetProvider>
+      <ThemeProvider>
+        <Suspense fallback={<div>Loading...</div>}>
           <App />
-        </HelmetProvider>
-      </Suspense>
-    </ThemeProvider>
+        </Suspense>
+      </ThemeProvider>
+    </HelmetProvider>
   </StrictMode>,
 );

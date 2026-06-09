@@ -20,8 +20,27 @@ function App() {
     };
   }, []);
 
-  const [isAllowed, setIsAllowedState] = useState(false);
   const isProduction = import.meta.env.VITE_APP_ENV === "production";
+
+  const getInitialAllowed = () => {
+    if (isProduction) return true;
+
+    const devStorage = sessionStorage.getItem("dev_access_allowed");
+    if (devStorage !== null) {
+      return devStorage === "true";
+    }
+
+    // First time visit in dev
+    if (!import.meta.env.VITE_APP_CODE) {
+      sessionStorage.setItem("dev_access_allowed", "true");
+      return true;
+    } else {
+      sessionStorage.setItem("dev_access_allowed", "false");
+      return false;
+    }
+  };
+
+  const [isAllowed, setIsAllowedState] = useState(getInitialAllowed());
 
   const setIsAllowed = (value: boolean) => {
     setIsAllowedState(value);
@@ -30,44 +49,17 @@ function App() {
 
   const devCode = "dev1234";
 
-  useEffect(() => {
-    if (isProduction) {
-      setIsAllowed(true);
-      return;
-    }
-
-    const devStorage = sessionStorage.getItem("dev_access_allowed");
-    if (!devStorage) {
-      if (!import.meta.env.VITE_APP_CODE) {
-        sessionStorage.setItem("dev_access_allowed", "true");
-      } else {
-        sessionStorage.setItem("dev_access_allowed", "false");
-      }
-    }
-
-    const isAllowedFromStorage =
-      sessionStorage.getItem("dev_access_allowed") === "true";
-    if (isAllowedFromStorage) setIsAllowed(true);
-  }, [isProduction]);
-
   return (
-    // Temporarily used
-    <>
+    <BrowserRouter>
       {!isAllowed && !isProduction ? (
         <AccessGuard
           correctCode={devCode}
           onAccessGranted={() => setIsAllowed(true)}
         />
       ) : (
-        <BrowserRouter>
-          <AppRoutes></AppRoutes>
-        </BrowserRouter>
+        <AppRoutes></AppRoutes>
       )}
-    </>
-    //Temporary disabled
-    // <BrowserRouter>
-    //   <AppRoutes></AppRoutes>
-    // </BrowserRouter>
+    </BrowserRouter>
   );
 }
 export default App;
