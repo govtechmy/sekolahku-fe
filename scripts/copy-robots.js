@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const env = process.env.NODE_ENV || "staging";
+const env = process.env.NODE_ENV || "development";
 const sourceFile = path.join(__dirname, `../public/robots.${env}.txt`);
 const destFile = path.join(__dirname, "../public/robots.txt");
 
