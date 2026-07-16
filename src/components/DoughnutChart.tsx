@@ -16,12 +16,12 @@ interface DoughnutChartProps {
 }
 
 const defaultColors = [
-  "#A8C5E8", // lighter blue
-  "#FFB380", // lighter orange
-  "#8CD49B", // lighter green
-  "#F08A8A", // lighter red
-  "#C5A8DE", // lighter purple
-  "#C4A59A", // lighter brown
+  "#2F80ED", // SK
+  "#F7A8B8", // SJKC
+  "#8FE3C2", // SJKT
+  "#FFB38A", // SRABK
+  "#B9A3F5", // SKPK
+  "#E6C8A8", // SMKK9
   "#F5B8E0", // lighter pink
   "#B3B3B3", // lighter gray
   "#E0E18C", // lighter yellow-green
