@@ -61,7 +61,7 @@ export default function SectionItemTakwim({
           <div className="border-r border-otl-gray-200 flex-shrink-0"></div>
           <div className="flex-1 min-w-0 w-full">
             {item.title && (
-              <div className="text-txt-black-700 text-body-lg text-center font-semibold pb-2">
+              <div className="h-full flex text-txt-black-700 text-body-lg items-center font-semibold pb-2">
                 {item.title}
               </div>
             )}
