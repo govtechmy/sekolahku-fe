@@ -1,6 +1,6 @@
 import type { TakwimItem } from "../../types/takwim";
 // import { getTakwimAttachmentUrl } from "../../utils/takwimAttachment";
-import DownloadAttachmentItem from "./DownloadAttachmentItem";
+// import DownloadAttachmentItem from "./DownloadAttachmentItem";
 
 type SectionItemTakwimProps = {
   dataItemCalendar: TakwimItem[];
@@ -51,17 +51,17 @@ export default function SectionItemTakwim({
           <div className="border-r border-otl-gray-200 flex-shrink-0"></div>
           <div className="flex-1 min-w-0 w-full">
             {item.title && (
-              <div className="text-txt-black-700 text-body-lg font-semibold pb-2">
+              <div className="text-txt-black-700 text-body-lg text-center font-semibold pb-2">
                 {item.title}
               </div>
             )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
               <DownloadAttachmentItem
                 classNameButton={"w-full"}
                 // classNameButtonString="max-w-[145px]"
                 attachments={item.attachments ?? []}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       ))}
