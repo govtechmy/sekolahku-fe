@@ -9,27 +9,37 @@ type SectionItemTakwimProps = {
 export default function SectionItemTakwim({
   dataItemCalendar,
 }: SectionItemTakwimProps) {
-  // const openAttachment = (item: TakwimItem) => {
-  //   const attachmentUrl = getTakwimAttachmentUrl(item);
+  const openAttachmentByIndex = (item: TakwimItem, index: number) => {
+    const validAttachments = (item.attachments ?? []).filter(
+      (attachment) => attachment?.url,
+    );
 
-  //   if (!attachmentUrl) {
-  //     return;
-  //   }
+    if (validAttachments.length === 0) {
+      return;
+    }
 
-  //   window.open(attachmentUrl, "_blank", "noopener,noreferrer");
-  // };
+    const attachment = validAttachments[index] ?? validAttachments[0];
+    window.open(attachment.url, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <div className="flex flex-col gap-6">
       {dataItemCalendar.map((item, index) => (
         <div
           key={index}
-          className="flex gap-3 w-full border border-otl-gray-200  p-3 rounded-lg cursor-pointer focus:outline-primary-200 hover:bg-bg-gray-50"
+          className="flex gap-3  w-full border border-otl-gray-200  p-3 rounded-lg cursor-pointer focus:outline-primary-200 hover:bg-bg-gray-50"
           tabIndex={0}
           role="button"
           aria-label={item.title ? `${item.title}` : "View event"}
+          onClick={() => openAttachmentByIndex(item, index)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              openAttachmentByIndex(item, index);
+            }
+          }}
         >
-          <div className="flex flex-col items-center justify-center w-[55px] flex-shrink-0">
+          <div className="flex  flex-col items-center justify-center w-[55px] flex-shrink-0">
             {item.createdAt && (
               <>
                 <div className="text-body-xs font-medium text-txt-danger">
