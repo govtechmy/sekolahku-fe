@@ -11,12 +11,14 @@ import {
 type SchoolMapMarkerProps = {
   school: SchoolMarkerInfo;
   onClick: () => void;
+  onMouseOver?: () => void;
   isSelected?: boolean;
 };
 
 export function SchoolMapMarker({
   school,
   onClick,
+  onMouseOver,
   isSelected = false,
 }: SchoolMapMarkerProps) {
   let icon;
@@ -47,6 +49,7 @@ export function SchoolMapMarker({
       icon={icon}
       eventHandlers={{
         click: onClick,
+        mouseover: onMouseOver ?? onClick,
       }}
     />
   );

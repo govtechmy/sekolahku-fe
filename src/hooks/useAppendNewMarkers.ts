@@ -3,6 +3,7 @@ import type { MarkerGroup } from "../models/response";
 import { processMarkers, type MarkerMap } from "../utils/markerProcessors";
 import type { Coordinates } from "../types/maps";
 import { useMapViewStore } from "../store/mapView";
+import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
 
 interface UseAppendNewMarkersParams {
   fetchNearbySchools: (
@@ -13,7 +14,7 @@ interface UseAppendNewMarkersParams {
     zoom?: number,
     query?: string,
   ) => Promise<MarkerGroup[]>;
-  schoolMarkers: MarkerMap;
+  schoolMarkers?: MarkerMap;
 
   setSchoolMarkers: React.Dispatch<React.SetStateAction<MarkerMap>>;
   radius: number;
@@ -28,39 +29,32 @@ export function useAppendNewMarkers({
   radius,
   initialLocationSet,
   zoom,
-  schoolMarkers,
 }: UseAppendNewMarkersParams) {
   const { query: name } = useMapViewStore();
   const append = useCallback(
     async (center: Coordinates) => {
+      // Read the latest state from the store at call time to avoid stale closures
+      const state = useMapViewStore.getState();
+      const currentZoom = state.zoom ?? zoom ?? 6;
+      const currentRadius = state.radius || radius;
+      // Recalculate radius based on current zoom and center latitude for accuracy
+      const effectiveRadius = CalculateRadiusZoomLevel(currentZoom, center.koordinatXX) || currentRadius;
+
       try {
         const markersArray = await fetchNearbySchools(
           center.koordinatXX,
           center.koordinatYY,
-          radius,
+          effectiveRadius,
           initialLocationSet,
-          zoom,
+          currentZoom,
           name,
         );
-        const prevSchool = schoolMarkers.values().next().value?.markerType;
-        const newMarkerType = markersArray[0]?.markerType;
 
-        if (!newMarkerType) {
+        if (!markersArray.length) {
           return;
         }
 
-        setSchoolMarkers((prevMap) => {
-          if (
-            !markersArray.length ||
-            !prevSchool ||
-            newMarkerType !== prevSchool
-          ) {
-            return processMarkers(markersArray, new Map());
-          }
-
-          const newMap = processMarkers(markersArray, prevMap);
-          return newMap.size > prevMap.size ? newMap : prevMap;
-        });
+        setSchoolMarkers((prevMap) => processMarkers(markersArray, prevMap));
       } catch (error) {
         console.error("Failed to fetch nearby schools:", error);
       }
@@ -71,7 +65,6 @@ export function useAppendNewMarkers({
       radius,
       initialLocationSet,
       zoom,
-      schoolMarkers,
       name,
     ],
   );

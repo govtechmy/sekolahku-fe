@@ -146,7 +146,7 @@ export const fetchNearbySchools = async (
   longitude: number,
   radiusInMeter: number,
   initialLocationSet?: boolean,
-  zoom?: number,
+  _zoom?: number,
   name?: string,
 ): Promise<MarkerGroup[]> => {
   if (initialLocationSet === false) {
@@ -160,7 +160,6 @@ export const fetchNearbySchools = async (
         latitude: latitudeFixed,
         longitude: longitudeFixed,
         radiusInMeter,
-        zoom,
         name,
       });
       return nearbySchools?.markerGroups || [];
@@ -169,7 +168,6 @@ export const fetchNearbySchools = async (
         latitude: latitudeFixed,
         longitude: longitudeFixed,
         radiusInMeter,
-        zoom,
       });
       return nearbySchools?.markerGroups || [];
     }

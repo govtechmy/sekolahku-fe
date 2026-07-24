@@ -1,5 +1,6 @@
 @import "@govtechmy/myds-style/full.css";
 @import "leaflet/dist/leaflet.css";
+@import "maplibre-gl/dist/maplibre-gl.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -68,4 +69,16 @@ input[aria-controls="search-input"][cmdk-input][role="combobox"] {
   body {
     margin: 1.6cm;
   }
+}
+
+/* Hover tooltip above school pins — hide the popup arrow/tip */
+.school-hover-tooltip .maplibregl-popup-tip {
+  display: none;
+}
+
+/* Soft rounded tooltip container */
+.school-hover-tooltip .maplibregl-popup-content {
+  border-radius: 12px;
+  padding: 8px 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
