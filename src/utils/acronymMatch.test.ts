@@ -11,7 +11,10 @@ const words = (jenisLabel: string, namaSekolah: string) =>
   toAcronymWords(`${jenisLabel} ${namaSekolah}`);
 
 // Real records fetched from the dev API for "putrajaya presint 8".
-const SMK_P8 = words("SMK", "SEKOLAH MENENGAH KEBANGSAAN PUTRAJAYA PRESINT 8(1)");
+const SMK_P8 = words(
+  "SMK",
+  "SEKOLAH MENENGAH KEBANGSAAN PUTRAJAYA PRESINT 8(1)",
+);
 const SK_P8_1 = words("SK", "SEKOLAH KEBANGSAAN PUTRAJAYA PRESINT 8(1)");
 const SK_P8_3 = words("SK", "SEKOLAH KEBANGSAAN PUTRAJAYA PRESINT 8 (3)");
 const SK_GOMBAK = words("SK", "SEKOLAH KEBANGSAAN GOMBAK SETIA");
@@ -102,7 +105,9 @@ describe("matchSchoolAcronym (type-code anchored)", () => {
   it("matches real type + initials acronyms", () => {
     expect(matchSchoolAcronym("smkpp8", SMK_P8)).toBeGreaterThanOrEqual(1);
     expect(matchSchoolAcronym("skpp8", SK_P8_1)).toBeGreaterThanOrEqual(1);
-    expect(matchSchoolAcronym("smkputrajaya", SMK_P8)).toBeGreaterThanOrEqual(1);
+    expect(matchSchoolAcronym("smkputrajaya", SMK_P8)).toBeGreaterThanOrEqual(
+      1,
+    );
   });
 
   it("rejects plain words that scatter across unrelated words (the bug)", () => {

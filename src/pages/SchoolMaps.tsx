@@ -179,7 +179,11 @@ export default function SchoolMaps() {
         // On the very first load, fetch only schools within a fixed 20km radius.
         if (firstLoadRef.current) {
           firstLoadRef.current = false;
-          console.log("[SchoolMaps] FIRST LOAD: setZoom(11)? current zoom=", zoom, "-> 20km fetch");
+          console.log(
+            "[SchoolMaps] FIRST LOAD: setZoom(11)? current zoom=",
+            zoom,
+            "-> 20km fetch",
+          );
           setRadius(20000);
           appendNewMarkers(
             { koordinatXX: center[0], koordinatYY: center[1] },

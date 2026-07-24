@@ -14,20 +14,17 @@ import type {
   SymbolLayerSpecification,
   MapLayerMouseEvent,
 } from "maplibre-gl";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMapViewStore } from "../../store/mapView";
 import { useLocationSessionStore } from "../../store/locationSession";
 import { toMapLibre, fromMapLibre } from "../../utils/coordinates";
 import { createCirclePolygon } from "../../utils/circlePolygon";
 import { SchoolMapMarkerMapCN } from "./SchoolMapMarkerMapCN";
 import { StatePolygonMapCN } from "./StatePolygonMapCN";
-import { getSchoolS3Json, getAllSchoolMarkers } from "../../services/school.svc";
+import {
+  getSchoolS3Json,
+  getAllSchoolMarkers,
+} from "../../services/school.svc";
 import type { SchoolPoint } from "../../services/school.svc";
 import { getSchoolLogoUrl } from "../../utils/schoolHelpers";
 import type { ViewStateChangeEvent, MapRef } from "react-map-gl/maplibre";
@@ -197,7 +194,6 @@ export function MapContainerMapCN() {
     }),
     [],
   );
-
 
   useEffect(() => {
     const centerChanged =
@@ -469,8 +465,7 @@ export function MapContainerMapCN() {
         map.addImage("school-pin", img, { pixelRatio: 2 });
       }
     };
-    img.src =
-      "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }, []);
 
   // Smooth pulsing animation for the 3km user radius circle. Uses a sine wave
