@@ -98,7 +98,7 @@ export function LocationPickerWindow() {
         });
         return next;
       });
-      setZoom(14);
+      setZoom(11);
       setInitialLocationSet(true);
     }
   };

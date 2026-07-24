@@ -45,6 +45,7 @@ export default function SchoolMaps() {
   const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
   const polygonsFetchedRef = useRef(false);
+  const firstLoadRef = useRef(true);
   const [isGeolocating, setIsGeolocating] = useState(false);
   const appendNewMarkers = useAppendNewMarkers({
     fetchNearbySchools,
@@ -65,7 +66,7 @@ export default function SchoolMaps() {
           sessionInitialLocation[0],
           sessionInitialLocation[1],
         ]);
-        setZoom(15);
+        setZoom(11);
         setUserMarkers((prev) => {
           const next = new Map(prev);
           next.clear();
@@ -98,7 +99,7 @@ export default function SchoolMaps() {
             const { latitude, longitude } = position.coords;
             setCenter([latitude, longitude]);
             setInitialLocationUser([latitude, longitude]);
-            setZoom(17);
+            setZoom(11);
             setUserMarkers((prev) => {
               const next = new Map(prev);
               next.clear();
@@ -175,6 +176,17 @@ export default function SchoolMaps() {
   useEffect(() => {
     if (initialLocationSet) {
       if (zoom) {
+        // On the very first load, fetch only schools within a fixed 20km radius.
+        if (firstLoadRef.current) {
+          firstLoadRef.current = false;
+          console.log("[SchoolMaps] FIRST LOAD: setZoom(11)? current zoom=", zoom, "-> 20km fetch");
+          setRadius(20000);
+          appendNewMarkers(
+            { koordinatXX: center[0], koordinatYY: center[1] },
+            20000,
+          );
+          return;
+        }
         setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
         appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });
       }
@@ -229,11 +241,7 @@ export default function SchoolMaps() {
         setSelectedPeringkat={setSelectedPeringkat}
       />
       {USE_MAPCN ? (
-        <MapContainerMapCN
-          dragStartPos={dragStartPos}
-          setDragStartPos={setDragStartPos}
-          fetchNearbySchools={fetchNearbySchools}
-        />
+        <MapContainerMapCN />
       ) : (
         <MapContainerComponent
           dragStartPos={dragStartPos}
@@ -244,7 +252,7 @@ export default function SchoolMaps() {
 
       {/* Go to current location button */}
       {initialLocationSet && (
-        <div className="absolute bottom-6 left-6 z-[500] rounded-lg bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm">
+        <div className="absolute top-6 right-6 z-[500] rounded-lg bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm">
           <p className="mb-1 text-xs font-semibold text-gray-700">
             Jarak Radius
           </p>

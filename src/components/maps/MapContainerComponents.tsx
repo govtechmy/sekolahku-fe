@@ -110,8 +110,10 @@ function RoutePolyline() {
 
   if (!pointA || !pointB) return null;
 
-  // Use OSRM route if available, otherwise fall back to straight line
-  const positions = routeCoordinates.length > 0 ? routeCoordinates : [pointA, pointB];
+  // Use OSRM road-following route if available, otherwise fall back to a
+  // straight dashed line between origin and destination.
+  const positions =
+    routeCoordinates.length > 0 ? routeCoordinates : [pointA, pointB];
 
   return (
     <Polyline
@@ -241,48 +243,53 @@ export function MapContainerComponent({
           if (zoom < ZOOM_LEVELS.WEST_EAST_MALAYSIA)
             return coords.markerType === "WEST_EAST_MALAYSIA";
           if (zoom < ZOOM_LEVELS.NEGERI)
-            return coords.markerType === "NEGERI" || coords.markerType === "WEST_EAST_MALAYSIA";
+            return (
+              coords.markerType === "NEGERI" ||
+              coords.markerType === "WEST_EAST_MALAYSIA"
+            );
           if (zoom < ZOOM_LEVELS.PARLIMEN)
-            return coords.markerType === "PARLIMEN" || coords.markerType === "NEGERI";
+            return (
+              coords.markerType === "PARLIMEN" || coords.markerType === "NEGERI"
+            );
           return coords.markerType === "INDIVIDUAL";
         })
         .map(([kodSekolah, coords]) => (
-        <SchoolMapMarker
-          key={kodSekolah}
-          school={{
-            markerType: coords.markerType,
-            radiusInMeter: 0,
-            koordinatXX: coords.koordinatXX,
-            koordinatYY: coords.koordinatYY,
-            id: kodSekolah,
-            total: coords.total,
-          }}
-          isSelected={
-            coords.markerType === "INDIVIDUAL" &&
-            viewSchool?.kodSekolah === kodSekolah
-          }
-          onClick={async () => {
-            const { koordinatXX, koordinatYY } = coords;
-            setCenter([koordinatXX, koordinatYY]);
-            setViewSchool(null);
-            if (coords.dataUrl) {
-              setViewSchool(await getSchoolS3Json(coords.dataUrl));
+          <SchoolMapMarker
+            key={kodSekolah}
+            school={{
+              markerType: coords.markerType,
+              radiusInMeter: 0,
+              koordinatXX: coords.koordinatXX,
+              koordinatYY: coords.koordinatYY,
+              id: kodSekolah,
+              total: coords.total,
+            }}
+            isSelected={
+              coords.markerType === "INDIVIDUAL" &&
+              viewSchool?.kodSekolah === kodSekolah
             }
-            setZoom(ZOOM_LEVELS.INDIVIDUAL);
-          }}
-          onMouseOver={async () => {
-            if (viewSchool?.kodSekolah === kodSekolah) return;
-            const requestId = ++hoverRequestIdRef.current;
-            setViewSchool(null);
-            if (coords.dataUrl) {
-              const detail = await getSchoolS3Json(coords.dataUrl);
-              if (requestId === hoverRequestIdRef.current) {
-                setViewSchool(detail);
+            onClick={async () => {
+              const { koordinatXX, koordinatYY } = coords;
+              setCenter([koordinatXX, koordinatYY]);
+              setViewSchool(null);
+              if (coords.dataUrl) {
+                setViewSchool(await getSchoolS3Json(coords.dataUrl));
               }
-            }
-          }}
-        />
-      ))}
+              setZoom(ZOOM_LEVELS.INDIVIDUAL);
+            }}
+            onMouseOver={async () => {
+              if (viewSchool?.kodSekolah === kodSekolah) return;
+              const requestId = ++hoverRequestIdRef.current;
+              setViewSchool(null);
+              if (coords.dataUrl) {
+                const detail = await getSchoolS3Json(coords.dataUrl);
+                if (requestId === hoverRequestIdRef.current) {
+                  setViewSchool(detail);
+                }
+              }
+            }}
+          />
+        ))}
     </LeafletMapContainer>
   );
 }

@@ -82,6 +82,72 @@ export const getSchoolSuggestion = async (
   }
 };
 
+export interface SchoolPoint {
+  kodSekolah: string;
+  namaSekolah: string;
+  lng: number;
+  lat: number;
+  negeri: string;
+  parlimen: string;
+  peringkat: string;
+  jenisLabel: string;
+  bandarSurat: string;
+  sesi: string;
+  isSekolahAngkatMADANI: boolean;
+}
+
+/**
+ * Fetch ALL school points in one call (lightweight coords + fields) to feed
+ * client-side MapLibre clustering. ~10k schools, ~1MB gzipped.
+ * Cached at module level so repeated mounts (incl. React StrictMode double
+ * invoke in dev) reuse a single in-flight request / result.
+ */
+let allSchoolPointsCache: SchoolPoint[] | null = null;
+let allSchoolPointsPromise: Promise<SchoolPoint[]> | null = null;
+
+export const getAllSchoolMarkers = async (): Promise<SchoolPoint[]> => {
+  if (allSchoolPointsCache) return allSchoolPointsCache;
+  if (allSchoolPointsPromise) return allSchoolPointsPromise;
+
+  allSchoolPointsPromise = (async () => {
+    const response = await authAxios.get<APIResponse<ListSekolahModel>>(
+      `${BASE_URL}${SCHOOL_ENDPOINT}/search?page=1&pageSize=20000`,
+    );
+    const items = response.data.data?.items || [];
+    const points = items
+      .filter((s) => {
+        const c = s.data?.infoLokasi?.location?.coordinates;
+        return Array.isArray(c) && c[0] != null && c[1] != null;
+      })
+      .map((s) => {
+        const [lng, lat] = s.data.infoLokasi.location.coordinates;
+        return {
+          kodSekolah: s.kodSekolah ?? "",
+          namaSekolah: s.namaSekolah ?? "Sekolah",
+          lng,
+          lat,
+          negeri: s.data.infoPentadbiran?.negeri ?? "",
+          parlimen: s.data.infoPentadbiran?.parlimen ?? "",
+          peringkat: s.data.infoPentadbiran?.peringkat ?? "",
+          jenisLabel: s.data.infoSekolah?.jenisLabel ?? "",
+          bandarSurat: s.data.infoKomunikasi?.bandarSurat ?? "",
+          sesi: s.data.infoPentadbiran?.sesi ?? "",
+          isSekolahAngkatMADANI: s.isSekolahAngkatMADANI ?? false,
+        };
+      });
+    allSchoolPointsCache = points;
+    return points;
+  })();
+
+  try {
+    return await allSchoolPointsPromise;
+  } catch (err) {
+    // Allow a retry on next call if this attempt failed.
+    allSchoolPointsPromise = null;
+    throw err;
+  }
+};
+
 export const getSchoolNearby = async (
   params?: NearbySchoolsParams,
 ): Promise<NearbySchoolsModel> => {

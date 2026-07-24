@@ -4,33 +4,36 @@ import {
   Source,
   Layer,
   Popup,
+  Marker,
 } from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
-import type { LineLayerSpecification, FillLayerSpecification } from "maplibre-gl";
+import type {
+  LineLayerSpecification,
+  FillLayerSpecification,
+  CircleLayerSpecification,
+  SymbolLayerSpecification,
+  MapLayerMouseEvent,
+} from "maplibre-gl";
 import {
-  type Dispatch,
-  type SetStateAction,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-import type { Coordinates } from "../../types/maps";
-import type { MarkerGroup } from "../../models/response";
 import { useMapViewStore } from "../../store/mapView";
 import { useLocationSessionStore } from "../../store/locationSession";
-import { useAppendNewMarkers } from "../../hooks/useAppendNewMarkers";
-import { calculateDistance } from "../../utils/calculateDistance";
 import { toMapLibre, fromMapLibre } from "../../utils/coordinates";
 import { createCirclePolygon } from "../../utils/circlePolygon";
 import { SchoolMapMarkerMapCN } from "./SchoolMapMarkerMapCN";
 import { StatePolygonMapCN } from "./StatePolygonMapCN";
-import { getSchoolS3Json } from "../../services/school.svc";
+import { getSchoolS3Json, getAllSchoolMarkers } from "../../services/school.svc";
+import type { SchoolPoint } from "../../services/school.svc";
 import { getSchoolLogoUrl } from "../../utils/schoolHelpers";
 import type { ViewStateChangeEvent, MapRef } from "react-map-gl/maplibre";
 
-const MAP_STYLE = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
+const MAP_STYLE =
+  "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
 
 // Constants for zoom levels
 const ZOOM_LEVELS = {
@@ -41,39 +44,19 @@ const ZOOM_LEVELS = {
   INDIVIDUAL: 18,
 } as const;
 
-interface MapContainerMapCNProps {
-  dragStartPos: Coordinates | null;
-  setDragStartPos: Dispatch<SetStateAction<Coordinates | null>>;
-  fetchNearbySchools: (
-    koordinatXX: number,
-    koordinatYY: number,
-    radiusInMeter: number,
-    initialLocationSet?: boolean,
-    zoom?: number,
-  ) => Promise<MarkerGroup[]>;
-}
-
-export function MapContainerMapCN({
-  dragStartPos,
-  setDragStartPos,
-  fetchNearbySchools,
-}: MapContainerMapCNProps) {
+export function MapContainerMapCN() {
   const {
     center,
     setCenter,
     setZoom,
     zoom,
-    radius,
-    schoolMarkers,
-    setSchoolMarkers,
-    initialLocationSet,
     setViewSchool,
-    viewSchool,
     statePolygons,
     userMarkers,
     pointA,
     pointB,
     routeCoordinates,
+    mapFilters,
   } = useMapViewStore();
 
   const { initialLocationUser } = useLocationSessionStore();
@@ -82,15 +65,8 @@ export function MapContainerMapCN({
   const hoverRequestIdRef = useRef(0);
   // Track whether the next store change was caused by the map's own moveEnd
   const skipNextFlyTo = useRef(false);
-
-  const appendNewMarkers = useAppendNewMarkers({
-    fetchNearbySchools,
-    schoolMarkers,
-    setSchoolMarkers,
-    radius,
-    initialLocationSet,
-    zoom,
-  });
+  const prevCenter = useRef(center);
+  const prevZoom = useRef(zoom);
 
   // Controlled view state
   const [viewState, setViewState] = useState({
@@ -98,9 +74,6 @@ export function MapContainerMapCN({
     latitude: toMapLibre(center)[1],
     zoom: zoom,
   });
-
-  // Track the rounded zoom to avoid re-filtering markers on fractional zoom changes during animation
-  const [displayZoom, setDisplayZoom] = useState(Math.floor(zoom));
 
   // Marker currently hovered — drives the tooltip popup above the pin
   const [hoveredMarker, setHoveredMarker] = useState<{
@@ -113,13 +86,123 @@ export function MapContainerMapCN({
     logoUrl: string;
   } | null>(null);
 
-  // Programmatic flyTo when store center/zoom changes externally
-  const prevCenter = useRef(center);
-  const prevZoom = useRef(zoom);
+  // ---- Client-side clustering (MapLibre native) ----
+  // Load ALL school points once and let MapLibre cluster them on the GPU.
+  const [allPoints, setAllPoints] = useState<SchoolPoint[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    getAllSchoolMarkers()
+      .then((points) => {
+        console.log("[MapCN] loaded school points:", points.length);
+        if (!cancelled) setAllPoints(points);
+      })
+      .catch((err) => {
+        console.error("[MapCN] Failed to load school points:", err);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Build a GeoJSON FeatureCollection from all school points, applying the
+  // active dropdown filters (negeri / peringkat / jenis) so the clustered map
+  // reflects the same result set as the sidebar.
+  const schoolsGeoJSON = useMemo<GeoJSON.FeatureCollection>(() => {
+    const { negeri, peringkat, jenis, sesi } = mapFilters;
+    const filtered = allPoints.filter((p) => {
+      if (negeri !== "ALL" && p.negeri !== negeri) return false;
+      if (peringkat !== "ALL" && p.peringkat !== peringkat) return false;
+      if (jenis === "SEKOLAH_ANGKAT_MADANI") {
+        if (!p.isSekolahAngkatMADANI) return false;
+      } else if (jenis !== "ALL" && p.jenisLabel !== jenis) {
+        return false;
+      }
+      if (sesi !== "ALL" && p.sesi !== sesi) return false;
+      return true;
+    });
+    return {
+      type: "FeatureCollection",
+      features: filtered.map((p) => ({
+        type: "Feature",
+        geometry: { type: "Point", coordinates: [p.lng, p.lat] },
+        properties: {
+          kodSekolah: p.kodSekolah,
+          namaSekolah: p.namaSekolah,
+          negeri: p.negeri,
+          parlimen: p.parlimen,
+          bandarSurat: p.bandarSurat,
+        },
+      })),
+    };
+  }, [allPoints, mapFilters]);
+
+  const clusterLayer: CircleLayerSpecification = useMemo(
+    () => ({
+      id: "school-clusters",
+      type: "circle",
+      source: "schools",
+      filter: ["has", "point_count"],
+      paint: {
+        "circle-color": "#2951E6",
+        "circle-opacity": 0.9,
+        "circle-radius": [
+          "step",
+          ["get", "point_count"],
+          16,
+          50,
+          22,
+          200,
+          30,
+          1000,
+          40,
+        ],
+        "circle-stroke-width": 3,
+        "circle-stroke-color": "#ffffff",
+      },
+    }),
+    [],
+  );
+
+  const clusterCountLayer: SymbolLayerSpecification = useMemo(
+    () => ({
+      id: "school-cluster-count",
+      type: "symbol",
+      source: "schools",
+      filter: ["has", "point_count"],
+      layout: {
+        "text-field": ["get", "point_count_abbreviated"],
+        "text-size": 13,
+        "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+      },
+      paint: {
+        "text-color": "#ffffff",
+      },
+    }),
+    [],
+  );
+
+  const unclusteredLayer: SymbolLayerSpecification = useMemo(
+    () => ({
+      id: "school-unclustered",
+      type: "symbol",
+      source: "schools",
+      filter: ["!", ["has", "point_count"]],
+      layout: {
+        "icon-image": "school-pin",
+        "icon-size": 0.9,
+        "icon-allow-overlap": true,
+        "icon-anchor": "center",
+      },
+    }),
+    [],
+  );
+
 
   useEffect(() => {
     const centerChanged =
-      prevCenter.current[0] !== center[0] || prevCenter.current[1] !== center[1];
+      prevCenter.current[0] !== center[0] ||
+      prevCenter.current[1] !== center[1];
     const zoomChanged = prevZoom.current !== zoom;
 
     prevCenter.current = center;
@@ -149,94 +232,42 @@ export function MapContainerMapCN({
 
   const handleMove = useCallback((evt: ViewStateChangeEvent) => {
     setViewState(evt.viewState);
-    // Only update displayZoom when the integer zoom level changes
-    const newFloor = Math.floor(evt.viewState.zoom);
-    setDisplayZoom((prev) => (prev !== newFloor ? newFloor : prev));
   }, []);
-
-  const prevViewZoom = useRef(viewState.zoom);
 
   const handleMoveEnd = useCallback(
     (evt: ViewStateChangeEvent) => {
       const { longitude, latitude, zoom: newZoom } = evt.viewState;
       const [lat, lng] = fromMapLibre([longitude, latitude]);
-
       // Tell the useEffect to skip flyTo since this change comes from user interaction
       skipNextFlyTo.current = true;
       setCenter([lat, lng]);
       setZoom(newZoom);
-
-      // Directly trigger marker fetch on zoom change to ensure markers load
-      // Skip if a drag just occurred (handleDragEnd already fetched)
-      if (justDragged.current) {
-        justDragged.current = false;
-        prevViewZoom.current = newZoom;
-        return;
-      }
-
-      if (initialLocationSet && Math.abs(newZoom - prevViewZoom.current) >= 0.5) {
-        prevViewZoom.current = newZoom;
-        appendNewMarkers({ koordinatXX: lat, koordinatYY: lng });
-      }
     },
-    [setCenter, setZoom, initialLocationSet, appendNewMarkers],
-  );
-
-  const handleDragStart = useCallback(() => {
-    setDragStartPos({ koordinatXX: center[0], koordinatYY: center[1] });
-  }, [center, setDragStartPos]);
-
-  const justDragged = useRef(false);
-
-  const handleDragEnd = useCallback(
-    (evt: ViewStateChangeEvent) => {
-      const { longitude, latitude } = evt.viewState;
-      const [lat, lng] = fromMapLibre([longitude, latitude]);
-      const newCenter: Coordinates = { koordinatXX: lat, koordinatYY: lng };
-
-      justDragged.current = true;
-
-      if (dragStartPos) {
-        const distance = calculateDistance(
-          dragStartPos.koordinatXX,
-          dragStartPos.koordinatYY,
-          newCenter.koordinatXX,
-          newCenter.koordinatYY,
-        );
-
-        if (distance > radius / 100) {
-          appendNewMarkers({
-            koordinatXX: newCenter.koordinatXX,
-            koordinatYY: newCenter.koordinatYY,
-          });
-        }
-      }
-      setDragStartPos(null);
-    },
-    [dragStartPos, radius, appendNewMarkers, setDragStartPos],
+    [setCenter, setZoom],
   );
 
   // Polygon toggle - same as original: always false for now
   const shouldShowPolygons = false;
 
   // Route GeoJSON data
-  const routeGeoJSON = useMemo((): GeoJSON.Feature<GeoJSON.LineString> | null => {
-    if (!pointA || !pointB) return null;
-    const positions =
-      routeCoordinates.length > 0 ? routeCoordinates : [pointA, pointB];
-    // Convert from [lat, lng] to [lng, lat] for GeoJSON
-    const coordinates = positions.map(
-      ([lat, lng]) => [lng, lat] as [number, number],
-    );
-    return {
-      type: "Feature",
-      properties: {},
-      geometry: {
-        type: "LineString",
-        coordinates,
-      },
-    };
-  }, [pointA, pointB, routeCoordinates]);
+  const routeGeoJSON =
+    useMemo((): GeoJSON.Feature<GeoJSON.LineString> | null => {
+      if (!pointA || !pointB) return null;
+      const positions =
+        routeCoordinates.length > 0 ? routeCoordinates : [pointA, pointB];
+      // Convert from [lat, lng] to [lng, lat] for GeoJSON
+      const coordinates = positions.map(
+        ([lat, lng]) => [lng, lat] as [number, number],
+      );
+      return {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "LineString",
+          coordinates,
+        },
+      };
+    }, [pointA, pointB, routeCoordinates]);
 
   // User radius circle GeoJSON (Tier 1: 3km)
   const userCircleGeoJSON = useMemo(() => {
@@ -327,125 +358,155 @@ export function MapContainerMapCN({
     [],
   );
 
-  // Filter markers by zoom level - overlap only the aggregate ranges.
-  const filteredSchoolMarkers = useMemo(() => {
-    const entries = Array.from(schoolMarkers.entries());
-    const visibleMarkers = entries.filter(([, coords]) => {
-      const type = coords.markerType;
-      if (displayZoom < ZOOM_LEVELS.WEST_EAST_MALAYSIA) {
-        return type === "WEST_EAST_MALAYSIA";
-      }
-      if (displayZoom < ZOOM_LEVELS.NEGERI) {
-        return type === "NEGERI" || type === "WEST_EAST_MALAYSIA";
-      }
-      if (displayZoom < ZOOM_LEVELS.PARLIMEN) {
-        return type === "PARLIMEN" || type === "NEGERI";
-      }
-      // Do not retain aggregate markers here: they can overlap school pins
-      // and capture the pointer before the individual marker receives hover.
-      return type === "INDIVIDUAL";
-    });
+  // Click on a cluster (zoom to expand) or an individual school (open detail).
+  const handleMapClick = useCallback(
+    (evt: MapLayerMouseEvent) => {
+      const map = mapRef.current;
+      const feature = evt.features?.[0];
+      if (!map || !feature) return;
+      const props = feature.properties ?? {};
+      const [lng, lat] = (feature.geometry as GeoJSON.Point).coordinates as [
+        number,
+        number,
+      ];
 
-    // Search responses contain individual schools only. If an aggregate fetch
-    // has not populated the current tier yet, keep those pins available rather
-    // than rendering an empty, non-interactive map.
-    if (visibleMarkers.length === 0) {
-      return entries.filter(([, coords]) => coords.markerType === "INDIVIDUAL");
-    }
-
-    return visibleMarkers;
-  }, [schoolMarkers, displayZoom]);
-
-  const fetchMarkerSchoolDetail = useCallback(
-    async (kodSekolah: string) => {
-      const coords = useMapViewStore.getState().schoolMarkers.get(kodSekolah);
-      if (!coords || coords.markerType !== "INDIVIDUAL") return null;
-
-      const hasFallbackPath = Boolean(coords.negeri && coords.parlimen);
-      if (!coords.dataUrl && !hasFallbackPath) {
-        console.warn(
-          `[MapContainerMapCN] Missing school detail location for ${kodSekolah}`,
-        );
-        return null;
-      }
-
-      try {
-        return await getSchoolS3Json(
-          coords.dataUrl || undefined,
-          coords.negeri,
-          coords.parlimen,
-          kodSekolah,
-        );
-      } catch (error) {
-        console.error(
-          `[MapContainerMapCN] Failed to load school detail for ${kodSekolah}:`,
-          error,
-        );
-        return null;
-      }
-    },
-    [],
-  );
-
-  const handleMarkerClick = useCallback(
-    async (markerId: string) => {
-      const coords = useMapViewStore.getState().schoolMarkers.get(markerId);
-      if (!coords) return;
-
-      setCenter([coords.koordinatXX, coords.koordinatYY]);
-
-      if (coords.markerType !== "INDIVIDUAL") {
-        setViewSchool(null);
-        // Zoom IN to the next detail level when clicking a cluster marker
-        if (coords.markerType === "WEST_EAST_MALAYSIA") {
-          setZoom(ZOOM_LEVELS.NEGERI);
-        } else if (coords.markerType === "NEGERI") {
-          setZoom(ZOOM_LEVELS.PARLIMEN);
-        } else {
-          // PARLIMEN → show individual schools
-          setZoom(ZOOM_LEVELS.PARLIMEN + 1);
-        }
+      if (props.cluster) {
+        const clusterId = props.cluster_id as number;
+        const src = map.getSource("schools") as maplibregl.GeoJSONSource;
+        src
+          .getClusterExpansionZoom(clusterId)
+          .then((z) => {
+            skipNextFlyTo.current = true;
+            map.easeTo({ center: [lng, lat], zoom: z, duration: 500 });
+          })
+          .catch(() => {});
         return;
       }
 
-      const requestId = ++hoverRequestIdRef.current;
+      // Individual school pin
+      setCenter([lat, lng]);
       setZoom(ZOOM_LEVELS.INDIVIDUAL);
-      const detail = await fetchMarkerSchoolDetail(markerId);
-      if (requestId === hoverRequestIdRef.current && detail) {
-        setViewSchool(detail);
-      }
-    },
-    [fetchMarkerSchoolDetail, setCenter, setViewSchool, setZoom],
-  );
-
-  const handleMarkerHover = useCallback(
-    async (kodSekolah: string) => {
-      const coords = useMapViewStore.getState().schoolMarkers.get(kodSekolah);
-      if (!coords || coords.markerType !== "INDIVIDUAL") return;
-
       const requestId = ++hoverRequestIdRef.current;
-      const detail = await fetchMarkerSchoolDetail(kodSekolah);
-      if (requestId !== hoverRequestIdRef.current) return;
-      const negeri = detail?.data?.infoPentadbiran?.negeri ?? coords.negeri ?? "";
-      const parlimen =
-        detail?.data?.infoPentadbiran?.parlimen ?? coords.parlimen ?? "";
-      setHoveredMarker({
-        id: kodSekolah,
-        lat: coords.koordinatXX,
-        lng: coords.koordinatYY,
-        name: detail?.namaSekolah ?? "Sekolah",
-        kod: detail?.kodSekolah ?? kodSekolah,
-        daerah: detail?.data?.infoKomunikasi?.bandarSurat ?? "",
-        logoUrl: getSchoolLogoUrl(negeri, parlimen, detail?.kodSekolah ?? kodSekolah),
-      });
+      getSchoolS3Json(
+        undefined,
+        String(props.negeri ?? ""),
+        String(props.parlimen ?? ""),
+        String(props.kodSekolah ?? ""),
+      )
+        .then((detail) => {
+          if (requestId === hoverRequestIdRef.current && detail) {
+            setViewSchool(detail);
+          }
+        })
+        .catch((error) =>
+          console.error("[MapCN] Failed to load school detail:", error),
+        );
     },
-    [fetchMarkerSchoolDetail],
+    [setCenter, setZoom, setViewSchool],
   );
 
-  const handleMarkerLeave = useCallback(() => {
-    hoverRequestIdRef.current++;
+  // Hover over an individual school pin → show tooltip above it.
+  const handleMapMouseMove = useCallback((evt: MapLayerMouseEvent) => {
+    const map = mapRef.current;
+    if (!map) return;
+    const feature = evt.features?.[0];
+    if (!feature) {
+      map.getCanvas().style.cursor = "";
+      setHoveredMarker((h) => (h ? null : h));
+      return;
+    }
+    map.getCanvas().style.cursor = "pointer";
+    const props = feature.properties ?? {};
+    if (props.cluster) {
+      setHoveredMarker((h) => (h ? null : h));
+      return;
+    }
+    const [lng, lat] = (feature.geometry as GeoJSON.Point).coordinates as [
+      number,
+      number,
+    ];
+    const kod = String(props.kodSekolah ?? "");
+    setHoveredMarker({
+      id: kod,
+      lat,
+      lng,
+      name: String(props.namaSekolah ?? "Sekolah"),
+      kod,
+      daerah: String(props.bandarSurat ?? ""),
+      logoUrl: getSchoolLogoUrl(
+        String(props.negeri ?? ""),
+        String(props.parlimen ?? ""),
+        kod,
+      ),
+    });
+  }, []);
+
+  const handleMapMouseLeave = useCallback(() => {
+    const map = mapRef.current;
+    if (map) map.getCanvas().style.cursor = "";
     setHoveredMarker(null);
   }, []);
+
+  // Register the custom school pin icon (blue circle + white school glyph)
+  // as a map image so the unclustered symbol layer can use it.
+  const handleMapLoad = useCallback(() => {
+    const map = mapRef.current?.getMap?.();
+    if (!map || map.hasImage("school-pin")) return;
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 40 40'>
+      <circle cx='20' cy='20' r='18' fill='#2951E6'/>
+      <g transform='translate(8,8)' fill='#ffffff'>
+        <path fill-rule='evenodd' clip-rule='evenodd' d='M8.75 7.25C7.92157 7.25 7.25 7.92157 7.25 8.75V19.75H14.75V8.75C14.75 7.92157 14.0785 7.25 13.25 7.25H8.75ZM6.25 8.75C6.25 7.36929 7.36929 6.25 8.75 6.25H13.25C14.6307 6.25 15.75 7.36929 15.75 8.75V20.25C15.75 20.5261 15.5261 20.75 15.25 20.75H6.75C6.47386 20.75 6.25 20.5261 6.25 20.25V8.75Z'/>
+        <path fill-rule='evenodd' clip-rule='evenodd' d='M15.75 12.75V19.75H19V13.75C19 13.1977 18.5523 12.75 18 12.75H15.75ZM14.75 20.75H20V13.75C20 12.6454 19.1046 11.75 18 11.75H14.75V20.75Z'/>
+        <path fill-rule='evenodd' clip-rule='evenodd' d='M10.5 1.15143C10.5 0.72068 10.9404 0.43026 11.3364 0.599941L14.4825 1.94829C14.9674 2.15609 14.9674 2.84346 14.4825 3.05126L11.5 4.32947V6.99977H10.5V1.15143ZM11.5 3.2415L13.2307 2.49977L11.5 1.75804V3.2415Z'/>
+        <path fill-rule='evenodd' clip-rule='evenodd' d='M5.25 20.25C5.25 19.9739 5.47386 19.75 5.75 19.75H20.25C20.5261 19.75 20.75 19.9739 20.75 20.25C20.75 20.5261 20.5261 20.75 20.25 20.75H5.75C5.47386 20.75 5.25 20.5261 5.25 20.25Z'/>
+        <path fill-rule='evenodd' clip-rule='evenodd' d='M10.75 15.25C9.92154 15.25 9.25 15.9215 9.25 16.75V19.75H12.75V16.75C12.75 15.9215 12.0785 15.25 11.25 15.25H10.75ZM8.25 16.75C8.25 15.3693 9.36926 14.25 10.75 14.25H11.25C12.6307 14.25 13.75 15.3693 13.75 16.75V20.25C13.75 20.5261 13.5261 20.75 13.25 20.75H8.75C8.47386 20.75 8.25 20.5261 8.25 20.25V16.75Z'/>
+        <path fill-rule='evenodd' clip-rule='evenodd' d='M11 12C11.5523 12 12 11.5523 12 11C12 10.4477 11.5523 10 11 10C10.4477 10 10 10.4477 10 11C10 11.5523 10.4477 12 11 12ZM11 13C12.1046 13 13 12.1046 13 11C13 9.89543 12.1046 9 11 9C9.89543 9 9 9.89543 9 11C9 12.1046 9.89543 13 11 13Z'/>
+      </g>
+    </svg>`;
+    const img = new Image(80, 80);
+    img.onload = () => {
+      if (!map.hasImage("school-pin")) {
+        map.addImage("school-pin", img, { pixelRatio: 2 });
+      }
+    };
+    img.src =
+      "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  }, []);
+
+  // Smooth pulsing animation for the 3km user radius circle. Uses a sine wave
+  // to gently oscillate the fill/line opacity and line width via requestAnimationFrame.
+  useEffect(() => {
+    if (!userCircleGeoJSON) return;
+    let rafId: number;
+    const start = performance.now();
+    // One full pulse cycle every 2.5 seconds.
+    const PERIOD = 2500;
+
+    const animate = (now: number) => {
+      const map = mapRef.current?.getMap?.();
+      if (map && map.getLayer("user-circle-fill")) {
+        // t oscillates 0 → 1 → 0 smoothly.
+        const t = (Math.sin(((now - start) / PERIOD) * Math.PI * 2) + 1) / 2;
+        map.setPaintProperty(
+          "user-circle-fill",
+          "fill-opacity",
+          0.05 + t * 0.12,
+        );
+        if (map.getLayer("user-circle-line")) {
+          map.setPaintProperty(
+            "user-circle-line",
+            "line-opacity",
+            0.4 + t * 0.6,
+          );
+          map.setPaintProperty("user-circle-line", "line-width", 1 + t * 2.5);
+        }
+      }
+      rafId = requestAnimationFrame(animate);
+    };
+
+    rafId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafId);
+  }, [userCircleGeoJSON]);
 
   const handleUserMarkerClick = useCallback(
     (id: string) => {
@@ -466,8 +527,11 @@ export function MapContainerMapCN({
       {...viewState}
       onMove={handleMove}
       onMoveEnd={handleMoveEnd}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+      onLoad={handleMapLoad}
+      onClick={handleMapClick}
+      onMouseMove={handleMapMouseMove}
+      onMouseLeave={handleMapMouseLeave}
+      interactiveLayerIds={["school-clusters", "school-unclustered"]}
       style={{ width: "100%", height: "100%" }}
     >
       <NavigationControl position="bottom-right" />
@@ -520,24 +584,58 @@ export function MapContainerMapCN({
         </Source>
       )}
 
-      {/* School Markers */}
-      {filteredSchoolMarkers.map(([kodSekolah, coords]) => (
-        <SchoolMapMarkerMapCN
-          key={kodSekolah}
-          id={kodSekolah}
-          markerType={coords.markerType}
-          koordinatXX={coords.koordinatXX}
-          koordinatYY={coords.koordinatYY}
-          total={coords.total}
-          isSelected={
-            coords.markerType === "INDIVIDUAL" &&
-            viewSchool?.kodSekolah === kodSekolah
-          }
-          onClick={handleMarkerClick}
-          onMouseEnter={handleMarkerHover}
-          onMouseLeave={handleMarkerLeave}
-        />
-      ))}
+      {/* Origin (A) dot — shown while a route/destination is active */}
+      {pointA && pointB && (
+        <Marker
+          longitude={toMapLibre(pointA)[0]}
+          latitude={toMapLibre(pointA)[1]}
+          anchor="center"
+        >
+          <div
+            className="h-4 w-4 rounded-full border-2 border-white bg-blue-600 shadow-md"
+            aria-label="Titik asal"
+          />
+        </Marker>
+      )}
+
+      {/* Destination (B) pin — the selected school */}
+      {pointB && (
+        <Marker
+          longitude={toMapLibre(pointB)[0]}
+          latitude={toMapLibre(pointB)[1]}
+          anchor="bottom"
+        >
+          <svg
+            width="32"
+            height="42"
+            viewBox="0 0 24 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-label="Lokasi sekolah"
+            style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.3))" }}
+          >
+            <path
+              d="M12 0C5.373 0 0 5.373 0 12c0 8.5 12 20 12 20s12-11.5 12-20C24 5.373 18.627 0 12 0z"
+              fill="#E11D48"
+            />
+            <circle cx="12" cy="12" r="4.5" fill="#ffffff" />
+          </svg>
+        </Marker>
+      )}
+
+      {/* School Markers — clustered GeoJSON source (GPU rendered) */}
+      <Source
+        id="schools"
+        type="geojson"
+        data={schoolsGeoJSON}
+        cluster
+        clusterMaxZoom={11}
+        clusterRadius={50}
+      >
+        <Layer {...clusterLayer} />
+        <Layer {...clusterCountLayer} />
+        <Layer {...unclusteredLayer} />
+      </Source>
 
       {/* Hover tooltip above the pinpoint */}
       {hoveredMarker && (

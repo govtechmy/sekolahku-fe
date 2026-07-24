@@ -13,6 +13,12 @@ interface MapViewState {
   zoom: number;
   initialLocationSet: boolean;
   radius: number;
+  mapFilters: {
+    negeri: string;
+    peringkat: string;
+    jenis: string;
+    sesi: string;
+  };
   schoolMarkers: MarkerMap;
   userMarkers: MarkerMap;
   localSuggestions: SearchBarMapProps[];
@@ -34,6 +40,12 @@ interface MapViewState {
   setDataTotal: (total: number) => void;
   setSinglePageTotal: (total: number) => void;
   setRadius: (r: number) => void;
+  setMapFilters: (f: {
+    negeri: string;
+    peringkat: string;
+    jenis: string;
+  }) => void;
+  setSesiFilter: (sesi: string) => void;
   setZoom: (z: number) => void;
   setInitialLocationSet: (v: boolean) => void;
   setSchoolMarkers: (
@@ -57,7 +69,11 @@ interface MapViewState {
   setQuery: (q: string) => void;
   setPointA: (point: [number, number] | null) => void;
   setPointB: (point: [number, number] | null) => void;
-  setRoute: (coords: [number, number][], distance: number | null, duration: number | null) => void;
+  setRoute: (
+    coords: [number, number][],
+    distance: number | null,
+    duration: number | null,
+  ) => void;
   clearRoute: () => void;
   // Polygon actions
   setStatePolygons: (polygons: Map<string, GeoJSONFeature>) => void;
@@ -71,6 +87,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   center: [3.760115447396889, 108.46252441406251],
   zoom: 6,
   radius: 3000,
+  mapFilters: { negeri: "ALL", peringkat: "ALL", jenis: "ALL", sesi: "ALL" },
   initialLocationSet: false,
   schoolMarkers: new Map() as MarkerMap,
   userMarkers: new Map() as MarkerMap,
@@ -94,7 +111,11 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
     set({ pointB: point });
   },
   setRoute: (coords, distance, duration) => {
-    set({ routeCoordinates: coords, routeDistance: distance, routeDuration: duration });
+    set({
+      routeCoordinates: coords,
+      routeDistance: distance,
+      routeDuration: duration,
+    });
   },
   clearRoute: () => {
     set({ routeCoordinates: [], routeDistance: null, routeDuration: null });
@@ -119,6 +140,12 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
     set(() => {
       return { radius: r };
     });
+  },
+  setMapFilters: (f) => {
+    set((s) => ({ mapFilters: { ...s.mapFilters, ...f } }));
+  },
+  setSesiFilter: (sesi) => {
+    set((s) => ({ mapFilters: { ...s.mapFilters, sesi } }));
   },
   setInitialLocationSet: (v) => {
     set(() => {
@@ -152,11 +179,21 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
     const requestId = (get()._searchRequestId || 0) + 1;
     set({ _searchRequestId: requestId, isLoadingLocalSuggestions: true });
 
+    // Keep the map's clustered source in sync with the active dropdown filters.
+    set((s) => ({
+      mapFilters: {
+        ...s.mapFilters,
+        negeri: params?.negeri ?? "ALL",
+        peringkat: params?.peringkat ?? "ALL",
+        jenis: params?.jenis ?? "ALL",
+      },
+    }));
+
     const hasActiveMapSearch = Boolean(
       params?.namaSekolah?.trim() ||
-        (params?.negeri && params.negeri !== "ALL") ||
-        (params?.jenis && params.jenis !== "ALL") ||
-        (params?.peringkat && params.peringkat !== "ALL"),
+      (params?.negeri && params.negeri !== "ALL") ||
+      (params?.jenis && params.jenis !== "ALL") ||
+      (params?.peringkat && params.peringkat !== "ALL"),
     );
 
     try {
