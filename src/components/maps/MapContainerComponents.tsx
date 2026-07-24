@@ -1,13 +1,17 @@
 import {
   MapContainer as LeafletMapContainer,
   TileLayer,
+  Circle,
+  Polyline,
   useMapEvents,
+  ZoomControl,
 } from "react-leaflet";
 import { SchoolMapMarker } from "./SchoolMapMarker";
-import { type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction, useRef } from "react";
 import { calculateDistance } from "../../utils/calculateDistance";
 import type { Coordinates } from "../../types/maps";
 import { useMapViewStore } from "../../store/mapView";
+import { useLocationSessionStore } from "../../store/locationSession";
 import type { MarkerGroup } from "../../models/response";
 import { getSchoolS3Json } from "../../services/school.svc";
 import { useAppendNewMarkers } from "../../hooks/useAppendNewMarkers";
@@ -63,6 +67,65 @@ interface MapContainerProps {
   ) => Promise<MarkerGroup[]>;
 }
 
+function UserRadiusCircle() {
+  const { initialLocationUser } = useLocationSessionStore();
+  const [lat, lng] = initialLocationUser;
+
+  if (lat == null || lng == null) return null;
+
+  return (
+    <>
+      {/* Tier 2: outer 20km radius */}
+      <Circle
+        center={[lat, lng]}
+        radius={20000}
+        pathOptions={{
+          color: "#3366FF",
+          fillColor: "#3366FF",
+          fillOpacity: 0.03,
+          weight: 2,
+          opacity: 0.7,
+          dashArray: "8, 6",
+        }}
+      />
+      {/* Tier 1: inner 3km radius */}
+      <Circle
+        center={[lat, lng]}
+        radius={3000}
+        pathOptions={{
+          color: "#3366FF",
+          fillColor: "#3366FF",
+          fillOpacity: 0.08,
+          weight: 1.5,
+        }}
+      />
+    </>
+  );
+}
+
+function RoutePolyline() {
+  const pointA = useMapViewStore((s) => s.pointA);
+  const pointB = useMapViewStore((s) => s.pointB);
+  const routeCoordinates = useMapViewStore((s) => s.routeCoordinates);
+
+  if (!pointA || !pointB) return null;
+
+  // Use OSRM route if available, otherwise fall back to straight line
+  const positions = routeCoordinates.length > 0 ? routeCoordinates : [pointA, pointB];
+
+  return (
+    <Polyline
+      positions={positions}
+      pathOptions={{
+        color: "#3366FF",
+        weight: 4,
+        opacity: 0.8,
+        dashArray: routeCoordinates.length > 0 ? undefined : "10, 10",
+      }}
+    />
+  );
+}
+
 export function MapContainerComponent({
   dragStartPos,
   setDragStartPos,
@@ -92,12 +155,10 @@ export function MapContainerComponent({
     zoom,
   });
 
-  // Determine if we should show polygons based on marker type
-  const firstMarker = schoolMarkers.values().next().value;
-  const currentMarkerType = firstMarker?.markerType;
-  const shouldShowPolygons =
-    currentMarkerType === "NEGERI" ||
-    currentMarkerType === "WEST_EAST_MALAYSIA";
+  const hoverRequestIdRef = useRef(0);
+
+  // All markers are individual - no clustering
+  const shouldShowPolygons = false;
 
   return (
     <LeafletMapContainer
@@ -111,6 +172,7 @@ export function MapContainerComponent({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
+      <ZoomControl position="bottomright" />
       <MapEvents
         onZoomChange={(zoom) => {
           setZoom(zoom);
@@ -168,7 +230,23 @@ export function MapContainerComponent({
           }}
         />
       ))}
-      {Array.from(schoolMarkers.entries()).map(([kodSekolah, coords]) => (
+
+      {/* Radius circle around user's current location */}
+      <UserRadiusCircle />
+      {/* Route polyline between point A and point B */}
+      <RoutePolyline />
+      {Array.from(schoolMarkers.entries())
+        .filter(([, coords]) => {
+          // Only show markers appropriate for current zoom level
+          if (zoom < ZOOM_LEVELS.WEST_EAST_MALAYSIA)
+            return coords.markerType === "WEST_EAST_MALAYSIA";
+          if (zoom < ZOOM_LEVELS.NEGERI)
+            return coords.markerType === "NEGERI" || coords.markerType === "WEST_EAST_MALAYSIA";
+          if (zoom < ZOOM_LEVELS.PARLIMEN)
+            return coords.markerType === "PARLIMEN" || coords.markerType === "NEGERI";
+          return coords.markerType === "INDIVIDUAL";
+        })
+        .map(([kodSekolah, coords]) => (
         <SchoolMapMarker
           key={kodSekolah}
           school={{
@@ -184,21 +262,23 @@ export function MapContainerComponent({
             viewSchool?.kodSekolah === kodSekolah
           }
           onClick={async () => {
-            const { koordinatXX, koordinatYY, markerType } = coords;
+            const { koordinatXX, koordinatYY } = coords;
             setCenter([koordinatXX, koordinatYY]);
-
-            if (markerType === "WEST_EAST_MALAYSIA") {
-              setZoom(ZOOM_LEVELS.WEST_EAST_MALAYSIA);
-            } else if (markerType === "NEGERI") {
-              setZoom(ZOOM_LEVELS.NEGERI);
-            } else if (markerType === "PARLIMEN") {
-              setZoom(ZOOM_LEVELS.PARLIMEN);
-            } else if (markerType === "INDIVIDUAL") {
-              setViewSchool(null);
-              if (coords.dataUrl) {
-                setViewSchool(await getSchoolS3Json(coords.dataUrl));
+            setViewSchool(null);
+            if (coords.dataUrl) {
+              setViewSchool(await getSchoolS3Json(coords.dataUrl));
+            }
+            setZoom(ZOOM_LEVELS.INDIVIDUAL);
+          }}
+          onMouseOver={async () => {
+            if (viewSchool?.kodSekolah === kodSekolah) return;
+            const requestId = ++hoverRequestIdRef.current;
+            setViewSchool(null);
+            if (coords.dataUrl) {
+              const detail = await getSchoolS3Json(coords.dataUrl);
+              if (requestId === hoverRequestIdRef.current) {
+                setViewSchool(detail);
               }
-              setZoom(ZOOM_LEVELS.INDIVIDUAL);
             }
           }}
         />

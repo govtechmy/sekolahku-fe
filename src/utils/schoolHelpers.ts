@@ -2,8 +2,9 @@ import type { ItemSekolahModel } from "../models/response";
 import { DATA_BASE_URL } from "../services/school.svc";
 
 export const formatSchoolAddress = (school: ItemSekolahModel): string => {
-  const { alamatSurat, poskodSurat, bandarSurat } = school.data.infoKomunikasi;
-  const { negeri } = school.data.infoPentadbiran || {};
+  const { alamatSurat, poskodSurat, bandarSurat } =
+    school?.data?.infoKomunikasi || {};
+  const { negeri } = school?.data?.infoPentadbiran || {};
 
   const parts = [
     alamatSurat,

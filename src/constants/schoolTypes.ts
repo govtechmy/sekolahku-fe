@@ -44,6 +44,6 @@ export const SCHOOL_LEVEL: Record<string, string[]> = {
 };
 
 export const SCHOOL_JENIS_BANTUAN: Record<string, string> = {
-  SK: "Sekolah Kerajaan",
+  SK: "Sekolah Kebangsaan",
   SBK: "Sekolah Bantuan Kerajaan",
 };

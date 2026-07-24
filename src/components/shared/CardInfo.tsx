@@ -1,6 +1,6 @@
 export type InfoRowProps = {
   label: string;
-  value: string;
+  value: React.ReactNode;
 };
 
 export function InfoRow({ label, value }: InfoRowProps) {
@@ -14,7 +14,7 @@ export function InfoRow({ label, value }: InfoRowProps) {
 
 export type InfoIconRowProps = {
   icon: React.ReactNode;
-  value: string;
+  value: React.ReactNode;
 };
 
 export function InfoIconRow({ icon, value }: InfoIconRowProps) {

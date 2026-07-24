@@ -9,6 +9,12 @@ const ICON_SIZE: [number, number] = [32, 32];
 const ICON_ANCHOR: [number, number] = [16, 32];
 const POPUP_ANCHOR: [number, number] = [0, -32];
 
+const NEGERI_ICON_SIZE: [number, number] = [40, 40];
+const NEGERI_ICON_ANCHOR: [number, number] = [20, 20];
+
+const PARLIMEN_ICON_SIZE: [number, number] = [36, 36];
+const PARLIMEN_ICON_ANCHOR: [number, number] = [18, 18];
+
 const sekolahMarkerHtml = renderToString(SekolahMarkerIcon());
 const selectedSekolahMarkerHtml = renderToString(
   SekolahMarkerIcon(undefined, true),
@@ -41,7 +47,19 @@ export const selectedSekolahMarkerIcon = createDivIcon(
 export const userMarkerIcon = createDivIcon(userMarkerHtml, "user-marker-icon");
 
 export const parlimenMarkerIcon = (total?: number | string) =>
-  createDivIcon(parlimenMarkerHtml(total), "parlimen-marker-icon");
+  new L.DivIcon({
+    className: "parlimen-marker-icon",
+    html: parlimenMarkerHtml(total),
+    iconSize: PARLIMEN_ICON_SIZE,
+    iconAnchor: PARLIMEN_ICON_ANCHOR,
+    popupAnchor: POPUP_ANCHOR,
+  });
 
 export const negeriMarkerIcon = (total?: number | string) =>
-  createDivIcon(negeriMarkerHtml(total), "negeri-marker-icon");
+  new L.DivIcon({
+    className: "negeri-marker-icon",
+    html: negeriMarkerHtml(total),
+    iconSize: NEGERI_ICON_SIZE,
+    iconAnchor: NEGERI_ICON_ANCHOR,
+    popupAnchor: POPUP_ANCHOR,
+  });

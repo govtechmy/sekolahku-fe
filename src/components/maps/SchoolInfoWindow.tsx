@@ -16,6 +16,7 @@ import {
   getSchoolLogoUrl,
 } from "../../utils/schoolHelpers";
 import { removePPD } from "../../utils/ppdRemover";
+import { SCHOOL_JENIS_BANTUAN } from "../../constants/schoolTypes";
 import underScoreRemover from "../../utils/underscoreRemover";
 import SekolahAngkatMadaniImage from "../../icons/SekolahAngkatMadaniImage";
 
@@ -25,7 +26,28 @@ type SchoolInfoWindowProps = {
   mobile?: boolean;
   isFullScreen?: boolean;
   onToggleFullScreen?: () => void;
+  searchQuery?: string;
 };
+
+/**
+ * Highlights matching text portions by wrapping them in a styled <mark> element.
+ */
+function highlightMatch(text: string, query?: string): React.ReactNode {
+  if (!query || query.trim().length < 2) return text;
+  const escaped = query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(`(${escaped})`, "gi");
+  const parts = text.split(regex);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) =>
+    regex.test(part) ? (
+      <mark key={i} className="bg-yellow-200 text-gray-900 rounded-sm px-0.5">
+        {part}
+      </mark>
+    ) : (
+      <span key={i}>{part}</span>
+    ),
+  );
+}
 
 export function SchoolInfoWindow({
   school,
@@ -33,6 +55,7 @@ export function SchoolInfoWindow({
   mobile,
   isFullScreen,
   onToggleFullScreen,
+  searchQuery,
 }: SchoolInfoWindowProps) {
   const navigate = useNavigate();
   const lang = localStorage.getItem("lang") || "ms";
@@ -85,9 +108,9 @@ export function SchoolInfoWindow({
         )}
         <img
           src={getSchoolLogoUrl(
-            school.data.infoPentadbiran.negeri,
-            school.data.infoPentadbiran.parlimen,
-            school.kodSekolah,
+            school?.data?.infoPentadbiran?.negeri,
+            school?.data?.infoPentadbiran?.parlimen,
+            school?.kodSekolah,
           )}
           alt={school?.namaSekolah ?? "Sekolah"}
           className="max-h-32 w-auto object-contain"
@@ -119,7 +142,10 @@ export function SchoolInfoWindow({
           </Tag>
         </div>
         <div className="text-body-md font-semibold font-body">
-          {`${school?.namaSekolah ?? "Sekolah"} ${school?.kodSekolah ?? ""}`.trim()}
+          {highlightMatch(
+            `${school?.namaSekolah ?? "Sekolah"} ${school?.kodSekolah ?? ""}`.trim(),
+            searchQuery,
+          )}
         </div>
         <div className="flex flex-col gap-2 text-txt-black-700">
           <InfoIconRow
@@ -132,7 +158,10 @@ export function SchoolInfoWindow({
           />
           <InfoIconRow
             icon={<PinIcon />}
-            value={toTitleCase(formatSchoolAddress(school)) || "Tiada Maklumat"}
+            value={highlightMatch(
+              toTitleCase(formatSchoolAddress(school)) || "Tiada Maklumat",
+              searchQuery,
+            )}
           />
         </div>
       </div>
@@ -149,11 +178,12 @@ export function SchoolInfoWindow({
           />
           <InfoRow
             label="Lokasi"
-            value={
+            value={highlightMatch(
               school?.data?.infoPentadbiran?.negeri
                 ? underScoreRemover(school.data.infoPentadbiran.negeri)
-                : "Tiada Maklumat"
-            }
+                : "Tiada Maklumat",
+              searchQuery,
+            )}
           />
           <InfoRow
             label="PPD"
@@ -163,7 +193,10 @@ export function SchoolInfoWindow({
           />
           <InfoRow
             label="Daerah"
-            value={school?.data?.infoKomunikasi.bandarSurat || "Tiada Maklumat"}
+            value={highlightMatch(
+              school?.data?.infoKomunikasi.bandarSurat || "Tiada Maklumat",
+              searchQuery,
+            )}
           />
           <InfoRow
             label="Sesi"
@@ -171,7 +204,7 @@ export function SchoolInfoWindow({
           />
           <InfoRow
             label="Bantuan"
-            value={school?.data?.infoPentadbiran?.bantuan || "Tiada Maklumat"}
+            value={(SCHOOL_JENIS_BANTUAN[school?.data?.infoPentadbiran?.bantuan ?? ""] ?? school?.data?.infoPentadbiran?.bantuan) || "Tiada Maklumat"}
           />
         </div>
       </div>

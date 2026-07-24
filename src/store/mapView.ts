@@ -19,11 +19,17 @@ interface MapViewState {
   localSuggestionsPage: number;
   hasMoreLocalSuggestions: boolean;
   isLoadingLocalSuggestions: boolean;
+  _searchRequestId: number;
   viewSchool: ItemSekolahModel | null;
   query: string;
   statePolygons: Map<string, GeoJSONFeature>;
   dataTotal: number;
   singlePageTotal: number;
+  pointA: [number, number] | null;
+  pointB: [number, number] | null;
+  routeCoordinates: [number, number][];
+  routeDistance: number | null;
+  routeDuration: number | null;
   setCenter: (c: Center) => void;
   setDataTotal: (total: number) => void;
   setSinglePageTotal: (total: number) => void;
@@ -49,6 +55,10 @@ interface MapViewState {
     append?: boolean,
   ) => Promise<void>;
   setQuery: (q: string) => void;
+  setPointA: (point: [number, number] | null) => void;
+  setPointB: (point: [number, number] | null) => void;
+  setRoute: (coords: [number, number][], distance: number | null, duration: number | null) => void;
+  clearRoute: () => void;
   // Polygon actions
   setStatePolygons: (polygons: Map<string, GeoJSONFeature>) => void;
   clearStatePolygons: () => void;
@@ -68,9 +78,27 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   localSuggestionsPage: 1,
   hasMoreLocalSuggestions: true,
   isLoadingLocalSuggestions: false,
+  _searchRequestId: 0,
   viewSchool: null,
   query: "",
   statePolygons: new Map<string, GeoJSONFeature>(),
+  pointA: null,
+  pointB: null,
+  routeCoordinates: [],
+  routeDistance: null,
+  routeDuration: null,
+  setPointA: (point) => {
+    set({ pointA: point });
+  },
+  setPointB: (point) => {
+    set({ pointB: point });
+  },
+  setRoute: (coords, distance, duration) => {
+    set({ routeCoordinates: coords, routeDistance: distance, routeDuration: duration });
+  },
+  clearRoute: () => {
+    set({ routeCoordinates: [], routeDistance: null, routeDuration: null });
+  },
   setDataTotal: (total) => {
     set({ dataTotal: total });
   },
@@ -120,12 +148,18 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
     });
   },
   handleSearch: async (params, pageNumber = 1, append = false) => {
-    // Prevent overlapping requests regardless of UI timing
-    if (get().isLoadingLocalSuggestions) {
-      return;
-    }
+    // Increment request ID — only the latest request's response will be applied
+    const requestId = (get()._searchRequestId || 0) + 1;
+    set({ _searchRequestId: requestId, isLoadingLocalSuggestions: true });
+
+    const hasActiveMapSearch = Boolean(
+      params?.namaSekolah?.trim() ||
+        (params?.negeri && params.negeri !== "ALL") ||
+        (params?.jenis && params.jenis !== "ALL") ||
+        (params?.peringkat && params.peringkat !== "ALL"),
+    );
+
     try {
-      set({ isLoadingLocalSuggestions: true });
       const initialLocationUser =
         useLocationSessionStore.getState().initialLocationUser;
       const results = await getSchoolSuggestion(
@@ -133,6 +167,9 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
         pageNumber,
         initialLocationUser,
       );
+
+      // If a newer request was fired while we were waiting, discard this response
+      if (get()._searchRequestId !== requestId) return;
       const dataResults = results.filteredData;
       const dataTotal = results.totalSchool;
       const singlePageTotal = results.totalInSinglePage;
@@ -167,11 +204,60 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
         };
       });
 
-      if (!append && transformed.length > 0) {
-        const firstResult = transformed[0];
+      if (hasActiveMapSearch && !append && transformed.length > 0) {
+        // Build new markers from search results
+        const newMarkers: MarkerMap = new Map();
+        transformed.forEach((school) => {
+          if (school.kodSekolah) {
+            newMarkers.set(school.kodSekolah, {
+              koordinatXX: school.koordinatYY,
+              koordinatYY: school.koordinatXX,
+              dataUrl: "",
+              markerType: "INDIVIDUAL",
+              negeri: school.negeri,
+              parlimen: school.parlimen,
+            });
+          }
+        });
+
+        // Calculate appropriate zoom based on spread of results
+        let zoom = 18;
+        if (transformed.length > 1) {
+          const lats = transformed.map((s) => s.koordinatYY);
+          const lngs = transformed.map((s) => s.koordinatXX);
+          const latSpread = Math.max(...lats) - Math.min(...lats);
+          const lngSpread = Math.max(...lngs) - Math.min(...lngs);
+          const maxSpread = Math.max(latSpread, lngSpread);
+
+          if (maxSpread > 2) zoom = 8;
+          else if (maxSpread > 1) zoom = 9;
+          else if (maxSpread > 0.5) zoom = 10;
+          else if (maxSpread > 0.2) zoom = 11;
+          else if (maxSpread > 0.1) zoom = 12;
+          else if (maxSpread > 0.05) zoom = 13;
+          else if (maxSpread > 0.01) zoom = 15;
+          else zoom = 17;
+        }
+
+        // Center on midpoint of all results
+        const avgLat =
+          transformed.reduce((sum, s) => sum + s.koordinatYY, 0) /
+          transformed.length;
+        const avgLng =
+          transformed.reduce((sum, s) => sum + s.koordinatXX, 0) /
+          transformed.length;
+
         set({
-          center: [firstResult.koordinatYY, firstResult.koordinatXX],
-          zoom: 18,
+          center: [avgLat, avgLng],
+          zoom,
+          schoolMarkers: newMarkers,
+        });
+      }
+
+      if (hasActiveMapSearch && !append && transformed.length === 0) {
+        set({
+          schoolMarkers: new Map(),
+          viewSchool: null,
         });
       }
     } catch (error) {
