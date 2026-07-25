@@ -20,6 +20,7 @@ import {
   NearbySchoolCard,
 } from "../components/SchoolProfile";
 import { formatSchoolAddress, getSchoolLogoUrl } from "../utils/schoolHelpers";
+import { SCHOOL_JENIS_BANTUAN } from "../constants/schoolTypes";
 import underScoreRemover from "../utils/underscoreRemover";
 import PageContainer from "../components/layout/PageContainer";
 import { removePPD } from "../utils/ppdRemover";
@@ -230,7 +231,11 @@ export default function SchoolProfile() {
                 {school.data.infoPentadbiran?.bantuan && (
                   <InfoGridItem
                     label="BANTUAN"
-                    value={school.data.infoPentadbiran.bantuan}
+                    value={
+                      SCHOOL_JENIS_BANTUAN[
+                        school.data.infoPentadbiran.bantuan
+                      ] ?? school.data.infoPentadbiran.bantuan
+                    }
                   />
                 )}
                 {school.data.infoPentadbiran?.bilSesi && (
@@ -256,7 +261,7 @@ export default function SchoolProfile() {
 
                 {school.data.infoPentadbiran && (
                   <InfoGridItem
-                    label="INTEGRASI"
+                    label="PROGRAM PENDIDIKAN KHAS INTEGRASI (PPKI)"
                     value={
                       school.data.infoPentadbiran.integrasi !== undefined
                         ? school.data.infoPentadbiran.integrasi

@@ -17,23 +17,34 @@ type FilterDropdownsProps = {
   selectedNegeri: string;
   selectedJenis: string;
   selectedPeringkat: string;
+  selectedSesi: string;
   negeriList: (string | null)[];
   jenisList: (string | null)[];
   setSelectedNegeri: (value: string) => void;
   setSelectedJenis: (value: string) => void;
   setSelectedPeringkat: (value: string) => void;
+  setSelectedSesi: (value: string) => void;
+  onClearFilters: () => void;
 };
 
 export function FilterDropdowns({
   selectedNegeri,
   selectedJenis,
   selectedPeringkat,
+  selectedSesi,
   negeriList,
   jenisList,
   setSelectedNegeri,
   setSelectedJenis,
   setSelectedPeringkat,
+  setSelectedSesi,
+  onClearFilters,
 }: FilterDropdownsProps) {
+  const hasActiveFilter =
+    selectedNegeri !== "ALL" ||
+    selectedJenis !== "ALL" ||
+    selectedPeringkat !== "ALL" ||
+    selectedSesi !== "ALL";
   return (
     <div className="px-3 py-4 border-t border-gray-200 flex flex-wrap gap-2 text-sm">
       {/* NEW IMPLEMENTATION - SimpleSelect with built-in truncation */}
@@ -106,6 +117,9 @@ export function FilterDropdowns({
         className="w-[155px]"
       >
         <SimpleSelectItem value="ALL">Semua Jenis</SimpleSelectItem>
+        <SimpleSelectItem value="SEKOLAH_ANGKAT_MADANI">
+          Sekolah Angkat Madani
+        </SimpleSelectItem>
         {jenisList &&
           jenisList
             .filter((x): x is string => typeof x === "string")
@@ -120,6 +134,32 @@ export function FilterDropdowns({
               </SimpleSelectItem>
             ))}
       </SimpleSelect>
+
+      <SimpleSelect
+        size="small"
+        variant="outline"
+        onValueChange={setSelectedSesi}
+        value={selectedSesi ?? "ALL"}
+        placeholder="Sesi"
+        className="w-[155px]"
+      >
+        <SimpleSelectItem value="ALL">Semua Sesi</SimpleSelectItem>
+        <SimpleSelectItem value="Pagi Sahaja">Pagi Sahaja</SimpleSelectItem>
+        <SimpleSelectItem value="Pagi dan Petang">
+          Pagi dan Petang
+        </SimpleSelectItem>
+        <SimpleSelectItem value="Petang Sahaja">Petang Sahaja</SimpleSelectItem>
+      </SimpleSelect>
+
+      {hasActiveFilter && (
+        <button
+          type="button"
+          onClick={onClearFilters}
+          className="h-9 rounded-md border border-gray-300 px-3 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+        >
+          Kosongkan Filter
+        </button>
+      )}
 
       {/*
       <Select

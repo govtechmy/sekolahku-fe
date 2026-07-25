@@ -1,18 +1,16 @@
 import { useEffect, useState, useRef, useMemo } from "react";
-import type { Coordinates } from "../types/maps";
-import { fetchNearbySchools, getSchoolTypes } from "../services/school.svc";
+import { getSchoolTypes } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
-import { MapContainerComponent } from "../components/maps/MapContainerComponents";
+import { MapContainerMapCN } from "../components/maps/MapContainerMapCN";
 import { LocationPickerWindow } from "../components/maps";
 import { useMapViewStore } from "../store/mapView";
-import CalculateRadiusZoomLevel from "../utils/calculateRadiusZoomLevel";
-import { useAppendNewMarkers } from "../hooks/useAppendNewMarkers";
 import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import { NEGERI_LIST } from "../contentData";
+import { FIRST_LOAD_ZOOM } from "../constants/mapDefaults";
 import { useLocationSessionStore } from "../store/locationSession";
 import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
 import HelmetMeta from "../seo/HelmetMeta";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 // import DisclaimerMap from "../components/maps/DisclaimerMap";
 
 export default function SchoolMaps() {
@@ -21,36 +19,26 @@ export default function SchoolMaps() {
   const [selectedPeringkat, setSelectedPeringkat] = useState<string>("ALL");
   // const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const {
-    center,
     setCenter,
-    zoom,
     setZoom,
-    radius,
-    setRadius,
+    setQuery,
     initialLocationSet,
     setInitialLocationSet,
-
-    setSchoolMarkers,
-    schoolMarkers,
-    query,
     setUserMarkers,
     setStatePolygons,
   } = useMapViewStore();
 
   const { setInitialLocationUser } = useLocationSessionStore();
 
-  const [dragStartPos, setDragStartPos] = useState<Coordinates | null>(null);
   const geolocationRequestedRef = useRef(false);
   const polygonsFetchedRef = useRef(false);
   const [isGeolocating, setIsGeolocating] = useState(false);
-  const appendNewMarkers = useAppendNewMarkers({
-    fetchNearbySchools,
-    schoolMarkers,
-    setSchoolMarkers,
-    radius,
-    initialLocationSet,
-    zoom,
-  });
+  const [searchParams] = useSearchParams();
+  const urlQuery = searchParams.get("q")?.trim() ?? "";
+
+  useEffect(() => {
+    setQuery(urlQuery);
+  }, [setQuery, urlQuery]);
 
   useEffect(() => {
     if (!initialLocationSet) {
@@ -62,7 +50,7 @@ export default function SchoolMaps() {
           sessionInitialLocation[0],
           sessionInitialLocation[1],
         ]);
-        setZoom(15);
+        setZoom(FIRST_LOAD_ZOOM);
         setUserMarkers((prev) => {
           const next = new Map(prev);
           next.clear();
@@ -95,7 +83,7 @@ export default function SchoolMaps() {
             const { latitude, longitude } = position.coords;
             setCenter([latitude, longitude]);
             setInitialLocationUser([latitude, longitude]);
-            setZoom(17);
+            setZoom(FIRST_LOAD_ZOOM);
             setUserMarkers((prev) => {
               const next = new Map(prev);
               next.clear();
@@ -169,26 +157,6 @@ export default function SchoolMaps() {
     return [...new Set([...schoolTypesMenengah, ...schoolTypesRendah])];
   }, [selectedPeringkat, schoolTypesMenengah, schoolTypesRendah]);
 
-  useEffect(() => {
-    if (initialLocationSet) {
-      if (zoom) {
-        setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
-        appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [zoom, initialLocationSet]);
-
-  useEffect(() => {
-    if (initialLocationSet) {
-      if (query) {
-        setRadius(CalculateRadiusZoomLevel(zoom, center[0]));
-        appendNewMarkers({ koordinatXX: center[0], koordinatYY: center[1] });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, initialLocationSet]);
-
   // // Close the location picker when query is set
   // useEffect(() => {
   //   if (query && !initialLocationSet) {
@@ -225,11 +193,31 @@ export default function SchoolMaps() {
         selectedPeringkat={selectedPeringkat}
         setSelectedPeringkat={setSelectedPeringkat}
       />
-      <MapContainerComponent
-        dragStartPos={dragStartPos}
-        setDragStartPos={setDragStartPos}
-        fetchNearbySchools={fetchNearbySchools}
-      />
+      <MapContainerMapCN />
+
+      {/* Radius legend */}
+      {initialLocationSet && (
+        <div className="absolute top-6 right-6 z-[500] rounded-lg bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm">
+          <p className="mb-1 text-xs font-semibold text-gray-700">
+            Jarak Radius
+          </p>
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-block h-3 w-3 rounded-full border-2"
+              style={{ borderColor: "#3366FF", backgroundColor: "#3366FF14" }}
+            />
+            <span className="text-xs text-gray-600">3 km</span>
+          </div>
+          <div className="mt-1 flex items-center gap-2">
+            <span
+              className="inline-block h-3 w-3 rounded-full border-2 border-dashed"
+              style={{ borderColor: "#FF3B30", backgroundColor: "#FF3B3014" }}
+            />
+            <span className="text-xs text-gray-600">20 km</span>
+          </div>
+        </div>
+      )}
+
       {/* {!initialLocationSet && !disclaimerAccepted && (
         <DisclaimerMap onAccept={() => setDisclaimerAccepted(true)} />
       )} */}
