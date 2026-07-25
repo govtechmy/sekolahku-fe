@@ -43,7 +43,7 @@ export const getRoute = async (
 
     const route = data.routes[0];
 
-    // Convert GeoJSON coordinates from [lng, lat] to [lat, lng] for Leaflet
+    // Convert GeoJSON coordinates from [lng, lat] to the store's [lat, lng]
     const coordinates: [number, number][] = route.geometry.coordinates.map(
       (coord: [number, number]) => [coord[1], coord[0]],
     );

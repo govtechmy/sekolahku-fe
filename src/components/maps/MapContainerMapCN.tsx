@@ -5,14 +5,14 @@ import {
   Layer,
   Popup,
   Marker,
+  useControl,
 } from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
 import type {
   LineLayerSpecification,
   FillLayerSpecification,
-  CircleLayerSpecification,
-  SymbolLayerSpecification,
   MapLayerMouseEvent,
+  IControl,
 } from "maplibre-gl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMapViewStore } from "../../store/mapView";
@@ -23,11 +23,19 @@ import { SchoolMapMarkerMapCN } from "./SchoolMapMarkerMapCN";
 import { StatePolygonMapCN } from "./StatePolygonMapCN";
 import {
   getSchoolS3Json,
-  getAllSchoolMarkers,
+  subscribeSchoolMarkers,
 } from "../../services/school.svc";
 import type { SchoolPoint } from "../../services/school.svc";
 import { getSchoolLogoUrl } from "../../utils/schoolHelpers";
 import type { ViewStateChangeEvent, MapRef } from "react-map-gl/maplibre";
+import {
+  CLUSTER_MAX_ZOOM,
+  CLUSTER_RADIUS,
+  SCHOOL_SOURCE_ID,
+  schoolClusterCountLayer,
+  schoolClusterLayer,
+  schoolUnclusteredLayer,
+} from "./schoolLayers";
 
 const MAP_STYLE =
   "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
@@ -40,6 +48,70 @@ const ZOOM_LEVELS = {
   USER: 17,
   INDIVIDUAL: 18,
 } as const;
+
+const MY_LOCATION_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>`;
+
+/**
+ * "Go to my location" button rendered as a real MapLibre control rather than an
+ * absolutely-positioned overlay. MapLibre inserts bottom-position controls
+ * before the existing ones, so registering this AFTER <NavigationControl />
+ * places it directly above the zoom-in (+) button — and it inherits the
+ * standard control margins, so it can't collide with the attribution bar the
+ * way a hard-coded offset would.
+ */
+function MyLocationControl({ onClick }: { onClick: () => void }) {
+  // Keep the latest handler without re-creating (and thus re-adding) the control.
+  const handlerRef = useRef(onClick);
+  handlerRef.current = onClick;
+
+  useControl(
+    () => {
+      // MapLibre expects a control to detach its own element on removal. Without
+      // this, StrictMode's mount → unmount → mount cycle leaves an orphaned
+      // empty control container behind, which shows up as a phantom gap in the
+      // control column.
+      let container: HTMLDivElement | null = null;
+
+      const control: IControl = {
+        onAdd: () => {
+          container = document.createElement("div");
+          container.className = "maplibregl-ctrl maplibregl-ctrl-group";
+
+          const button = document.createElement("button");
+          button.type = "button";
+          button.title = "Pergi ke lokasi saya";
+          button.setAttribute("aria-label", "Go to my location");
+          button.addEventListener("click", () => handlerRef.current());
+
+          // MapLibre's control buttons are display:block with no padding, so an
+          // inline <svg> child would sit on the text baseline (offset left and
+          // pushed down). Use the same span.maplibregl-ctrl-icon pattern the
+          // built-in +/−/compass buttons use, which centres via
+          // background-position: 50%.
+          const icon = document.createElement("span");
+          icon.className = "maplibregl-ctrl-icon";
+          icon.setAttribute("aria-hidden", "true");
+          icon.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(
+            MY_LOCATION_ICON,
+          )}")`;
+          icon.style.backgroundSize = "18px 18px";
+          button.appendChild(icon);
+
+          container.appendChild(button);
+          return container;
+        },
+        onRemove: () => {
+          container?.parentNode?.removeChild(container);
+          container = null;
+        },
+      };
+      return control;
+    },
+    { position: "bottom-right" },
+  );
+
+  return null;
+}
 
 export function MapContainerMapCN() {
   const {
@@ -54,6 +126,7 @@ export function MapContainerMapCN() {
     pointB,
     routeCoordinates,
     mapFilters,
+    initialLocationSet,
   } = useMapViewStore();
 
   const { initialLocationUser } = useLocationSessionStore();
@@ -88,18 +161,11 @@ export function MapContainerMapCN() {
   const [allPoints, setAllPoints] = useState<SchoolPoint[]>([]);
 
   useEffect(() => {
-    let cancelled = false;
-    getAllSchoolMarkers()
-      .then((points) => {
-        console.log("[MapCN] loaded school points:", points.length);
-        if (!cancelled) setAllPoints(points);
-      })
-      .catch((err) => {
-        console.error("[MapCN] Failed to load school points:", err);
-      });
-    return () => {
-      cancelled = true;
-    };
+    // Subscribe rather than await: pins appear as soon as the first page of
+    // schools lands, then fill in as the remaining pages arrive.
+    return subscribeSchoolMarkers((points) => {
+      setAllPoints(points);
+    });
   }, []);
 
   // Build a GeoJSON FeatureCollection from all school points, applying the
@@ -134,67 +200,6 @@ export function MapContainerMapCN() {
     };
   }, [allPoints, mapFilters]);
 
-  const clusterLayer: CircleLayerSpecification = useMemo(
-    () => ({
-      id: "school-clusters",
-      type: "circle",
-      source: "schools",
-      filter: ["has", "point_count"],
-      paint: {
-        "circle-color": "#2951E6",
-        "circle-opacity": 0.9,
-        "circle-radius": [
-          "step",
-          ["get", "point_count"],
-          16,
-          50,
-          22,
-          200,
-          30,
-          1000,
-          40,
-        ],
-        "circle-stroke-width": 3,
-        "circle-stroke-color": "#ffffff",
-      },
-    }),
-    [],
-  );
-
-  const clusterCountLayer: SymbolLayerSpecification = useMemo(
-    () => ({
-      id: "school-cluster-count",
-      type: "symbol",
-      source: "schools",
-      filter: ["has", "point_count"],
-      layout: {
-        "text-field": ["get", "point_count_abbreviated"],
-        "text-size": 13,
-        "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-      },
-      paint: {
-        "text-color": "#ffffff",
-      },
-    }),
-    [],
-  );
-
-  const unclusteredLayer: SymbolLayerSpecification = useMemo(
-    () => ({
-      id: "school-unclustered",
-      type: "symbol",
-      source: "schools",
-      filter: ["!", ["has", "point_count"]],
-      layout: {
-        "icon-image": "school-pin",
-        "icon-size": 0.9,
-        "icon-allow-overlap": true,
-        "icon-anchor": "center",
-      },
-    }),
-    [],
-  );
-
   useEffect(() => {
     const centerChanged =
       prevCenter.current[0] !== center[0] ||
@@ -226,9 +231,50 @@ export function MapContainerMapCN() {
     }
   }, [center, zoom]);
 
-  const handleMove = useCallback((evt: ViewStateChangeEvent) => {
-    setViewState(evt.viewState);
-  }, []);
+  // Diagnostic logging for the "pins sometimes missing at certain zoom levels"
+  // report. Logs on every zoom change while scrolling, along with the signals
+  // that decide whether pins can render at all: which mode the cluster source
+  // is in, how many features each layer actually rendered, and whether the
+  // school-pin image the unclustered symbol layer depends on is registered.
+  const lastLoggedZoom = useRef<number | null>(null);
+
+  const logZoomState = useCallback(
+    (z: number) => {
+      if (
+        lastLoggedZoom.current !== null &&
+        Math.abs(z - lastLoggedZoom.current) < 0.01
+      ) {
+        return;
+      }
+      lastLoggedZoom.current = z;
+
+      const map = mapRef.current?.getMap?.();
+      const countRendered = (layerId: string) => {
+        if (!map?.getLayer(layerId)) return "no-layer";
+        return map.queryRenderedFeatures({ layers: [layerId] }).length;
+      };
+
+      console.log(
+        `[MapCN] zoom=${z.toFixed(2)}`,
+        // Tiles are requested at floor(zoom), so clustering applies for the
+        // whole of e.g. 11.0–11.99 even though the fractional zoom is above
+        // clusterMaxZoom.
+        `mode=${Math.floor(z) <= CLUSTER_MAX_ZOOM ? "clustered" : "individual pins"}`,
+        `clusters=${countRendered("school-clusters")}`,
+        `pins=${countRendered("school-unclustered")}`,
+        `points=${allPoints.length}`,
+      );
+    },
+    [allPoints.length],
+  );
+
+  const handleMove = useCallback(
+    (evt: ViewStateChangeEvent) => {
+      setViewState(evt.viewState);
+      logZoomState(evt.viewState.zoom);
+    },
+    [logZoomState],
+  );
 
   const handleMoveEnd = useCallback(
     (evt: ViewStateChangeEvent) => {
@@ -443,31 +489,6 @@ export function MapContainerMapCN() {
     setHoveredMarker(null);
   }, []);
 
-  // Register the custom school pin icon (blue circle + white school glyph)
-  // as a map image so the unclustered symbol layer can use it.
-  const handleMapLoad = useCallback(() => {
-    const map = mapRef.current?.getMap?.();
-    if (!map || map.hasImage("school-pin")) return;
-    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 40 40'>
-      <circle cx='20' cy='20' r='18' fill='#2951E6'/>
-      <g transform='translate(8,8)' fill='#ffffff'>
-        <path fill-rule='evenodd' clip-rule='evenodd' d='M8.75 7.25C7.92157 7.25 7.25 7.92157 7.25 8.75V19.75H14.75V8.75C14.75 7.92157 14.0785 7.25 13.25 7.25H8.75ZM6.25 8.75C6.25 7.36929 7.36929 6.25 8.75 6.25H13.25C14.6307 6.25 15.75 7.36929 15.75 8.75V20.25C15.75 20.5261 15.5261 20.75 15.25 20.75H6.75C6.47386 20.75 6.25 20.5261 6.25 20.25V8.75Z'/>
-        <path fill-rule='evenodd' clip-rule='evenodd' d='M15.75 12.75V19.75H19V13.75C19 13.1977 18.5523 12.75 18 12.75H15.75ZM14.75 20.75H20V13.75C20 12.6454 19.1046 11.75 18 11.75H14.75V20.75Z'/>
-        <path fill-rule='evenodd' clip-rule='evenodd' d='M10.5 1.15143C10.5 0.72068 10.9404 0.43026 11.3364 0.599941L14.4825 1.94829C14.9674 2.15609 14.9674 2.84346 14.4825 3.05126L11.5 4.32947V6.99977H10.5V1.15143ZM11.5 3.2415L13.2307 2.49977L11.5 1.75804V3.2415Z'/>
-        <path fill-rule='evenodd' clip-rule='evenodd' d='M5.25 20.25C5.25 19.9739 5.47386 19.75 5.75 19.75H20.25C20.5261 19.75 20.75 19.9739 20.75 20.25C20.75 20.5261 20.5261 20.75 20.25 20.75H5.75C5.47386 20.75 5.25 20.5261 5.25 20.25Z'/>
-        <path fill-rule='evenodd' clip-rule='evenodd' d='M10.75 15.25C9.92154 15.25 9.25 15.9215 9.25 16.75V19.75H12.75V16.75C12.75 15.9215 12.0785 15.25 11.25 15.25H10.75ZM8.25 16.75C8.25 15.3693 9.36926 14.25 10.75 14.25H11.25C12.6307 14.25 13.75 15.3693 13.75 16.75V20.25C13.75 20.5261 13.5261 20.75 13.25 20.75H8.75C8.47386 20.75 8.25 20.5261 8.25 20.25V16.75Z'/>
-        <path fill-rule='evenodd' clip-rule='evenodd' d='M11 12C11.5523 12 12 11.5523 12 11C12 10.4477 11.5523 10 11 10C10.4477 10 10 10.4477 10 11C10 11.5523 10.4477 12 11 12ZM11 13C12.1046 13 13 12.1046 13 11C13 9.89543 12.1046 9 11 9C9.89543 9 9 9.89543 9 11C9 12.1046 9.89543 13 11 13Z'/>
-      </g>
-    </svg>`;
-    const img = new Image(80, 80);
-    img.onload = () => {
-      if (!map.hasImage("school-pin")) {
-        map.addImage("school-pin", img, { pixelRatio: 2 });
-      }
-    };
-    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-  }, []);
-
   // Smooth pulsing animation for the 3km user radius circle. Uses a sine wave
   // to gently oscillate the fill/line opacity and line width via requestAnimationFrame.
   useEffect(() => {
@@ -514,6 +535,14 @@ export function MapContainerMapCN() {
     [setCenter, setZoom],
   );
 
+  // Recenter on the location the user picked / was geolocated to.
+  const handleGoToMyLocation = useCallback(() => {
+    const [lat, lng] = useLocationSessionStore.getState().initialLocationUser;
+    if (lat == null || lng == null) return;
+    setCenter([lat, lng]);
+    setZoom(ZOOM_LEVELS.USER);
+  }, [setCenter, setZoom]);
+
   return (
     <Map
       ref={mapRef}
@@ -522,7 +551,6 @@ export function MapContainerMapCN() {
       {...viewState}
       onMove={handleMove}
       onMoveEnd={handleMoveEnd}
-      onLoad={handleMapLoad}
       onClick={handleMapClick}
       onMouseMove={handleMapMouseMove}
       onMouseLeave={handleMapMouseLeave}
@@ -530,6 +558,10 @@ export function MapContainerMapCN() {
       style={{ width: "100%", height: "100%" }}
     >
       <NavigationControl position="bottom-right" />
+      {/* Registered after NavigationControl so it stacks above the + button. */}
+      {initialLocationSet && (
+        <MyLocationControl onClick={handleGoToMyLocation} />
+      )}
 
       {/* State Polygons */}
       {shouldShowPolygons &&
@@ -620,16 +652,16 @@ export function MapContainerMapCN() {
 
       {/* School Markers — clustered GeoJSON source (GPU rendered) */}
       <Source
-        id="schools"
+        id={SCHOOL_SOURCE_ID}
         type="geojson"
         data={schoolsGeoJSON}
         cluster
-        clusterMaxZoom={11}
-        clusterRadius={50}
+        clusterMaxZoom={CLUSTER_MAX_ZOOM}
+        clusterRadius={CLUSTER_RADIUS}
       >
-        <Layer {...clusterLayer} />
-        <Layer {...clusterCountLayer} />
-        <Layer {...unclusteredLayer} />
+        <Layer {...schoolClusterLayer} />
+        <Layer {...schoolClusterCountLayer} />
+        <Layer {...schoolUnclusteredLayer} />
       </Source>
 
       {/* Hover tooltip above the pinpoint */}

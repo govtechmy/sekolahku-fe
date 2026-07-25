@@ -5,6 +5,7 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from "../shared/mydsNavbar";
+import { usePrefetchCarianSekolah } from "../../hooks/usePrefetchCarianSekolah";
 // import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 // import { GlobeIcon } from "@govtechmy/myds-react/icon";
 
@@ -31,6 +32,9 @@ export default function NavbarMyds() {
   const activeItem =
     pathSegments.length > 1 ? pathSegments[1] : pathSegments[0] || "home";
   const currentLang = lang || localStorage.getItem("lang") || "ms";
+
+  // Warm the map page's data the moment the user hovers/focuses the nav item.
+  const prefetchCarianProps = usePrefetchCarianSekolah();
 
   const handleNavItemClick = () => {
     const closeButton = document.querySelector<HTMLButtonElement>(
@@ -92,6 +96,7 @@ export default function NavbarMyds() {
           <Link
             to={`/${currentLang}/carian-sekolah`}
             onClick={handleNavItemClick}
+            {...prefetchCarianProps}
             className="focus:outline-otl-primary-200"
           >
             Carian Sekolah

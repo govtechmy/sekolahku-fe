@@ -16,6 +16,8 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
+import { usePrefetchCarianSekolah } from "../../hooks/usePrefetchCarianSekolah";
+import { buildSchoolSearchPath } from "../../utils/schoolSearchUrl";
 
 interface SearchBarHomeProps<T> {
   query?: string;
@@ -52,6 +54,11 @@ export default function SearchBarHome<T>({
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
   const location = useLocation();
+  // On the home page every exit from this search bar (button, Enter, picking a
+  // suggestion) leads to /carian-sekolah, so warm that page's data on intent.
+  const isOnHome = location.pathname === `/${lang || "ms"}/home`;
+  const prefetchCarianProps = usePrefetchCarianSekolah();
+  const schoolSearchPath = buildSchoolSearchPath(lang, query);
 
   useEffect(() => {
     const handleSlashFocus = (e: KeyboardEvent) => {
@@ -80,7 +87,10 @@ export default function SearchBarHome<T>({
           value={query}
           onValueChange={handleValueChange}
           onKeyDown={handleSearchEnter}
-          onFocus={() => setHasFocus(true)}
+          onFocus={() => {
+            setHasFocus(true);
+            if (isOnHome) prefetchCarianProps.onFocus();
+          }}
         />
         {query && (
           <SearchBarClearButton
@@ -99,11 +109,12 @@ export default function SearchBarHome<T>({
         )} */}
         <SearchBarSearchButton
           tabIndex={0}
-          {...(location.pathname === `/${lang || "ms"}/home` && {
-            onClick: () => navigate(`/${lang || "ms"}/carian-sekolah`),
+          {...(isOnHome && {
+            ...prefetchCarianProps,
+            onClick: () => navigate(schoolSearchPath),
             onKeyDown: (e) => {
               if (e.key === "Enter") {
-                navigate(`/${lang || "ms"}/carian-sekolah`);
+                navigate(schoolSearchPath);
               }
             },
           })}

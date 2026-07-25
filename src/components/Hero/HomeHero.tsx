@@ -3,6 +3,7 @@ import { useMapViewStore } from "../../store/mapView";
 import Hero from "../shared/Hero";
 import SearchBar from "../shared/SearchBar";
 import { useRef } from "react";
+import { buildSchoolSearchPath } from "../../utils/schoolSearchUrl";
 
 export default function HomeHero() {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ export default function HomeHero() {
   ) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      navigate(`/${lang || "ms"}/carian-sekolah`);
+      navigate(buildSchoolSearchPath(lang, query));
     }
   };
 
@@ -64,8 +65,9 @@ export default function HomeHero() {
           getLabel={(item) => item.namaSekolah}
           getSubLabel={(item) => item.kodSekolah}
           onSelect={(item) => {
-            setQuery(item.namaSekolah ?? "");
-            navigate(`/${lang || "ms"}/carian-sekolah`);
+            const selectedQuery = item.namaSekolah ?? "";
+            setQuery(selectedQuery);
+            navigate(buildSchoolSearchPath(lang, selectedQuery));
           }}
           searchBarTitle="Carian Sekolah"
           singlePageTotal={singlePageTotal}

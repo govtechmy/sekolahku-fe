@@ -16,10 +16,11 @@ import type { SearchBarMapProps } from "../../types/maps";
 import type { ItemSekolahModel } from "../../models/response";
 import Fuse from "fuse.js";
 import {
-  getAllSchoolMarkers,
+  subscribeSchoolMarkers,
   type SchoolPoint,
 } from "../../services/school.svc";
 import { matchSchoolAcronym, toAcronymWords } from "../../utils/acronymMatch";
+import { matchesSchoolSearchText } from "../../utils/schoolSearchText";
 import { searchPoi, type PoiResult } from "../../services/geocode.svc";
 import { getRoute, getRouteDistances } from "../../services/route.svc";
 
@@ -87,7 +88,6 @@ export function SearchBarMap({
   setSelectedPeringkat,
 }: SearchBarMapComponentProps) {
   const {
-    initialLocationSet,
     viewSchool,
     setViewSchool,
     localSuggestions,
@@ -143,17 +143,11 @@ export function SearchBarMap({
   const setMapFilters = useMapViewStore((s) => s.setMapFilters);
 
   useEffect(() => {
-    let cancelled = false;
-    getAllSchoolMarkers()
-      .then((points) => {
-        if (!cancelled) setAllPoints(points);
-      })
-      .catch((err) =>
-        console.error("[SearchBarMap] Failed to load school points:", err),
-      );
-    return () => {
-      cancelled = true;
-    };
+    // Progressive: the sidebar becomes searchable after the first page of
+    // schools instead of waiting for the full dataset.
+    return subscribeSchoolMarkers((points) => {
+      setAllPoints(points);
+    });
   }, []);
 
   // Build the search corpus once per dataset. `searchText` combines the school
@@ -321,6 +315,30 @@ export function SearchBarMap({
         }
       }
 
+      // The home page already fetched matching API suggestions before
+      // navigation. While the progressively loaded map corpus is still missing
+      // that school's page, do not replace a valid carried result with an empty
+      // list and flash "Tiada hasil carian".
+      const hasNoActiveFilters =
+        negeri === "ALL" &&
+        peringkat === "ALL" &&
+        jenis === "ALL" &&
+        sesi === "ALL";
+      const hasMatchingCarriedResult =
+        q.length >= 2 &&
+        base.length === 0 &&
+        hasNoActiveFilters &&
+        useMapViewStore
+          .getState()
+          .localSuggestions.some((school) =>
+            matchesSchoolSearchText(
+              `${school.jenisLabel ?? ""} ${school.namaSekolah} ${school.kodSekolah ?? ""}`,
+              q,
+            ),
+          );
+
+      if (hasMatchingCarriedResult) return;
+
       allMatchedRef.current = base;
       setDisplayLimit(30);
       setLocalSuggestions(base.slice(0, 30).map(schoolPointToSuggestion));
@@ -410,15 +428,13 @@ export function SearchBarMap({
         setSelectedJenis("ALL");
       } else {
         // If jenis is already ALL, manually trigger search since selectedJenis won't change
-        if (initialLocationSet) {
-          runFuzzySearch({
-            namaSekolah: query.trim().length >= 2 ? query : "",
-            negeri: selectedNegeri,
-            jenis: "ALL",
-            peringkat: selectedPeringkat,
-            sesi: selectedSesi,
-          });
-        }
+        runFuzzySearch({
+          namaSekolah: query.trim().length >= 2 ? query : "",
+          negeri: selectedNegeri,
+          jenis: "ALL",
+          peringkat: selectedPeringkat,
+          sesi: selectedSesi,
+        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -637,8 +653,6 @@ export function SearchBarMap({
 
     const trimmedQuery = query.trim();
 
-    if (!initialLocationSet) return;
-
     if (trimmedQuery.length >= 2) {
       setIsExpanded(true);
     }
@@ -663,14 +677,13 @@ export function SearchBarMap({
       }
     }, 250);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, initialLocationSet]);
+  }, [query]);
 
   // Re-run search when filters, the dataset, OR the origin (Field A) change.
   // Including pointA keeps the list sorted from the *current* origin so the
   // per-row distances stay monotonic (nearest-first) after picking a POI /
   // switching back to current location.
   useEffect(() => {
-    if (!initialLocationSet) return;
     runFuzzySearch({
       namaSekolah: query.trim().length >= 2 ? query : "",
       negeri: selectedNegeri,
