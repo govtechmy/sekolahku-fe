@@ -26,7 +26,6 @@
     "@radix-ui/react-slot": "^1.1.0",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
-    "fuse.js": "7.0.0",
     "i18next": "^25.4.2",
     "lexical": "^0.39.0",
     "maplibre-gl": "^4.7.1",

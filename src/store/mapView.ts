@@ -17,8 +17,8 @@ interface MapViewState {
     negeri: string;
     peringkat: string;
     jenis: string;
-    sesi: string;
   };
+  mapQuery: string;
   schoolMarkers: MarkerMap;
   userMarkers: MarkerMap;
   localSuggestions: SearchBarMapProps[];
@@ -45,7 +45,6 @@ interface MapViewState {
     peringkat: string;
     jenis: string;
   }) => void;
-  setSesiFilter: (sesi: string) => void;
   setZoom: (z: number) => void;
   setInitialLocationSet: (v: boolean) => void;
   setSchoolMarkers: (
@@ -87,7 +86,8 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   center: [3.760115447396889, 108.46252441406251],
   zoom: 6,
   radius: 3000,
-  mapFilters: { negeri: "ALL", peringkat: "ALL", jenis: "ALL", sesi: "ALL" },
+  mapFilters: { negeri: "ALL", peringkat: "ALL", jenis: "ALL" },
+  mapQuery: "",
   initialLocationSet: false,
   schoolMarkers: new Map() as MarkerMap,
   userMarkers: new Map() as MarkerMap,
@@ -144,9 +144,6 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   setMapFilters: (f) => {
     set((s) => ({ mapFilters: { ...s.mapFilters, ...f } }));
   },
-  setSesiFilter: (sesi) => {
-    set((s) => ({ mapFilters: { ...s.mapFilters, sesi } }));
-  },
   setInitialLocationSet: (v) => {
     set(() => {
       return { initialLocationSet: v };
@@ -181,6 +178,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
 
     // Keep the map's clustered source in sync with the active dropdown filters.
     set((s) => ({
+      mapQuery: params?.namaSekolah?.trim() ?? "",
       mapFilters: {
         ...s.mapFilters,
         negeri: params?.negeri ?? "ALL",
@@ -202,7 +200,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
       const results = await getSchoolSuggestion(
         params,
         pageNumber,
-        initialLocationUser,
+        hasActiveMapSearch ? undefined : initialLocationUser,
       );
 
       // If a newer request was fired while we were waiting, discard this response
@@ -236,8 +234,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
         return {
           localSuggestions: newSuggestions,
           localSuggestionsPage: pageNumber,
-          //12 is page size returned from Backend. Atm not supported for changes.
-          hasMoreLocalSuggestions: transformed.length >= 12,
+          hasMoreLocalSuggestions: results.hasMore,
         };
       });
 

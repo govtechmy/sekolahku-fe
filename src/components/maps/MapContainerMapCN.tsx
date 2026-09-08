@@ -23,6 +23,7 @@ import { SchoolMapMarkerMapCN } from "./SchoolMapMarkerMapCN";
 import { StatePolygonMapCN } from "./StatePolygonMapCN";
 import {
   getSchoolS3Json,
+  getSchoolSearchMarkers,
   subscribeSchoolMarkers,
 } from "../../services/school.svc";
 import type { SchoolPoint } from "../../services/school.svc";
@@ -126,6 +127,7 @@ export function MapContainerMapCN() {
     pointB,
     routeCoordinates,
     mapFilters,
+    mapQuery,
     initialLocationSet,
   } = useMapViewStore();
 
@@ -159,6 +161,7 @@ export function MapContainerMapCN() {
   // ---- Client-side clustering (MapLibre native) ----
   // Load ALL school points once and let MapLibre cluster them on the GPU.
   const [allPoints, setAllPoints] = useState<SchoolPoint[]>([]);
+  const [searchPoints, setSearchPoints] = useState<SchoolPoint[]>([]);
 
   useEffect(() => {
     // Subscribe rather than await: pins appear as soon as the first page of
@@ -168,25 +171,70 @@ export function MapContainerMapCN() {
     });
   }, []);
 
-  // Build a GeoJSON FeatureCollection from all school points, applying the
-  // active dropdown filters (negeri / peringkat / jenis) so the clustered map
-  // reflects the same result set as the sidebar.
+  useEffect(() => {
+    if (!mapQuery) {
+      setSearchPoints([]);
+      return;
+    }
+
+    const controller = new AbortController();
+    setSearchPoints([]);
+    void getSchoolSearchMarkers(
+      {
+        namaSekolah: mapQuery,
+        negeri: mapFilters.negeri === "ALL" ? undefined : mapFilters.negeri,
+        peringkat:
+          mapFilters.peringkat === "ALL" ? undefined : mapFilters.peringkat,
+        jenis: mapFilters.jenis === "ALL" ? undefined : mapFilters.jenis,
+      },
+      controller.signal,
+    )
+      .then((points) => {
+        if (!controller.signal.aborted) setSearchPoints(points);
+      })
+      .catch((error) => {
+        if (!controller.signal.aborted) {
+          console.error("[map] failed to load complete search markers:", error);
+        }
+      });
+
+    return () => controller.abort();
+  }, [mapFilters.jenis, mapFilters.negeri, mapFilters.peringkat, mapQuery]);
+
+  // When a search/filter is active, show only the results returned by the
+  // backend. Otherwise keep the full progressively loaded marker dataset.
   const schoolsGeoJSON = useMemo<GeoJSON.FeatureCollection>(() => {
-    const { negeri, peringkat, jenis, sesi } = mapFilters;
-    const filtered = allPoints.filter((p) => {
-      if (negeri !== "ALL" && p.negeri !== negeri) return false;
-      if (peringkat !== "ALL" && p.peringkat !== peringkat) return false;
-      if (jenis === "SEKOLAH_ANGKAT_MADANI") {
-        if (!p.isSekolahAngkatMADANI) return false;
-      } else if (jenis !== "ALL" && p.jenisLabel !== jenis) {
-        return false;
-      }
-      if (sesi !== "ALL" && p.sesi !== sesi) return false;
-      return true;
-    });
+    const hasActiveSearch =
+      mapQuery.length > 0 ||
+      mapFilters.negeri !== "ALL" ||
+      mapFilters.peringkat !== "ALL" ||
+      mapFilters.jenis !== "ALL";
+    const points = mapQuery
+      ? searchPoints
+      : hasActiveSearch
+        ? allPoints.filter((point) => {
+            if (
+              mapFilters.negeri !== "ALL" &&
+              point.negeri !== mapFilters.negeri
+            ) {
+              return false;
+            }
+            if (
+              mapFilters.peringkat !== "ALL" &&
+              point.peringkat !== mapFilters.peringkat
+            ) {
+              return false;
+            }
+            return (
+              mapFilters.jenis === "ALL" ||
+              point.jenisLabel === mapFilters.jenis
+            );
+          })
+        : allPoints;
+
     return {
       type: "FeatureCollection",
-      features: filtered.map((p) => ({
+      features: points.map((p) => ({
         type: "Feature",
         geometry: { type: "Point", coordinates: [p.lng, p.lat] },
         properties: {
@@ -198,7 +246,7 @@ export function MapContainerMapCN() {
         },
       })),
     };
-  }, [allPoints, mapFilters]);
+  }, [allPoints, mapFilters, mapQuery, searchPoints]);
 
   useEffect(() => {
     const centerChanged =
