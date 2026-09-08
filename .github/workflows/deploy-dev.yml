@@ -58,9 +58,17 @@ jobs:
           aws s3 sync --delete dist/halaman-sekolah/ s3://${{ secrets.S3_BUCKET_DEV }}/halaman-sekolah/
 
       - name: Invalidate CloudFront cache
-        env:
-          DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }}
         run: |
+          DOMAIN_NAME=$(sed -n 's|^VITE_DOMAIN_NAME=https://||p' .env.development)
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions \
+            --query "DistributionList.Items[?DomainName=='$DOMAIN_NAME'].Id | [0]" \
+            --output text)
+
+          if [ -z "$DISTRIBUTION_ID" ] || [ "$DISTRIBUTION_ID" = "None" ]; then
+            echo "No CloudFront distribution found for $DOMAIN_NAME"
+            exit 1
+          fi
+
           INVALIDATION_ID=$(aws cloudfront create-invalidation \
             --distribution-id "$DISTRIBUTION_ID" \
             --paths "/*" \
