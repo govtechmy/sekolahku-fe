@@ -1,45 +1,16 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-  type UIEvent,
-} from "react";
+import { useState, useEffect, useRef, useCallback, type UIEvent } from "react";
 import {
   ArrowBackIcon,
   ChevronRightIcon,
   PinIcon,
 } from "@govtechmy/myds-react/icon";
 import { FilterDropdowns } from "./FilterDropdowns";
+import { SearchFallbackIndicator } from "../shared/SearchFallbackIndicator";
 import type { SearchBarMapProps } from "../../types/maps";
 import type { ItemSekolahModel } from "../../models/response";
-import Fuse from "fuse.js";
-import {
-  subscribeSchoolMarkers,
-  type SchoolPoint,
-} from "../../services/school.svc";
-import { matchSchoolAcronym, toAcronymWords } from "../../utils/acronymMatch";
-import { matchesSchoolSearchText } from "../../utils/schoolSearchText";
+import { getSchoolS3Json } from "../../services/school.svc";
 import { searchPoi, type PoiResult } from "../../services/geocode.svc";
 import { getRoute, getRouteDistances } from "../../services/route.svc";
-
-function schoolPointToSuggestion(p: SchoolPoint): SearchBarMapProps {
-  return {
-    namaSekolah: p.namaSekolah,
-    kodSekolah: p.kodSekolah,
-    koordinatYY: p.lat,
-    koordinatXX: p.lng,
-    negeri: p.negeri,
-    bandarSurat: p.bandarSurat,
-    jenisLabel: p.jenisLabel,
-    jumlahPelajar: 0,
-    jumlahGuru: 0,
-    parlimen: p.parlimen,
-    isSekolahAngkatMADANI: p.isSekolahAngkatMADANI,
-  };
-}
-import { getSchoolS3Json } from "../../services/school.svc";
 import {
   SearchBar,
   SearchBarInput,
@@ -91,11 +62,13 @@ export function SearchBarMap({
     viewSchool,
     setViewSchool,
     localSuggestions,
-    setLocalSuggestions,
+    localSuggestionsPage,
+    hasMoreLocalSuggestions,
+    isLoadingLocalSuggestions,
+    handleSearch,
     query,
     setQuery,
     dataTotal,
-    setDataTotal,
     setPointA,
     setPointB,
     setRoute,
@@ -105,8 +78,6 @@ export function SearchBarMap({
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
-  const [selectedSesi, setSelectedSesi] = useState("ALL");
-  const setSesiFilter = useMapViewStore((s) => s.setSesiFilter);
   const debounceTimerRef = useRef<number | null>(null);
   const setCenter = useMapViewStore((s) => s.setCenter);
   const setZoom = useMapViewStore((s) => s.setZoom);
@@ -135,225 +106,6 @@ export function SearchBarMap({
   // The school "pinned" by an actual click — survives mouse-leave. Hover only
   // previews; leaving the list restores this (or clears if nothing pinned).
   const pinnedSchoolRef = useRef<ItemSekolahModel | null>(null);
-
-  // ---- Client-side fuzzy search over all schools ----
-  const [allPoints, setAllPoints] = useState<SchoolPoint[]>([]);
-  const [displayLimit, setDisplayLimit] = useState(30);
-  const allMatchedRef = useRef<SchoolPoint[]>([]);
-  const setMapFilters = useMapViewStore((s) => s.setMapFilters);
-
-  useEffect(() => {
-    // Progressive: the sidebar becomes searchable after the first page of
-    // schools instead of waiting for the full dataset.
-    return subscribeSchoolMarkers((points) => {
-      setAllPoints(points);
-    });
-  }, []);
-
-  // Build the search corpus once per dataset. `searchText` combines the school
-  // type label (SMK, SK, SJKC…), name and code so queries like "smk gombak"
-  // match (SMK via type + gombak via name). Town/state are intentionally
-  // excluded to avoid location noise — use the dropdowns for those.
-  const searchRecords = useMemo(
-    () =>
-      allPoints.map((p) => ({
-        point: p,
-        searchText:
-          `${p.jenisLabel} ${p.namaSekolah} ${p.kodSekolah}`.toLowerCase(),
-        // Word list for acronym matching, e.g.
-        // ["smk","sekolah","menengah","kebangsaan","putrajaya","presint","8"].
-        // Code is excluded so the acronym stays "type + name".
-        words: toAcronymWords(`${p.jenisLabel} ${p.namaSekolah}`),
-      })),
-    [allPoints],
-  );
-
-  const fuse = useMemo(() => {
-    if (searchRecords.length === 0) return null;
-    return new Fuse(searchRecords, {
-      keys: ["searchText"],
-      threshold: 0.35,
-      ignoreLocation: true,
-      minMatchCharLength: 2,
-      includeScore: true,
-    });
-  }, [searchRecords]);
-
-  // Run a filtered + fuzzy search entirely on the client.
-  const runFuzzySearch = useCallback(
-    (params: {
-      namaSekolah?: string;
-      negeri?: string;
-      jenis?: string;
-      peringkat?: string;
-      sesi?: string;
-    }) => {
-      const negeri = params.negeri ?? "ALL";
-      const peringkat = params.peringkat ?? "ALL";
-      const jenis = params.jenis ?? "ALL";
-      const sesi = params.sesi ?? "ALL";
-      const q = (params.namaSekolah ?? "").trim();
-
-      // Keep the clustered map in sync with the same filters.
-      setMapFilters({ negeri, peringkat, jenis });
-      setSesiFilter(sesi);
-
-      // 1) Apply dropdown filters.
-      let base = allPoints.filter((p) => {
-        if (negeri !== "ALL" && p.negeri !== negeri) return false;
-        if (peringkat !== "ALL" && p.peringkat !== peringkat) return false;
-        if (jenis === "SEKOLAH_ANGKAT_MADANI") {
-          if (!p.isSekolahAngkatMADANI) return false;
-        } else if (jenis !== "ALL" && p.jenisLabel !== jenis) {
-          return false;
-        }
-        if (sesi !== "ALL" && p.sesi !== sesi) return false;
-        return true;
-      });
-
-      // 2) Token-based match (every token must match). Short tokens (type
-      // codes like SMK/SK/SJKC) use exact word-boundary matching so "smk"
-      // does not fuzzily collapse into "sk". Longer tokens use fuzzy match
-      // for typo tolerance.
-      if (q.length >= 2 && fuse) {
-        const ql = q.toLowerCase();
-        const tokens = ql.split(/\s+/).filter(Boolean);
-        let ids: Set<string> | null = null;
-        // Best (lowest) Fuse score per school across fuzzy tokens — lexical
-        // relevance signal used by the reranker (0 = perfect match).
-        const fuzzyScore = new Map<string, number>();
-        for (const tok of tokens) {
-          let found: Set<string>;
-          // Short tokens (type codes: SMK/SK/SJKC…) and code-like tokens
-          // (containing digits, e.g. BBA3029) use exact word-boundary matching
-          // so they don't fuzzily collapse into many near matches.
-          const isExactToken = tok.length <= 4 || /\d/.test(tok);
-          if (isExactToken) {
-            const escaped = tok.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-            const re = new RegExp(`\\b${escaped}\\b`, "i");
-            found = new Set(
-              searchRecords
-                .filter((r) => re.test(r.searchText))
-                .map((r) => r.point.kodSekolah),
-            );
-          } else {
-            const res = fuse.search(tok);
-            found = new Set(res.map((r) => r.item.point.kodSekolah));
-            for (const r of res) {
-              const k = r.item.point.kodSekolah;
-              const sc = r.score ?? 1;
-              fuzzyScore.set(k, Math.min(fuzzyScore.get(k) ?? 1, sc));
-            }
-          }
-          ids = ids
-            ? new Set([...ids].filter((x: string) => found.has(x)))
-            : found;
-        }
-
-        // Acronym / initialism matching for compact, space-less queries like
-        // "smkpp8" -> "SMK Putrajaya Presint 8" (words: smk, sekolah, menengah,
-        // kebangsaan, putrajaya, presint, 8). The token pipeline above can't
-        // catch these because the letters are glued together. Run it as an
-        // extra candidate producer and UNION it with the token matches; the
-        // reranker below then orders everything.
-        const acroIds = new Set<string>();
-        const isCompact = ql.length >= 4 && !/\s/.test(ql);
-        if (isCompact) {
-          for (const r of searchRecords) {
-            // Cheap guard: the query's first char must match the type code's
-            // first char (acronyms start with the school type: smk/sk/sjkc…).
-            if (ql[0] !== r.words[0]?.[0]) continue;
-            if (matchSchoolAcronym(ql, r.words) >= 1) {
-              acroIds.add(r.point.kodSekolah);
-            }
-          }
-          if (acroIds.size > 0) {
-            ids = ids ? new Set([...ids, ...acroIds]) : acroIds;
-          }
-        }
-
-        if (ids) base = base.filter((p) => ids.has(p.kodSekolah));
-
-        // --- Rerank (RAG-style stage 2) ---
-        // Composite relevance: exact/prefix boosts + Fuse lexical score, with
-        // distance only as a small tie-breaker. Higher score = better.
-        // Distance is measured from the chosen origin (picked POI / current
-        // location = pointA), falling back to the device location.
-        const [rLat, rLng] =
-          useMapViewStore.getState().pointA ??
-          useLocationSessionStore.getState().initialLocationUser;
-        const scoreOf = (p: SchoolPoint): number => {
-          const name = p.namaSekolah.toLowerCase();
-          let s = 0;
-          if (p.kodSekolah.toLowerCase() === ql) s += 1000;
-          if (name === ql) s += 800;
-          else if (name.startsWith(ql)) s += 300;
-          else if (name.includes(ql)) s += 150;
-          // Acronym hits are a strong intent signal — rank them near the top.
-          if (acroIds.has(p.kodSekolah)) s += 400;
-          s += (1 - (fuzzyScore.get(p.kodSekolah) ?? 0)) * 100;
-          if (rLat != null && rLng != null) {
-            const km = calculateDistance(rLat, rLng, p.lat, p.lng) / 1000;
-            s -= Math.min(km, 300) * 0.1;
-          }
-          return s;
-        };
-        base = base.slice().sort((a, b) => scoreOf(b) - scoreOf(a));
-      } else {
-        // No query — order by distance from the origin (nearest first).
-        const [uLat, uLng] =
-          useMapViewStore.getState().pointA ??
-          useLocationSessionStore.getState().initialLocationUser;
-        if (uLat != null && uLng != null) {
-          base = base
-            .slice()
-            .sort(
-              (a, b) =>
-                calculateDistance(uLat, uLng, a.lat, a.lng) -
-                calculateDistance(uLat, uLng, b.lat, b.lng),
-            );
-        }
-      }
-
-      // The home page already fetched matching API suggestions before
-      // navigation. While the progressively loaded map corpus is still missing
-      // that school's page, do not replace a valid carried result with an empty
-      // list and flash "Tiada hasil carian".
-      const hasNoActiveFilters =
-        negeri === "ALL" &&
-        peringkat === "ALL" &&
-        jenis === "ALL" &&
-        sesi === "ALL";
-      const hasMatchingCarriedResult =
-        q.length >= 2 &&
-        base.length === 0 &&
-        hasNoActiveFilters &&
-        useMapViewStore
-          .getState()
-          .localSuggestions.some((school) =>
-            matchesSchoolSearchText(
-              `${school.jenisLabel ?? ""} ${school.namaSekolah} ${school.kodSekolah ?? ""}`,
-              q,
-            ),
-          );
-
-      if (hasMatchingCarriedResult) return;
-
-      allMatchedRef.current = base;
-      setDisplayLimit(30);
-      setLocalSuggestions(base.slice(0, 30).map(schoolPointToSuggestion));
-      setDataTotal(base.length);
-    },
-    [
-      allPoints,
-      fuse,
-      searchRecords,
-      setMapFilters,
-      setSesiFilter,
-      setLocalSuggestions,
-      setDataTotal,
-    ],
-  );
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
@@ -419,34 +171,20 @@ export function SearchBarMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pointA?.[0], pointA?.[1], pointB?.[0], pointB?.[1]]);
 
-  // Reset selectedJenis to ALL when peringkat changes, then trigger search
+  // Reset jenis when peringkat changes; the backend search effect below
+  // re-runs automatically for both values.
   useEffect(() => {
     if (prevPeringkatRef.current !== selectedPeringkat) {
       prevPeringkatRef.current = selectedPeringkat;
-      // Reset jenis when peringkat changes - this will trigger the search via selectedJenis change
       if (selectedJenis !== "ALL") {
         setSelectedJenis("ALL");
-      } else {
-        // If jenis is already ALL, manually trigger search since selectedJenis won't change
-        runFuzzySearch({
-          namaSekolah: query.trim().length >= 2 ? query : "",
-          negeri: selectedNegeri,
-          jenis: "ALL",
-          peringkat: selectedPeringkat,
-          sesi: selectedSesi,
-        });
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedPeringkat]);
+  }, [selectedJenis, selectedPeringkat]);
 
   // Also reset if the current jenis is not valid for the new schoolTypes list
   useEffect(() => {
-    if (
-      selectedJenis !== "ALL" &&
-      selectedJenis !== "SEKOLAH_ANGKAT_MADANI" &&
-      !schoolTypes.includes(selectedJenis)
-    ) {
+    if (selectedJenis !== "ALL" && !schoolTypes.includes(selectedJenis)) {
       setSelectedJenis("ALL");
     }
   }, [schoolTypes, selectedJenis]);
@@ -507,9 +245,6 @@ export function SearchBarMap({
     const pointACoords = useMapViewStore.getState().pointA;
     const pointBCoords = useMapViewStore.getState().pointB;
 
-    // Mark as swapping to prevent debounce search from firing
-    isSwappingRef.current = true;
-
     // Move B text → A
     if (currentB && currentB.trim().length > 0) {
       setFieldAValue(currentB);
@@ -541,11 +276,6 @@ export function SearchBarMap({
       setCenter(pointACoords);
       setZoom(15);
     }
-
-    // Reset swapping flag after state updates propagate
-    setTimeout(() => {
-      isSwappingRef.current = false;
-    }, 500);
   };
 
   useEffect(() => {
@@ -642,9 +372,24 @@ export function SearchBarMap({
     };
   }, []);
 
-  // Trigger search when query is set (with debouncing)
+  const runBackendSearch = useCallback(
+    (page = 1, append = false) =>
+      handleSearch(
+        {
+          namaSekolah: query.trim() || undefined,
+          negeri: selectedNegeri === "ALL" ? undefined : selectedNegeri,
+          jenis: selectedJenis === "ALL" ? undefined : selectedJenis,
+          peringkat:
+            selectedPeringkat === "ALL" ? undefined : selectedPeringkat,
+        },
+        page,
+        append,
+      ),
+    [handleSearch, query, selectedJenis, selectedNegeri, selectedPeringkat],
+  );
+
+  // Send every school query and supported filter directly to the backend.
   useEffect(() => {
-    // Skip search during a swap operation
     if (isSwappingRef.current) return;
 
     if (debounceTimerRef.current) {
@@ -658,48 +403,18 @@ export function SearchBarMap({
     }
 
     debounceTimerRef.current = window.setTimeout(() => {
-      runFuzzySearch({
-        namaSekolah: trimmedQuery,
-        negeri: selectedNegeri,
-        jenis: selectedJenis,
-        peringkat: selectedPeringkat,
-        sesi: selectedSesi,
-      });
-
-      // Auto-open the info window on an exact name match.
-      if (trimmedQuery.length >= 2) {
+      void runBackendSearch().then(() => {
+        if (trimmedQuery.length < 2) return;
         const current = useMapViewStore.getState().localSuggestions;
         const exactMatch = current.find(
           (school) =>
             school.namaSekolah.toLowerCase() === trimmedQuery.toLowerCase(),
         );
         if (exactMatch) handleSelect(exactMatch);
-      }
-    }, 250);
+      });
+    }, 400);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
-
-  // Re-run search when filters, the dataset, OR the origin (Field A) change.
-  // Including pointA keeps the list sorted from the *current* origin so the
-  // per-row distances stay monotonic (nearest-first) after picking a POI /
-  // switching back to current location.
-  useEffect(() => {
-    runFuzzySearch({
-      namaSekolah: query.trim().length >= 2 ? query : "",
-      negeri: selectedNegeri,
-      jenis: selectedJenis,
-      peringkat: selectedPeringkat,
-      sesi: selectedSesi,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    selectedJenis,
-    selectedNegeri,
-    selectedSesi,
-    allPoints,
-    originLat,
-    originLng,
-  ]);
+  }, [runBackendSearch]);
 
   // Road distances for the nearest N results (one OSRM /table call). Keyed off
   // the top-N kodSekolah so paging (append) doesn't re-trigger the request.
@@ -810,18 +525,14 @@ export function SearchBarMap({
   };
 
   const loadMoreSuggestions = () => {
-    if (displayLimit >= allMatchedRef.current.length) return;
-    const next = displayLimit + 30;
-    setDisplayLimit(next);
-    setLocalSuggestions(
-      allMatchedRef.current.slice(0, next).map(schoolPointToSuggestion),
-    );
+    if (!hasMoreLocalSuggestions || isLoadingLocalSuggestions) return;
+    void runBackendSearch(localSuggestionsPage + 1, true);
   };
 
   const handleScroll = (event: UIEvent<HTMLDivElement>) => {
     const target = event.currentTarget;
     // Distance (in px) from the bottom at which to trigger loading more results
-    const threshold = 50;
+    const threshold = 40;
 
     if (
       target.scrollTop + target.clientHeight >=
@@ -1094,22 +805,15 @@ export function SearchBarMap({
                 selectedNegeri={selectedNegeri}
                 selectedJenis={selectedJenis}
                 selectedPeringkat={selectedPeringkat}
-                selectedSesi={selectedSesi}
                 negeriList={negeriList}
                 jenisList={schoolTypes}
                 setSelectedNegeri={setSelectedNegeri}
                 setSelectedJenis={setSelectedJenis}
                 setSelectedPeringkat={setSelectedPeringkat}
-                setSelectedSesi={(value) => {
-                  setSelectedSesi(value);
-                  setSesiFilter(value);
-                }}
                 onClearFilters={() => {
                   setSelectedNegeri("ALL");
                   setSelectedJenis("ALL");
                   setSelectedPeringkat("ALL");
-                  setSelectedSesi("ALL");
-                  setSesiFilter("ALL");
                   setQuery("");
                 }}
               />
@@ -1218,9 +922,18 @@ export function SearchBarMap({
                     </div>
                   </li>
                 ))
+              ) : isLoadingLocalSuggestions ? (
+                <li>
+                  <SearchFallbackIndicator visible={true} className="py-5" />
+                </li>
               ) : (
                 <li className="px-4 py-4 text-sm text-gray-500">
                   Tiada hasil carian
+                </li>
+              )}
+              {localSuggestions.length > 0 && isLoadingLocalSuggestions && (
+                <li className="border-t border-otl-divider">
+                  <SearchFallbackIndicator visible={true} className="py-3" />
                 </li>
               )}
             </div>

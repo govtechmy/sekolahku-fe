@@ -32,6 +32,92 @@ describe("school.svc request caching", () => {
     vi.clearAllMocks();
   });
 
+  describe("getSchoolSuggestion", () => {
+    it("does not constrain an active search to the user's location", async () => {
+      get.mockResolvedValue({
+        data: {
+          data: {
+            items: [],
+            totalRecords: 0,
+            pageSize: 12,
+          },
+        },
+      });
+      const { getSchoolSuggestion } = await loadService();
+
+      await getSchoolSuggestion(
+        {
+          namaSekolah: "bufot",
+          negeri: "SELANGOR",
+        },
+        1,
+        [3.139, 101.6869],
+      );
+
+      expect(get.mock.calls[0][0]).toContain(
+        "/schools/search?page=1&pageSize=12",
+      );
+      expect(get.mock.calls[0][0]).not.toContain("latitude=");
+      expect(get.mock.calls[0][0]).not.toContain("longitude=");
+    });
+
+    it("keeps an empty search ordered from the user's location", async () => {
+      get.mockResolvedValue({
+        data: {
+          data: {
+            items: [],
+            totalRecords: 0,
+            pageNumber: 1,
+            pageSize: 12,
+          },
+        },
+      });
+      const { getSchoolSuggestion } = await loadService();
+
+      await getSchoolSuggestion(undefined, 1, [3.139, 101.6869]);
+
+      expect(get.mock.calls[0][0]).toContain("latitude=3.139");
+      expect(get.mock.calls[0][0]).toContain("longitude=101.6869");
+    });
+
+    it("uses API pagination metadata before dropping invalid coordinates", async () => {
+      const validSchool = {
+        kodSekolah: "VALID1",
+        namaSekolah: "SK VALID",
+        data: {
+          infoLokasi: { koordinatXX: 101.6869, koordinatYY: 3.139 },
+          infoPentadbiran: {},
+          infoSekolah: {},
+          infoKomunikasi: {},
+        },
+      };
+      const invalidSchool = {
+        ...validSchool,
+        kodSekolah: "INVALID1",
+        data: {
+          ...validSchool.data,
+          infoLokasi: { koordinatXX: null, koordinatYY: null },
+        },
+      };
+      get.mockResolvedValue({
+        data: {
+          data: {
+            items: [validSchool, invalidSchool],
+            totalRecords: 24,
+            pageNumber: 1,
+            pageSize: 12,
+          },
+        },
+      });
+      const { getSchoolSuggestion } = await loadService();
+
+      const result = await getSchoolSuggestion(undefined, 1);
+
+      expect(result.filteredData).toHaveLength(1);
+      expect(result.hasMore).toBe(true);
+    });
+  });
+
   describe("getSchoolNearby", () => {
     it("serves an identical follow-up request from cache", async () => {
       get.mockResolvedValue(nearbyResponse());
@@ -246,6 +332,31 @@ describe("school.svc request caching", () => {
         "DUP1",
         "ONE",
         "TWO",
+      ]);
+    });
+
+    it("loads every page for an active backend search", async () => {
+      get.mockImplementation(
+        (url: string, config?: { params?: { namaSekolah?: string } }) => {
+          const page = Number(
+            new URL(url, "http://x").searchParams.get("page"),
+          );
+          return Promise.resolve(
+            pagedResponse(page === 1 ? ["MATCH1"] : ["MATCH2"], 2501),
+          ).then((response) => {
+            expect(config?.params?.namaSekolah).toBe("bufot");
+            return response;
+          });
+        },
+      );
+      const { getSchoolSearchMarkers } = await loadService();
+
+      const points = await getSchoolSearchMarkers({ namaSekolah: "bufot" });
+
+      expect(get).toHaveBeenCalledTimes(2);
+      expect(points.map((point) => point.kodSekolah)).toEqual([
+        "MATCH1",
+        "MATCH2",
       ]);
     });
   });

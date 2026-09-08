@@ -17,13 +17,11 @@ type FilterDropdownsProps = {
   selectedNegeri: string;
   selectedJenis: string;
   selectedPeringkat: string;
-  selectedSesi: string;
   negeriList: (string | null)[];
   jenisList: (string | null)[];
   setSelectedNegeri: (value: string) => void;
   setSelectedJenis: (value: string) => void;
   setSelectedPeringkat: (value: string) => void;
-  setSelectedSesi: (value: string) => void;
   onClearFilters: () => void;
 };
 
@@ -31,20 +29,17 @@ export function FilterDropdowns({
   selectedNegeri,
   selectedJenis,
   selectedPeringkat,
-  selectedSesi,
   negeriList,
   jenisList,
   setSelectedNegeri,
   setSelectedJenis,
   setSelectedPeringkat,
-  setSelectedSesi,
   onClearFilters,
 }: FilterDropdownsProps) {
   const hasActiveFilter =
     selectedNegeri !== "ALL" ||
     selectedJenis !== "ALL" ||
-    selectedPeringkat !== "ALL" ||
-    selectedSesi !== "ALL";
+    selectedPeringkat !== "ALL";
   return (
     <div className="px-3 py-4 border-t border-gray-200 flex flex-wrap gap-2 text-sm">
       {/* NEW IMPLEMENTATION - SimpleSelect with built-in truncation */}
@@ -117,9 +112,6 @@ export function FilterDropdowns({
         className="w-[155px]"
       >
         <SimpleSelectItem value="ALL">Semua Jenis</SimpleSelectItem>
-        <SimpleSelectItem value="SEKOLAH_ANGKAT_MADANI">
-          Sekolah Angkat Madani
-        </SimpleSelectItem>
         {jenisList &&
           jenisList
             .filter((x): x is string => typeof x === "string")
@@ -133,22 +125,6 @@ export function FilterDropdowns({
                 {SCHOOL_TYPE_LABELS[x] ? `${SCHOOL_TYPE_LABELS[x]} (${x})` : x}
               </SimpleSelectItem>
             ))}
-      </SimpleSelect>
-
-      <SimpleSelect
-        size="small"
-        variant="outline"
-        onValueChange={setSelectedSesi}
-        value={selectedSesi ?? "ALL"}
-        placeholder="Sesi"
-        className="w-[155px]"
-      >
-        <SimpleSelectItem value="ALL">Semua Sesi</SimpleSelectItem>
-        <SimpleSelectItem value="Pagi Sahaja">Pagi Sahaja</SimpleSelectItem>
-        <SimpleSelectItem value="Pagi dan Petang">
-          Pagi dan Petang
-        </SimpleSelectItem>
-        <SimpleSelectItem value="Petang Sahaja">Petang Sahaja</SimpleSelectItem>
       </SimpleSelect>
 
       {hasActiveFilter && (

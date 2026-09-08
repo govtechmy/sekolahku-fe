@@ -17,6 +17,9 @@ export default function HomeHero() {
   } = useMapViewStore();
   const dataTotal = useMapViewStore((state) => state.dataTotal);
   const singlePageTotal = useMapViewStore((state) => state.singlePageTotal);
+  const isLoadingLocalSuggestions = useMapViewStore(
+    (state) => state.isLoadingLocalSuggestions,
+  );
   const debounceTimerRef = useRef<number | null>(null);
 
   const handleValueChange = (value: string) => {
@@ -72,6 +75,7 @@ export default function HomeHero() {
           searchBarTitle="Carian Sekolah"
           singlePageTotal={singlePageTotal}
           dataTotal={dataTotal}
+          isSearchingBackend={isLoadingLocalSuggestions}
         />
       }
       // links={[{ label: "Pautan Pintas", link: "#pautan" }]}

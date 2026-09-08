@@ -18,6 +18,7 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 import { usePrefetchCarianSekolah } from "../../hooks/usePrefetchCarianSekolah";
 import { buildSchoolSearchPath } from "../../utils/schoolSearchUrl";
+import { SearchFallbackIndicator } from "./SearchFallbackIndicator";
 
 interface SearchBarHomeProps<T> {
   query?: string;
@@ -32,6 +33,8 @@ interface SearchBarHomeProps<T> {
   searchBarTitle?: string;
   singlePageTotal?: number;
   dataTotal?: number;
+  /** Whether a backend fallback search is in progress. */
+  isSearchingBackend?: boolean;
 }
 
 export default function SearchBarHome<T>({
@@ -47,6 +50,7 @@ export default function SearchBarHome<T>({
   searchBarTitle = "Carian",
   singlePageTotal,
   dataTotal,
+  isSearchingBackend = false,
 }: SearchBarHomeProps<T>) {
   const [hasFocus, setHasFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -122,11 +126,18 @@ export default function SearchBarHome<T>({
       </SearchBarInputContainer>
       <SearchBarResults open={hasQuery && hasFocus} className="p-0">
         {/* open={hasQuery && hasFocus} */}
-        {hasQuery && !(suggestions && suggestions.length) && (
-          <p className="px-4 py-5 text-txt-black-900 text-center">
-            Tiada hasil carian
-          </p>
-        )}
+        {hasQuery &&
+          !(suggestions && suggestions.length) &&
+          !isSearchingBackend && (
+            <p className="px-4 py-5 text-txt-black-900 text-center">
+              Tiada hasil carian
+            </p>
+          )}
+        {hasQuery &&
+          !(suggestions && suggestions.length) &&
+          isSearchingBackend && (
+            <SearchFallbackIndicator visible={true} className="py-5" />
+          )}
         {hasQuery && suggestions && suggestions.length > 0 && (
           <SearchBarResultsList className="max-h-[400px] overflow-y-auto focus-visible:outline-none">
             {suggestions.map((item) => (

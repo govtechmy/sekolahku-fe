@@ -23,6 +23,7 @@ export const getSchoolSuggestion = async (
   filteredData: ItemSekolahModel[];
   totalSchool: number;
   totalInSinglePage: number;
+  hasMore: boolean;
 }> => {
   try {
     if (params?.namaSekolah) {
@@ -32,11 +33,17 @@ export const getSchoolSuggestion = async (
       };
     }
 
+    const hasActiveSearch = Boolean(
+      params?.namaSekolah?.trim() ||
+      (params?.negeri && params.negeri !== "ALL") ||
+      (params?.jenis && params.jenis !== "ALL") ||
+      (params?.peringkat && params.peringkat !== "ALL"),
+    );
     const [lat, lng] = initialLocationUser || [null, null];
-    let locationParams = ``;
-    if (lat != null && lng != null) {
-      locationParams = `latitude=${lat}&longitude=${lng}&`;
-    }
+    const locationParams =
+      !hasActiveSearch && lat != null && lng != null
+        ? `latitude=${lat}&longitude=${lng}&`
+        : "";
     const searchParams = `/search?${locationParams}page=${pageNumber}&pageSize=12`;
 
     if (params?.peringkat && params.peringkat !== "ALL") {
@@ -70,12 +77,15 @@ export const getSchoolSuggestion = async (
     );
     const totalSchool = response.data.data?.totalRecords ?? 0;
     const pageSize = response.data.data?.pageSize ?? 0;
+    const responsePageNumber = response.data.data?.pageNumber ?? pageNumber;
     const safeTotalSchool = isNaN(totalSchool) ? 0 : totalSchool;
     const safePageSize = isNaN(pageSize) ? 0 : pageSize;
     const totalInSinglePage =
       safeTotalSchool > safePageSize ? safePageSize : safeTotalSchool;
+    const hasMore =
+      safePageSize > 0 && responsePageNumber * safePageSize < safeTotalSchool;
 
-    return { filteredData, totalSchool, totalInSinglePage };
+    return { filteredData, totalSchool, totalInSinglePage, hasMore };
   } catch (error) {
     console.error("Error fetching school suggestions:", error);
     throw error;
@@ -179,9 +189,18 @@ const toSchoolPoints = (items: ItemSekolahModel[]): SchoolPoint[] =>
 
 const fetchSchoolPointsPage = async (
   page: number,
+  params?: schoolSearchModel,
+  signal?: AbortSignal,
 ): Promise<{ points: SchoolPoint[]; totalRecords: number }> => {
   const response = await authAxios.get<APIResponse<ListSekolahModel>>(
     `${BASE_URL}${SCHOOL_ENDPOINT}/search?page=${page}&pageSize=${MARKER_PAGE_SIZE}`,
+    params || signal
+      ? {
+          params,
+          signal,
+          paramsSerializer: { indexes: null },
+        }
+      : undefined,
   );
   return {
     points: toSchoolPoints(response.data.data?.items || []),
@@ -238,6 +257,38 @@ export const getAllSchoolMarkers = async (): Promise<SchoolPoint[]> => {
     partialSchoolPoints = [];
     throw err;
   }
+};
+
+export const getSchoolSearchMarkers = async (
+  params: schoolSearchModel,
+  signal?: AbortSignal,
+): Promise<SchoolPoint[]> => {
+  const byCode = new Map<string, SchoolPoint>();
+  const merge = (points: SchoolPoint[]) => {
+    points.forEach((point) =>
+      byCode.set(point.kodSekolah || `${point.lng},${point.lat}`, point),
+    );
+  };
+
+  const first = await fetchSchoolPointsPage(1, params, signal);
+  merge(first.points);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(first.totalRecords / MARKER_PAGE_SIZE),
+  );
+  if (totalPages > 1) {
+    await Promise.all(
+      Array.from({ length: totalPages - 1 }, (_, index) => index + 2).map(
+        async (page) => {
+          const { points } = await fetchSchoolPointsPage(page, params, signal);
+          merge(points);
+        },
+      ),
+    );
+  }
+
+  return [...byCode.values()];
 };
 
 /**
