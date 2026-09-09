@@ -59,22 +59,6 @@ jobs:
 
       - name: Invalidate CloudFront cache
         run: |
-          DOMAIN_NAME=$(sed -n 's|^VITE_DOMAIN_NAME=https://||p' .env.development)
-          DISTRIBUTION_ID=$(aws cloudfront list-distributions \
-            --query "DistributionList.Items[?DomainName=='$DOMAIN_NAME'].Id | [0]" \
-            --output text)
-
-          if [ -z "$DISTRIBUTION_ID" ] || [ "$DISTRIBUTION_ID" = "None" ]; then
-            echo "No CloudFront distribution found for $DOMAIN_NAME"
-            exit 1
-          fi
-
-          INVALIDATION_ID=$(aws cloudfront create-invalidation \
-            --distribution-id "$DISTRIBUTION_ID" \
-            --paths "/*" \
-            --query 'Invalidation.Id' \
-            --output text)
-
-          aws cloudfront wait invalidation-completed \
-            --distribution-id "$DISTRIBUTION_ID" \
-            --id "$INVALIDATION_ID"
+          aws cloudfront create-invalidation \
+            --distribution-id "E2QRPYF61GS1RQ" \
+            --paths "/*"
