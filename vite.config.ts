@@ -8,6 +8,8 @@ export default defineConfig({
     manifest: true,
   },
   server: {
+    // Honour PORT (preview harness assigns one); default to Vite's 5173 otherwise.
+    port: Number(process.env.PORT) || 5173,
     // The school-detail JSON lives on a CDN that returns no CORS headers for
     // localhost, so a direct browser fetch is blocked. In dev, point
     // VITE_DATA_BASE_URL at "/cdn-data" and let Vite proxy it server-side.
