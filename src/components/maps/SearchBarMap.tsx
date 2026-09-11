@@ -139,6 +139,8 @@ export function SearchBarMap({
   );
   const tableAbortRef = useRef<AbortController | null>(null);
   const tableDebounceRef = useRef<number | null>(null);
+  // Surfaced when selecting a school fails to load its detail (see handleSelect).
+  const [selectError, setSelectError] = useState<string | null>(null);
   // How many of the top (nearest) suggestions get a real road distance.
   const ROAD_DISTANCE_TOP_N = 10;
 
@@ -488,6 +490,7 @@ export function SearchBarMap({
 
   const handleSelect = async (school: SearchBarMapProps) => {
     try {
+      setSelectError(null);
       if (!school.kodSekolah) {
         console.error("School code is null");
         return;
@@ -521,7 +524,23 @@ export function SearchBarMap({
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
+      setSelectError(
+        "Gagal memuatkan maklumat sekolah. Sila cuba lagi sebentar.",
+      );
     }
+  };
+
+  // Commit the current query: pinpoint the exact-name match if there is one,
+  // otherwise fall back to the first (best-ranked) suggestion. Wired to Enter
+  // and the search button so live typing itself never hijacks the map.
+  const commitTopResult = () => {
+    const current = useMapViewStore.getState().localSuggestions;
+    if (current.length === 0) return;
+    const trimmed = query.trim().toLowerCase();
+    const exact = current.find(
+      (school) => school.namaSekolah.toLowerCase() === trimmed,
+    );
+    handleSelect(exact ?? current[0]);
   };
 
   const loadMoreSuggestions = () => {
@@ -719,6 +738,12 @@ export function SearchBarMap({
                     aria-label="Destinasi sekolah"
                     value={query}
                     onChange={(e) => handleValueChange(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        commitTopResult();
+                      }
+                    }}
                     className="flex-1 bg-transparent text-sm outline-none text-txt-primary"
                   />
                   <svg
@@ -781,9 +806,15 @@ export function SearchBarMap({
                     placeholder="Carian Sekolah"
                     value={query}
                     onValueChange={handleValueChange}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        commitTopResult();
+                      }
+                    }}
                     className=""
                   />
-                  <SearchBarSearchButton />
+                  <SearchBarSearchButton onClick={commitTopResult} />
                 </SearchBarInputContainer>
               </SearchBar>
             </div>
@@ -823,6 +854,22 @@ export function SearchBarMap({
                 </div>
               )}
             </>
+          )}
+
+          {selectError && (
+            <div
+              role="alert"
+              className="mx-4 mb-2 flex items-center justify-between gap-3 rounded-lg border border-otl-danger-200 bg-danger-50 px-3 py-2 text-body-sm text-txt-danger"
+            >
+              <span>{selectError}</span>
+              <button
+                type="button"
+                onClick={() => setSelectError(null)}
+                className="shrink-0 font-semibold hover:underline"
+              >
+                Tutup
+              </button>
+            </div>
           )}
 
           {isExpanded && (

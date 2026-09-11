@@ -12,6 +12,7 @@ interface MapViewState {
   center: Center;
   zoom: number;
   initialLocationSet: boolean;
+  locationPickerOpen: boolean;
   radius: number;
   mapFilters: {
     negeri: string;
@@ -47,6 +48,7 @@ interface MapViewState {
   }) => void;
   setZoom: (z: number) => void;
   setInitialLocationSet: (v: boolean) => void;
+  setLocationPickerOpen: (v: boolean) => void;
   setSchoolMarkers: (
     markers: MarkerMap | ((prev: MarkerMap) => MarkerMap),
   ) => void;
@@ -89,6 +91,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   mapFilters: { negeri: "ALL", peringkat: "ALL", jenis: "ALL" },
   mapQuery: "",
   initialLocationSet: false,
+  locationPickerOpen: false,
   schoolMarkers: new Map() as MarkerMap,
   userMarkers: new Map() as MarkerMap,
   localSuggestions: [],
@@ -147,6 +150,11 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   setInitialLocationSet: (v) => {
     set(() => {
       return { initialLocationSet: v };
+    });
+  },
+  setLocationPickerOpen: (v) => {
+    set(() => {
+      return { locationPickerOpen: v };
     });
   },
   setSchoolMarkers: (markers) => {

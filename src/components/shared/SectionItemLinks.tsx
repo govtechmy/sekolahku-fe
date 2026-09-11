@@ -1,10 +1,9 @@
-import { Button } from "@govtechmy/myds-react/button";
-import { ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
-
 type LinkItem = {
   icon: React.ReactElement;
   name: string;
   link: string;
+  desc?: string;
+  iconBg?: string;
 };
 
 type SectionItemLinksProps = {
@@ -15,33 +14,32 @@ export default function SectionItemLinks({
   dataItemLinks,
 }: SectionItemLinksProps) {
   return (
-    <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2  xl:grid-cols-3 ">
-      {dataItemLinks.map((item: LinkItem, index: number) => {
-        return (
-          <div key={index}>
-            <Button
-              variant={"default-outline"}
-              size="large"
-              className="flex justify-between gap-4.5 p-4.5 rounded-[14px] w-full"
-              onClick={() =>
-                window.open(item.link, "_blank", "noopener,noreferrer")
-              }
-            >
-              <div className="flex items-center">
-                <div className="bg-bg-white-hover size-12 rounded-full border border-otl-divider items-center justify-center flex">
-                  {item.icon}
-                </div>
-                <div className="pl-2 text-start font-heading text-body-md font-semibold">
-                  {item.name}
-                </div>
-              </div>
-              <div className="p-1.5">
-                <ArrowOutgoingIcon />
-              </div>
-            </Button>
+    <div className="flex flex-col gap-3">
+      {dataItemLinks.map((item: LinkItem, index: number) => (
+        <button
+          key={index}
+          type="button"
+          onClick={() =>
+            window.open(item.link, "_blank", "noopener,noreferrer")
+          }
+          className="group flex flex-col gap-2.5 rounded-[14px] bg-[#F7F8FA] p-4 text-left transition-shadow hover:shadow-md focus:outline-primary-200"
+        >
+          <div
+            className="flex size-10 items-center justify-center rounded-[10px]"
+            style={{ backgroundColor: item.iconBg ?? "#E7F0FE" }}
+          >
+            {item.icon}
           </div>
-        );
-      })}
+          <div className="flex flex-col gap-1">
+            <div className="text-body-sm font-bold text-txt-black-900">
+              {item.name}
+            </div>
+            {item.desc && (
+              <div className="text-body-xs text-txt-black-500">{item.desc}</div>
+            )}
+          </div>
+        </button>
+      ))}
     </div>
   );
 }

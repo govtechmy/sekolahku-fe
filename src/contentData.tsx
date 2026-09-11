@@ -1,4 +1,4 @@
-import { JataNegaraIcon } from "@govtechmy/myds-react/icon";
+import { UserIcon, CopyIcon } from "@govtechmy/myds-react/icon";
 
 //fetch backend when available later
 export const siaranSocialLinks = [
@@ -75,9 +75,11 @@ export const dataItemLinks = [
   //   link: "https://sapsnkra.moe.gov.my/",
   // },
   {
-    icon: <JataNegaraIcon />,
+    icon: <UserIcon className="size-[18px] text-[#0062FF]" />,
     name: "IDME",
     link: "https://idme.moe.gov.my/",
+    desc: "Sistem Pengurusan Identiti",
+    iconBg: "#E7F0FE",
   },
   // {
   //   icon: <JataNegaraIcon />,
@@ -100,8 +102,10 @@ export const dataItemLinks = [
   //   link: "https://emisonline.moe.gov.my/",
   // },
   {
-    icon: <JataNegaraIcon />,
+    icon: <CopyIcon className="size-[18px] text-[#F59E0B]" />,
     name: "DELIMa",
     link: "https://d2.delima.edu.my/",
+    desc: "Pembelajaran Digital Maya",
+    iconBg: "#FDF1DE",
   },
 ];
