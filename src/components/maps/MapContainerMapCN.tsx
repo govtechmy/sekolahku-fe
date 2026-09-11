@@ -128,7 +128,7 @@ export function MapContainerMapCN() {
     routeCoordinates,
     mapFilters,
     mapQuery,
-    initialLocationSet,
+    setLocationPickerOpen,
   } = useMapViewStore();
 
   const { initialLocationUser } = useLocationSessionStore();
@@ -583,13 +583,18 @@ export function MapContainerMapCN() {
     [setCenter, setZoom],
   );
 
-  // Recenter on the location the user picked / was geolocated to.
+  // Recenter on the location the user picked / was geolocated to. If no
+  // location is known yet (geolocation denied/unavailable), open the manual
+  // picker instead of doing nothing.
   const handleGoToMyLocation = useCallback(() => {
     const [lat, lng] = useLocationSessionStore.getState().initialLocationUser;
-    if (lat == null || lng == null) return;
+    if (lat == null || lng == null) {
+      setLocationPickerOpen(true);
+      return;
+    }
     setCenter([lat, lng]);
     setZoom(ZOOM_LEVELS.USER);
-  }, [setCenter, setZoom]);
+  }, [setCenter, setZoom, setLocationPickerOpen]);
 
   return (
     <Map
@@ -606,10 +611,10 @@ export function MapContainerMapCN() {
       style={{ width: "100%", height: "100%" }}
     >
       <NavigationControl position="bottom-right" />
-      {/* Registered after NavigationControl so it stacks above the + button. */}
-      {initialLocationSet && (
-        <MyLocationControl onClick={handleGoToMyLocation} />
-      )}
+      {/* Registered after NavigationControl so it stacks above the + button.
+          Always shown: with a known location it recenters, otherwise it opens
+          the manual location picker. */}
+      <MyLocationControl onClick={handleGoToMyLocation} />
 
       {/* State Polygons */}
       {shouldShowPolygons &&
