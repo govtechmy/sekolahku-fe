@@ -22,7 +22,7 @@ export default function SectionItemLinks({
           onClick={() =>
             window.open(item.link, "_blank", "noopener,noreferrer")
           }
-          className="group flex flex-col gap-2.5 rounded-[14px] bg-[#F7F8FA] p-4 text-left transition-shadow hover:shadow-md focus:outline-primary-200"
+          className="group flex flex-col gap-2.5 rounded-[14px] bg-[#F7F8FA] p-4 text-left transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:ring-2 hover:ring-otl-primary-200 focus:outline-primary-200"
         >
           <div
             className="flex size-10 items-center justify-center rounded-[10px]"

@@ -101,7 +101,7 @@ export default function CustomChart({
       <div className="bg-white">
         <div className="flex flex-col gap-3 items-start justify-between mb-6">
           <div>
-            <h3 className="text-txt-black-900 font-bold text-lg font-body">
+            <h3 className="text-txt-black-900 font-bold text-lg font-heading">
               {title}
             </h3>
           </div>

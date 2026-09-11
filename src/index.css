@@ -1,18 +1,15 @@
 @import "@govtechmy/myds-style/full.css";
+/* MYDS only loads Poppins 400/500/600; our headings use 700/800, so load those
+   real weights here to avoid the browser faux-bolding them. */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap");
 @import "maplibre-gl/dist/maplibre-gl.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  * {
-    font-family:
-      "Inter",
-      system-ui,
-      -apple-system,
-      sans-serif !important;
-  }
-}
+/* Inter is the default body font (set by MYDS base: `body { font-family: Inter }`).
+   Headings opt into Poppins via the `font-heading` utility — so we must NOT force
+   a global `* { font-family: Inter !important }` here, or it defeats font-heading. */
 
 /* Hide scrollbar but keep functionality */
 .hide-scrollbar {

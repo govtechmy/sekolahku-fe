@@ -90,7 +90,7 @@ export default function SectionItemTakwim({
                 </span>
               )}
               {item.title && (
-                <div className="text-body-sm font-semibold text-txt-black-900">
+                <div className="line-clamp-2 text-body-sm font-semibold text-txt-black-900">
                   {item.title}
                 </div>
               )}

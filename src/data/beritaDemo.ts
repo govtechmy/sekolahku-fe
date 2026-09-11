@@ -5,7 +5,7 @@
 // API returns no siaran, we show this sample content with working images so the
 // full home layout is visible. Gated by `import.meta.env.DEV` — never used in
 // production, where real siaran data is present.
-import type { SiaranItem } from "../models/response";
+import type { NewsCardItem } from "../components/shared/NewsCard";
 
 const demoImage =
   "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80";
@@ -40,4 +40,4 @@ export const DEMO_BERITA = [
     imageHero: { url: demoImage, alt: "Berita" },
     categoryInfo: { name: "Bantuan", colors: "#F59E0B" },
   },
-] as unknown as SiaranItem[];
+] satisfies NewsCardItem[];

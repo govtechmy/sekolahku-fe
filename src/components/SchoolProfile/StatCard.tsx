@@ -23,7 +23,7 @@ export const StatCard = ({ icon, label, value, className }: StatCardProps) => {
           <p className="text-txt-primary text-center text-sm max-md:text-xs font-semibold leading-tight tracking-widest uppercase">
             {label}
           </p>
-          <div className="self-stretch text-txt-black-900 text-heading-lg max-md:text-heading-sm font-semibold">
+          <div className="self-stretch font-heading text-txt-black-900 text-heading-lg max-md:text-heading-sm font-semibold">
             {value}
           </div>
         </div>

@@ -146,7 +146,7 @@ export default function SchoolProfile() {
           </div>
           <PageContainer>
             <div className="pt-[84px] pb-[32px] px-[40px] max-md:pt-[48px] max-md:px-[28px]">
-              <div className="text-heading-sm text-txt-black-900 font-semibold pb-12">
+              <div className="font-heading text-heading-sm text-txt-black-900 font-semibold pb-12">
                 <div
                   className=" focus:outline-primary-200"
                   tabIndex={0}
@@ -277,7 +277,7 @@ export default function SchoolProfile() {
           {nearbySchools && nearbySchools.length > 0 && (
             <PageContainer>
               <div className="py-[84px] px-[40px] max-md:px-[28px] max-md:py-[48px]">
-                <div className="text-heading-sm text-txt-black-900 font-semibold pb-12 ">
+                <div className="font-heading text-heading-sm text-txt-black-900 font-semibold pb-12 ">
                   <div
                     className="focus:outline-primary-200"
                     tabIndex={0}

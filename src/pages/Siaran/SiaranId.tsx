@@ -224,7 +224,7 @@ export default function SiaranId() {
                   {/* PDF/Document Attachments */}
                   {documentAttachments.length > 0 && (
                     <div className="flex flex-col gap-2">
-                      <h3 className="text-body-lg font-semibold font-body">
+                      <h3 className="text-body-lg font-semibold font-heading">
                         Lampiran
                       </h3>
                       <div className="flex flex-wrap gap-2">

@@ -52,7 +52,7 @@ export default function SectionItemStats({ analytics }: SectionItemStatsProps) {
       {STATS.map(({ key, eyebrow, label, accent, soft, Icon }) => (
         <div
           key={key}
-          className="flex flex-col gap-4 rounded-2xl border border-otl-gray-200 bg-bg-white p-5"
+          className="flex flex-col gap-4 rounded-2xl bg-[#F7F8FA] p-5"
         >
           <div
             className="flex items-center gap-1.5 text-body-xs font-semibold"
