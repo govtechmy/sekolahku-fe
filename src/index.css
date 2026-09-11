@@ -1,5 +1,4 @@
 @import "@govtechmy/myds-style/full.css";
-@import "leaflet/dist/leaflet.css";
 @import "maplibre-gl/dist/maplibre-gl.css";
 @tailwind base;
 @tailwind components;
@@ -53,13 +52,6 @@
 /* Target the CommandK search input specifically */
 input[aria-controls="search-input"][cmdk-input][role="combobox"] {
   width: 100px;
-}
-
-/* Remove default Leaflet DivIcon square background/border */
-.sekolah-marker-icon,
-.parlimen-marker-icon,
-.negeri-marker-icon {
-  background: transparent !important;
 }
 
 @media print {

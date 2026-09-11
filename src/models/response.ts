@@ -45,6 +45,7 @@ export interface SchoolInfoLokasi {
 export interface SchoolInfoPentadbiran {
   parlimen: string;
   negeri: string;
+  peringkat?: string;
   ppd: string;
   bantuan: string;
   bilSesi: string;

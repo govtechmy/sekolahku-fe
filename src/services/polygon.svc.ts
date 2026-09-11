@@ -12,10 +12,41 @@ const normalizeStateName = (stateName: string): string => {
   return stateName.toUpperCase().replace(/\s+/g, "_");
 };
 
+/**
+ * Module-level cache keyed by normalized state name. Lets a prefetch (e.g. on
+ * hover over the "Carian Sekolah" nav item) warm the polygons so the map page
+ * resolves them instantly on mount. In-flight promises are cached too, so a
+ * prefetch immediately followed by navigation shares one request.
+ */
+const polygonCache = new Map<string, GeoJSONFeature>();
+const polygonPromises = new Map<string, Promise<GeoJSONFeature>>();
+
 export const getStatePolygon = async (
   stateName: string,
 ): Promise<GeoJSONFeature> => {
   const state = normalizeStateName(stateName);
+
+  const cached = polygonCache.get(state);
+  if (cached) return cached;
+
+  const inFlight = polygonPromises.get(state);
+  if (inFlight) return inFlight;
+
+  const promise = fetchStatePolygon(state);
+  polygonPromises.set(state, promise);
+
+  try {
+    const data = await promise;
+    polygonCache.set(state, data);
+    return data;
+  } catch (error) {
+    // Allow a retry on the next call if this attempt failed.
+    polygonPromises.delete(state);
+    throw error;
+  }
+};
+
+const fetchStatePolygon = async (state: string): Promise<GeoJSONFeature> => {
   const url = `${S3_BASE_URL}/${state}/${state}.json`;
 
   try {
@@ -48,7 +79,7 @@ export const getStatePolygon = async (
 
     return geoJsonData;
   } catch (error) {
-    console.error(`Error fetching polygon for ${stateName}:`, error);
+    console.error(`Error fetching polygon for ${state}:`, error);
     console.error(`URL attempted: ${url}`);
     throw error;
   }

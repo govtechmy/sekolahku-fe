@@ -1,7 +1,7 @@
 /**
  * Coordinate conversion utilities.
  *
- * The Zustand store uses [lat, lng] (Leaflet convention).
+ * The Zustand store uses [lat, lng].
  * MapLibre GL uses [lng, lat] (GeoJSON / GPS convention).
  *
  * These helpers ensure consistent conversion at the map boundary.

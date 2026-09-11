@@ -22,6 +22,7 @@ type FilterDropdownsProps = {
   setSelectedNegeri: (value: string) => void;
   setSelectedJenis: (value: string) => void;
   setSelectedPeringkat: (value: string) => void;
+  onClearFilters: () => void;
 };
 
 export function FilterDropdowns({
@@ -33,7 +34,12 @@ export function FilterDropdowns({
   setSelectedNegeri,
   setSelectedJenis,
   setSelectedPeringkat,
+  onClearFilters,
 }: FilterDropdownsProps) {
+  const hasActiveFilter =
+    selectedNegeri !== "ALL" ||
+    selectedJenis !== "ALL" ||
+    selectedPeringkat !== "ALL";
   return (
     <div className="px-3 py-4 border-t border-gray-200 flex flex-wrap gap-2 text-sm">
       {/* NEW IMPLEMENTATION - SimpleSelect with built-in truncation */}
@@ -120,6 +126,16 @@ export function FilterDropdowns({
               </SimpleSelectItem>
             ))}
       </SimpleSelect>
+
+      {hasActiveFilter && (
+        <button
+          type="button"
+          onClick={onClearFilters}
+          className="h-9 rounded-md border border-gray-300 px-3 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+        >
+          Kosongkan Filter
+        </button>
+      )}
 
       {/*
       <Select

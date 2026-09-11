@@ -1,5 +1,8 @@
 import { Source, Layer } from "react-map-gl/maplibre";
-import type { FillLayerSpecification, LineLayerSpecification } from "maplibre-gl";
+import type {
+  FillLayerSpecification,
+  LineLayerSpecification,
+} from "maplibre-gl";
 import type { GeoJSONFeature } from "../../types/polygon";
 import { getStateColor } from "../../utils/stateColors";
 
@@ -14,7 +17,11 @@ export function StatePolygonMapCN({
 }: StatePolygonMapCNProps) {
   const color = getStateColor(stateName);
 
-  if (!geoJsonData?.type || geoJsonData.type !== "Feature" || !geoJsonData.geometry) {
+  if (
+    !geoJsonData?.type ||
+    geoJsonData.type !== "Feature" ||
+    !geoJsonData.geometry
+  ) {
     return null;
   }
 

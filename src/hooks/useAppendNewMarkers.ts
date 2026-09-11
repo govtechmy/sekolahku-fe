@@ -32,13 +32,17 @@ export function useAppendNewMarkers({
 }: UseAppendNewMarkersParams) {
   const { query: name } = useMapViewStore();
   const append = useCallback(
-    async (center: Coordinates) => {
+    async (center: Coordinates, overrideRadius?: number) => {
       // Read the latest state from the store at call time to avoid stale closures
       const state = useMapViewStore.getState();
       const currentZoom = state.zoom ?? zoom ?? 6;
       const currentRadius = state.radius || radius;
-      // Recalculate radius based on current zoom and center latitude for accuracy
-      const effectiveRadius = CalculateRadiusZoomLevel(currentZoom, center.koordinatXX) || currentRadius;
+      // Recalculate radius based on current zoom and center latitude for accuracy.
+      // An explicit overrideRadius (e.g. the initial 20km on-load fetch) wins.
+      const effectiveRadius =
+        overrideRadius ??
+        (CalculateRadiusZoomLevel(currentZoom, center.koordinatXX) ||
+          currentRadius);
 
       try {
         const markersArray = await fetchNearbySchools(

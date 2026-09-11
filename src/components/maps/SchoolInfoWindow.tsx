@@ -204,7 +204,13 @@ export function SchoolInfoWindow({
           />
           <InfoRow
             label="Bantuan"
-            value={(SCHOOL_JENIS_BANTUAN[school?.data?.infoPentadbiran?.bantuan ?? ""] ?? school?.data?.infoPentadbiran?.bantuan) || "Tiada Maklumat"}
+            value={
+              (SCHOOL_JENIS_BANTUAN[
+                school?.data?.infoPentadbiran?.bantuan ?? ""
+              ] ??
+                school?.data?.infoPentadbiran?.bantuan) ||
+              "Tiada Maklumat"
+            }
           />
         </div>
       </div>

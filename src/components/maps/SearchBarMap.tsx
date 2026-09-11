@@ -1,13 +1,16 @@
-import { useState, useEffect, useRef, type UIEvent } from "react";
+import { useState, useEffect, useRef, useCallback, type UIEvent } from "react";
 import {
   ArrowBackIcon,
   ChevronRightIcon,
   PinIcon,
 } from "@govtechmy/myds-react/icon";
 import { FilterDropdowns } from "./FilterDropdowns";
+import { SearchFallbackIndicator } from "../shared/SearchFallbackIndicator";
 import type { SearchBarMapProps } from "../../types/maps";
+import type { ItemSekolahModel } from "../../models/response";
 import { getSchoolS3Json } from "../../services/school.svc";
-import { getRoute } from "../../services/route.svc";
+import { searchPoi, type PoiResult } from "../../services/geocode.svc";
+import { getRoute, getRouteDistances } from "../../services/route.svc";
 import {
   SearchBar,
   SearchBarInput,
@@ -56,19 +59,16 @@ export function SearchBarMap({
   setSelectedPeringkat,
 }: SearchBarMapComponentProps) {
   const {
-    initialLocationSet,
     viewSchool,
     setViewSchool,
     localSuggestions,
-    setLocalSuggestions,
-    query,
-    setQuery,
-    handleSearch,
     localSuggestionsPage,
     hasMoreLocalSuggestions,
     isLoadingLocalSuggestions,
+    handleSearch,
+    query,
+    setQuery,
     dataTotal,
-    setDataTotal,
     setPointA,
     setPointB,
     setRoute,
@@ -87,11 +87,25 @@ export function SearchBarMap({
   const [fieldAValue, setFieldAValue] = useState("Lokasi Semasa");
   const [fieldAIsCurrentLocation, setFieldAIsCurrentLocation] = useState(true);
 
+  // Field A POI geocoding (search "From" like Google Maps) state
+  const [fieldASuggestions, setFieldASuggestions] = useState<PoiResult[]>([]);
+  const [fieldAFocused, setFieldAFocused] = useState(false);
+  const [fieldALoading, setFieldALoading] = useState(false);
+  const fieldADebounceRef = useRef<number | null>(null);
+  const fieldAAbortRef = useRef<AbortController | null>(null);
+  const fieldABlurTimerRef = useRef<number | null>(null);
+  // Set right after a suggestion is picked so the geocode effect doesn't
+  // immediately re-search the committed label and reopen the dropdown.
+  const fieldACommittedRef = useRef(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const inputARef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const isSwappingRef = useRef(false);
   const hoverRequestIdRef = useRef(0);
+  // The school "pinned" by an actual click — survives mouse-leave. Hover only
+  // previews; leaving the list restores this (or clears if nothing pinned).
+  const pinnedSchoolRef = useRef<ItemSekolahModel | null>(null);
 
   // Use predefined lists instead of extracting from markers
   const negeriList = NEGERI_LIST;
@@ -99,63 +113,74 @@ export function SearchBarMap({
 
   // Set pointA from user location when it becomes available
   useEffect(() => {
-    if (fieldAIsCurrentLocation && initialLocationUser[0] != null && initialLocationUser[1] != null) {
+    if (
+      fieldAIsCurrentLocation &&
+      initialLocationUser[0] != null &&
+      initialLocationUser[1] != null
+    ) {
       setPointA([initialLocationUser[0], initialLocationUser[1]]);
     }
   }, [fieldAIsCurrentLocation, initialLocationUser, setPointA]);
 
-  // Fetch OSRM route when both pointA and pointB are set
+  // Origin / destination + computed driving route (OSRM).
   const pointA = useMapViewStore((s) => s.pointA);
   const pointB = useMapViewStore((s) => s.pointB);
+  const routeDistance = useMapViewStore((s) => s.routeDistance);
+  const routeDuration = useMapViewStore((s) => s.routeDuration);
+  // Origin coords as primitives — stable, statically-checkable effect deps.
+  const originLat = pointA?.[0];
+  const originLng = pointA?.[1];
+  const routeAbortRef = useRef<AbortController | null>(null);
 
+  // Road (driving) distance in meters for the nearest few results, keyed by
+  // kodSekolah. Filled by one OSRM /table call; other rows keep straight-line.
+  const [roadDistances, setRoadDistances] = useState<Map<string, number>>(
+    new Map(),
+  );
+  const tableAbortRef = useRef<AbortController | null>(null);
+  const tableDebounceRef = useRef<number | null>(null);
+  // How many of the top (nearest) suggestions get a real road distance.
+  const ROAD_DISTANCE_TOP_N = 10;
+
+  // Fetch a road-following route (distance + duration) whenever both the
+  // origin (Field A: current location or a picked POI) and destination
+  // (Field B: selected school) are set.
   useEffect(() => {
     if (!pointA || !pointB) {
+      routeAbortRef.current?.abort();
       clearRoute();
       return;
     }
 
-    let cancelled = false;
+    routeAbortRef.current?.abort();
+    const controller = new AbortController();
+    routeAbortRef.current = controller;
 
-    const fetchRoute = async () => {
-      const result = await getRoute(pointA, pointB);
-      if (cancelled) return;
-
+    getRoute(pointA, pointB, controller.signal).then((result) => {
+      if (routeAbortRef.current !== controller) return; // stale
       if (result) {
         setRoute(result.coordinates, result.distance, result.duration);
       } else {
         clearRoute();
       }
-    };
-
-    fetchRoute();
+    });
 
     return () => {
-      cancelled = true;
+      controller.abort();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pointA?.[0], pointA?.[1], pointB?.[0], pointB?.[1]]);
 
-  // Reset selectedJenis to ALL when peringkat changes, then trigger search
+  // Reset jenis when peringkat changes; the backend search effect below
+  // re-runs automatically for both values.
   useEffect(() => {
     if (prevPeringkatRef.current !== selectedPeringkat) {
       prevPeringkatRef.current = selectedPeringkat;
-      // Reset jenis when peringkat changes - this will trigger the search via selectedJenis change
       if (selectedJenis !== "ALL") {
         setSelectedJenis("ALL");
-      } else {
-        // If jenis is already ALL, manually trigger search since selectedJenis won't change
-        if (initialLocationSet) {
-          handleSearch({
-            namaSekolah: query.trim().length >= 3 ? query : "",
-            negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
-            jenis: "ALL",
-            peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
-          });
-        }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedPeringkat]);
+  }, [selectedJenis, selectedPeringkat]);
 
   // Also reset if the current jenis is not valid for the new schoolTypes list
   useEffect(() => {
@@ -171,6 +196,8 @@ export function SearchBarMap({
 
   // Handler for Field A value change
   const handleFieldAChange = (value: string) => {
+    // User is typing again → allow the geocode effect to run.
+    fieldACommittedRef.current = false;
     setFieldAValue(value);
     if (value === "" || value === "Lokasi Semasa") {
       setFieldAIsCurrentLocation(true);
@@ -179,9 +206,35 @@ export function SearchBarMap({
       }
     } else {
       setFieldAIsCurrentLocation(false);
-      // Clear pointA when typing a custom value (no geocoding available)
+      // Origin is unknown until the user picks a POI suggestion.
       setPointA(null);
     }
+  };
+
+  // Pick a geocoded POI as the route origin (Field A).
+  const handleSelectPoi = (poi: PoiResult) => {
+    fieldACommittedRef.current = true;
+    setFieldAValue(poi.label);
+    setFieldAIsCurrentLocation(false);
+    setPointA([poi.lat, poi.lng]);
+    setFieldASuggestions([]);
+    setFieldALoading(false);
+    setFieldAFocused(false);
+    inputARef.current?.blur();
+  };
+
+  // Reset Field A back to the device's current location.
+  const handleUseCurrentLocation = () => {
+    fieldACommittedRef.current = true;
+    setFieldAValue("Lokasi Semasa");
+    setFieldAIsCurrentLocation(true);
+    if (initialLocationUser[0] != null && initialLocationUser[1] != null) {
+      setPointA([initialLocationUser[0], initialLocationUser[1]]);
+    }
+    setFieldASuggestions([]);
+    setFieldALoading(false);
+    setFieldAFocused(false);
+    inputARef.current?.blur();
   };
 
   // Swap A and B values
@@ -191,9 +244,6 @@ export function SearchBarMap({
     const currentB = query;
     const pointACoords = useMapViewStore.getState().pointA;
     const pointBCoords = useMapViewStore.getState().pointB;
-
-    // Mark as swapping to prevent debounce search from firing
-    isSwappingRef.current = true;
 
     // Move B text → A
     if (currentB && currentB.trim().length > 0) {
@@ -207,7 +257,11 @@ export function SearchBarMap({
     // Move A text → B
     if (currentAIsLocation) {
       setQuery("");
-    } else if (currentA && currentA.trim().length > 0 && currentA !== "Lokasi Semasa") {
+    } else if (
+      currentA &&
+      currentA.trim().length > 0 &&
+      currentA !== "Lokasi Semasa"
+    ) {
       setQuery(currentA);
     } else {
       setQuery("");
@@ -222,11 +276,6 @@ export function SearchBarMap({
       setCenter(pointACoords);
       setZoom(15);
     }
-
-    // Reset swapping flag after state updates propagate
-    setTimeout(() => {
-      isSwappingRef.current = false;
-    }, 500);
   };
 
   useEffect(() => {
@@ -280,9 +329,67 @@ export function SearchBarMap({
     };
   }, []);
 
-  // Trigger search when query is set (with debouncing)
+  // Debounced POI geocoding for Field A ("From"), Google-Maps style. Runs only
+  // while the user is typing a custom origin (not "Lokasi Semasa").
   useEffect(() => {
-    // Skip search during a swap operation
+    const q = fieldAValue.trim();
+    if (
+      fieldACommittedRef.current ||
+      fieldAIsCurrentLocation ||
+      q === "Lokasi Semasa" ||
+      q.length < 3
+    ) {
+      setFieldASuggestions([]);
+      setFieldALoading(false);
+      return;
+    }
+
+    if (fieldADebounceRef.current) clearTimeout(fieldADebounceRef.current);
+    setFieldALoading(true);
+    fieldADebounceRef.current = window.setTimeout(() => {
+      fieldAAbortRef.current?.abort();
+      const controller = new AbortController();
+      fieldAAbortRef.current = controller;
+      searchPoi(q, controller.signal).then((results) => {
+        // Ignore stale responses superseded by a newer request.
+        if (fieldAAbortRef.current !== controller) return;
+        setFieldASuggestions(results);
+        setFieldALoading(false);
+      });
+    }, 450);
+
+    return () => {
+      if (fieldADebounceRef.current) clearTimeout(fieldADebounceRef.current);
+    };
+  }, [fieldAValue, fieldAIsCurrentLocation]);
+
+  // Cleanup Field A timers / in-flight request on unmount.
+  useEffect(() => {
+    return () => {
+      if (fieldADebounceRef.current) clearTimeout(fieldADebounceRef.current);
+      if (fieldABlurTimerRef.current) clearTimeout(fieldABlurTimerRef.current);
+      fieldAAbortRef.current?.abort();
+    };
+  }, []);
+
+  const runBackendSearch = useCallback(
+    (page = 1, append = false) =>
+      handleSearch(
+        {
+          namaSekolah: query.trim() || undefined,
+          negeri: selectedNegeri === "ALL" ? undefined : selectedNegeri,
+          jenis: selectedJenis === "ALL" ? undefined : selectedJenis,
+          peringkat:
+            selectedPeringkat === "ALL" ? undefined : selectedPeringkat,
+        },
+        page,
+        append,
+      ),
+    [handleSearch, query, selectedJenis, selectedNegeri, selectedPeringkat],
+  );
+
+  // Send every school query and supported filter directly to the backend.
+  useEffect(() => {
     if (isSwappingRef.current) return;
 
     if (debounceTimerRef.current) {
@@ -291,57 +398,74 @@ export function SearchBarMap({
 
     const trimmedQuery = query.trim();
 
-    if (trimmedQuery.length >= 3 && initialLocationSet) {
+    if (trimmedQuery.length >= 2) {
       setIsExpanded(true);
-      debounceTimerRef.current = window.setTimeout(() => {
-        handleSearch({
-          namaSekolah: query,
-          negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
-          jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
-          peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
-        }).then(() => {
-          // After search completes, find exact match from current store state
-          const currentSuggestions = useMapViewStore.getState().localSuggestions;
-          if (currentSuggestions.length > 0) {
-            const trimmedQuery = query.trim().toLowerCase();
-            const exactMatch = currentSuggestions.find(
-              (school) => school.namaSekolah.toLowerCase() === trimmedQuery,
-            );
-
-            if (exactMatch) {
-              handleSelect(exactMatch);
-            } else {
-              // No exact match found, don't show school info window
-              setViewSchool(null);
-            }
-          }
-        });
-      }, 250);
-    } else if (trimmedQuery.length < 3 && initialLocationSet) {
-      setLocalSuggestions([]);
-      setDataTotal(0);
-      // No query — fetch all with current filters
-      handleSearch({
-        namaSekolah: "",
-        negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
-        jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
-        peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
-      });
     }
+
+    debounceTimerRef.current = window.setTimeout(() => {
+      void runBackendSearch().then(() => {
+        if (trimmedQuery.length < 2) return;
+        const current = useMapViewStore.getState().localSuggestions;
+        const exactMatch = current.find(
+          (school) =>
+            school.namaSekolah.toLowerCase() === trimmedQuery.toLowerCase(),
+        );
+        if (exactMatch) handleSelect(exactMatch);
+      });
+    }, 400);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, initialLocationSet]);
+  }, [runBackendSearch]);
+
+  // Road distances for the nearest N results (one OSRM /table call). Keyed off
+  // the top-N kodSekolah so paging (append) doesn't re-trigger the request.
+  const topKods = localSuggestions
+    .slice(0, ROAD_DISTANCE_TOP_N)
+    .map((s) => s.kodSekolah ?? "")
+    .join(",");
 
   useEffect(() => {
-    if (!initialLocationSet) return;
-    handleSearch({
-      namaSekolah: query.trim().length >= 3 ? query : "",
-      negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
-      jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
-      peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
-    });
-    // Note: selectedPeringkat change is handled separately to reset jenis first
+    const top = localSuggestions
+      .slice(0, ROAD_DISTANCE_TOP_N)
+      .filter((s) => s.kodSekolah);
+    if (originLat == null || originLng == null || top.length === 0) {
+      setRoadDistances(new Map());
+      return;
+    }
+
+    if (tableDebounceRef.current) clearTimeout(tableDebounceRef.current);
+    tableDebounceRef.current = window.setTimeout(() => {
+      tableAbortRef.current?.abort();
+      const controller = new AbortController();
+      tableAbortRef.current = controller;
+      const dests = top.map(
+        (s) => [s.koordinatYY, s.koordinatXX] as [number, number],
+      );
+      getRouteDistances([originLat, originLng], dests, controller.signal).then(
+        (results) => {
+          if (tableAbortRef.current !== controller) return; // stale
+          const next = new Map<string, number>();
+          results.forEach((r, i) => {
+            const kod = top[i].kodSekolah;
+            if (kod && r.distance != null) next.set(kod, r.distance);
+          });
+          setRoadDistances(next);
+        },
+      );
+    }, 500);
+
+    return () => {
+      if (tableDebounceRef.current) clearTimeout(tableDebounceRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedJenis, selectedNegeri]);
+  }, [topKods, originLat, originLng]);
+
+  // Cleanup the /table request/timer on unmount.
+  useEffect(() => {
+    return () => {
+      if (tableDebounceRef.current) clearTimeout(tableDebounceRef.current);
+      tableAbortRef.current?.abort();
+    };
+  }, []);
 
   const handleHover = async (school: SearchBarMapProps) => {
     try {
@@ -375,6 +499,7 @@ export function SearchBarMap({
         school.kodSekolah,
       );
       if (detail) {
+        pinnedSchoolRef.current = detail;
         setViewSchool(detail);
         setCenter([school.koordinatYY, school.koordinatXX]);
         setZoom(16);
@@ -400,24 +525,14 @@ export function SearchBarMap({
   };
 
   const loadMoreSuggestions = () => {
-    if (isLoadingLocalSuggestions || !hasMoreLocalSuggestions) return;
-
-    handleSearch(
-      {
-        namaSekolah: query.trim().length >= 3 ? query : "",
-        negeri: selectedNegeri !== "ALL" ? selectedNegeri : "ALL",
-        jenis: selectedJenis !== "ALL" ? selectedJenis : "ALL",
-        peringkat: selectedPeringkat !== "ALL" ? selectedPeringkat : "ALL",
-      },
-      (localSuggestionsPage || 1) + 1,
-      true,
-    );
+    if (!hasMoreLocalSuggestions || isLoadingLocalSuggestions) return;
+    void runBackendSearch(localSuggestionsPage + 1, true);
   };
 
   const handleScroll = (event: UIEvent<HTMLDivElement>) => {
     const target = event.currentTarget;
     // Distance (in px) from the bottom at which to trigger loading more results
-    const threshold = 50;
+    const threshold = 40;
 
     if (
       target.scrollTop + target.clientHeight >=
@@ -470,7 +585,9 @@ export function SearchBarMap({
               >
                 <ArrowBackIcon className="size-4" />
               </Button>
-              <span className="text-sm font-medium text-txt-primary">Carian Sekolah</span>
+              <span className="text-sm font-medium text-txt-primary">
+                Carian Sekolah
+              </span>
             </div>
           )}
 
@@ -486,34 +603,111 @@ export function SearchBarMap({
 
               {/* Input fields */}
               <div className="flex flex-col flex-1 gap-2">
-                {/* Field A - From */}
-                <div className="flex items-center border border-otl-divider rounded-lg px-3 py-2 bg-gray-50">
-                  <input
-                    ref={inputARef}
-                    type="text"
-                    placeholder="Dari"
-                    aria-label="Lokasi asal"
-                    value={fieldAValue}
-                    onChange={(e) => handleFieldAChange(e.target.value)}
-                    onFocus={() => {
-                      if (fieldAIsCurrentLocation) {
-                        setFieldAValue("");
-                      }
-                    }}
-                    onBlur={() => {
-                      if (fieldAValue.trim() === "") {
-                        setFieldAValue("Lokasi Semasa");
-                        setFieldAIsCurrentLocation(true);
-                        if (initialLocationUser[0] != null && initialLocationUser[1] != null) {
-                          setPointA([initialLocationUser[0], initialLocationUser[1]]);
+                {/* Field A - From (current location or POI search) */}
+                <div className="relative">
+                  <div className="flex items-center border border-otl-divider rounded-lg px-3 py-2 bg-gray-50">
+                    <input
+                      ref={inputARef}
+                      type="text"
+                      placeholder="Dari — lokasi semasa atau cari tempat"
+                      aria-label="Lokasi asal"
+                      value={fieldAValue}
+                      onChange={(e) => handleFieldAChange(e.target.value)}
+                      onFocus={() => {
+                        setFieldAFocused(true);
+                        if (fieldABlurTimerRef.current) {
+                          clearTimeout(fieldABlurTimerRef.current);
                         }
-                      }
-                    }}
-                    className={clx(
-                      "flex-1 bg-transparent text-sm outline-none",
-                      fieldAIsCurrentLocation ? "text-blue-600" : "text-txt-primary",
-                    )}
-                  />
+                        if (fieldAIsCurrentLocation) {
+                          setFieldAValue("");
+                        }
+                      }}
+                      onBlur={() => {
+                        // Delay so a click on a dropdown item registers first.
+                        fieldABlurTimerRef.current = window.setTimeout(() => {
+                          setFieldAFocused(false);
+                          if (fieldAValue.trim() === "") {
+                            setFieldAValue("Lokasi Semasa");
+                            setFieldAIsCurrentLocation(true);
+                            if (
+                              initialLocationUser[0] != null &&
+                              initialLocationUser[1] != null
+                            ) {
+                              setPointA([
+                                initialLocationUser[0],
+                                initialLocationUser[1],
+                              ]);
+                            }
+                          }
+                        }, 150);
+                      }}
+                      className={clx(
+                        "flex-1 bg-transparent text-sm outline-none",
+                        fieldAIsCurrentLocation
+                          ? "text-blue-600"
+                          : "text-txt-primary",
+                      )}
+                    />
+                  </div>
+
+                  {fieldAFocused && (
+                    <div className="absolute left-0 right-0 top-full mt-1 z-[600] bg-white border border-otl-divider rounded-lg shadow-lg overflow-hidden max-h-64 overflow-y-auto">
+                      {/* Switch back to the device's current location */}
+                      <button
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={handleUseCurrentLocation}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-blue-600 hover:bg-gray-50 border-b border-otl-divider"
+                      >
+                        <PinIcon className="w-4 h-4 shrink-0" />
+                        Guna Lokasi Semasa
+                      </button>
+
+                      {fieldALoading && (
+                        <div className="px-3 py-2 text-sm text-gray-500">
+                          Mencari lokasi…
+                        </div>
+                      )}
+
+                      {!fieldALoading &&
+                        fieldASuggestions.map((poi) => (
+                          <button
+                            key={poi.id}
+                            type="button"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => handleSelectPoi(poi)}
+                            className="w-full flex flex-col items-start gap-0.5 px-3 py-2 text-left hover:bg-gray-50 border-b last:border-b-0 border-otl-divider"
+                          >
+                            <span className="text-sm text-txt-primary line-clamp-1">
+                              {poi.label}
+                            </span>
+                            {poi.sublabel && (
+                              <span className="text-xs text-gray-500 line-clamp-1">
+                                {poi.sublabel}
+                              </span>
+                            )}
+                          </button>
+                        ))}
+
+                      {!fieldALoading &&
+                        !fieldAIsCurrentLocation &&
+                        fieldAValue.trim().length >= 3 &&
+                        fieldASuggestions.length === 0 && (
+                          <div className="px-3 py-2 text-sm text-gray-500">
+                            Tiada lokasi ditemui
+                          </div>
+                        )}
+
+                      {!fieldAIsCurrentLocation &&
+                        fieldAValue.trim().length > 0 &&
+                        fieldAValue.trim().length < 3 && (
+                          <div className="px-3 py-2 text-xs text-gray-400">
+                            Taip sekurang-kurangnya 3 aksara, cth: “McDonald’s
+                            Putrajaya”
+                          </div>
+                        )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Field B - To (school search) */}
@@ -597,6 +791,16 @@ export function SearchBarMap({
 
           {isExpanded && (
             <>
+              {routeDistance != null && routeDuration != null && (
+                <div className="px-4 pb-2 flex items-center gap-2 text-sm text-txt-primary">
+                  <span className="font-semibold">
+                    {(routeDistance / 1000).toFixed(1)} km
+                  </span>
+                  <span className="text-gray-300">•</span>
+                  <span>{Math.max(1, Math.round(routeDuration / 60))} min</span>
+                  <span className="text-xs text-gray-500">anggaran pandu</span>
+                </div>
+              )}
               <FilterDropdowns
                 selectedNegeri={selectedNegeri}
                 selectedJenis={selectedJenis}
@@ -606,6 +810,12 @@ export function SearchBarMap({
                 setSelectedNegeri={setSelectedNegeri}
                 setSelectedJenis={setSelectedJenis}
                 setSelectedPeringkat={setSelectedPeringkat}
+                onClearFilters={() => {
+                  setSelectedNegeri("ALL");
+                  setSelectedJenis("ALL");
+                  setSelectedPeringkat("ALL");
+                  setQuery("");
+                }}
               />
               {dataTotal > 0 && (
                 <div className="p-4 pt-0 text-txt-black-500">
@@ -619,6 +829,11 @@ export function SearchBarMap({
             <div
               ref={listRef}
               onScroll={handleScroll}
+              onMouseLeave={() => {
+                // Leaving the list closes the hover preview, unless a school
+                // has been pinned by an actual click.
+                setViewSchool(pinnedSchoolRef.current);
+              }}
               tabIndex={0}
               className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1 focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 "
             >
@@ -656,24 +871,50 @@ export function SearchBarMap({
                         </span>
 
                         <span className="mt-1 flex items-center text-sm text-primary-600 gap-1">
-                          {initialLocationUser?.[0] &&
-                            initialLocationUser?.[1] && (
+                          {(() => {
+                            const oLat =
+                              pointA?.[0] ?? initialLocationUser?.[0];
+                            const oLng =
+                              pointA?.[1] ?? initialLocationUser?.[1];
+                            if (oLat == null || oLng == null) return null;
+                            const fromLabel =
+                              pointA != null && !fieldAIsCurrentLocation
+                                ? "titik asal"
+                                : "lokasi anda";
+                            // Prefer the OSRM road distance (top-N nearest);
+                            // fall back to straight-line for the rest.
+                            const road = school.kodSekolah
+                              ? roadDistances.get(school.kodSekolah)
+                              : undefined;
+                            if (road != null) {
+                              const text =
+                                road > 1000
+                                  ? `${(road / 1000).toFixed(2)} km ikut jalan dari ${fromLabel}`
+                                  : `${Math.round(road)} meter ikut jalan dari ${fromLabel}`;
+                              return (
+                                <>
+                                  <PinIcon className="w-4 h-4" />
+                                  {text}
+                                </>
+                              );
+                            }
+                            const straight = calculateDistance(
+                              oLat,
+                              oLng,
+                              school.koordinatYY,
+                              school.koordinatXX,
+                            );
+                            const text =
+                              straight > 1000
+                                ? `${(straight / 1000).toFixed(2)} km dari ${fromLabel}`
+                                : `${straight.toFixed(2)} meter dari ${fromLabel}`;
+                            return (
                               <>
                                 <PinIcon className="w-4 h-4" />
-                                {(() => {
-                                  const distanceInMeters = calculateDistance(
-                                    initialLocationUser[0],
-                                    initialLocationUser[1],
-                                    school.koordinatYY,
-                                    school.koordinatXX,
-                                  );
-                                  if (distanceInMeters > 1000) {
-                                    return `${(distanceInMeters / 1000).toFixed(2)} km dari lokasi anda`;
-                                  }
-                                  return `${distanceInMeters.toFixed(2)} meter dari lokasi anda`;
-                                })()}
+                                {text}
                               </>
-                            )}
+                            );
+                          })()}
                         </span>
                       </div>
 
@@ -681,9 +922,18 @@ export function SearchBarMap({
                     </div>
                   </li>
                 ))
+              ) : isLoadingLocalSuggestions ? (
+                <li>
+                  <SearchFallbackIndicator visible={true} className="py-5" />
+                </li>
               ) : (
                 <li className="px-4 py-4 text-sm text-gray-500">
                   Tiada hasil carian
+                </li>
+              )}
+              {localSuggestions.length > 0 && isLoadingLocalSuggestions && (
+                <li className="border-t border-otl-divider">
+                  <SearchFallbackIndicator visible={true} className="py-3" />
                 </li>
               )}
             </div>
@@ -692,18 +942,21 @@ export function SearchBarMap({
       </div>
       {viewSchool && (
         <>
-          {/* Desktop view - side panel */}
+          {/* Desktop view - side panel (beside the sidebar, top aligned) */}
           <div
             className={clx(
               "hidden md:block bg-transparent rounded-xl overflow-y-auto",
               isExpanded
-                ? "my-10 mx-3 max-w-[328px]"
+                ? "mt-2 ml-2 mr-3 max-w-[350px] max-h-[85vh]"
                 : "absolute top-[53px] max-h-[78vh] w-full max-w-[350px]",
             )}
           >
             <SchoolInfoWindow
               school={viewSchool}
-              setSelected={() => setViewSchool(null)}
+              setSelected={() => {
+                pinnedSchoolRef.current = null;
+                setViewSchool(null);
+              }}
               mobile={false}
               searchQuery={query}
             />

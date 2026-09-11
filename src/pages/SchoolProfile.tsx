@@ -231,7 +231,11 @@ export default function SchoolProfile() {
                 {school.data.infoPentadbiran?.bantuan && (
                   <InfoGridItem
                     label="BANTUAN"
-                    value={SCHOOL_JENIS_BANTUAN[school.data.infoPentadbiran.bantuan] ?? school.data.infoPentadbiran.bantuan}
+                    value={
+                      SCHOOL_JENIS_BANTUAN[
+                        school.data.infoPentadbiran.bantuan
+                      ] ?? school.data.infoPentadbiran.bantuan
+                    }
                   />
                 )}
                 {school.data.infoPentadbiran?.bilSesi && (

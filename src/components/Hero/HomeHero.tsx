@@ -3,6 +3,7 @@ import { useMapViewStore } from "../../store/mapView";
 import Hero from "../shared/Hero";
 import SearchBar from "../shared/SearchBar";
 import { useRef } from "react";
+import { buildSchoolSearchPath } from "../../utils/schoolSearchUrl";
 
 export default function HomeHero() {
   const navigate = useNavigate();
@@ -16,6 +17,9 @@ export default function HomeHero() {
   } = useMapViewStore();
   const dataTotal = useMapViewStore((state) => state.dataTotal);
   const singlePageTotal = useMapViewStore((state) => state.singlePageTotal);
+  const isLoadingLocalSuggestions = useMapViewStore(
+    (state) => state.isLoadingLocalSuggestions,
+  );
   const debounceTimerRef = useRef<number | null>(null);
 
   const handleValueChange = (value: string) => {
@@ -42,7 +46,7 @@ export default function HomeHero() {
   ) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      navigate(`/${lang || "ms"}/carian-sekolah`);
+      navigate(buildSchoolSearchPath(lang, query));
     }
   };
 
@@ -64,12 +68,14 @@ export default function HomeHero() {
           getLabel={(item) => item.namaSekolah}
           getSubLabel={(item) => item.kodSekolah}
           onSelect={(item) => {
-            setQuery(item.namaSekolah ?? "");
-            navigate(`/${lang || "ms"}/carian-sekolah`);
+            const selectedQuery = item.namaSekolah ?? "";
+            setQuery(selectedQuery);
+            navigate(buildSchoolSearchPath(lang, selectedQuery));
           }}
           searchBarTitle="Carian Sekolah"
           singlePageTotal={singlePageTotal}
           dataTotal={dataTotal}
+          isSearchingBackend={isLoadingLocalSuggestions}
         />
       }
       // links={[{ label: "Pautan Pintas", link: "#pautan" }]}
