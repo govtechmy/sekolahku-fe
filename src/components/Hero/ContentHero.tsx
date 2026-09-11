@@ -9,7 +9,7 @@ type ContentHeroProps = {
 };
 
 // Dark-gradient illustration hero shared by the content pages (Berita, Takwim).
-// White headline over /utama/hero.png with a navy wash, and a white search card
+// White headline over /utama/hero.jpg with a navy wash, and a white search card
 // holding the search bar plus an optional filter row. Matches the home hero spec.
 export default function ContentHero({
   title,
@@ -22,7 +22,7 @@ export default function ContentHero({
       {/* overflow-hidden lives on the bg wrapper so the rounded corners clip the
           image without clipping the search/filter dropdowns. */}
       <div className="absolute inset-0 -z-10 overflow-hidden rounded-b-[32px]">
-        <div className="absolute inset-0 scale-105 bg-[url('/utama/hero.png')] bg-cover bg-center bg-no-repeat" />
+        <div className="absolute inset-0 scale-105 bg-[url('/utama/hero.jpg')] bg-cover bg-center bg-no-repeat" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B1220]/[.91] from-0% to-[#0B1220]/[.08] to-70%" />
       </div>
 

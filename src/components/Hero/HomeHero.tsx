@@ -67,7 +67,7 @@ export default function HomeHero() {
           overflow-hidden lives here (not the section) so the rounded corners
           clip the bg without clipping the search dropdowns. */}
       <div className="absolute inset-0 -z-10 overflow-hidden rounded-b-[32px]">
-        <div className="absolute inset-0 scale-105 bg-[url('/utama/hero.png')] bg-cover bg-center bg-no-repeat" />
+        <div className="absolute inset-0 scale-105 bg-[url('/utama/hero.jpg')] bg-cover bg-center bg-no-repeat" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B1220]/[.91] from-0% to-[#0B1220]/[.08] to-70%" />
       </div>
 
