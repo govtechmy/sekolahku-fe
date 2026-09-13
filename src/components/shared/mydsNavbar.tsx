@@ -67,7 +67,13 @@ const Navbar: FunctionComponent<NavbarProps> = ({
         data-nosnippet
         {...props}
       >
-        <div className="px-4.5 relative mx-auto flex h-16 max-w-screen-xl items-center justify-between gap-4 max-md:h-14 md:px-6">
+        {/* grid-cols-[1fr_auto_1fr]: the two outer tracks are equal width,
+            so the middle (nav) track is centered on the *whole* header no
+            matter how wide the logo vs. action slot are — unlike flex
+            centering (which only centers within the leftover gap between
+            them) or absolute positioning (which overlaps and can steal
+            clicks from the logo). Grid tracks never overlap. */}
+        <div className="px-4.5 relative mx-auto grid grid-cols-[1fr_auto_1fr] h-16 max-w-screen-xl items-center gap-4 max-md:h-14 md:px-6">
           {children}
         </div>
       </header>
@@ -147,7 +153,7 @@ const NavbarMenu: FunctionComponent<NavigationMenuProps> = ({
   classNameNavMobile,
 }) => {
   return (
-    <NavigationMenu className="grow">
+    <NavigationMenu>
       {/* Desktop */}
       <NavigationMenuList
         className={clx(
