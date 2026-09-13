@@ -5,6 +5,7 @@ import type { ItemSekolahModel } from "../models/response";
 import { getSchoolSuggestion } from "../services/school.svc";
 import type { GeoJSONFeature } from "../types/polygon";
 import { useLocationSessionStore } from "./locationSession";
+import { calculateDistance } from "../utils/calculateDistance";
 
 type Center = [number, number];
 
@@ -68,6 +69,10 @@ interface MapViewState {
     append?: boolean,
   ) => Promise<void>;
   setQuery: (q: string) => void;
+  // Re-derives `distance` for every currently-loaded suggestion against
+  // `origin` and re-sorts ascending (nulls last). No-op if origin is
+  // incomplete. Called after every fetch and whenever the origin changes.
+  resortByOrigin: (origin: [number | null, number | null]) => void;
   setPointA: (point: [number, number] | null) => void;
   setPointB: (point: [number, number] | null) => void;
   setRoute: (
@@ -218,6 +223,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
       const singlePageTotal = results.totalInSinglePage;
       set({ singlePageTotal });
       set({ dataTotal });
+
       const transformed = dataResults.map(
         (school): SearchBarMapProps => ({
           namaSekolah: school.namaSekolah ?? "Sekolah Tidak Diketahui",
@@ -245,6 +251,16 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
           hasMoreLocalSuggestions: results.hasMore,
         };
       });
+
+      // Point A: a manually-picked/geocoded origin takes priority over the
+      // device's geolocation, matching what SearchBarMap's Field A shows.
+      // Re-derives distance for EVERY currently-loaded item (not just the
+      // page just fetched) so pagination and origin changes never leave
+      // stale/undefined distances behind.
+      get().resortByOrigin([
+        get().pointA?.[0] ?? initialLocationUser[0],
+        get().pointA?.[1] ?? initialLocationUser[1],
+      ]);
 
       if (hasActiveMapSearch && !append && transformed.length > 0) {
         // Build new markers from search results
@@ -315,6 +331,22 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   },
   setQuery: (q) => {
     set({ query: q });
+  },
+  resortByOrigin: ([originLat, originLng]) => {
+    if (originLat == null || originLng == null) return;
+    set((state) => {
+      const next = state.localSuggestions.map((s) => ({
+        ...s,
+        distance: calculateDistance(
+          originLat,
+          originLng,
+          s.koordinatYY,
+          s.koordinatXX,
+        ),
+      }));
+      next.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
+      return { localSuggestions: next };
+    });
   },
   setStatePolygons: (polygons) => {
     set({ statePolygons: polygons });

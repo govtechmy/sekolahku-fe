@@ -41,9 +41,15 @@ const AccessGuard: React.FC<AccessGuardProps> = ({
     >
       <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8 text-center">
         {/* Logo */}
-        <img src="/JataNegara.svg" className="mx-auto mb-6 w-20 h-auto" />
+        <img
+          src="/JataNegara.svg"
+          alt="Jata Negara"
+          className="mx-auto mb-6 w-20 h-auto"
+        />
 
-        <h1 className="text-2xl font-semibold mb-2">Akses Pembangunan</h1>
+        <h1 className="font-heading text-2xl font-semibold mb-2">
+          Akses Pembangunan
+        </h1>
         <p className="text-gray-600 text-sm mb-6">
           Aplikasi ini hanya untuk akses pasukan pembangunan.
         </p>

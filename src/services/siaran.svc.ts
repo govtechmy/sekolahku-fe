@@ -1,4 +1,9 @@
-import type { APIResponse, SiaranList, SiaranItem } from "../models/response";
+import type {
+  APIResponse,
+  SiaranList,
+  SiaranItem,
+  SiaranCategory,
+} from "../models/response";
 import { authAxios } from "./http";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -7,10 +12,14 @@ const SIARAN_ENDPOINT = "/siaran";
 export interface GetSiaranListParams {
   pageNumber?: number;
   pageSize?: number;
-  query?: string;
+  // Backend reads `search`, `category`, `startDate`, `endDate` on /siaran.
+  search?: string;
   category?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
+// Single list endpoint that handles browse + search + category + date range.
 export const getSiaranList = async (
   params: GetSiaranListParams = {},
 ): Promise<SiaranList> => {
@@ -21,8 +30,10 @@ export const getSiaranList = async (
         params: {
           page: params.pageNumber ?? 1,
           pageSize: params.pageSize ?? 12,
-          query: params.query ?? undefined,
-          category: params.category ?? undefined,
+          search: params.search || undefined,
+          category: params.category || undefined,
+          startDate: params.startDate || undefined,
+          endDate: params.endDate || undefined,
         },
       },
     );
@@ -34,27 +45,14 @@ export const getSiaranList = async (
   }
 };
 
-export const getSearchSiaran = async (
-  pageNumber: number,
-  search: string,
-  startDate?: string,
-  endDate?: string,
-) => {
+export const getSiaranCategories = async (): Promise<SiaranCategory[]> => {
   try {
-    let url = `${BASE_URL}${SIARAN_ENDPOINT}?page=${pageNumber}&pageSize=12`;
-    if (search) {
-      url += `&search=${encodeURI(search)}`;
-    }
-    if (startDate) {
-      url += `&startDate=${startDate}`;
-    }
-    if (endDate) {
-      url += `&endDate=${endDate}`;
-    }
-    const response = await authAxios.get(url);
+    const response = await authAxios.get<APIResponse<SiaranCategory[]>>(
+      `${BASE_URL}${SIARAN_ENDPOINT}/categories`,
+    );
     return response.data.data;
   } catch (error) {
-    console.error("Error searching siaran", error);
+    console.error("Error fetching siaran categories:", error);
     throw error;
   }
 };

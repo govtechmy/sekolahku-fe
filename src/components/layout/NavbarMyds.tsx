@@ -72,7 +72,10 @@ export default function NavbarMyds() {
           Sekolahku
         </div>
       </Link>
-      <NavbarMenu classNameNavDesktop="" classNameNavMobile="z-[1200]">
+      <NavbarMenu
+        classNameNavDesktop="xl:justify-center"
+        classNameNavMobile="z-[1200]"
+      >
         <NavbarMenuItem
           asChild
           href={`/${currentLang}/home`}
