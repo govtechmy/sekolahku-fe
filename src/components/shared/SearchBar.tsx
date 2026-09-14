@@ -64,6 +64,24 @@ export default function SearchBarHome<T>({
   const prefetchCarianProps = usePrefetchCarianSekolah();
   const schoolSearchPath = buildSchoolSearchPath(lang, query);
 
+  // On the home page the button/Enter both go through the parent's
+  // handleSearchEnter so the selected negeri/peringkat/jenis filters are
+  // carried into the destination URL. Falls back to a query-only navigate.
+  const submitHomeSearch = () => {
+    if (handleSearchEnter && inputRef.current) {
+      const syntheticEvent = {
+        key: "Enter",
+        currentTarget: inputRef.current,
+        target: inputRef.current,
+        preventDefault: () => {},
+        stopPropagation: () => {},
+      } as unknown as React.KeyboardEvent<HTMLInputElement>;
+      handleSearchEnter(syntheticEvent);
+    } else {
+      navigate(schoolSearchPath);
+    }
+  };
+
   useEffect(() => {
     const handleSlashFocus = (e: KeyboardEvent) => {
       if (e.key === "/" && !hasFocus) {
@@ -115,10 +133,10 @@ export default function SearchBarHome<T>({
           tabIndex={0}
           {...(isOnHome && {
             ...prefetchCarianProps,
-            onClick: () => navigate(schoolSearchPath),
+            onClick: submitHomeSearch,
             onKeyDown: (e) => {
               if (e.key === "Enter") {
-                navigate(schoolSearchPath);
+                submitHomeSearch();
               }
             },
           })}

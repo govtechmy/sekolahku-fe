@@ -243,6 +243,8 @@ export function MapContainerMapCN() {
           negeri: p.negeri,
           parlimen: p.parlimen,
           bandarSurat: p.bandarSurat,
+          peringkat: p.peringkat,
+          isSearch: mapQuery ? 1 : 0,
         },
       })),
     };
