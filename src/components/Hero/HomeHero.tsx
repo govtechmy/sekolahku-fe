@@ -88,25 +88,29 @@ export default function HomeHero() {
         {/* Search card. relative z-20 keeps its suggestion/select dropdowns
             above the stats cards (z-10) that overlap the hero's bottom edge. */}
         <div className="relative z-20 flex w-full max-w-[760px] flex-col gap-3.5 rounded-[20px] bg-bg-white p-5 shadow-xl">
-          <SearchBar
-            query={query}
-            setQuery={setQuery}
-            handleValueChange={handleValueChange}
-            handleSearchEnter={handleSearchEnter}
-            suggestions={localSuggestions}
-            getKey={(item) => item.kodSekolah ?? ""}
-            getLabel={(item) => item.namaSekolah}
-            getSubLabel={(item) => item.kodSekolah}
-            onSelect={(item) => {
-              const selectedQuery = item.namaSekolah ?? "";
-              setQuery(selectedQuery);
-              goSearch(selectedQuery);
-            }}
-            searchBarTitle="Carian Sekolah"
-            singlePageTotal={singlePageTotal}
-            dataTotal={dataTotal}
-            isSearchingBackend={isLoadingLocalSuggestions}
-          />
+          {/* relative z-30 lifts the search suggestions dropdown above the
+              filter row below it (which comes later in the DOM). */}
+          <div className="relative z-30">
+            <SearchBar
+              query={query}
+              setQuery={setQuery}
+              handleValueChange={handleValueChange}
+              handleSearchEnter={handleSearchEnter}
+              suggestions={localSuggestions}
+              getKey={(item) => item.kodSekolah ?? ""}
+              getLabel={(item) => item.namaSekolah}
+              getSubLabel={(item) => item.kodSekolah}
+              onSelect={(item) => {
+                const selectedQuery = item.namaSekolah ?? "";
+                setQuery(selectedQuery);
+                goSearch(selectedQuery);
+              }}
+              searchBarTitle="Carian Sekolah"
+              singlePageTotal={singlePageTotal}
+              dataTotal={dataTotal}
+              isSearchingBackend={isLoadingLocalSuggestions}
+            />
+          </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="flex flex-col gap-1.5 text-left">

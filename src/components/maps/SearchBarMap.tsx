@@ -63,12 +63,16 @@ type SearchBarMapComponentProps = {
   schoolTypes: string[];
   selectedPeringkat: string;
   setSelectedPeringkat: (value: string) => void;
+  initialNegeri?: string;
+  initialJenis?: string;
 };
 
 export function SearchBarMap({
   schoolTypes,
   selectedPeringkat,
   setSelectedPeringkat,
+  initialNegeri = "ALL",
+  initialJenis = "ALL",
 }: SearchBarMapComponentProps) {
   const {
     viewSchool,
@@ -157,8 +161,8 @@ export function SearchBarMap({
       window.removeEventListener("pointercancel", handleResizePointerUp);
     };
   }, [handleResizePointerMove, handleResizePointerUp]);
-  const [selectedNegeri, setSelectedNegeri] = useState("ALL");
-  const [selectedJenis, setSelectedJenis] = useState("ALL");
+  const [selectedNegeri, setSelectedNegeri] = useState(initialNegeri);
+  const [selectedJenis, setSelectedJenis] = useState(initialJenis);
   const debounceTimerRef = useRef<number | null>(null);
   const setCenter = useMapViewStore((s) => s.setCenter);
   const setZoom = useMapViewStore((s) => s.setZoom);
@@ -209,6 +213,7 @@ export function SearchBarMap({
   const routeDistance = useMapViewStore((s) => s.routeDistance);
   const routeDuration = useMapViewStore((s) => s.routeDuration);
   const resortByOrigin = useMapViewStore((s) => s.resortByOrigin);
+  const hasActiveNameSearch = useMapViewStore((s) => s.hasActiveNameSearch);
   // Origin coords as primitives — stable, statically-checkable effect deps.
   const originLat = pointA?.[0];
   const originLng = pointA?.[1];
@@ -231,7 +236,9 @@ export function SearchBarMap({
   // Surfaced when selecting a school fails to load its detail (see handleSelect).
   const [selectError, setSelectError] = useState<string | null>(null);
   // How many of the top (nearest) suggestions get a real road distance.
-  const ROAD_DISTANCE_TOP_N = 10;
+  // Matches the backend pageSize (12) so the whole visible page shows an OSRM
+  // road distance in one /table call, instead of straight-line for rows 11–12.
+  const ROAD_DISTANCE_TOP_N = 12;
 
   // Fetch a road-following route (distance + duration) whenever both the
   // origin (Field A: current location or a picked POI) and destination
@@ -563,7 +570,9 @@ export function SearchBarMap({
   // above, re-sort just that slice by the more accurate road distance —
   // items beyond ROAD_DISTANCE_TOP_N keep the straight-line order.
   const orderedSuggestions = useMemo(() => {
-    if (roadDistances.size === 0) return localSuggestions;
+    // During a name/acronym search, keep the backend relevance order (best match
+    // first). Road-distance reordering only applies to nearest-first browsing.
+    if (hasActiveNameSearch || roadDistances.size === 0) return localSuggestions;
     const head = localSuggestions.slice(0, ROAD_DISTANCE_TOP_N);
     const tail = localSuggestions.slice(ROAD_DISTANCE_TOP_N);
     const sortedHead = [...head].sort((a, b) => {
@@ -574,7 +583,7 @@ export function SearchBarMap({
       return da - db;
     });
     return [...sortedHead, ...tail];
-  }, [localSuggestions, roadDistances]);
+  }, [localSuggestions, roadDistances, hasActiveNameSearch]);
 
   const handleHover = async (school: SearchBarMapProps) => {
     try {
@@ -641,7 +650,10 @@ export function SearchBarMap({
   // otherwise fall back to the first (best-ranked) suggestion. Wired to Enter
   // and the search button so live typing itself never hijacks the map.
   const commitTopResult = () => {
-    const current = useMapViewStore.getState().localSuggestions;
+    // Use the same list the user sees (road-distance reordered head), not the
+    // store's straight-line order — otherwise Enter can pinpoint a different
+    // school than the visible first row.
+    const current = orderedSuggestions;
     if (current.length === 0) return;
     const trimmed = query.trim().toLowerCase();
     const exact = current.find(

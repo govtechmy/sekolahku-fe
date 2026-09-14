@@ -14,9 +14,16 @@ import { useParams, useSearchParams } from "react-router-dom";
 // import DisclaimerMap from "../components/maps/DisclaimerMap";
 
 export default function SchoolMaps() {
+  const [searchParams] = useSearchParams();
+  const urlQuery = searchParams.get("q")?.trim() ?? "";
+  const urlNegeri = searchParams.get("negeri") ?? "ALL";
+  const urlPeringkat = searchParams.get("peringkat") ?? "ALL";
+  const urlJenis = searchParams.get("jenis") ?? "ALL";
+
   const [schoolTypesMenengah, setSchoolTypesMenengah] = useState<string[]>([]);
   const [schoolTypesRendah, setSchoolTypesRendah] = useState<string[]>([]);
-  const [selectedPeringkat, setSelectedPeringkat] = useState<string>("ALL");
+  const [selectedPeringkat, setSelectedPeringkat] =
+    useState<string>(urlPeringkat);
   // const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const {
     setCenter,
@@ -33,12 +40,16 @@ export default function SchoolMaps() {
 
   const geolocationRequestedRef = useRef(false);
   const polygonsFetchedRef = useRef(false);
-  const [searchParams] = useSearchParams();
-  const urlQuery = searchParams.get("q")?.trim() ?? "";
 
   useEffect(() => {
     setQuery(urlQuery);
   }, [setQuery, urlQuery]);
+
+  // Keep peringkat (owned here, not by the remounted SearchBarMap) in sync when
+  // only the URL query params change while this route stays mounted.
+  useEffect(() => {
+    setSelectedPeringkat(urlPeringkat);
+  }, [urlPeringkat]);
 
   useEffect(() => {
     if (!initialLocationSet) {
@@ -189,34 +200,66 @@ export default function SchoolMaps() {
         canonical={`${domain}/${lang}/carian-sekolah`}
       />
       <SearchBarMap
+        key={`${urlNegeri}|${urlPeringkat}|${urlJenis}`}
         schoolTypes={schoolTypes}
         selectedPeringkat={selectedPeringkat}
         setSelectedPeringkat={setSelectedPeringkat}
+        initialNegeri={urlNegeri}
+        initialJenis={urlJenis}
       />
       <MapContainerMapCN />
 
-      {/* Radius legend */}
-      {initialLocationSet && (
-        <div className="absolute top-6 right-6 z-[500] rounded-lg bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm">
+      {/* Map legends (top-right) */}
+      <div className="absolute top-6 right-6 z-[500] flex flex-col gap-2">
+        {/* Pin colour legend */}
+        <div className="rounded-lg bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm">
           <p className="mb-1 text-xs font-semibold text-gray-700">
-            Jarak Radius
+            Petunjuk Pin
           </p>
-          <div className="flex items-center gap-2">
-            <span
-              className="inline-block h-3 w-3 rounded-full border-2"
-              style={{ borderColor: "#3366FF", backgroundColor: "#3366FF14" }}
-            />
-            <span className="text-xs text-gray-600">3 km</span>
-          </div>
-          <div className="mt-1 flex items-center gap-2">
-            <span
-              className="inline-block h-3 w-3 rounded-full border-2 border-dashed"
-              style={{ borderColor: "#FF3B30", backgroundColor: "#FF3B3014" }}
-            />
-            <span className="text-xs text-gray-600">20 km</span>
-          </div>
+          {(
+            [
+              ["#2A9D8F", "Sekolah Rendah"],
+              ["#D99A3D", "Sekolah Menengah"],
+              ["#EF4444", "Sekolah Dicari"],
+              ["#2563EB", "Lokasi Anda"],
+            ] as const
+          ).map(([color, label]) => (
+            <div
+              key={label}
+              className="mt-1 flex items-center gap-2 first:mt-0"
+            >
+              <span
+                className="inline-block h-3 w-3 rounded-full"
+                style={{ backgroundColor: color }}
+              />
+              <span className="text-xs text-gray-600">{label}</span>
+            </div>
+          ))}
         </div>
-      )}
+
+        {/* Radius legend */}
+        {initialLocationSet && (
+          <div className="rounded-lg bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm">
+            <p className="mb-1 text-xs font-semibold text-gray-700">
+              Jarak Radius
+            </p>
+            <div className="flex items-center gap-2">
+              <span
+                className="inline-block h-3 w-3 rounded-full border-2"
+                style={{ borderColor: "#3366FF", backgroundColor: "#3366FF14" }}
+              />
+              <span className="text-xs text-gray-600">3 km</span>
+            </div>
+            <div className="mt-1 flex items-center gap-2">
+              <span
+                className="inline-block h-3 w-3 rounded-full border-2 border-dashed"
+                style={{ borderColor: "#FF3B30", backgroundColor: "#FF3B3014" }}
+              />
+              <span className="text-xs text-gray-600">20 km</span>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* On-demand only: opened from the map's location button, never forced on
           load, so the map stays interactive while geolocation resolves async. */}

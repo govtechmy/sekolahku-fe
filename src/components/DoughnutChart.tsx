@@ -233,7 +233,12 @@ export default function DoughnutChart({
                 />
               ))}
             </Pie>
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip
+              content={<CustomTooltip />}
+              allowEscapeViewBox={{ x: true, y: true }}
+              position={{ x: 0, y: 190 }}
+              wrapperStyle={{ zIndex: 50, pointerEvents: "none" }}
+            />
           </PieChart>
         </ResponsiveContainer>
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">

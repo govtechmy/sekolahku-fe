@@ -28,6 +28,11 @@ export const CLUSTER_MAX_ZOOM = 11;
 export const CLUSTER_RADIUS = 50;
 
 const BRAND_BLUE = "#2951E6";
+// Per-peringkat pin colours (individual/unclustered schools).
+const PIN_RENDAH = "#2A9D8F";
+const PIN_MENENGAH = "#D99A3D";
+// Schools returned by an active name search stay red so they stand out.
+const PIN_SEARCH = "#EF4444";
 
 export const schoolClusterLayer: CircleLayerSpecification = {
   id: "school-clusters",
@@ -74,7 +79,22 @@ export const schoolUnclusteredLayer: CircleLayerSpecification = {
   source: SCHOOL_SOURCE_ID,
   filter: ["!", ["has", "point_count"]],
   paint: {
-    "circle-color": BRAND_BLUE,
+    // Red for active search results, otherwise colour by peringkat
+    // (rendah = teal, menengah = amber) with a blue fallback.
+    "circle-color": [
+      "case",
+      ["==", ["get", "isSearch"], 1],
+      PIN_SEARCH,
+      [
+        "match",
+        ["get", "peringkat"],
+        "RENDAH",
+        PIN_RENDAH,
+        "MENENGAH",
+        PIN_MENENGAH,
+        BRAND_BLUE,
+      ],
+    ],
     "circle-opacity": 0.9,
     // Grow with zoom so dense areas stay legible when zoomed out.
     "circle-radius": [

@@ -9,14 +9,6 @@ type SectionItemTakwimProps = {
   dataItemCalendar: TakwimItem[];
 };
 
-// Category → accent colour for the tag text (on a dark pill), matching the mockup.
-const CATEGORY_COLORS: Record<string, string> = {
-  Akademik: "#34D399",
-  "Kenaikan Kebangsaan": "#F59E0B",
-  "Cuti Sekolah": "#A78BFA",
-};
-const CATEGORY_FALLBACK = "#4F86F7";
-
 // Takwim items carry no plain description, so pull the first non-empty
 // paragraph out of the Lexical content for the row subtitle.
 const firstParagraph = (content?: ArticleContent): string => {
@@ -79,16 +71,6 @@ export default function SectionItemTakwim({
               </div>
             )}
             <div className="flex min-w-0 flex-1 flex-col gap-1">
-              {item.category && (
-                <span
-                  className="w-fit rounded-lg bg-black px-2 py-0.5 text-body-xs font-bold"
-                  style={{
-                    color: CATEGORY_COLORS[item.category] ?? CATEGORY_FALLBACK,
-                  }}
-                >
-                  {item.category}
-                </span>
-              )}
               {item.title && (
                 <div className="line-clamp-2 text-body-sm font-semibold text-txt-black-900">
                   {item.title}

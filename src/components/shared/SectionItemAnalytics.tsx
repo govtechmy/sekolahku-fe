@@ -74,7 +74,7 @@ export default function SectionItemAnalytics({
                 onClick={() => setSelectedLevel(level)}
                 className={`rounded-lg px-3.5 py-1.5 text-body-sm transition-all focus:outline-primary-200 ${
                   selectedLevel === level
-                    ? "bg-bg-white font-bold text-txt-black-900 shadow-sm"
+                    ? "bg-[#0D6EFD] font-bold text-white shadow-sm"
                     : "font-medium text-txt-black-500 hover:text-txt-black-700"
                 }`}
                 role="radio"
@@ -87,11 +87,11 @@ export default function SectionItemAnalytics({
           </div>
         </div>
 
-        <DoughnutChart data={filteredJenisData} />
-
         <p className="text-body-xs text-txt-black-500">
           Klik kategori untuk fokus segmen
         </p>
+
+        <DoughnutChart data={filteredJenisData} />
       </div>
 
       {/* Bantuan Kerajaan */}
