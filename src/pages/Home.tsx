@@ -115,7 +115,7 @@ export default function HomePage() {
             {newsToShow && newsToShow.length > 0 && (
               <SectionHeader
                 header="PEMBERITAHUAN TERKINI"
-                title="Berita & Pengumuman KPM"
+                title="Berita"
                 isLastSection={true}
                 className="lg:px-0"
                 headerAction={
@@ -149,7 +149,7 @@ export default function HomePage() {
               {dataItemCalendar && dataItemCalendar.length > 0 && (
                 <div className="flex flex-col gap-2.5">
                   <h2 className="font-heading text-body-lg font-bold text-txt-black-900">
-                    Kalendar Aktiviti Persekolahan
+                    Takwim Persekolahan
                   </h2>
                   <SectionItemTakwim dataItemCalendar={dataItemCalendar} />
                   <button
@@ -170,6 +170,7 @@ export default function HomePage() {
               <SectionHeader
                 header="ANALITIK"
                 title="Statistik Sekolah di Malaysia"
+                titleClassName="md:whitespace-nowrap"
                 subTitle={formatFileVersion(analytics?.fileVersion)}
                 sourceBtn={true}
                 isLastSection={true}

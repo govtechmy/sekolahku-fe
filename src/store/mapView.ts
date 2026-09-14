@@ -14,6 +14,9 @@ interface MapViewState {
   zoom: number;
   initialLocationSet: boolean;
   locationPickerOpen: boolean;
+  // True while a school-name/acronym query is active. When set, suggestions keep
+  // the backend's relevance order instead of being re-sorted nearest-first.
+  hasActiveNameSearch: boolean;
   radius: number;
   mapFilters: {
     negeri: string;
@@ -97,6 +100,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   mapQuery: "",
   initialLocationSet: false,
   locationPickerOpen: false,
+  hasActiveNameSearch: false,
   schoolMarkers: new Map() as MarkerMap,
   userMarkers: new Map() as MarkerMap,
   localSuggestions: [],
@@ -206,6 +210,10 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
       (params?.jenis && params.jenis !== "ALL") ||
       (params?.peringkat && params.peringkat !== "ALL"),
     );
+
+    // Only a name/acronym query should preserve backend relevance order.
+    // Filter-only browsing (negeri/jenis/peringkat) still sorts nearest-first.
+    set({ hasActiveNameSearch: Boolean(params?.namaSekolah?.trim()) });
 
     try {
       const initialLocationUser =
@@ -344,7 +352,12 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
           s.koordinatXX,
         ),
       }));
-      next.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
+      // Distances are always refreshed for display, but a name/acronym search
+      // keeps the backend's relevance order (best match first). Only nearest-first
+      // browsing re-sorts by distance.
+      if (!state.hasActiveNameSearch) {
+        next.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
+      }
       return { localSuggestions: next };
     });
   },
