@@ -23,7 +23,7 @@ export const NearbySchoolCard = ({
   return (
     <div
       key={school.kodSekolah}
-      className="bg-bg-white rounded-2xl shadow overflow-hidden border outline-otl-divider cursor-pointer hover:shadow-lg transition-shadow focus:outline-primary-200"
+      className="bg-bg-white rounded-2xl shadow overflow-hidden border outline-otl-divider cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:ring-2 hover:ring-otl-primary-200 focus:outline-primary-200"
       onClick={() => handleNearbySchoolClick(school.kodSekolah)}
       role="button"
       onKeyPress={(e) => {
@@ -47,7 +47,9 @@ export const NearbySchoolCard = ({
         />
       </div>
       <div className="p-4.5 flex flex-col gap-2">
-        <h3 className="text-txt-black-900 font-medium">{school.namaSekolah}</h3>
+        <h3 className="font-heading text-txt-black-900 font-medium">
+          {school.namaSekolah}
+        </h3>
         <p className="text-txt-black-500 text-sm min-h-12 line-clamp-3">
           {underScoreRemover(formatSchoolAddress(school))}
         </p>

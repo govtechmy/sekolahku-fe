@@ -82,6 +82,10 @@ interface SimpleSelectProps {
   variant?: "outline" | "ghost";
   size?: "small" | "medium" | "large";
   className?: string;
+  /** Applied to the trigger button so a visible <label htmlFor> can bind to it. */
+  id?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
   children: React.ReactNode;
 }
 
@@ -127,6 +131,9 @@ export function SimpleSelect({
   variant = "outline",
   size = "small",
   className,
+  id,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledby,
   children,
 }: SimpleSelectProps) {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -179,12 +186,15 @@ export function SimpleSelect({
       <div ref={containerRef} className={clx("relative w-full", className)}>
         <button
           type="button"
+          id={id}
           disabled={disabled}
           onClick={() => !disabled && setIsOpen((prev) => !prev)}
           className={select_trigger_cva({ variant, size })}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-controls={dropdownId}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledby}
         >
           <span className="flex-1 min-w-0 truncate text-left">
             {selectedLabel || (

@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useCallback, type UIEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+  type UIEvent,
+} from "react";
 import {
   ArrowBackIcon,
   ChevronRightIcon,
@@ -47,6 +54,11 @@ function highlightMatch(text: string, query: string): React.ReactNode {
   );
 }
 
+// Desktop sidebar width bounds (px) — drag-resizable between these.
+const SIDEBAR_DEFAULT_WIDTH = 350;
+const SIDEBAR_MIN_WIDTH = 280;
+const SIDEBAR_MAX_WIDTH = 600;
+
 type SearchBarMapComponentProps = {
   schoolTypes: string[];
   selectedPeringkat: string;
@@ -76,6 +88,75 @@ export function SearchBarMap({
   } = useMapViewStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  // Desktop-only panel width, drag-resizable via the handle on its right
+  // edge (see SIDEBAR_MIN/MAX_WIDTH below). Session-only — resets on reload.
+  const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR_DEFAULT_WIDTH);
+  const resizeStartRef = useRef<{ startX: number; startWidth: number } | null>(
+    null,
+  );
+
+  const handleResizePointerMove = useCallback((e: PointerEvent) => {
+    const start = resizeStartRef.current;
+    if (!start) return;
+    const next = Math.min(
+      SIDEBAR_MAX_WIDTH,
+      Math.max(
+        SIDEBAR_MIN_WIDTH,
+        start.startWidth + (e.clientX - start.startX),
+      ),
+    );
+    setSidebarWidth(next);
+  }, []);
+
+  const handleResizePointerUp = useCallback(() => {
+    resizeStartRef.current = null;
+    window.removeEventListener("pointermove", handleResizePointerMove);
+    window.removeEventListener("pointerup", handleResizePointerUp);
+    window.removeEventListener("pointercancel", handleResizePointerUp);
+    document.body.style.cursor = "";
+    document.body.style.userSelect = "";
+  }, [handleResizePointerMove]);
+
+  const handleResizePointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      e.preventDefault();
+      resizeStartRef.current = { startX: e.clientX, startWidth: sidebarWidth };
+      window.addEventListener("pointermove", handleResizePointerMove);
+      window.addEventListener("pointerup", handleResizePointerUp);
+      // A drag can end without a pointerup — window loses focus, a native
+      // dialog opens, a touch gesture gets taken over by the OS — so without
+      // this the cursor/listeners would stick and any later mouse movement
+      // would resize the panel with no drag in progress.
+      window.addEventListener("pointercancel", handleResizePointerUp);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+    },
+    [sidebarWidth, handleResizePointerMove, handleResizePointerUp],
+  );
+
+  // Arrow-key resizing so the handle is keyboard-operable, not just
+  // draggable (WAI-ARIA "window splitter" pattern).
+  const handleResizeKeyDown = useCallback((e: React.KeyboardEvent) => {
+    const step = 20;
+    let delta = 0;
+    if (e.key === "ArrowLeft") delta = -step;
+    else if (e.key === "ArrowRight") delta = step;
+    else return;
+    e.preventDefault();
+    setSidebarWidth((prev) =>
+      Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, prev + delta)),
+    );
+  }, []);
+
+  // Drop stale listeners if the component unmounts mid-drag.
+  useEffect(() => {
+    return () => {
+      window.removeEventListener("pointermove", handleResizePointerMove);
+      window.removeEventListener("pointerup", handleResizePointerUp);
+      window.removeEventListener("pointercancel", handleResizePointerUp);
+    };
+  }, [handleResizePointerMove, handleResizePointerUp]);
   const [selectedNegeri, setSelectedNegeri] = useState("ALL");
   const [selectedJenis, setSelectedJenis] = useState("ALL");
   const debounceTimerRef = useRef<number | null>(null);
@@ -127,9 +208,17 @@ export function SearchBarMap({
   const pointB = useMapViewStore((s) => s.pointB);
   const routeDistance = useMapViewStore((s) => s.routeDistance);
   const routeDuration = useMapViewStore((s) => s.routeDuration);
+  const resortByOrigin = useMapViewStore((s) => s.resortByOrigin);
   // Origin coords as primitives — stable, statically-checkable effect deps.
   const originLat = pointA?.[0];
   const originLng = pointA?.[1];
+
+  // Re-rank already-loaded results the moment the origin resolves (initial
+  // geolocation) or changes (user picks a different Field A) — client-side
+  // only, no refetch, since the result set itself doesn't depend on origin.
+  useEffect(() => {
+    resortByOrigin([originLat ?? null, originLng ?? null]);
+  }, [originLat, originLng, resortByOrigin]);
   const routeAbortRef = useRef<AbortController | null>(null);
 
   // Road (driving) distance in meters for the nearest few results, keyed by
@@ -139,6 +228,8 @@ export function SearchBarMap({
   );
   const tableAbortRef = useRef<AbortController | null>(null);
   const tableDebounceRef = useRef<number | null>(null);
+  // Surfaced when selecting a school fails to load its detail (see handleSelect).
+  const [selectError, setSelectError] = useState<string | null>(null);
   // How many of the top (nearest) suggestions get a real road distance.
   const ROAD_DISTANCE_TOP_N = 10;
 
@@ -467,6 +558,24 @@ export function SearchBarMap({
     };
   }, []);
 
+  // `localSuggestions` (from the store) is already nearest-first by
+  // straight-line distance. Once road distances resolve for the head slice
+  // above, re-sort just that slice by the more accurate road distance —
+  // items beyond ROAD_DISTANCE_TOP_N keep the straight-line order.
+  const orderedSuggestions = useMemo(() => {
+    if (roadDistances.size === 0) return localSuggestions;
+    const head = localSuggestions.slice(0, ROAD_DISTANCE_TOP_N);
+    const tail = localSuggestions.slice(ROAD_DISTANCE_TOP_N);
+    const sortedHead = [...head].sort((a, b) => {
+      const da = a.kodSekolah ? roadDistances.get(a.kodSekolah) : undefined;
+      const db = b.kodSekolah ? roadDistances.get(b.kodSekolah) : undefined;
+      if (da == null) return db == null ? 0 : 1;
+      if (db == null) return -1;
+      return da - db;
+    });
+    return [...sortedHead, ...tail];
+  }, [localSuggestions, roadDistances]);
+
   const handleHover = async (school: SearchBarMapProps) => {
     try {
       if (!school.kodSekolah) return;
@@ -488,6 +597,7 @@ export function SearchBarMap({
 
   const handleSelect = async (school: SearchBarMapProps) => {
     try {
+      setSelectError(null);
       if (!school.kodSekolah) {
         console.error("School code is null");
         return;
@@ -521,7 +631,23 @@ export function SearchBarMap({
       }
     } catch (error) {
       console.error("Error fetching school details:", error);
+      setSelectError(
+        "Gagal memuatkan maklumat sekolah. Sila cuba lagi sebentar.",
+      );
     }
+  };
+
+  // Commit the current query: pinpoint the exact-name match if there is one,
+  // otherwise fall back to the first (best-ranked) suggestion. Wired to Enter
+  // and the search button so live typing itself never hijacks the map.
+  const commitTopResult = () => {
+    const current = useMapViewStore.getState().localSuggestions;
+    if (current.length === 0) return;
+    const trimmed = query.trim().toLowerCase();
+    const exact = current.find(
+      (school) => school.namaSekolah.toLowerCase() === trimmed,
+    );
+    handleSelect(exact ?? current[0]);
   };
 
   const loadMoreSuggestions = () => {
@@ -553,10 +679,13 @@ export function SearchBarMap({
         `}
     >
       <div
-        className={`shadow-md border border-otl-divider bg-white 
+        style={
+          { "--sidebar-width": `${sidebarWidth}px` } as React.CSSProperties
+        }
+        className={`shadow-md border border-otl-divider bg-white relative
             ${
               isExpanded
-                ? "w-full md:max-w-[350px]"
+                ? "w-full md:w-[var(--sidebar-width)]"
                 : "rounded-full cursor-pointer w-full md:max-w-[350px]"
             }
           `}
@@ -570,6 +699,24 @@ export function SearchBarMap({
           }
         }}
       >
+        {/* Drag handle — desktop only, only while the panel is expanded
+            (the collapsed pill-shaped search button isn't resizable). */}
+        {isExpanded && (
+          <div
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Ubah saiz panel carian"
+            aria-valuenow={sidebarWidth}
+            aria-valuemin={SIDEBAR_MIN_WIDTH}
+            aria-valuemax={SIDEBAR_MAX_WIDTH}
+            tabIndex={0}
+            onPointerDown={handleResizePointerDown}
+            onKeyDown={handleResizeKeyDown}
+            className="absolute right-0 top-0 z-10 -mr-1.5 hidden h-full w-3 cursor-col-resize touch-none focus:outline-none focus-visible:bg-otl-primary-200/30 md:block"
+          >
+            <div className="mx-auto h-full w-0.5 bg-transparent transition-colors hover:bg-otl-primary-200 active:bg-otl-primary-200" />
+          </div>
+        )}
         <div className={clx("h-full w-full flex flex-col")}>
           {/* Header with back button */}
           {isExpanded && (
@@ -719,6 +866,12 @@ export function SearchBarMap({
                     aria-label="Destinasi sekolah"
                     value={query}
                     onChange={(e) => handleValueChange(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        commitTopResult();
+                      }
+                    }}
                     className="flex-1 bg-transparent text-sm outline-none text-txt-primary"
                   />
                   <svg
@@ -781,9 +934,15 @@ export function SearchBarMap({
                     placeholder="Carian Sekolah"
                     value={query}
                     onValueChange={handleValueChange}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        commitTopResult();
+                      }
+                    }}
                     className=""
                   />
-                  <SearchBarSearchButton />
+                  <SearchBarSearchButton onClick={commitTopResult} />
                 </SearchBarInputContainer>
               </SearchBar>
             </div>
@@ -825,6 +984,22 @@ export function SearchBarMap({
             </>
           )}
 
+          {selectError && (
+            <div
+              role="alert"
+              className="mx-4 mb-2 flex items-center justify-between gap-3 rounded-lg border border-otl-danger-200 bg-danger-50 px-3 py-2 text-body-sm text-txt-danger"
+            >
+              <span>{selectError}</span>
+              <button
+                type="button"
+                onClick={() => setSelectError(null)}
+                className="shrink-0 font-semibold hover:underline"
+              >
+                Tutup
+              </button>
+            </div>
+          )}
+
           {isExpanded && (
             <div
               ref={listRef}
@@ -837,8 +1012,8 @@ export function SearchBarMap({
               tabIndex={0}
               className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1 focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 "
             >
-              {localSuggestions.length > 0 ? (
-                localSuggestions.map((school, idx) => (
+              {orderedSuggestions.length > 0 ? (
+                orderedSuggestions.map((school, idx) => (
                   <li
                     key={school.kodSekolah || idx}
                     onClick={() => handleSelect(school)}
@@ -931,7 +1106,7 @@ export function SearchBarMap({
                   Tiada hasil carian
                 </li>
               )}
-              {localSuggestions.length > 0 && isLoadingLocalSuggestions && (
+              {orderedSuggestions.length > 0 && isLoadingLocalSuggestions && (
                 <li className="border-t border-otl-divider">
                   <SearchFallbackIndicator visible={true} className="py-3" />
                 </li>

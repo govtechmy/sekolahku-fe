@@ -148,9 +148,16 @@ export interface CategoryItem {
   peringkatBreakdown?: PeringkatBreakdown[];
 }
 
+export interface NegeriTotal {
+  negeri: string;
+  total: number;
+}
+
 export interface AnalyticsData {
   jenisLabel: CategoryItem[];
   bantuan: CategoryItem[];
+  // School count per state, sorted desc (added by the backend /analitik endpoint).
+  taburanNegeri?: NegeriTotal[];
 }
 
 export interface AnalyticsModel {

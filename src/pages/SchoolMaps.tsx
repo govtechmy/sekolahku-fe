@@ -24,6 +24,7 @@ export default function SchoolMaps() {
     setQuery,
     initialLocationSet,
     setInitialLocationSet,
+    locationPickerOpen,
     setUserMarkers,
     setStatePolygons,
   } = useMapViewStore();
@@ -32,7 +33,6 @@ export default function SchoolMaps() {
 
   const geolocationRequestedRef = useRef(false);
   const polygonsFetchedRef = useRef(false);
-  const [isGeolocating, setIsGeolocating] = useState(false);
   const [searchParams] = useSearchParams();
   const urlQuery = searchParams.get("q")?.trim() ?? "";
 
@@ -71,10 +71,12 @@ export default function SchoolMaps() {
           return;
         }
         geolocationRequestedRef.current = true;
-        setIsGeolocating(true);
+        // Non-blocking: the map is already interactive at the national view.
+        // Low accuracy resolves in ~1s (no GPS lock wait) and a short timeout
+        // means a hung request never traps the user — it just never recenters.
         const options: PositionOptions = {
-          enableHighAccuracy: true,
-          timeout: 600000,
+          enableHighAccuracy: false,
+          timeout: 8000,
           maximumAge: 86400000,
         };
 
@@ -96,13 +98,11 @@ export default function SchoolMaps() {
               return next;
             });
             setInitialLocationSet(true);
-            setIsGeolocating(false);
           },
           (error) => {
             if (error) {
               console.error(error);
             }
-            setIsGeolocating(false);
           },
           options,
         );
@@ -218,14 +218,9 @@ export default function SchoolMaps() {
         </div>
       )}
 
-      {/* {!initialLocationSet && !disclaimerAccepted && (
-        <DisclaimerMap onAccept={() => setDisclaimerAccepted(true)} />
-      )} */}
-      {/* {!initialLocationSet && disclaimerAccepted && <LocationPickerWindow />} */}
-      {!initialLocationSet && !isGeolocating && <LocationPickerWindow />}
-      {(!initialLocationSet || isGeolocating) && (
-        <div className="fixed inset-0 z-[800] bg-bg-black-900/40 backdrop-blur-sm pointer-events-auto" />
-      )}
+      {/* On-demand only: opened from the map's location button, never forced on
+          load, so the map stays interactive while geolocation resolves async. */}
+      {locationPickerOpen && <LocationPickerWindow />}
     </div>
   );
 }

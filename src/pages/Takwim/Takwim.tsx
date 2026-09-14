@@ -1,4 +1,4 @@
-import Hero from "../../components/shared/Hero";
+import ContentHero from "../../components/Hero/ContentHero";
 import SearchBarMain from "../../components/shared/SearchBar";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useEffect, useState, useRef } from "react";
@@ -84,10 +84,9 @@ export default function Takwim() {
         description="Takwim dan kalendar pendidikan Malaysia. Semak tarikh penting dan acara sekolah."
         canonical={`${domain}/${lang}/takwim`}
       />
-      <Hero
-        title=""
-        className="h-[350px]"
-        variant="full"
+      <ContentHero
+        title="Takwim Pendidikan"
+        highlight="KEMENTERIAN PENDIDIKAN"
         search={
           <SearchBarMain
             query={searchQuery}
@@ -98,22 +97,6 @@ export default function Takwim() {
             getLabel={(item) => item.title ?? "Untitled"}
             searchBarTitle="Carian Takwim"
           />
-        }
-        background={
-          // <>
-          //   <div className="block lg:hidden h-full w-full bg-[url('/utama/siaran/hero-banner/mobile-sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
-          //   <div className="hidden lg:block h-full w-full bg-[url('/utama/siaran/hero-banner/large-sekolahku.svg')] bg-cover bg-center bg-no-repeat" />
-          // </>
-          <>
-            <div className="relative block h-full w-full overflow-hidden bg-[#d9ecf7] lg:hidden">
-              <div className="absolute inset-0 scale-110 bg-[url('/utama/kpm-hero-mobile.jpg')] bg-cover bg-center bg-no-repeat opacity-100 blur-2xl" />
-              <div className="absolute inset-0 bg-[url('/utama/kpm-hero-mobile.jpg')] bg-contain bg-center bg-no-repeat" />
-            </div>
-            <div className="relative hidden h-full w-full overflow-hidden bg-[#d9ecf7] lg:block">
-              <div className="absolute inset-0 scale-110 bg-[url('/utama/kpm-hero.jpg')] bg-cover bg-center bg-no-repeat opacity-100 blur-2xl" />
-              <div className="absolute inset-0 bg-[url('/utama/kpm-hero.jpg')] bg-contain bg-center bg-no-repeat" />
-            </div>
-          </>
         }
       />
       <div className="mx-auto flex-1 px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1280px] py-16 flex flex-col">

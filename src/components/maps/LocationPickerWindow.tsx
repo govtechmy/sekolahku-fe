@@ -9,6 +9,7 @@ import {
 import {
   CheckCircleFillIcon,
   ChevronRightIcon,
+  CrossIcon,
 } from "@govtechmy/myds-react/icon";
 import { useState, useRef } from "react";
 import { useMapViewStore } from "../../store/mapView";
@@ -33,7 +34,7 @@ export function LocationPickerWindow() {
     setCenter,
     setZoom,
     setInitialLocationSet,
-
+    setLocationPickerOpen,
     setUserMarkers,
   } = useMapViewStore();
 
@@ -100,6 +101,7 @@ export function LocationPickerWindow() {
       });
       setZoom(11);
       setInitialLocationSet(true);
+      setLocationPickerOpen(false);
     }
   };
 
@@ -111,10 +113,18 @@ export function LocationPickerWindow() {
       aria-labelledby="location-picker-title"
     >
       <div className="bg-white rounded-lg w-full sm:w-auto sm:min-w-96 sm:max-w-md lg:max-w-lg max-h-[80vh] overflow-hidden flex flex-col">
-        <div className="flex items-center p-6 pb-4.5 border-b border-otl-gray-200">
+        <div className="flex items-center justify-between p-6 pb-4.5 border-b border-otl-gray-200">
           <h2 className="font-heading text-body-lg font-semibold text-txt-black-900">
             Pilih Lokasi Anda
           </h2>
+          <button
+            type="button"
+            onClick={() => setLocationPickerOpen(false)}
+            aria-label="Tutup"
+            className="text-txt-black-500 hover:text-txt-black-900"
+          >
+            <CrossIcon className="size-5" />
+          </button>
         </div>
 
         {currentView === "districts" && selectedState && (
