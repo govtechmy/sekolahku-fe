@@ -59,10 +59,7 @@ export default function SectionHeader({
         </div>
         {title && (
           <div
-            className={clx(
-              "flex flex-col gap-4",
-              subTitle ? "pb-12" : "pb-6",
-            )}
+            className={clx("flex flex-col gap-4", subTitle ? "pb-12" : "pb-6")}
           >
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-1">

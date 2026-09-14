@@ -572,7 +572,8 @@ export function SearchBarMap({
   const orderedSuggestions = useMemo(() => {
     // During a name/acronym search, keep the backend relevance order (best match
     // first). Road-distance reordering only applies to nearest-first browsing.
-    if (hasActiveNameSearch || roadDistances.size === 0) return localSuggestions;
+    if (hasActiveNameSearch || roadDistances.size === 0)
+      return localSuggestions;
     const head = localSuggestions.slice(0, ROAD_DISTANCE_TOP_N);
     const tail = localSuggestions.slice(ROAD_DISTANCE_TOP_N);
     const sortedHead = [...head].sort((a, b) => {
