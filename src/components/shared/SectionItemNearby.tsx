@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { PinIcon, SearchIcon, ArrowForwardIcon } from "@govtechmy/myds-react/icon";
+import {
+  PinIcon,
+  SearchIcon,
+  ArrowForwardIcon,
+} from "@govtechmy/myds-react/icon";
 import { getSchoolSuggestion } from "../../services/school.svc";
 import { getSchoolLogoUrl } from "../../utils/schoolHelpers";
 import { calculateDistance } from "../../utils/calculateDistance";
@@ -25,11 +29,10 @@ export default function SectionItemNearby() {
     setLoading(true);
     setError(null);
     try {
-      const { filteredData } = await getSchoolSuggestion(
-        undefined,
-        1,
-        [lat, lng],
-      );
+      const { filteredData } = await getSchoolSuggestion(undefined, 1, [
+        lat,
+        lng,
+      ]);
       const withDistance = filteredData.map((school) => ({
         school,
         distanceKm:
@@ -78,7 +81,6 @@ export default function SectionItemNearby() {
       },
       { timeout: 5000 },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleUseCurrentLocation = () => {
@@ -168,9 +170,7 @@ export default function SectionItemNearby() {
               <SearchIcon className="size-3.5 text-white" />
             </button>
           </div>
-          {error && (
-            <p className="font-body text-xs text-red-600">{error}</p>
-          )}
+          {error && <p className="font-body text-xs text-red-600">{error}</p>}
         </div>
 
         <div className="min-w-0 flex-1 self-stretch">
