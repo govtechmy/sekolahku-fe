@@ -11,10 +11,8 @@ import {
   ChevronRightIcon,
   PinIcon,
 } from "@govtechmy/myds-react/icon";
-import { FilterDropdowns } from "./FilterDropdowns";
 import { SearchFallbackIndicator } from "../shared/SearchFallbackIndicator";
 import type { SearchBarMapProps } from "../../types/maps";
-import type { ItemSekolahModel } from "../../models/response";
 import { getSchoolS3Json } from "../../services/school.svc";
 import { searchPoi, type PoiResult } from "../../services/geocode.svc";
 import { getRoute, getRouteDistances } from "../../services/route.svc";
@@ -28,7 +26,6 @@ import { clx } from "@govtechmy/myds-react/utils";
 import { Button } from "@govtechmy/myds-react/button";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import { useMapViewStore } from "../../store/mapView";
-import { NEGERI_LIST } from "../../contentData";
 import { calculateDistance } from "../../utils/calculateDistance";
 import { useLocationSessionStore } from "../../store/locationSession";
 import SekolahAngkatMadaniIcon from "../../icons/SekolahAngkatMadaniIcon";
@@ -62,17 +59,17 @@ const SIDEBAR_MAX_WIDTH = 600;
 type SearchBarMapComponentProps = {
   schoolTypes: string[];
   selectedPeringkat: string;
-  setSelectedPeringkat: (value: string) => void;
-  initialNegeri?: string;
-  initialJenis?: string;
+  selectedNegeri: string;
+  selectedJenis: string;
+  setSelectedJenis: (value: string) => void;
 };
 
 export function SearchBarMap({
   schoolTypes,
   selectedPeringkat,
-  setSelectedPeringkat,
-  initialNegeri = "ALL",
-  initialJenis = "ALL",
+  selectedNegeri,
+  selectedJenis,
+  setSelectedJenis,
 }: SearchBarMapComponentProps) {
   const {
     viewSchool,
@@ -84,7 +81,6 @@ export function SearchBarMap({
     handleSearch,
     query,
     setQuery,
-    dataTotal,
     setPointA,
     setPointB,
     setRoute,
@@ -161,8 +157,6 @@ export function SearchBarMap({
       window.removeEventListener("pointercancel", handleResizePointerUp);
     };
   }, [handleResizePointerMove, handleResizePointerUp]);
-  const [selectedNegeri, setSelectedNegeri] = useState(initialNegeri);
-  const [selectedJenis, setSelectedJenis] = useState(initialJenis);
   const debounceTimerRef = useRef<number | null>(null);
   const setCenter = useMapViewStore((s) => s.setCenter);
   const setZoom = useMapViewStore((s) => s.setZoom);
@@ -187,13 +181,7 @@ export function SearchBarMap({
   const inputARef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const isSwappingRef = useRef(false);
-  const hoverRequestIdRef = useRef(0);
-  // The school "pinned" by an actual click — survives mouse-leave. Hover only
-  // previews; leaving the list restores this (or clears if nothing pinned).
-  const pinnedSchoolRef = useRef<ItemSekolahModel | null>(null);
 
-  // Use predefined lists instead of extracting from markers
-  const negeriList = NEGERI_LIST;
   const prevPeringkatRef = useRef(selectedPeringkat);
 
   // Set pointA from user location when it becomes available
@@ -278,14 +266,14 @@ export function SearchBarMap({
         setSelectedJenis("ALL");
       }
     }
-  }, [selectedJenis, selectedPeringkat]);
+  }, [selectedJenis, selectedPeringkat, setSelectedJenis]);
 
   // Also reset if the current jenis is not valid for the new schoolTypes list
   useEffect(() => {
     if (selectedJenis !== "ALL" && !schoolTypes.includes(selectedJenis)) {
       setSelectedJenis("ALL");
     }
-  }, [schoolTypes, selectedJenis]);
+  }, [schoolTypes, selectedJenis, setSelectedJenis]);
 
   // Handler for MyDS SearchBar onValueChange (Field B - destination)
   const handleValueChange = (value: string) => {
@@ -586,25 +574,6 @@ export function SearchBarMap({
     return [...sortedHead, ...tail];
   }, [localSuggestions, roadDistances, hasActiveNameSearch]);
 
-  const handleHover = async (school: SearchBarMapProps) => {
-    try {
-      if (!school.kodSekolah) return;
-      const requestId = ++hoverRequestIdRef.current;
-      const detail = await getSchoolS3Json(
-        undefined,
-        school.negeri,
-        school.parlimen,
-        school.kodSekolah,
-      );
-      // Only update if this is still the latest hover request
-      if (requestId === hoverRequestIdRef.current && detail) {
-        setViewSchool(detail);
-      }
-    } catch (error) {
-      console.error("Error fetching school details on hover:", error);
-    }
-  };
-
   const handleSelect = async (school: SearchBarMapProps) => {
     try {
       setSelectError(null);
@@ -619,7 +588,6 @@ export function SearchBarMap({
         school.kodSekolah,
       );
       if (detail) {
-        pinnedSchoolRef.current = detail;
         setViewSchool(detail);
         setCenter([school.koordinatYY, school.koordinatXX]);
         setZoom(16);
@@ -683,10 +651,10 @@ export function SearchBarMap({
 
   return (
     <div
-      className={`absolute flex z-[500] bottom-0 
+      className={`absolute flex z-[500] bottom-0 pointer-events-none
           ${
             isExpanded
-              ? "top-0 md:top-0 left-0 gap-4 justify-start w-full md:w-auto"
+              ? "top-0 md:top-0 left-0 right-0 md:right-6 gap-4 justify-start w-full md:w-auto"
               : "top-[16px] left-3 right-3 sm:left-3 sm:right-3 flex-col gap-2 h-[45px] justify-center sm:justify-start"
           }
         `}
@@ -695,7 +663,7 @@ export function SearchBarMap({
         style={
           { "--sidebar-width": `${sidebarWidth}px` } as React.CSSProperties
         }
-        className={`shadow-md border border-otl-divider bg-white relative
+        className={`pointer-events-auto shadow-md border border-otl-divider bg-white relative
             ${
               isExpanded
                 ? "w-full md:w-[var(--sidebar-width)]"
@@ -973,27 +941,6 @@ export function SearchBarMap({
                   <span className="text-xs text-gray-500">anggaran pandu</span>
                 </div>
               )}
-              <FilterDropdowns
-                selectedNegeri={selectedNegeri}
-                selectedJenis={selectedJenis}
-                selectedPeringkat={selectedPeringkat}
-                negeriList={negeriList}
-                jenisList={schoolTypes}
-                setSelectedNegeri={setSelectedNegeri}
-                setSelectedJenis={setSelectedJenis}
-                setSelectedPeringkat={setSelectedPeringkat}
-                onClearFilters={() => {
-                  setSelectedNegeri("ALL");
-                  setSelectedJenis("ALL");
-                  setSelectedPeringkat("ALL");
-                  setQuery("");
-                }}
-              />
-              {dataTotal > 0 && (
-                <div className="p-4 pt-0 text-txt-black-500">
-                  {dataTotal} buah sekolah ditemui berdasarkan carian anda
-                </div>
-              )}
             </>
           )}
 
@@ -1017,11 +964,6 @@ export function SearchBarMap({
             <div
               ref={listRef}
               onScroll={handleScroll}
-              onMouseLeave={() => {
-                // Leaving the list closes the hover preview, unless a school
-                // has been pinned by an actual click.
-                setViewSchool(pinnedSchoolRef.current);
-              }}
               tabIndex={0}
               className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1 focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 "
             >
@@ -1030,7 +972,6 @@ export function SearchBarMap({
                   <li
                     key={school.kodSekolah || idx}
                     onClick={() => handleSelect(school)}
-                    onMouseEnter={() => handleHover(school)}
                     className="px-4 py-4 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
                   >
                     <div className="flex justify-between items-center">
@@ -1130,22 +1071,20 @@ export function SearchBarMap({
       </div>
       {viewSchool && (
         <>
-          {/* Desktop view - side panel (beside the sidebar, top aligned) */}
+          {/* Desktop view - horizontal bar pinned to the bottom of the map */}
           <div
             className={clx(
-              "hidden md:block bg-transparent rounded-xl overflow-y-auto",
+              "hidden md:block pointer-events-auto bg-transparent rounded-xl overflow-y-auto",
               isExpanded
-                ? "mt-2 ml-2 mr-3 max-w-[350px] max-h-[85vh]"
-                : "absolute top-[53px] max-h-[78vh] w-full max-w-[350px]",
+                ? "flex-1 self-end mb-2 mr-3 max-h-[42vh]"
+                : "absolute top-[61px] left-3 right-3 md:right-6 max-h-[60vh]",
             )}
           >
             <SchoolInfoWindow
               school={viewSchool}
-              setSelected={() => {
-                pinnedSchoolRef.current = null;
-                setViewSchool(null);
-              }}
+              setSelected={() => setViewSchool(null)}
               mobile={false}
+              layout="horizontal"
               searchQuery={query}
             />
           </div>
@@ -1153,7 +1092,7 @@ export function SearchBarMap({
           {/* Mobile view - bottom sheet */}
           <div
             className={clx(
-              "md:hidden fixed inset-x-0 bottom-0 z-[60] flex flex-col",
+              "md:hidden pointer-events-auto fixed inset-x-0 bottom-0 z-[60] flex flex-col",
               isFullScreen ? "top-[31vh]" : "max-h-[40vh]",
             )}
           >

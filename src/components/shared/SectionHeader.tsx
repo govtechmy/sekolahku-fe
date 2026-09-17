@@ -61,7 +61,7 @@ export default function SectionHeader({
           <div
             className={clx("flex flex-col gap-4", subTitle ? "pb-12" : "pb-6")}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-start justify-between gap-3">
               <div className="flex flex-col gap-1">
                 <div
                   className={clx(
@@ -71,27 +71,31 @@ export default function SectionHeader({
                 >
                   {title}
                 </div>
-                {subTitle && (
-                  <span className="text-txt-black-500 text-body-sm font-normal">
-                    Data sehingga {subTitle}
-                  </span>
+                {(subTitle || sourceBtn) && (
+                  <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                    {subTitle && (
+                      <span className="text-txt-black-500 text-body-sm font-normal">
+                        Data sehingga {subTitle}
+                      </span>
+                    )}
+                    {sourceBtn && (
+                      <div className="flex items-center gap-1.5 rounded-full border border-otl-gray-200 bg-bg-white px-3 py-1.5">
+                        <span className="size-[7px] rounded-full bg-[#34D399]" />
+                        <span className="whitespace-nowrap text-body-xs font-semibold text-txt-black-500">
+                          Kemaskini Langsung
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
               {headerAction}
-            </div>
-            {sourceBtn && (
-              <div className="flex flex-wrap items-center gap-2.5">
-                <div className="flex items-center gap-1.5 rounded-full bg-bg-white px-3 py-1.5">
-                  <span className="size-[7px] rounded-full bg-[#34D399]" />
-                  <span className="whitespace-nowrap text-body-xs font-semibold text-txt-black-500">
-                    Kemaskini Langsung
-                  </span>
-                </div>
+              {sourceBtn && (
                 <a
                   href="https://emisonline.moe.gov.my/risalahmap/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-2 rounded-[10px] bg-[#F7F8FA] px-2.5 py-1.5 ring-2 ring-transparent transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-bg-gray-100 hover:shadow-md hover:ring-otl-primary-200 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                  className="group flex shrink-0 items-center gap-2 rounded-[10px] border border-otl-gray-200 bg-[#F7F8FA] px-2.5 py-1.5 ring-2 ring-transparent transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-bg-gray-100 hover:shadow-md hover:ring-otl-primary-200 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                 >
                   <JataNegaraIcon className="size-5" />
                   <div className="flex flex-col">
@@ -104,8 +108,8 @@ export default function SectionHeader({
                   </div>
                   <ArrowOutgoingIcon className="size-3.5 text-txt-black-500 transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none" />
                 </a>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         )}
       </div>

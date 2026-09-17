@@ -1,4 +1,4 @@
 export { SchoolInfoWindow } from "./SchoolInfoWindow";
 export { LocationPickerWindow } from "./LocationPickerWindow";
-export { FilterDropdowns } from "./FilterDropdowns";
+export { FilterBar } from "./FilterBar";
 export { SearchBarMap } from "./SearchBarMap";

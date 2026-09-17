@@ -85,8 +85,6 @@ export default function Takwim() {
         canonical={`${domain}/${lang}/takwim`}
       />
       <ContentHero
-        title="Takwim Pendidikan"
-        highlight="KEMENTERIAN PENDIDIKAN"
         search={
           <SearchBarMain
             query={searchQuery}

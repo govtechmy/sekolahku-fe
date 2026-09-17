@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useMapViewStore } from "../../store/mapView";
-import SearchBar from "../shared/SearchBar";
 import { SimpleSelect, SimpleSelectItem } from "../shared/SelectComponent";
+import { SearchIcon, ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
 import { useRef, useState } from "react";
 import { buildSchoolSearchPath } from "../../utils/schoolSearchUrl";
 import { NEGERI_LIST } from "../../contentData";
@@ -23,8 +23,6 @@ export default function HomeHero() {
     localSuggestions,
     setLocalSuggestions,
   } = useMapViewStore();
-  const dataTotal = useMapViewStore((state) => state.dataTotal);
-  const singlePageTotal = useMapViewStore((state) => state.singlePageTotal);
   const isLoadingLocalSuggestions = useMapViewStore(
     (state) => state.isLoadingLocalSuggestions,
   );
@@ -63,23 +61,33 @@ export default function HomeHero() {
 
   return (
     <section className="relative flex min-h-[560px] items-center justify-center">
-      {/* Background image with a dark navy wash so the headline reads on top.
-          overflow-hidden lives here (not the section) so the rounded corners
-          clip the bg without clipping the search dropdowns. */}
-      <div className="absolute inset-0 -z-10 overflow-hidden rounded-b-[32px]">
-        <div className="absolute inset-0 scale-105 bg-[url('/utama/hero.jpg')] bg-cover bg-center bg-no-repeat" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1220]/[.91] from-0% to-[#0B1220]/[.08] to-70%" />
+      {/* Light background: line-art school illustration washed out under a
+          soft gradient so the headline and card read on top. overflow-hidden
+          lives here (not the section) so the rounded corners clip the bg
+          without clipping the search dropdowns. */}
+      <div className="absolute inset-0 -z-10 overflow-hidden rounded-b-[32px] bg-[#F7F8FA]">
+        <div className="absolute inset-0 bg-[url('/utama/hero-portal-sekolahku.png')] bg-cover bg-bottom bg-no-repeat" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, #FFFFFFC4 0%, #FFFFFF4D 50%, #FFFFFFF7 90%)",
+          }}
+        />
       </div>
 
       <div className="relative mx-auto flex w-full max-w-[860px] flex-col items-center gap-5 px-5 pt-16 pb-32 text-center">
         {/* Title */}
         <h1 className="m-0 flex flex-col items-center gap-0.5">
-          <span className="font-heading text-[22px] font-bold leading-tight text-white">
-            Selamat Datang ke
+          <span
+            className="font-body text-xs font-bold leading-tight tracking-[1.5px]"
+            style={{ color: "#0B4FCC" }}
+          >
+            SELAMAT DATANG KE
           </span>
           <span
             className="font-heading text-4xl font-extrabold leading-tight md:text-[38px]"
-            style={{ color: "#F0B429" }}
+            style={{ color: "#0A1930" }}
           >
             PORTAL SEKOLAHKU
           </span>
@@ -87,29 +95,49 @@ export default function HomeHero() {
 
         {/* Search card. relative z-20 keeps its suggestion/select dropdowns
             above the stats cards (z-10) that overlap the hero's bottom edge. */}
-        <div className="relative z-20 flex w-full max-w-[760px] flex-col gap-3.5 rounded-[20px] bg-bg-white p-5 shadow-xl">
+        <div className="relative z-20 flex w-full max-w-[760px] flex-col gap-3.5 rounded-[20px] border border-[#DCE6F5] bg-white p-5 shadow-xl">
           {/* relative z-30 lifts the search suggestions dropdown above the
               filter row below it (which comes later in the DOM). */}
-          <div className="relative z-30">
-            <SearchBar
-              query={query}
-              setQuery={setQuery}
-              handleValueChange={handleValueChange}
-              handleSearchEnter={handleSearchEnter}
-              suggestions={localSuggestions}
-              getKey={(item) => item.kodSekolah ?? ""}
-              getLabel={(item) => item.namaSekolah}
-              getSubLabel={(item) => item.kodSekolah}
-              onSelect={(item) => {
-                const selectedQuery = item.namaSekolah ?? "";
-                setQuery(selectedQuery);
-                goSearch(selectedQuery);
-              }}
-              searchBarTitle="Carian Sekolah"
-              singlePageTotal={singlePageTotal}
-              dataTotal={dataTotal}
-              isSearchingBackend={isLoadingLocalSuggestions}
+          <div className="relative z-30 flex w-full items-center gap-2.5 rounded-[14px] bg-[#F7F8FA] py-2 pl-4 pr-2">
+            <SearchIcon className="size-[18px] shrink-0 text-txt-black-500" />
+            <input
+              value={query}
+              onChange={(e) => handleValueChange(e.target.value)}
+              onKeyDown={handleSearchEnter}
+              placeholder="Masukkan Nama Sekolah, Kod Sekolah (cth: WBA0001), atau Lokasi..."
+              className="min-w-0 flex-1 bg-transparent font-body text-sm text-txt-black-900 outline-none placeholder:text-txt-black-500"
             />
+            <button
+              type="button"
+              onClick={() => goSearch(query)}
+              className="flex shrink-0 items-center gap-1.5 rounded-[10px] bg-[#0062FF] px-5 py-2.5 font-body text-[13px] font-bold text-white transition hover:bg-[#0052D6]"
+            >
+              Cari
+              <ArrowOutgoingIcon className="size-3.5" />
+            </button>
+            {isLoadingLocalSuggestions === false &&
+              query.trim().length >= 3 &&
+              localSuggestions.length > 0 && (
+                <div className="absolute left-0 top-full z-30 mt-1 max-h-[400px] w-full overflow-y-auto rounded-md border border-otl-gray-200 bg-bg-dialog py-1 shadow-context-menu">
+                  {localSuggestions.map((item) => (
+                    <button
+                      key={item.kodSekolah ?? item.namaSekolah}
+                      type="button"
+                      onClick={() => {
+                        const selectedQuery = item.namaSekolah ?? "";
+                        setQuery(selectedQuery);
+                        goSearch(selectedQuery);
+                      }}
+                      className="flex w-full items-center justify-between px-4 py-3 text-left text-body-sm text-txt-black-700 hover:bg-bg-washed"
+                    >
+                      <span className="line-clamp-2">
+                        {item.namaSekolah}
+                        {item.kodSekolah ? ` ${item.kodSekolah}` : ""}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
