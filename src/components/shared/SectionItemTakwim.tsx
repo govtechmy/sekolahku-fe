@@ -9,6 +9,73 @@ type SectionItemTakwimProps = {
   dataItemCalendar: TakwimItem[];
 };
 
+type TakwimListItemProps = {
+  leading: React.ReactNode;
+  title: string;
+  description?: string;
+  onClick?: () => void;
+  href?: string;
+  ariaLabel: string;
+  showChevron?: boolean;
+};
+
+export function TakwimListItem({
+  leading,
+  title,
+  description,
+  onClick,
+  href,
+  ariaLabel,
+  showChevron = false,
+}: TakwimListItemProps) {
+  const content = (
+    <>
+      {leading}
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="line-clamp-2 text-body-sm font-semibold text-txt-black-900">
+          {title}
+        </div>
+        {description && (
+          <div className="line-clamp-2 text-body-xs text-txt-black-500">
+            {description}
+          </div>
+        )}
+      </div>
+      {showChevron && (
+        <ChevronRightIcon className="size-4 shrink-0 text-txt-black-500" />
+      )}
+    </>
+  );
+
+  const className =
+    "group flex w-full items-center gap-3.5 rounded-xl bg-[#F7F8FA] p-3.5 transition-colors hover:bg-bg-gray-100 focus:outline-primary-200";
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={ariaLabel}
+        className={className}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      aria-label={ariaLabel}
+      className={`${className} cursor-pointer text-left`}
+      onClick={onClick}
+    >
+      {content}
+    </button>
+  );
+}
+
 // Takwim items carry no plain description, so pull the first non-empty
 // paragraph out of the Lexical content for the row subtitle.
 const firstParagraph = (content?: ArticleContent): string => {
@@ -44,46 +111,28 @@ export default function SectionItemTakwim({
         const eventDate = item.articleDate || item.createdAt;
         const desc = firstParagraph(item.content);
         return (
-          <div
-            key={index}
-            className="group flex w-full cursor-pointer items-center gap-3.5 rounded-xl bg-[#F7F8FA] p-3.5 transition-colors hover:bg-bg-gray-100 focus:outline-primary-200"
-            tabIndex={0}
-            role="button"
-            aria-label={item.title ? `${item.title}` : "View event"}
+          <TakwimListItem
+            key={item._id ?? index}
+            leading={
+              eventDate ? (
+                <div className="flex w-[52px] shrink-0 flex-col items-center rounded-[10px] bg-bg-white py-2">
+                  <div className="text-body-xs font-bold text-txt-danger">
+                    {new Date(eventDate)
+                      .toLocaleString("default", { month: "short" })
+                      .toUpperCase()}
+                  </div>
+                  <div className="text-body-lg font-bold text-txt-black-900">
+                    {eventDate.slice(8, 10)}
+                  </div>
+                </div>
+              ) : null
+            }
+            title={item.title ?? "Acara takwim"}
+            description={desc}
             onClick={() => openAttachmentByIndex(item, index)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                openAttachmentByIndex(item, index);
-              }
-            }}
-          >
-            {eventDate && (
-              <div className="flex w-[52px] shrink-0 flex-col items-center rounded-[10px] bg-bg-white py-2">
-                <div className="text-body-xs font-bold text-txt-danger">
-                  {new Date(eventDate)
-                    .toLocaleString("default", { month: "short" })
-                    .toUpperCase()}
-                </div>
-                <div className="text-body-lg font-bold text-txt-black-900">
-                  {eventDate.slice(8, 10)}
-                </div>
-              </div>
-            )}
-            <div className="flex min-w-0 flex-1 flex-col gap-1">
-              {item.title && (
-                <div className="line-clamp-2 text-body-sm font-semibold text-txt-black-900">
-                  {item.title}
-                </div>
-              )}
-              {desc && (
-                <div className="line-clamp-2 text-body-xs text-txt-black-500">
-                  {desc}
-                </div>
-              )}
-            </div>
-            <ChevronRightIcon className="size-4 shrink-0 text-txt-black-500" />
-          </div>
+            ariaLabel={item.title ?? "Lihat acara"}
+            showChevron
+          />
         );
       })}
     </div>
