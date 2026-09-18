@@ -12,6 +12,8 @@ import { getSiaranList } from "../services/siaran.svc";
 import SectionItemTakwim from "../components/shared/SectionItemTakwim";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemStats from "../components/shared/SectionItemStats";
+import SectionItemLayanan from "../components/shared/SectionItemLayanan";
+import SectionItemNearby from "../components/shared/SectionItemNearby";
 import { getAnalytics } from "../services/analytics.svc";
 import { formatFileVersion } from "../utils/fileVersionFormat";
 import HelmetMeta from "../seo/HelmetMeta";
@@ -108,9 +110,12 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] pt-12 pb-16 flex flex-col">
+      <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] pt-12 pb-16 flex flex-col gap-12">
+        <SectionItemLayanan />
+        <SectionItemNearby />
+
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] gap-12 lg:gap-8 xl:gap-10">
-          {/* Left column: Berita, then Pautan Pantas + Takwim */}
+          {/* Left column: Berita */}
           <div className="flex flex-col gap-12">
             {newsToShow && newsToShow.length > 0 && (
               <SectionHeader
@@ -122,7 +127,7 @@ export default function HomePage() {
                   <button
                     type="button"
                     onClick={() => navigate(`/${lang}/berita-kpm`)}
-                    className="flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-body-sm font-semibold text-txt-black-900 transition-colors hover:bg-bg-gray-50 focus:outline-primary-200"
+                    className="flex shrink-0 items-center gap-1.5 rounded-full border border-otl-gray-200 px-3.5 py-2 text-body-sm font-semibold text-txt-black-900 transition-colors hover:bg-bg-gray-50 focus:outline-primary-200"
                   >
                     Semua Berita
                     <ArrowForwardIcon className="size-4" />
@@ -137,49 +142,48 @@ export default function HomePage() {
                 }
               />
             )}
+          </div>
 
-            <div className="grid grid-cols-1 px-4 md:grid-cols-[minmax(0,300px)_minmax(0,1fr)] gap-6 lg:px-0">
-              <div id="pautan" className="flex flex-col gap-3">
+          {/* Right column: Kalendar Aktiviti Persekolahan, then Pautan Pantas */}
+          <div className="flex flex-col gap-8">
+            {dataItemCalendar && dataItemCalendar.length > 0 && (
+              <div className="flex flex-col gap-2.5">
                 <h2 className="font-heading text-body-lg font-bold text-txt-black-900">
-                  Pautan Pantas
+                  Kalendar Aktiviti Persekolahan
                 </h2>
-                <SectionItemLinks dataItemLinks={dataItemLinks} />
+                <SectionItemTakwim dataItemCalendar={dataItemCalendar} />
+                <button
+                  type="button"
+                  onClick={() => navigate(`/${lang}/takwim`)}
+                  className="w-fit text-body-sm font-semibold text-[#0062FF] hover:underline focus:outline-primary-200"
+                >
+                  Lihat Seluruh Takwim Tahunan &gt;
+                </button>
               </div>
+            )}
 
-              {dataItemCalendar && dataItemCalendar.length > 0 && (
-                <div className="flex flex-col gap-2.5">
-                  <h2 className="font-heading text-body-lg font-bold text-txt-black-900">
-                    Takwim Persekolahan
-                  </h2>
-                  <SectionItemTakwim dataItemCalendar={dataItemCalendar} />
-                  <button
-                    type="button"
-                    onClick={() => navigate(`/${lang}/takwim`)}
-                    className="w-fit text-body-sm font-semibold text-[#0062FF] hover:underline focus:outline-primary-200"
-                  >
-                    Lihat Seluruh Takwim Tahunan &gt;
-                  </button>
-                </div>
-              )}
+            <div id="pautan" className="flex flex-col gap-3">
+              <h2 className="font-heading text-body-lg font-bold text-txt-black-900">
+                Pautan Pantas
+              </h2>
+              <SectionItemLinks dataItemLinks={dataItemLinks} />
             </div>
           </div>
-
-          {/* Right column: Analitik */}
-          <div className="flex flex-col">
-            {analytics && (
-              <SectionHeader
-                header="ANALITIK"
-                title="Statistik Sekolah di Malaysia"
-                titleClassName="md:whitespace-nowrap"
-                subTitle={formatFileVersion(analytics?.fileVersion)}
-                sourceBtn={true}
-                isLastSection={true}
-                className="lg:px-0"
-                children={<SectionItemAnalytics analytics={analytics} />}
-              />
-            )}
-          </div>
         </div>
+
+        {/* Analitik: full width, further down the page */}
+        {analytics && (
+          <SectionHeader
+            header="ANALITIK"
+            title="Statistik Sekolah di Malaysia"
+            titleClassName="md:whitespace-nowrap"
+            subTitle={formatFileVersion(analytics?.fileVersion)}
+            sourceBtn={true}
+            isLastSection={true}
+            className="lg:px-0"
+            children={<SectionItemAnalytics analytics={analytics} />}
+          />
+        )}
       </div>
     </div>
   );

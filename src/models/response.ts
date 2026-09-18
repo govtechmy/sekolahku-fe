@@ -221,15 +221,22 @@ export interface SiaranItem {
   createdAt: string;
   updatedAt: string;
   title: string;
-  image: string;
-  readTime: number;
+  image?: string;
+  readTime?: number;
   articleDate: string;
-  attachments: Attachment[];
-  content: SiaranContent;
-  category: string;
-  __v: number;
-  imageHero: SiaranImageHero;
-  categoryInfo: SiaranCategory;
+  attachments?: Attachment[];
+  content?: SiaranContent;
+  category?: string;
+  __v?: number;
+  imageHero?: SiaranImageHero;
+  categoryInfo?: SiaranCategory;
+  // Present when this item is synced from an external source (e.g. MOE news)
+  // rather than authored in the CMS - see sekolahku-be's siaran controller merge.
+  source?: "internal" | "moe";
+  sourceUrl?: string;
+  // Full image set for MOE articles (imageHero is just images[0]); CMS articles
+  // use `attachments` instead for their extra gallery images.
+  images?: { url: string; alt?: string }[];
 }
 
 export interface SiaranList extends BaseListModel {

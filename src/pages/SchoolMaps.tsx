@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import { getSchoolTypes } from "../services/school.svc";
 import { SearchBarMap } from "../components/maps/SearchBarMap";
 import { MapContainerMapCN } from "../components/maps/MapContainerMapCN";
-import { LocationPickerWindow } from "../components/maps";
+import { FilterBar, LocationPickerWindow } from "../components/maps";
 import { useMapViewStore } from "../store/mapView";
 import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import { NEGERI_LIST } from "../contentData";
@@ -24,6 +24,8 @@ export default function SchoolMaps() {
   const [schoolTypesRendah, setSchoolTypesRendah] = useState<string[]>([]);
   const [selectedPeringkat, setSelectedPeringkat] =
     useState<string>(urlPeringkat);
+  const [selectedNegeri, setSelectedNegeri] = useState<string>(urlNegeri);
+  const [selectedJenis, setSelectedJenis] = useState<string>(urlJenis);
   // const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const {
     setCenter,
@@ -34,6 +36,7 @@ export default function SchoolMaps() {
     locationPickerOpen,
     setUserMarkers,
     setStatePolygons,
+    dataTotal,
   } = useMapViewStore();
 
   const { setInitialLocationUser } = useLocationSessionStore();
@@ -50,6 +53,14 @@ export default function SchoolMaps() {
   useEffect(() => {
     setSelectedPeringkat(urlPeringkat);
   }, [urlPeringkat]);
+
+  useEffect(() => {
+    setSelectedNegeri(urlNegeri);
+  }, [urlNegeri]);
+
+  useEffect(() => {
+    setSelectedJenis(urlJenis);
+  }, [urlJenis]);
 
   useEffect(() => {
     if (!initialLocationSet) {
@@ -193,77 +204,105 @@ export default function SchoolMaps() {
   const domain = import.meta.env.VITE_DOMAIN_NAME;
 
   return (
-    <div className="h-full w-full flex relative">
+    <div className="h-full w-full flex flex-col relative">
       <HelmetMeta
         title="Carian Sekolah - SekolahKu"
         description="Cari sekolah berhampiran anda. Gunakan peta interaktif untuk mencari maklumat sekolah di seluruh Malaysia."
         canonical={`${domain}/${lang}/carian-sekolah`}
       />
-      <SearchBarMap
-        key={`${urlNegeri}|${urlPeringkat}|${urlJenis}`}
-        schoolTypes={schoolTypes}
+
+      <FilterBar
+        selectedNegeri={selectedNegeri}
+        selectedJenis={selectedJenis}
         selectedPeringkat={selectedPeringkat}
+        negeriList={NEGERI_LIST}
+        jenisList={schoolTypes}
+        setSelectedNegeri={setSelectedNegeri}
+        setSelectedJenis={setSelectedJenis}
         setSelectedPeringkat={setSelectedPeringkat}
-        initialNegeri={urlNegeri}
-        initialJenis={urlJenis}
+        onClearFilters={() => {
+          setSelectedNegeri("ALL");
+          setSelectedJenis("ALL");
+          setSelectedPeringkat("ALL");
+          setQuery("");
+        }}
+        dataTotal={dataTotal}
       />
-      <MapContainerMapCN />
 
-      {/* Map legends (top-right) */}
-      <div className="absolute top-6 right-6 z-[500] flex flex-col gap-2">
-        {/* Pin colour legend */}
-        <div className="rounded-lg bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm">
-          <p className="mb-1 text-xs font-semibold text-gray-700">
-            Petunjuk Pin
-          </p>
-          {(
-            [
-              ["#2A9D8F", "Sekolah Rendah"],
-              ["#D99A3D", "Sekolah Menengah"],
-              ["#EF4444", "Sekolah Dicari"],
-              ["#2563EB", "Lokasi Anda"],
-            ] as const
-          ).map(([color, label]) => (
-            <div
-              key={label}
-              className="mt-1 flex items-center gap-2 first:mt-0"
-            >
-              <span
-                className="inline-block h-3 w-3 rounded-full"
-                style={{ backgroundColor: color }}
-              />
-              <span className="text-xs text-gray-600">{label}</span>
-            </div>
-          ))}
-        </div>
+      <div className="flex-1 w-full flex relative">
+        <SearchBarMap
+          key={`${urlNegeri}|${urlPeringkat}|${urlJenis}`}
+          schoolTypes={schoolTypes}
+          selectedPeringkat={selectedPeringkat}
+          selectedNegeri={selectedNegeri}
+          selectedJenis={selectedJenis}
+          setSelectedJenis={setSelectedJenis}
+        />
+        <MapContainerMapCN />
 
-        {/* Radius legend */}
-        {initialLocationSet && (
+        {/* Map legends (top-right) */}
+        <div className="absolute top-6 right-6 z-[500] flex flex-col gap-2">
+          {/* Pin colour legend */}
           <div className="rounded-lg bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm">
             <p className="mb-1 text-xs font-semibold text-gray-700">
-              Jarak Radius
+              Petunjuk Pin
             </p>
-            <div className="flex items-center gap-2">
-              <span
-                className="inline-block h-3 w-3 rounded-full border-2"
-                style={{ borderColor: "#3366FF", backgroundColor: "#3366FF14" }}
-              />
-              <span className="text-xs text-gray-600">3 km</span>
-            </div>
-            <div className="mt-1 flex items-center gap-2">
-              <span
-                className="inline-block h-3 w-3 rounded-full border-2 border-dashed"
-                style={{ borderColor: "#FF3B30", backgroundColor: "#FF3B3014" }}
-              />
-              <span className="text-xs text-gray-600">20 km</span>
-            </div>
+            {(
+              [
+                ["#2A9D8F", "Sekolah Rendah"],
+                ["#D99A3D", "Sekolah Menengah"],
+                ["#EF4444", "Sekolah Dicari"],
+                ["#2563EB", "Lokasi Anda"],
+              ] as const
+            ).map(([color, label]) => (
+              <div
+                key={label}
+                className="mt-1 flex items-center gap-2 first:mt-0"
+              >
+                <span
+                  className="inline-block h-3 w-3 rounded-full"
+                  style={{ backgroundColor: color }}
+                />
+                <span className="text-xs text-gray-600">{label}</span>
+              </div>
+            ))}
           </div>
-        )}
-      </div>
 
-      {/* On-demand only: opened from the map's location button, never forced on
-          load, so the map stays interactive while geolocation resolves async. */}
-      {locationPickerOpen && <LocationPickerWindow />}
+          {/* Radius legend */}
+          {initialLocationSet && (
+            <div className="rounded-lg bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm">
+              <p className="mb-1 text-xs font-semibold text-gray-700">
+                Jarak Radius
+              </p>
+              <div className="flex items-center gap-2">
+                <span
+                  className="inline-block h-3 w-3 rounded-full border-2"
+                  style={{
+                    borderColor: "#3366FF",
+                    backgroundColor: "#3366FF14",
+                  }}
+                />
+                <span className="text-xs text-gray-600">3 km</span>
+              </div>
+              <div className="mt-1 flex items-center gap-2">
+                <span
+                  className="inline-block h-3 w-3 rounded-full border-2 border-dashed"
+                  style={{
+                    borderColor: "#FF3B30",
+                    backgroundColor: "#FF3B3014",
+                  }}
+                />
+                <span className="text-xs text-gray-600">20 km</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* On-demand only: opened from the map's location button, never forced
+            on load, so the map stays interactive while geolocation resolves
+            async. */}
+        {locationPickerOpen && <LocationPickerWindow />}
+      </div>
     </div>
   );
 }

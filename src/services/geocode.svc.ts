@@ -28,7 +28,8 @@ export interface PoiResult {
 // --- Amazon Location Service GeoPlaces v2 (primary) -----------------------
 
 const ALS_API_KEY = import.meta.env.VITE_ALS_API_KEY as string | undefined;
-const ALS_REGION = (import.meta.env.VITE_ALS_REGION as string | undefined) ?? "ap-southeast-5";
+const ALS_REGION =
+  (import.meta.env.VITE_ALS_REGION as string | undefined) ?? "ap-southeast-5";
 
 // [lng, lat] of KL — bias results towards Malaysia's centre of gravity.
 const BIAS_POSITION: [number, number] = [101.6869, 3.139];
@@ -40,7 +41,10 @@ interface GeoPlacesResultItem {
   Position?: number[]; // [lng, lat]
 }
 
-async function searchPoiAls(q: string, signal?: AbortSignal): Promise<PoiResult[]> {
+async function searchPoiAls(
+  q: string,
+  signal?: AbortSignal,
+): Promise<PoiResult[]> {
   const url = `https://places.geo.${ALS_REGION}.amazonaws.com/v2/search-text?key=${encodeURIComponent(ALS_API_KEY!)}`;
   const res = await fetch(url, {
     method: "POST",
@@ -66,7 +70,15 @@ async function searchPoiAls(q: string, signal?: AbortSignal): Promise<PoiResult[
     const [lng, lat] = point;
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) return [];
     const label = item.Title ?? item.Address?.Label?.split(",")[0].trim() ?? "";
-    return [{ id: item.PlaceId ?? `${lat},${lng}`, label, sublabel: item.Address?.Label ?? "", lat, lng }];
+    return [
+      {
+        id: item.PlaceId ?? `${lat},${lng}`,
+        label,
+        sublabel: item.Address?.Label ?? "",
+        lat,
+        lng,
+      },
+    ];
   });
 }
 
@@ -82,7 +94,10 @@ interface NominatimItem {
   lon: string;
 }
 
-async function searchPoiNominatim(q: string, signal?: AbortSignal): Promise<PoiResult[]> {
+async function searchPoiNominatim(
+  q: string,
+  signal?: AbortSignal,
+): Promise<PoiResult[]> {
   const params = new URLSearchParams({
     q,
     format: "jsonv2",
@@ -92,7 +107,9 @@ async function searchPoiNominatim(q: string, signal?: AbortSignal): Promise<PoiR
     "accept-language": "ms,en",
   });
 
-  const res = await fetch(`${NOMINATIM_SEARCH_URL}?${params.toString()}`, { signal });
+  const res = await fetch(`${NOMINATIM_SEARCH_URL}?${params.toString()}`, {
+    signal,
+  });
   if (!res.ok) {
     console.error("[geocode] Nominatim request failed:", res.status);
     return [];
@@ -102,8 +119,13 @@ async function searchPoiNominatim(q: string, signal?: AbortSignal): Promise<PoiR
   return data
     .map((item): PoiResult => {
       const display = item.display_name ?? "";
-      const label = item.name && item.name.trim().length > 0 ? item.name : display.split(",")[0].trim();
-      const sublabel = display.startsWith(label) ? display.slice(label.length).replace(/^,\s*/, "") : display;
+      const label =
+        item.name && item.name.trim().length > 0
+          ? item.name
+          : display.split(",")[0].trim();
+      const sublabel = display.startsWith(label)
+        ? display.slice(label.length).replace(/^,\s*/, "")
+        : display;
       return {
         id: String(item.place_id),
         label,
@@ -124,12 +146,17 @@ async function searchPoiNominatim(q: string, signal?: AbortSignal): Promise<PoiR
  * @param query  Free-text place name.
  * @param signal Optional AbortSignal to cancel an in-flight request.
  */
-export async function searchPoi(query: string, signal?: AbortSignal): Promise<PoiResult[]> {
+export async function searchPoi(
+  query: string,
+  signal?: AbortSignal,
+): Promise<PoiResult[]> {
   const q = query.trim();
   if (q.length < MIN_GEOCODE_QUERY_LENGTH) return [];
 
   try {
-    return ALS_API_KEY ? await searchPoiAls(q, signal) : await searchPoiNominatim(q, signal);
+    return ALS_API_KEY
+      ? await searchPoiAls(q, signal)
+      : await searchPoiNominatim(q, signal);
   } catch (err) {
     // Aborts are expected when the user keeps typing — swallow quietly.
     if (err instanceof DOMException && err.name === "AbortError") return [];

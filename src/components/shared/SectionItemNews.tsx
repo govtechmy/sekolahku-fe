@@ -30,7 +30,7 @@ export default function SectionItemNews({
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2">
           {dataItemNews.slice(0, 4).map((item, index) => (
             <NewsCard
               key={item._id || index}

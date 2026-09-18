@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@govtechmy/myds-react/dialog";
+import { CalendarIcon } from "@govtechmy/myds-react/icon";
 
 interface SectionItemAnalyticsProps {
   analytics: AnalyticsModel;
@@ -16,6 +17,7 @@ interface SectionItemAnalyticsProps {
 
 const NEGERI_BAR_COLORS = ["#0062FF", "#14B8A6", "#F59E0B"];
 const BANTUAN_COLORS = ["#0062FF", "#F59E0B"];
+const BANTUAN_ICON_BG = ["#E7F0FE", "#FDF1DE"];
 
 export default function SectionItemAnalytics({
   analytics,
@@ -51,9 +53,9 @@ export default function SectionItemAnalytics({
   }, [analytics?.data?.taburanNegeri]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       {/* Sekolah Mengikut Peringkat */}
-      <div className="flex flex-col gap-[18px] rounded-2xl bg-[#F7F8FA] p-[22px]">
+      <div className="flex flex-col gap-[18px] rounded-2xl border border-otl-gray-200 bg-[#F7F8FA] p-[22px]">
         <div className="flex items-center justify-between gap-3">
           <h3
             className="text-body-lg font-bold text-txt-black-900"
@@ -72,9 +74,9 @@ export default function SectionItemAnalytics({
               <button
                 key={level}
                 onClick={() => setSelectedLevel(level)}
-                className={`rounded-lg px-3.5 py-1.5 text-body-sm transition-all focus:outline-primary-200 ${
+                className={`rounded-full px-3.5 py-1.5 text-body-sm transition-all focus:outline-primary-200 ${
                   selectedLevel === level
-                    ? "bg-[#0D6EFD] font-bold text-white shadow-sm"
+                    ? "bg-[#0062FF] font-bold text-white shadow-sm"
                     : "font-medium text-txt-black-500 hover:text-txt-black-700"
                 }`}
                 role="radio"
@@ -87,101 +89,119 @@ export default function SectionItemAnalytics({
           </div>
         </div>
 
-        <p className="text-body-xs text-txt-black-500">
+        <p className="text-right text-body-xs text-txt-black-500">
           Klik kategori untuk fokus segmen
         </p>
 
         <DoughnutChart data={filteredJenisData} />
       </div>
 
-      {/* Bantuan Kerajaan */}
-      <div className="flex flex-col gap-5 rounded-2xl bg-[#F7F8FA] p-[22px]">
-        <h3
-          className="text-body-lg font-bold text-txt-black-900"
-          tabIndex={0}
-          aria-label="Bantuan Kerajaan"
-        >
-          Bantuan Kerajaan
-        </h3>
-        <div className="grid grid-cols-2 gap-4">
-          {filteredBantuanData.map((item, index) => (
-            <div
-              key={item.jenis}
-              className="flex flex-col gap-1 rounded-xl bg-bg-white p-4"
-            >
+      <div className="flex flex-col gap-4">
+        {/* Bantuan Kerajaan + Taburan Sekolah Mengikut Negeri (merged card) */}
+        <div className="flex flex-col gap-4 rounded-2xl border border-otl-gray-200 bg-[#F7F8FA] p-[18px]">
+          <h3
+            className="text-body-lg font-bold text-txt-black-900"
+            tabIndex={0}
+            aria-label="Bantuan Kerajaan"
+          >
+            Bantuan Kerajaan
+          </h3>
+          <div className="grid grid-cols-2 gap-2">
+            {filteredBantuanData.map((item, index) => (
               <div
-                className="font-heading text-[28px] font-bold leading-none"
-                style={{
-                  color: BANTUAN_COLORS[index % BANTUAN_COLORS.length],
-                }}
+                key={item.jenis}
+                className="flex items-center gap-2 rounded-xl bg-bg-white p-3.5"
               >
-                {item.total.toLocaleString()}
-              </div>
-              <div className="text-body-sm font-semibold text-txt-black-900">
-                {item.jenis}
-              </div>
-              <div className="text-body-xs text-txt-black-500">
-                {item.peratus}% daripada keseluruhan
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Taburan Sekolah Mengikut Negeri */}
-      {taburanNegeri.top.length > 0 && (
-        <div className="flex flex-col gap-[18px] rounded-2xl bg-[#F7F8FA] p-[22px]">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex flex-col gap-0.5">
-              <h3
-                className="text-body-lg font-bold text-txt-black-900"
-                tabIndex={0}
-                aria-label="Taburan Sekolah Mengikut Negeri"
-              >
-                Taburan Sekolah Mengikut Negeri
-              </h3>
-              <span className="text-body-xs text-txt-black-500">
-                {taburanNegeri.top.length} negeri teratas mengikut jumlah
-                sekolah
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setIsNegeriModalOpen(true)}
-              className="shrink-0 text-body-xs font-semibold text-[#0062FF] hover:underline focus:outline-primary-200"
-            >
-              Lihat semua negeri &gt;
-            </button>
-          </div>
-          <div className="flex flex-col gap-3.5">
-            {taburanNegeri.top.map((item, index) => (
-              <div key={item.negeri} className="flex items-center gap-3.5">
-                <span
-                  className="w-[110px] shrink-0 truncate text-body-sm font-semibold text-txt-black-900"
-                  title={toTitleCase(item.negeri)}
+                <div
+                  className="flex size-10 shrink-0 items-center justify-center rounded-[10px]"
+                  style={{
+                    backgroundColor:
+                      BANTUAN_ICON_BG[index % BANTUAN_ICON_BG.length],
+                  }}
                 >
-                  {toTitleCase(item.negeri)}
-                </span>
-                <div className="flex-1">
-                  <div
-                    className="h-4 rounded-lg"
+                  <CalendarIcon
+                    className="size-[18px]"
                     style={{
-                      width: `${(item.total / taburanNegeri.max) * 100}%`,
-                      backgroundColor:
-                        NEGERI_BAR_COLORS[
-                          Math.floor(index / 2) % NEGERI_BAR_COLORS.length
-                        ],
+                      color: BANTUAN_COLORS[index % BANTUAN_COLORS.length],
                     }}
                   />
                 </div>
-                <span className="w-14 shrink-0 text-right text-body-sm font-bold text-txt-black-500">
-                  {item.total.toLocaleString()}
-                </span>
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <div
+                    className="font-heading text-2xl font-bold leading-none"
+                    style={{
+                      color: BANTUAN_COLORS[index % BANTUAN_COLORS.length],
+                    }}
+                  >
+                    {item.total.toLocaleString()}
+                  </div>
+                  <div className="text-body-xs font-semibold text-txt-black-900">
+                    {item.jenis}
+                  </div>
+                  <div className="text-body-xs text-txt-black-500">
+                    {item.peratus}% daripada keseluruhan
+                  </div>
+                </div>
               </div>
             ))}
           </div>
+
+          {/* Taburan Sekolah Mengikut Negeri */}
+          {taburanNegeri.top.length > 0 && (
+            <>
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex flex-col gap-0.5">
+                  <h3
+                    className="text-body-lg font-bold text-txt-black-900"
+                    tabIndex={0}
+                    aria-label="Taburan Sekolah Mengikut Negeri"
+                  >
+                    Taburan Sekolah Mengikut Negeri
+                  </h3>
+                  <span className="text-body-xs text-txt-black-500">
+                    {taburanNegeri.top.length} negeri teratas mengikut jumlah
+                    sekolah
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsNegeriModalOpen(true)}
+                  className="shrink-0 text-body-xs font-semibold text-[#0062FF] hover:underline focus:outline-primary-200"
+                >
+                  Lihat semua negeri &gt;
+                </button>
+              </div>
+              <div className="flex flex-col gap-3.5">
+                {taburanNegeri.top.map((item, index) => (
+                  <div key={item.negeri} className="flex items-center gap-3.5">
+                    <span
+                      className="w-[110px] shrink-0 truncate text-body-sm font-semibold text-txt-black-900"
+                      title={toTitleCase(item.negeri)}
+                    >
+                      {toTitleCase(item.negeri)}
+                    </span>
+                    <div className="h-4 flex-1 overflow-hidden rounded-lg bg-bg-white">
+                      <div
+                        className="h-4 rounded-lg"
+                        style={{
+                          width: `${(item.total / taburanNegeri.max) * 100}%`,
+                          backgroundColor:
+                            NEGERI_BAR_COLORS[
+                              Math.floor(index / 2) % NEGERI_BAR_COLORS.length
+                            ],
+                        }}
+                      />
+                    </div>
+                    <span className="w-14 shrink-0 text-right text-body-sm font-bold text-txt-black-500">
+                      {item.total.toLocaleString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
-      )}
+      </div>
 
       {/* Full per-state breakdown */}
       <Dialog open={isNegeriModalOpen} onOpenChange={setIsNegeriModalOpen}>
@@ -193,12 +213,12 @@ export default function SectionItemAnalytics({
             {taburanNegeri.list.map((item, index) => (
               <div key={item.negeri} className="flex items-center gap-3.5">
                 <span
-                  className="w-[130px] shrink-0 truncate text-body-sm font-semibold text-txt-black-900"
+                  className="w-[170px] shrink-0 break-words text-body-sm font-semibold leading-snug text-txt-black-900"
                   title={toTitleCase(item.negeri)}
                 >
                   {toTitleCase(item.negeri)}
                 </span>
-                <div className="flex-1">
+                <div className="h-4 flex-1 overflow-hidden rounded-lg bg-bg-gray-50">
                   <div
                     className="h-4 rounded-lg"
                     style={{
