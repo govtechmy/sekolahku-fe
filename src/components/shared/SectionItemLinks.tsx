@@ -14,7 +14,7 @@ export default function SectionItemLinks({
   dataItemLinks,
 }: SectionItemLinksProps) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="grid grid-cols-2 gap-3">
       {dataItemLinks.map((item: LinkItem, index: number) => (
         <button
           key={index}

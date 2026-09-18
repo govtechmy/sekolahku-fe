@@ -82,6 +82,9 @@ interface SimpleSelectProps {
   variant?: "outline" | "ghost";
   size?: "small" | "medium" | "large";
   className?: string;
+  /** Merged onto the trigger <button> itself (e.g. to override its default
+   * padding), unlike `className` which only applies to the outer wrapper. */
+  triggerClassName?: string;
   /** Applied to the trigger button so a visible <label htmlFor> can bind to it. */
   id?: string;
   "aria-label"?: string;
@@ -131,6 +134,7 @@ export function SimpleSelect({
   variant = "outline",
   size = "small",
   className,
+  triggerClassName,
   id,
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledby,
@@ -189,7 +193,10 @@ export function SimpleSelect({
           id={id}
           disabled={disabled}
           onClick={() => !disabled && setIsOpen((prev) => !prev)}
-          className={select_trigger_cva({ variant, size })}
+          className={clx(
+            select_trigger_cva({ variant, size }),
+            triggerClassName,
+          )}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-controls={dropdownId}

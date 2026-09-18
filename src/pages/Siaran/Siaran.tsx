@@ -141,8 +141,6 @@ export default function Siaran() {
         canonical={`${domain}/${lang}/berita-kpm`}
       />
       <ContentHero
-        title="Berita & Pengumuman"
-        highlight="KEMENTERIAN PENDIDIKAN"
         search={
           <SearchBarMain
             query={searchQuery}

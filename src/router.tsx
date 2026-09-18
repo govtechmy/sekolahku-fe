@@ -12,6 +12,9 @@ const SchoolProfile = lazy(() => import("./pages/SchoolProfile"));
 const Siaran = lazy(() => import("./pages/Siaran/Siaran"));
 const SiaranId = lazy(() => import("./pages/Siaran/SiaranId"));
 const Takwim = lazy(() => import("./pages/Takwim/Takwim"));
+const KemasukanTahun1 = lazy(() => import("./pages/KemasukanTahun1"));
+const BantuanPersekolahan = lazy(() => import("./pages/BantuanPersekolahan"));
+const KemasukanTingkatan1 = lazy(() => import("./pages/KemasukanTingkatan1"));
 const DisclaimerPage = lazy(() => import("./pages/Disclaimer"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicy"));
 
@@ -77,6 +80,30 @@ export default function AppRoutes() {
             element={
               <Suspense fallback={<RouteFallback />}>
                 <Takwim />
+              </Suspense>
+            }
+          />
+          <Route
+            path="kemasukan-tahun-1"
+            element={
+              <Suspense fallback={<RouteFallback />}>
+                <KemasukanTahun1 />
+              </Suspense>
+            }
+          />
+          <Route
+            path="bantuan-persekolahan"
+            element={
+              <Suspense fallback={<RouteFallback />}>
+                <BantuanPersekolahan />
+              </Suspense>
+            }
+          />
+          <Route
+            path="kemasukan-tingkatan-1"
+            element={
+              <Suspense fallback={<RouteFallback />}>
+                <KemasukanTingkatan1 />
               </Suspense>
             }
           />
