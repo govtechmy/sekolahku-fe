@@ -123,7 +123,14 @@ export default function FooterMyds() {
           </div>
         </div>
         <div className="text-gray-500 flex flex-grow flex-col gap-3 lg:flex-row lg:gap-3 lg:justify-end">
-          <p>Kemaskini Terakhir: 15 Januari 2026</p>
+          <p>
+            Kemaskini Terakhir:{" "}
+            {new Intl.DateTimeFormat("ms-MY", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }).format(new Date(__BUILD_DATE__))}
+          </p>
         </div>
       </FooterSection>
     </Footer>
