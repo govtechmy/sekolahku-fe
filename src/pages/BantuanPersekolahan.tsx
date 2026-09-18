@@ -268,7 +268,7 @@ export default function BantuanPersekolahan() {
 
       {/* Hero */}
       <section className="relative overflow-hidden rounded-b-[32px] bg-[#EAF2FE]">
-        <div className="absolute inset-0 bg-[url('/utama/Bantuan.png')] bg-cover bg-center bg-no-repeat" />
+        <div className="absolute inset-0 bg-[url('/utama/Bantuan.png')] bg-cover bg-[position:center_70%] bg-no-repeat" />
         <div
           className="absolute inset-0"
           style={{

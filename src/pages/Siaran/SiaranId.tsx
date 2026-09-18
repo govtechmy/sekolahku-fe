@@ -50,14 +50,23 @@ export default function SiaranId() {
     }
   }, [id]);
 
-  // Filter attachments once to avoid multiple iterations
-  const imageAttachments = useMemo(
-    () =>
-      contents?.attachments?.filter((att) =>
-        att?.mimeType?.startsWith("image/"),
-      ) ?? [],
-    [contents],
-  );
+  // CMS articles show their extra image attachments here; MOE articles have
+  // no attachments, but any images beyond the hero (images[0]) go here instead.
+  const galleryImages = useMemo(() => {
+    if (!contents) return [];
+    if (contents.source === "moe") {
+      return (contents.images ?? []).slice(1).map((img, index) => ({
+        id: String(index),
+        url: img.url,
+        label: img.alt || contents.title,
+      }));
+    }
+    return (
+      contents.attachments
+        ?.filter((att) => att?.mimeType?.startsWith("image/"))
+        .map((att) => ({ id: att.id, url: att.url, label: att.filename })) ?? []
+    );
+  }, [contents]);
 
   const documentAttachments = useMemo(
     () =>
@@ -177,6 +186,16 @@ export default function SiaranId() {
                   </div>
                 )}
               </div>
+              {contents.source === "moe" && contents.sourceUrl && (
+                <a
+                  href={contents.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-body-sm font-body text-txt-primary underline"
+                >
+                  Sumber asal: moe.gov.my ↗
+                </a>
+              )}
             </div>
             <div className="md:px-10 print:hidden">
               <div className="flex justify-between pb-[18px] border-b border-gray-200">
@@ -218,7 +237,7 @@ export default function SiaranId() {
                 />
               </div>
             )}
-            {contents.attachments && contents.attachments.length > 0 && (
+            {(documentAttachments.length > 0 || galleryImages.length > 0) && (
               <div className="md:px-10 print:hidden">
                 <div className="flex flex-col pt-6 border-t border-gray-200 gap-4">
                   {/* PDF/Document Attachments */}
@@ -235,11 +254,11 @@ export default function SiaranId() {
                     </div>
                   )}
 
-                  {/* Image Attachments */}
-                  {imageAttachments.length > 0 && (
+                  {/* Image gallery: extra CMS attachments, or MOE images beyond the hero */}
+                  {galleryImages.length > 0 && (
                     <div className="flex flex-col gap-4">
                       <div className="flex flex-wrap gap-2">
-                        <ImageAttachmentItem attachments={imageAttachments} />
+                        <ImageAttachmentItem attachments={galleryImages} />
                       </div>
                     </div>
                   )}

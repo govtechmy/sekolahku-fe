@@ -81,7 +81,7 @@ export default function KemasukanTahun1() {
               "radial-gradient(115% 75% at 50% 26%, #FFFFFFEB 0%, #FFFFFFB8 60%, #FFFFFF00 100%), linear-gradient(0deg, #FFFFFF 0%, #FFFFFFD9 8%, #FFFFFF40 20%, #FFFFFF00 48%, #FFFFFF00 100%)",
           }}
         />
-        <div className="relative mx-auto flex min-h-[420px] max-w-[1280px] flex-col items-center justify-center gap-1 px-[18px] py-20 text-center md:px-6">
+        <div className="relative mx-auto flex min-h-[480px] max-w-[1280px] flex-col items-center justify-center gap-1 px-[18px] py-20 text-center md:min-h-[540px] md:px-6 lg:min-h-[600px]">
           <span className="font-body text-xs font-bold tracking-[1.5px] text-[#0B4FCC]">
             SEKOLAH RENDAH · PENDAFTARAN
           </span>

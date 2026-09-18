@@ -1,9 +1,6 @@
 import ContentHero from "../../components/Hero/ContentHero";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
-import {
-  ArrowOutgoingIcon,
-  SearchIcon,
-} from "@govtechmy/myds-react/icon";
+import { ArrowOutgoingIcon, SearchIcon } from "@govtechmy/myds-react/icon";
 import { useEffect, useState, useRef } from "react";
 import { getAllTakwim, getSearchTakwim } from "../../services/takwim.svc";
 import type { MoeTakwimResource, TakwimItem } from "../../types/takwim";
