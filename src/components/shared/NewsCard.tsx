@@ -13,6 +13,8 @@ export type NewsCardItem = {
   articleDate?: string;
   imageHero?: { url?: string; alt?: string };
   categoryInfo?: { name?: string; colors?: string };
+  source?: "internal" | "moe";
+  sourceUrl?: string;
 };
 
 type NewsCardProps = {
@@ -44,12 +46,11 @@ export default function NewsCard({
 }: NewsCardProps) {
   const excerpt = getLexicalExcerpt(item.content);
   const tagBg = item.categoryInfo?.colors || "#0062FF";
+  const cardClassName =
+    "group flex h-full flex-col overflow-hidden rounded-2xl bg-[#F7F8FA] transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:ring-2 hover:ring-otl-primary-200 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2";
 
-  return (
-    <Link
-      to={`/${lang}/berita-kpm/${item._id}`}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl bg-[#F7F8FA] transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:ring-2 hover:ring-otl-primary-200 focus:outline focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2"
-    >
+  const cardBody = (
+    <>
       <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-bg-gray-100">
         {item.imageHero?.url && (
           <img
@@ -91,6 +92,12 @@ export default function NewsCard({
           <ArrowOutgoingIcon className="size-4" />
         </div>
       </div>
+    </>
+  );
+
+  return (
+    <Link to={`/${lang}/berita-kpm/${item._id}`} className={cardClassName}>
+      {cardBody}
     </Link>
   );
 }

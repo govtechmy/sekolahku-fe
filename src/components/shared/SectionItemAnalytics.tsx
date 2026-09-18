@@ -213,7 +213,7 @@ export default function SectionItemAnalytics({
             {taburanNegeri.list.map((item, index) => (
               <div key={item.negeri} className="flex items-center gap-3.5">
                 <span
-                  className="w-[130px] shrink-0 truncate text-body-sm font-semibold text-txt-black-900"
+                  className="w-[170px] shrink-0 break-words text-body-sm font-semibold leading-snug text-txt-black-900"
                   title={toTitleCase(item.negeri)}
                 >
                   {toTitleCase(item.negeri)}

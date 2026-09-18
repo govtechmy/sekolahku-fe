@@ -1,23 +1,22 @@
 import ContentHero from "../../components/Hero/ContentHero";
-import SearchBarMain from "../../components/shared/SearchBar";
 import NewsCard from "../../components/shared/NewsCard";
-import {
-  SimpleSelect,
-  SimpleSelectItem,
-} from "../../components/shared/SelectComponent";
 import {
   DateRangePicker,
   type DateRange,
 } from "@govtechmy/myds-react/daterange-picker";
+import { Button } from "@govtechmy/myds-react/button";
+import {
+  ArrowOutgoingIcon,
+  CrossIcon,
+  SearchIcon,
+} from "@govtechmy/myds-react/icon";
 import { useNavigate, useParams } from "react-router-dom";
 import { AutoPagination } from "@govtechmy/myds-react/pagination";
 import { useEffect, useState, useRef } from "react";
-import { getSiaranList, getSiaranCategories } from "../../services/siaran.svc";
-import type { SiaranItem, SiaranCategory } from "../../models/response";
+import { getSiaranList } from "../../services/siaran.svc";
+import type { SiaranItem } from "../../models/response";
 import HelmetMeta from "../../seo/HelmetMeta";
 import { DEMO_BERITA } from "../../data/beritaDemo";
-
-const ALL = "ALL";
 
 export default function Siaran() {
   const navigate = useNavigate();
@@ -33,8 +32,6 @@ export default function Siaran() {
     from: undefined,
     to: undefined,
   });
-  const [category, setCategory] = useState<string>(ALL);
-  const [categories, setCategories] = useState<SiaranCategory[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const debounceTimerRef = useRef<number | null>(null);
   const searchQueryRef = useRef<string>("");
@@ -43,12 +40,6 @@ export default function Siaran() {
     return () => {
       if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
     };
-  }, []);
-
-  useEffect(() => {
-    getSiaranCategories()
-      .then(setCategories)
-      .catch(() => setCategories([]));
   }, []);
 
   useEffect(() => {
@@ -66,7 +57,6 @@ export default function Siaran() {
         const response = await getSiaranList({
           pageNumber,
           search: debouncedSearchQuery || undefined,
-          category: category !== ALL ? category : undefined,
           startDate,
           endDate,
         });
@@ -90,7 +80,7 @@ export default function Siaran() {
     return () => {
       ignore = true;
     };
-  }, [pageNumber, debouncedSearchQuery, dateRange, category]);
+  }, [pageNumber, debouncedSearchQuery, dateRange]);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -121,11 +111,17 @@ export default function Siaran() {
     }, 500);
   };
 
+  const handleSearchSubmit = () => {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    setSearchSuggestions([]);
+    setDebouncedSearchQuery(searchQuery);
+    setPageNumber(1);
+  };
+
   const domain = import.meta.env.VITE_DOMAIN_NAME;
 
   const hasActiveFilter =
     !!debouncedSearchQuery ||
-    category !== ALL ||
     (dateRange?.from != undefined && dateRange?.to != undefined);
   // Dev-only: siaran needs CMS-hosted images, so when the local API returns no
   // news (and no filter is applied) we show sample content in development.
@@ -142,40 +138,46 @@ export default function Siaran() {
       />
       <ContentHero
         search={
-          <SearchBarMain
-            query={searchQuery}
-            setQuery={setSearchQuery}
-            handleValueChange={handleSearchChange}
-            suggestions={searchSuggestions}
-            getKey={(item) => item._id}
-            getLabel={(item) => item.title}
-            onSelect={(item: SiaranItem) => {
-              navigate(`/${lang}/berita-kpm/${item._id}`);
-            }}
-            searchBarTitle="Carian Berita KPM"
-          />
+          <div className="relative z-30 flex w-full items-center gap-2.5 rounded-[14px] bg-[#F7F8FA] py-2 pl-4 pr-2">
+            <SearchIcon className="size-[18px] shrink-0 text-txt-black-500" />
+            <input
+              value={searchQuery}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearchSubmit();
+                }
+              }}
+              placeholder="Carian Berita KPM"
+              className="min-w-0 flex-1 bg-transparent font-body text-sm text-txt-black-900 outline-none placeholder:text-txt-black-500"
+            />
+            <button
+              type="button"
+              onClick={handleSearchSubmit}
+              className="flex shrink-0 items-center gap-1.5 rounded-[10px] bg-[#0062FF] px-5 py-2.5 font-body text-[13px] font-bold text-white transition hover:bg-[#0052D6]"
+            >
+              Cari
+              <ArrowOutgoingIcon className="size-3.5" />
+            </button>
+            {searchQuery.trim().length > 0 && searchSuggestions.length > 0 && (
+              <div className="absolute left-0 top-full z-30 mt-1 max-h-[400px] w-full overflow-y-auto rounded-md border border-otl-gray-200 bg-bg-dialog py-1 shadow-context-menu">
+                {searchSuggestions.map((item) => (
+                  <button
+                    key={item._id}
+                    type="button"
+                    onClick={() => navigate(`/${lang}/berita-kpm/${item._id}`)}
+                    className="flex w-full items-center justify-between px-4 py-3 text-left text-body-sm text-txt-black-700 hover:bg-bg-washed"
+                  >
+                    <span className="line-clamp-2">{item.title}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         }
         filters={
-          <>
-            <SimpleSelect
-              size="medium"
-              variant="outline"
-              value={category}
-              onValueChange={(v) => {
-                setCategory(v);
-                setPageNumber(1);
-              }}
-              placeholder="Kategori Berita"
-              aria-label="Kategori berita"
-              className="w-full"
-            >
-              <SimpleSelectItem value={ALL}>Semua Kategori</SimpleSelectItem>
-              {categories.map((cat) => (
-                <SimpleSelectItem key={cat._id} value={cat.value}>
-                  {cat.name}
-                </SimpleSelectItem>
-              ))}
-            </SimpleSelect>
+          <div className="flex w-full items-center justify-center gap-2">
             <DateRangePicker
               value={dateRange}
               onValueChange={(v) => {
@@ -186,7 +188,20 @@ export default function Siaran() {
               placeholder="Pilih Tarikh"
               aria-label="Julat tarikh"
             />
-          </>
+            {dateRange?.from && (
+              <Button
+                onClick={() => {
+                  setDateRange(undefined);
+                  setPageNumber(1);
+                }}
+                variant="default-outline"
+                className="p-1.5"
+                aria-label="Kosongkan julat tarikh"
+              >
+                <CrossIcon className="size-4" />
+              </Button>
+            )}
+          </div>
         }
       />
 
@@ -213,7 +228,7 @@ export default function Siaran() {
               Tiada berita ditemui
             </p>
             <p className="text-body-sm text-txt-black-500">
-              Cuba ubah kata carian, kategori, atau julat tarikh.
+              Cuba ubah kata carian atau julat tarikh.
             </p>
           </div>
         ) : (

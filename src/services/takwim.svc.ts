@@ -1,9 +1,12 @@
+import type { TakwimListResponse } from "../types/takwim";
 import { authAxios } from "./http";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 //pageSize hardcoded until required to change
-export const getAllTakwim = async (pageNumber: number = 1) => {
+export const getAllTakwim = async (
+  pageNumber: number = 1,
+): Promise<TakwimListResponse> => {
   try {
     const response = await authAxios.get(
       `${BASE_URL}/takwim?page=${pageNumber}&pageSize=12`,
@@ -20,7 +23,7 @@ export const getSearchTakwim = async (
   search: string,
   startDate?: string,
   endDate?: string,
-) => {
+): Promise<TakwimListResponse> => {
   try {
     let url = `${BASE_URL}/takwim?page=${pageNumber}&pageSize=12`;
     if (search) {

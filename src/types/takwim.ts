@@ -40,6 +40,20 @@ export interface Attachment {
 
 export type ArticleContent = SerializedEditorState<SerializedLexicalNode>;
 
+// Official calendar PDF merged in by the backend from the MOE portal API.
+export interface MoeTakwimResource {
+  url: string;
+  alt?: string;
+}
+
+export interface TakwimListResponse {
+  items: TakwimItem[];
+  totalRecords: number;
+  pageNumber: number;
+  pageSize: number;
+  moeTakwim?: MoeTakwimResource | null;
+}
+
 export interface RootNode {
   children: ParagraphNode[];
   direction: string | null;
