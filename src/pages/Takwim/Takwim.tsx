@@ -143,7 +143,7 @@ export default function Takwim() {
         }
       />
       <div className="mx-auto flex-1 px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1280px] py-16 flex flex-col">
-        <div className="mx-auto flex w-full max-w-[1200px] flex-col">
+        <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-3">
           {moeTakwim && (
             <TakwimListItem
               href={moeTakwim.url}
