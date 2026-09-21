@@ -27,3 +27,6 @@ package-lock.json
 public/sitemap.xml
 
 .playwright-mcp/
+
+# graphify
+graphify-out

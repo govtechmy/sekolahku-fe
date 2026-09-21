@@ -1,9 +1,4 @@
-import type {
-  APIResponse,
-  SiaranList,
-  SiaranItem,
-  SiaranCategory,
-} from "../models/response";
+import type { APIResponse, SiaranList, SiaranItem } from "../models/response";
 import { authAxios } from "./http";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -41,18 +36,6 @@ export const getSiaranList = async (
     return response.data.data;
   } catch (error) {
     console.error("Error fetching siaran list:", error);
-    throw error;
-  }
-};
-
-export const getSiaranCategories = async (): Promise<SiaranCategory[]> => {
-  try {
-    const response = await authAxios.get<APIResponse<SiaranCategory[]>>(
-      `${BASE_URL}${SIARAN_ENDPOINT}/categories`,
-    );
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching siaran categories:", error);
     throw error;
   }
 };

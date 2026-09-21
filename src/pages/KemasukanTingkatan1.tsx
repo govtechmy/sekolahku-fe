@@ -253,7 +253,7 @@ export default function KemasukanTingkatan1() {
               "radial-gradient(115% 75% at 50% 26%, #FFFFFFEB 0%, #FFFFFFB8 60%, #FFFFFF00 100%), linear-gradient(0deg, #FFFFFF 0%, #FFFFFFD9 8%, #FFFFFF40 20%, #FFFFFF00 48%, #FFFFFF00 100%)",
           }}
         />
-        <div className="relative mx-auto flex min-h-[420px] max-w-[1280px] flex-col items-center gap-3 px-[18px] py-16 text-center md:px-6">
+        <div className="relative mx-auto flex min-h-[500px] max-w-[1280px] flex-col items-center gap-3 px-[18px] pb-16 pt-28 text-center md:px-6">
           <div className="flex flex-col items-center gap-1">
             <span className="font-body text-xs font-bold tracking-[1.5px] text-[#0B4FCC]">
               SEKOLAH MENENGAH · PENDAFTARAN

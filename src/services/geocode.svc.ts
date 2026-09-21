@@ -12,7 +12,7 @@
 // (data.infoLokasi.location) from the backend.
 
 /** Minimum query length before a geocode request is worthwhile. */
-export const MIN_GEOCODE_QUERY_LENGTH = 3;
+const MIN_GEOCODE_QUERY_LENGTH = 3;
 
 export interface PoiResult {
   /** Stable id for React keys. */

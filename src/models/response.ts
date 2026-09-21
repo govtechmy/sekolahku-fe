@@ -242,3 +242,33 @@ export interface SiaranItem {
 export interface SiaranList extends BaseListModel {
   items: SiaranItem[];
 }
+
+export interface BantuanSection {
+  heading: string;
+  content: string[];
+}
+
+export interface BantuanAction {
+  label: string;
+  url: string;
+}
+
+export interface BantuanListItem {
+  slug: string;
+  title: string;
+  description: string;
+  heroSubtitle?: string;
+  sourceUrl: string;
+  heroMeta?: string;
+}
+
+export interface BantuanDetailItem extends BantuanListItem {
+  requirements: string[];
+  applicationGuide: string[];
+  sections: BantuanSection[];
+  actions: BantuanAction[];
+}
+
+export interface BantuanList extends BaseListModel {
+  items: BantuanListItem[];
+}

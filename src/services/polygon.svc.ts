@@ -21,9 +21,7 @@ const normalizeStateName = (stateName: string): string => {
 const polygonCache = new Map<string, GeoJSONFeature>();
 const polygonPromises = new Map<string, Promise<GeoJSONFeature>>();
 
-export const getStatePolygon = async (
-  stateName: string,
-): Promise<GeoJSONFeature> => {
+const getStatePolygon = async (stateName: string): Promise<GeoJSONFeature> => {
   const state = normalizeStateName(stateName);
 
   const cached = polygonCache.get(state);
