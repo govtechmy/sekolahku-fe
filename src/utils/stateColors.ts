@@ -4,7 +4,7 @@ export interface PolygonStyleWithLayer extends PolygonStyle {
   zIndex?: number;
 }
 
-export const STATE_COLORS: Record<string, PolygonStyleWithLayer> = {
+const STATE_COLORS: Record<string, PolygonStyleWithLayer> = {
   PAHANG: {
     borderColor: "#16A34A",
     fillColor: "#F0FDF4",

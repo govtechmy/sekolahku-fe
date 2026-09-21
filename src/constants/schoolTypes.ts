@@ -20,29 +20,6 @@ export const SCHOOL_TYPE_LABELS: Record<string, string> = {
   SUKAN: "Sekolah Sukan Malaysia",
 };
 
-export const SCHOOL_LEVEL: Record<string, string[]> = {
-  K11: ["MENENGAH"],
-  K9: ["RENDAH"],
-  KT6: ["MENENGAH"],
-  KV: ["MENENGAH"],
-  "MODEL KHAS": ["MENENGAH"],
-  SBJK: ["MENENGAH"],
-  //   SBK: ["RENDAH", "MENENGAH"], not exist in db check on 15/03/26
-  SBP: ["MENENGAH"],
-  SENI: ["MENENGAH"],
-  SJKC: ["RENDAH"],
-  SJKT: ["RENDAH"],
-  SK: ["RENDAH"],
-  "SK KHAS": ["RENDAH"],
-  "SM KHAS": ["MENENGAH"],
-  "SM SABK": ["MENENGAH"],
-  SMK: ["MENENGAH"],
-  SMKA: ["MENENGAH"],
-  SMT: ["MENENGAH"],
-  "SR SABK": ["RENDAH"],
-  SUKAN: ["MENENGAH"],
-};
-
 export const SCHOOL_JENIS_BANTUAN: Record<string, string> = {
   SK: "Sekolah Kebangsaan",
   SBK: "Sekolah Bantuan Kerajaan",
