@@ -14,6 +14,7 @@ const SiaranId = lazy(() => import("./pages/Siaran/SiaranId"));
 const Takwim = lazy(() => import("./pages/Takwim/Takwim"));
 const KemasukanTahun1 = lazy(() => import("./pages/KemasukanTahun1"));
 const BantuanPersekolahan = lazy(() => import("./pages/BantuanPersekolahan"));
+const BantuanId = lazy(() => import("./pages/Bantuan/BantuanId"));
 const KemasukanTingkatan1 = lazy(() => import("./pages/KemasukanTingkatan1"));
 const DisclaimerPage = lazy(() => import("./pages/Disclaimer"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicy"));
@@ -96,6 +97,14 @@ export default function AppRoutes() {
             element={
               <Suspense fallback={<RouteFallback />}>
                 <BantuanPersekolahan />
+              </Suspense>
+            }
+          />
+          <Route
+            path="bantuan-persekolahan/:slug"
+            element={
+              <Suspense fallback={<RouteFallback />}>
+                <BantuanId />
               </Suspense>
             }
           />

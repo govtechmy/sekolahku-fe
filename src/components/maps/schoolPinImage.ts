@@ -62,7 +62,7 @@ export type PinImageLoader = () => Promise<HTMLImageElement>;
 /** Decoded once per page — repeat map mounts reuse the same bitmap. */
 let pinImagePromise: Promise<HTMLImageElement> | null = null;
 
-export const loadSchoolPinImage: PinImageLoader = () => {
+const loadSchoolPinImage: PinImageLoader = () => {
   if (!pinImagePromise) {
     pinImagePromise = new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new Image(PIN_SIZE, PIN_SIZE);

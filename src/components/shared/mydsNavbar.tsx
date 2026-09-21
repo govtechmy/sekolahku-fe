@@ -374,11 +374,4 @@ const NavbarAction: FunctionComponent<NavbarActionProps> = ({
 
 NavbarAction.displayName = "NavbarAction";
 
-export {
-  Navbar,
-  NavbarLogo,
-  NavbarAction,
-  NavbarMenu,
-  NavbarMenuItem,
-  NavbarMenuDropdown,
-};
+export { Navbar, NavbarAction, NavbarMenu, NavbarMenuItem };
