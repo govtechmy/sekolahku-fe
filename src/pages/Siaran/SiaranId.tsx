@@ -27,6 +27,7 @@ import type { SiaranItem } from "../../models/response";
 import { getSiaranById } from "../../services/siaran.svc";
 import PrintDisplay from "../../components/shared/PrintDisplay";
 import HelmetMeta from "../../seo/HelmetMeta";
+import { decodeLexicalEntities } from "../../utils/htmlEntities";
 
 export default function SiaranId() {
   const { lang } = useParams<{ lang: string }>();
@@ -67,6 +68,12 @@ export default function SiaranId() {
         .map((att) => ({ id: att.id, url: att.url, label: att.filename })) ?? []
     );
   }, [contents]);
+
+  const decodedContent = useMemo(
+    () =>
+      contents?.content ? decodeLexicalEntities(contents.content) : undefined,
+    [contents],
+  );
 
   const documentAttachments = useMemo(
     () =>
@@ -128,11 +135,11 @@ export default function SiaranId() {
                     </div>
                   </div>
                 )}
-                {contents.content && (
+                {decodedContent && (
                   <div className="text-xl text-justify font-normal md:px-10">
                     <RichText
                       className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
-                      data={contents.content}
+                      data={decodedContent}
                     />
                   </div>
                 )}
@@ -229,11 +236,11 @@ export default function SiaranId() {
             </span> */}
               </div>
             )}
-            {contents.content && (
+            {decodedContent && (
               <div className="text-xl text-justify font-normal md:px-10 print:hidden">
                 <RichText
                   className="flex flex-col text-body-md text-txt-black-700 font-body font-normal"
-                  data={contents.content}
+                  data={decodedContent}
                 />
               </div>
             )}

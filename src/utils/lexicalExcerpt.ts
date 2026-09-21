@@ -1,4 +1,5 @@
 import type { SiaranContent, SiaranContentNode } from "../models/response";
+import { decodeHtmlEntities } from "./htmlEntities";
 
 // Siaran content is Lexical rich text with no stored plain-text excerpt.
 // Walk the node tree, collect text, collapse whitespace, and truncate at a
@@ -14,7 +15,7 @@ export function getLexicalExcerpt(
   const parts: string[] = [];
   const walk = (node?: SiaranContentNode) => {
     if (!node) return;
-    if (node.text) parts.push(node.text);
+    if (node.text) parts.push(decodeHtmlEntities(node.text));
     node.children?.forEach(walk);
   };
   walk(root);
