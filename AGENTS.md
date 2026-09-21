@@ -56,7 +56,16 @@ Vitest, colocated as `*.test.ts` next to the code under test (`src/services/bant
 
 ## graphify
 
-`sekolahku-be` has a `graphify-out/` knowledge graph; **this repo does not** (nothing to query here yet). If you add one, the CLI is installed via `uv` at `~/.local/bin/graphify` with its own bundled Python 3.13 — the system `python3` is Xcode's 3.9.6, below graphify's 3.10+ floor, so plain `pip install graphifyy` fails here.
+Knowledge graph at `graphify-out/` (gitignored, regenerate locally): 691 nodes / 1166 edges / 52 communities across 169 files. God-node hubs are `MapContainerMapCN.tsx`, `Home.tsx`, `response.ts`, and `school.svc.ts`.
+
+The CLI is installed via `uv` at `~/.local/bin/graphify` with its own bundled Python 3.13 — **not** the system `python3`, which is Xcode's 3.9.6 and below graphify's 3.10+ floor, so a plain `pip install graphifyy` fails on this machine.
+
+Rules:
+
+- For codebase questions, prefer `graphify explain "<file or symbol>"`, `graphify path "<A>" "<B>"`, and `graphify query "<question>"` over raw grep — they return a scoped subgraph.
+- Read `graphify-out/GRAPH_REPORT.md` only for broad architecture review.
+- Run `graphify update .` after code changes (AST-only, no LLM, no API cost). Deleting files does not remove their nodes until you re-run this.
+- Known noise: `.husky/_/*` git hook samples and `src/asset/Bg*.tsx` (large generated SVG components) inflate the node count; `bantuan.json` and the locale JSONs produce zero nodes, so data-file edges are absent from the graph.
 
 ## Reference
 
