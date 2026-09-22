@@ -324,6 +324,10 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
         set({
           schoolMarkers: new Map(),
           viewSchool: null,
+          pointB: null,
+          routeCoordinates: [],
+          routeDistance: null,
+          routeDuration: null,
         });
       }
     } catch (error) {
