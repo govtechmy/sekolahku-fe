@@ -5,9 +5,9 @@ export type InfoRowProps = {
 
 export function InfoRow({ label, value }: InfoRowProps) {
   return (
-    <div className="flex items-center gap-2">
-      <div className="text-txt-black-500 text-body-xs font-normal">{label}</div>
-      <div className="text-body-sm text-txt-black-900">{value}</div>
+    <div className="text-body-sm">
+      <span className="text-txt-black-500 font-normal">{label} : </span>
+      <span className="text-txt-black-900 font-semibold">{value}</span>
     </div>
   );
 }
