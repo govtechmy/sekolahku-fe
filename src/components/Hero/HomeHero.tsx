@@ -1,17 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useMapViewStore } from "../../store/mapView";
-import { SimpleSelect, SimpleSelectItem } from "../shared/SelectComponent";
 import { SearchIcon, ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { buildSchoolSearchPath } from "../../utils/schoolSearchUrl";
-import { NEGERI_LIST } from "../../contentData";
-import { SCHOOL_TYPE_LABELS } from "../../constants/schoolTypes";
-import underScoreRemover from "../../utils/underscoreRemover";
-
-const PERINGKAT_OPTIONS: [string, string][] = [
-  ["RENDAH", "Rendah"],
-  ["MENENGAH", "Menengah"],
-];
 
 export default function HomeHero() {
   const navigate = useNavigate();
@@ -28,10 +19,6 @@ export default function HomeHero() {
   );
   const debounceTimerRef = useRef<number | null>(null);
 
-  const [negeri, setNegeri] = useState("ALL");
-  const [peringkat, setPeringkat] = useState("ALL");
-  const [jenis, setJenis] = useState("ALL");
-
   const handleValueChange = (value: string) => {
     setQuery(value);
     if (debounceTimerRef.current) {
@@ -47,8 +34,7 @@ export default function HomeHero() {
     }
   };
 
-  const goSearch = (q: string) =>
-    navigate(buildSchoolSearchPath(lang, q, { negeri, peringkat, jenis }));
+  const goSearch = (q: string) => navigate(buildSchoolSearchPath(lang, q));
 
   const handleSearchEnter: React.KeyboardEventHandler<HTMLInputElement> = (
     e,
@@ -138,83 +124,6 @@ export default function HomeHero() {
                   ))}
                 </div>
               )}
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="flex flex-col gap-1.5 text-left">
-              <label
-                htmlFor="hero-filter-negeri"
-                className="font-body text-[10px] font-bold tracking-[0.5px] text-txt-black-500"
-              >
-                Negeri / Wilayah
-              </label>
-              <SimpleSelect
-                id="hero-filter-negeri"
-                size="medium"
-                variant="outline"
-                value={negeri}
-                onValueChange={setNegeri}
-                placeholder="Negeri / Wilayah"
-                className="w-full"
-              >
-                <SimpleSelectItem value="ALL">Semua Negeri</SimpleSelectItem>
-                {NEGERI_LIST.map((n) => (
-                  <SimpleSelectItem key={n} value={n}>
-                    {underScoreRemover(n)}
-                  </SimpleSelectItem>
-                ))}
-              </SimpleSelect>
-            </div>
-
-            <div className="flex flex-col gap-1.5 text-left">
-              <label
-                htmlFor="hero-filter-peringkat"
-                className="font-body text-[10px] font-bold tracking-[0.5px] text-txt-black-500"
-              >
-                Peringkat Persekolahan
-              </label>
-              <SimpleSelect
-                id="hero-filter-peringkat"
-                size="medium"
-                variant="outline"
-                value={peringkat}
-                onValueChange={setPeringkat}
-                placeholder="Peringkat Persekolahan"
-                className="w-full"
-              >
-                <SimpleSelectItem value="ALL">Semua Peringkat</SimpleSelectItem>
-                {PERINGKAT_OPTIONS.map(([value, label]) => (
-                  <SimpleSelectItem key={value} value={value}>
-                    {label}
-                  </SimpleSelectItem>
-                ))}
-              </SimpleSelect>
-            </div>
-
-            <div className="flex flex-col gap-1.5 text-left">
-              <label
-                htmlFor="hero-filter-jenis"
-                className="font-body text-[10px] font-bold tracking-[0.5px] text-txt-black-500"
-              >
-                Jenis Aliran
-              </label>
-              <SimpleSelect
-                id="hero-filter-jenis"
-                size="medium"
-                variant="outline"
-                value={jenis}
-                onValueChange={setJenis}
-                placeholder="Jenis Aliran"
-                className="w-full"
-              >
-                <SimpleSelectItem value="ALL">Semua Jenis</SimpleSelectItem>
-                {Object.entries(SCHOOL_TYPE_LABELS).map(([value, label]) => (
-                  <SimpleSelectItem key={value} value={value}>
-                    {label}
-                  </SimpleSelectItem>
-                ))}
-              </SimpleSelect>
-            </div>
           </div>
         </div>
       </div>
