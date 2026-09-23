@@ -119,7 +119,7 @@ export default function HomeHero() {
               query.trim().length >= 3 &&
               localSuggestions.length > 0 && (
                 <div className="absolute left-0 top-full z-30 mt-1 max-h-[400px] w-full overflow-y-auto rounded-md border border-otl-gray-200 bg-bg-dialog py-1 shadow-context-menu">
-                  {localSuggestions.map((item) => (
+                  {localSuggestions.slice(0, 5).map((item) => (
                     <button
                       key={item.kodSekolah ?? item.namaSekolah}
                       type="button"
