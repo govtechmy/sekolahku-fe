@@ -113,7 +113,8 @@ export function SchoolInfoWindow({
         label="JPN"
         value={
           school?.data?.infoPentadbiran?.negeri
-            ? underScoreRemover("JPN " + school.data.infoPentadbiran.negeri)
+            ? "JPN " +
+              toTitleCase(underScoreRemover(school.data.infoPentadbiran.negeri))
             : "Tiada Maklumat"
         }
       />
@@ -121,16 +122,16 @@ export function SchoolInfoWindow({
         label="Lokasi"
         value={highlightMatch(
           school?.data?.infoPentadbiran?.negeri
-            ? underScoreRemover(school.data.infoPentadbiran.negeri)
+            ? toTitleCase(underScoreRemover(school.data.infoPentadbiran.negeri))
             : "Tiada Maklumat",
           searchQuery,
         )}
       />
       <InfoRow
         label="PPD"
-        value={
-          removePPD(school?.data?.infoPentadbiran?.ppd) || "Tiada Maklumat"
-        }
+        value={toTitleCase(
+          removePPD(school?.data?.infoPentadbiran?.ppd) || "Tiada Maklumat",
+        )}
       />
     </>
   );
@@ -140,21 +141,27 @@ export function SchoolInfoWindow({
       <InfoRow
         label="Daerah"
         value={highlightMatch(
-          school?.data?.infoKomunikasi.bandarSurat || "Tiada Maklumat",
+          toTitleCase(
+            school?.data?.infoKomunikasi?.bandarSurat || "Tiada Maklumat",
+          ),
           searchQuery,
         )}
       />
       <InfoRow
         label="Sesi"
-        value={school?.data?.infoPentadbiran?.sesi || "Tiada Maklumat"}
+        value={toTitleCase(
+          school?.data?.infoPentadbiran?.sesi || "Tiada Maklumat",
+        )}
       />
       <InfoRow
         label="Bantuan"
-        value={
-          (SCHOOL_JENIS_BANTUAN[school?.data?.infoPentadbiran?.bantuan ?? ""] ??
-            school?.data?.infoPentadbiran?.bantuan) ||
-          "Tiada Maklumat"
-        }
+        value={(() => {
+          const bantuanCode = school?.data?.infoPentadbiran?.bantuan ?? "";
+          const bantuanLabel = SCHOOL_JENIS_BANTUAN[bantuanCode];
+          return bantuanLabel
+            ? toTitleCase(bantuanLabel)
+            : bantuanCode || "Tiada Maklumat";
+        })()}
       />
     </>
   );
