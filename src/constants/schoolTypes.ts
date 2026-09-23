@@ -21,6 +21,6 @@ export const SCHOOL_TYPE_LABELS: Record<string, string> = {
 };
 
 export const SCHOOL_JENIS_BANTUAN: Record<string, string> = {
-  SK: "Sekolah Kebangsaan",
+  SK: "Sekolah Kerajaan",
   SBK: "Sekolah Bantuan Kerajaan",
 };
