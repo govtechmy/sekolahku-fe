@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@govtechmy/myds-react/dialog";
 import { CalendarIcon } from "@govtechmy/myds-react/icon";
+import { SCHOOL_JENIS_BANTUAN } from "../../constants/schoolTypes";
 
 interface SectionItemAnalyticsProps {
   analytics: AnalyticsModel;
@@ -136,7 +137,7 @@ export default function SectionItemAnalytics({
                     {item.total.toLocaleString()}
                   </div>
                   <div className="text-body-xs font-semibold text-txt-black-900">
-                    {item.jenis}
+                    {SCHOOL_JENIS_BANTUAN[item.jenis] ?? item.jenis}
                   </div>
                   <div className="text-body-xs text-txt-black-500">
                     {item.peratus}% daripada keseluruhan
