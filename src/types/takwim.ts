@@ -54,15 +54,6 @@ export interface TakwimListResponse {
   moeTakwim?: MoeTakwimResource | null;
 }
 
-export interface RootNode {
-  children: ParagraphNode[];
-  direction: string | null;
-  format: string;
-  indent: number;
-  type: "root";
-  version: number;
-}
-
 export interface ParagraphNode {
   children: TextNode[];
   direction: string | null;
