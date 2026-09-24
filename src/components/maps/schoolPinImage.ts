@@ -133,8 +133,3 @@ export const registerSchoolPinImage = (
     map.off("styleimagemissing", handleMissing);
   };
 };
-
-/** Exposed for tests only. */
-export const __resetSchoolPinImageCache = () => {
-  pinImagePromise = null;
-};
