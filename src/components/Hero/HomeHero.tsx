@@ -66,7 +66,7 @@ export default function HomeHero() {
         {/* Title */}
         <h1 className="m-0 flex flex-col items-center gap-0.5">
           <span
-            className="font-body text-xs font-bold leading-tight tracking-[1.5px]"
+            className="font-body text-sm font-bold leading-tight tracking-[1.5px] md:text-base"
             style={{ color: "#0B4FCC" }}
           >
             SELAMAT DATANG KE

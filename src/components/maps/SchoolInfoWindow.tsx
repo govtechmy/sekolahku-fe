@@ -35,6 +35,10 @@ type SchoolInfoWindowProps = {
 /**
  * Highlights matching text portions by wrapping them in a styled <mark> element.
  */
+// label | colon | value columns, so InfoRow labels and colons line up.
+const FACT_GRID =
+  "grid grid-cols-[max-content_max-content_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-2";
+
 function highlightMatch(text: string, query?: string): React.ReactNode {
   if (!query || query.trim().length < 2) return text;
   const escaped = query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -205,9 +209,11 @@ export function SchoolInfoWindow({
 
         <div className="w-px shrink-0 bg-otl-divider" />
 
-        <div className="flex flex-1 items-center gap-10 px-4">
-          <div className="flex flex-1 flex-col gap-2">{factColumnA}</div>
-          <div className="flex flex-1 flex-col gap-2">{factColumnB}</div>
+        <div className="flex flex-1 items-center px-4">
+          <div className="flex w-full items-start gap-10">
+            <div className={`${FACT_GRID} flex-1`}>{factColumnA}</div>
+            <div className={`${FACT_GRID} flex-1`}>{factColumnB}</div>
+          </div>
         </div>
 
         <div className="w-px shrink-0 bg-otl-divider" />
@@ -299,7 +305,7 @@ export function SchoolInfoWindow({
       </div>
 
       <div className="p-3 flex flex-col gap-2 border-t border-otl-divider">
-        <div className="flex gap-1 flex-col">
+        <div className={FACT_GRID}>
           {factColumnA}
           {factColumnB}
         </div>

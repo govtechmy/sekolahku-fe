@@ -26,7 +26,7 @@ export default function ContentHero({ search, filters }: ContentHeroProps) {
       <div className="relative mx-auto flex w-full max-w-[860px] flex-col items-center gap-5 px-5 py-16 text-center">
         <h1 className="m-0 flex flex-col items-center gap-0.5">
           <span
-            className="font-body text-xs font-bold leading-tight tracking-[1.5px]"
+            className="font-body text-sm font-bold leading-tight tracking-[1.5px] md:text-base"
             style={{ color: "#0B4FCC" }}
           >
             SELAMAT DATANG KE
