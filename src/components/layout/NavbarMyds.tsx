@@ -68,8 +68,8 @@ export default function NavbarMyds() {
         className="flex items-center gap-2.5 focus:outline-otl-primary-200 rounded-sm"
       >
         <img src="/JataNegara.svg" />
-        <div className="font-heading text-txt-black-900 text-body-lg font-semibold">
-          Sekolahku
+        <div className="whitespace-nowrap font-heading text-txt-black-900 text-body-lg font-semibold">
+          Portal Sekolahku
         </div>
       </Link>
       <NavbarMenu

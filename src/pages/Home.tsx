@@ -110,7 +110,7 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] pt-12 pb-16 flex flex-col gap-12">
+      <div className="mx-auto flex-1 px-4 md:px-[24px] max-w-[1328px] pt-12 pb-16 flex flex-col gap-12">
         <SectionItemLayanan />
         <SectionItemNearby />
 
@@ -122,7 +122,7 @@ export default function HomePage() {
                 header="PEMBERITAHUAN TERKINI"
                 title="Berita"
                 isLastSection={true}
-                className="lg:px-0"
+                className="px-0"
                 headerAction={
                   <button
                     type="button"
@@ -180,7 +180,7 @@ export default function HomePage() {
             subTitle={formatFileVersion(analytics?.fileVersion)}
             sourceBtn={true}
             isLastSection={true}
-            className="lg:px-0"
+            className="px-0"
             children={<SectionItemAnalytics analytics={analytics} />}
           />
         )}

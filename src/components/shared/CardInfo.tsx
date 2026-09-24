@@ -5,8 +5,11 @@ export type InfoRowProps = {
 
 export function InfoRow({ label, value }: InfoRowProps) {
   return (
-    <div className="text-body-sm">
-      <span className="text-txt-black-500 font-normal">{label} : </span>
+    // Renders 3 grid cells (label, colon, value); the parent supplies the
+    // grid (see FACT_GRID in SchoolInfoWindow) so labels and colons line up across rows.
+    <div className="contents text-body-sm">
+      <span className="text-txt-black-500 font-normal">{label}</span>
+      <span className="text-txt-black-500 font-normal">:</span>
       <span className="text-txt-black-900 font-semibold">{value}</span>
     </div>
   );

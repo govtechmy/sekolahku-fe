@@ -233,6 +233,23 @@ export default function Siaran() {
           </div>
         ) : (
           <div className="flex flex-col gap-10">
+            {/* Same header style as BantuanPersekolahan; totalRecord follows
+                the active search/date filters. */}
+            <div className="-mb-2 flex flex-col gap-1.5">
+              <span className="font-body text-xs font-bold tracking-[1.5px] text-[#0062FF]">
+                PEMBERITAHUAN TERKINI
+              </span>
+              <h2 className="font-heading text-2xl font-bold text-txt-black-900 md:text-[28px]">
+                {(useDemo ? displayItems.length : totalRecord).toLocaleString(
+                  "ms-MY",
+                )}{" "}
+                {hasActiveFilter ? "Berita Ditemui" : "Berita Terkini"}
+              </h2>
+              <p className="max-w-[760px] font-body text-sm text-txt-black-500">
+                Berita dan siaran terkini daripada Kementerian Pendidikan. Klik
+                mana-mana kad untuk membaca berita penuh.
+              </p>
+            </div>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {displayItems.map((item) => (
                 <NewsCard key={item._id} item={item} lang={lang} />
@@ -240,14 +257,26 @@ export default function Siaran() {
             </div>
             {!useDemo && totalRecord > 0 && (
               <div className="flex justify-center">
-                <AutoPagination
-                  page={pageNumber}
-                  limit={pageSize}
-                  count={totalRecord}
-                  maxDisplay={4}
-                  onPageChange={(page) => setPageNumber(page)}
-                  type="default"
-                />
+                <div className="sm:hidden">
+                  <AutoPagination
+                    page={pageNumber}
+                    limit={pageSize}
+                    count={totalRecord}
+                    maxDisplay={4}
+                    onPageChange={(page) => setPageNumber(page)}
+                    type="simple"
+                  />
+                </div>
+                <div className="hidden sm:block">
+                  <AutoPagination
+                    page={pageNumber}
+                    limit={pageSize}
+                    count={totalRecord}
+                    maxDisplay={4}
+                    onPageChange={(page) => setPageNumber(page)}
+                    type="default"
+                  />
+                </div>
               </div>
             )}
           </div>

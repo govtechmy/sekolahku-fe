@@ -112,7 +112,7 @@ export default function SectionItemNearby() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex w-full items-start justify-between">
+      <div className="flex w-full flex-wrap items-start justify-between gap-x-4 gap-y-2">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1.5">
             <PinIcon className="size-[18px] text-[#0062FF]" />

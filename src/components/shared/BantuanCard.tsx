@@ -35,7 +35,7 @@ export default function BantuanCard({ item, lang }: BantuanCardProps) {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(180% 110% at 0% 100%, #FFFFFFE6 0%, #FFFFFFB8 30%, #FFFFFF00 70%, #FFFFFF00 100%)",
+            "radial-gradient(180% 120% at 0% 100%, #FFFFFFF2 0%, #FFFFFFD1 35%, #FFFFFF00 75%, #FFFFFF00 100%)",
         }}
       />
       <div className="relative mt-auto flex flex-col gap-1.5 p-3.5">
@@ -45,7 +45,7 @@ export default function BantuanCard({ item, lang }: BantuanCardProps) {
         <div className="flex items-center gap-1.5">
           <GovtOfficeIcon className="size-3 shrink-0 text-[#4B5568]" />
           <span className="font-body text-[11px] text-[#4B5568]">
-            Kementerian Pendidikan Malaysia
+            Kementerian Pendidikan
           </span>
         </div>
         <div className="flex items-center gap-1.5">
