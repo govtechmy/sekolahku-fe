@@ -144,6 +144,21 @@ export default function Takwim() {
       />
       <div className="mx-auto flex-1 px-[18px] md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1280px] py-16 flex flex-col">
         <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-3">
+          {/* Same header style as BantuanPersekolahan; totalRecord follows
+              the active search. */}
+          <div className="mb-5 flex flex-col gap-1.5">
+            <span className="font-body text-xs font-bold tracking-[1.5px] text-[#0062FF]">
+              KALENDAR AKTIVITI PERSEKOLAHAN
+            </span>
+            <h2 className="font-heading text-2xl font-bold text-txt-black-900 md:text-[28px]">
+              {totalRecord.toLocaleString("ms-MY")}{" "}
+              {debouncedSearchQuery ? "Takwim Ditemui" : "Aktiviti Takwim"}
+            </h2>
+            <p className="max-w-[760px] font-body text-sm text-txt-black-500">
+              Tarikh penting dan aktiviti persekolahan daripada Kementerian
+              Pendidikan. Klik mana-mana aktiviti untuk maklumat lanjut.
+            </p>
+          </div>
           {moeTakwim && (
             <TakwimListItem
               href={moeTakwim.url}
@@ -152,8 +167,8 @@ export default function Takwim() {
                   <PdfIconTakwim className="size-8" />
                 </div>
               }
-              title={`Muat turun ${moeTakwim.alt || "Kalendar Akademik"} (moe.gov.my)`}
-              ariaLabel={`Muat turun ${moeTakwim.alt || "Kalendar Akademik"}`}
+              title="Kalendar Akademik 2026"
+              ariaLabel="Muat turun Kalendar Akademik 2026 (moe.gov.my)"
             />
           )}
 
@@ -161,14 +176,26 @@ export default function Takwim() {
 
           {/* Pagination */}
           <div className="flex justify-center mt-12">
-            <AutoPagination
-              page={pageNumber}
-              limit={pageSize}
-              count={totalRecord}
-              maxDisplay={4}
-              onPageChange={(page) => setPageNumber(page)}
-              type="default"
-            />
+            <div className="sm:hidden">
+              <AutoPagination
+                page={pageNumber}
+                limit={pageSize}
+                count={totalRecord}
+                maxDisplay={4}
+                onPageChange={(page) => setPageNumber(page)}
+                type="simple"
+              />
+            </div>
+            <div className="hidden sm:block">
+              <AutoPagination
+                page={pageNumber}
+                limit={pageSize}
+                count={totalRecord}
+                maxDisplay={4}
+                onPageChange={(page) => setPageNumber(page)}
+                type="default"
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -85,6 +85,8 @@ interface SimpleSelectProps {
   /** Merged onto the trigger <button> itself (e.g. to override its default
    * padding), unlike `className` which only applies to the outer wrapper. */
   triggerClassName?: string;
+  /** Merged onto the dropdown list (e.g. to widen it past a narrow trigger). */
+  contentClassName?: string;
   /** Applied to the trigger button so a visible <label htmlFor> can bind to it. */
   id?: string;
   "aria-label"?: string;
@@ -135,6 +137,7 @@ export function SimpleSelect({
   size = "small",
   className,
   triggerClassName,
+  contentClassName,
   id,
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledby,
@@ -228,6 +231,7 @@ export function SimpleSelect({
             className={clx(
               select_content_cva({ size }),
               "overflow-y-auto overflow-x-hidden show-scrollbar pr-2",
+              contentClassName,
             )}
           >
             {children}

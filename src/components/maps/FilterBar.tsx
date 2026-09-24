@@ -19,6 +19,8 @@ type FilterBarProps = {
   setSelectedPeringkat: (value: string) => void;
   onClearFilters: () => void;
   dataTotal: number;
+  /** Set when the count is "schools near the user" rather than search results. */
+  nearbyRadiusKm?: number;
 };
 
 function FilterPill({
@@ -31,10 +33,12 @@ function FilterPill({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex shrink-0 items-center gap-2 rounded-lg border border-otl-gray-200 bg-white px-2.5 py-1.5">
-      {icon}
-      <div className="flex min-w-[110px] flex-col items-start leading-none">
-        <span className="font-body text-[9px] font-bold leading-none tracking-[0.3px] text-txt-black-500">
+    // Mobile: 3-up grid cell, icon hidden and value truncated so all three
+    // fit without horizontal scrolling.
+    <div className="flex min-w-0 items-center gap-2 rounded-lg border border-otl-gray-200 bg-white px-2 py-1.5 md:shrink-0 md:px-2.5">
+      <span className="hidden md:contents">{icon}</span>
+      <div className="flex min-w-0 flex-1 flex-col items-start leading-none md:min-w-[110px]">
+        <span className="w-full truncate font-body text-[9px] font-bold leading-none tracking-[0.3px] text-txt-black-500">
           {label}
         </span>
         {children}
@@ -54,6 +58,7 @@ export function FilterBar({
   setSelectedPeringkat,
   onClearFilters,
   dataTotal,
+  nearbyRadiusKm,
 }: FilterBarProps) {
   const hasActiveFilter =
     selectedNegeri !== "ALL" ||
@@ -62,7 +67,7 @@ export function FilterBar({
 
   return (
     <div className="flex w-full flex-col gap-2 bg-[#f8fafc] px-4 py-2 md:flex-row md:items-center md:justify-between md:gap-3 md:px-8 md:py-2">
-      <div className="flex items-center gap-2 overflow-x-auto md:flex-wrap md:overflow-visible">
+      <div className="grid grid-cols-3 gap-1.5 md:flex md:gap-2 md:flex-wrap md:items-center">
         <FilterPill
           icon={<MapIcon className="size-4 shrink-0 text-[#2563EB]" />}
           label="NEGERI"
@@ -70,12 +75,13 @@ export function FilterBar({
           <SimpleSelect
             size="small"
             variant="ghost"
-            triggerClassName="!p-0 leading-tight"
+            triggerClassName="!p-0 leading-tight w-full min-w-0"
+            contentClassName="min-w-[200px]"
             value={selectedNegeri}
             onValueChange={setSelectedNegeri}
-            placeholder="Semua Negeri"
+            placeholder="Semua"
           >
-            <SimpleSelectItem value="ALL">Semua Negeri</SimpleSelectItem>
+            <SimpleSelectItem value="ALL">Semua</SimpleSelectItem>
             {negeriList
               .filter((n): n is string => typeof n === "string")
               .map((n, idx) => (
@@ -93,12 +99,13 @@ export function FilterBar({
           <SimpleSelect
             size="small"
             variant="ghost"
-            triggerClassName="!p-0 leading-tight"
+            triggerClassName="!p-0 leading-tight w-full min-w-0"
+            contentClassName="min-w-[200px]"
             value={selectedPeringkat}
             onValueChange={setSelectedPeringkat}
-            placeholder="Semua Peringkat"
+            placeholder="Semua"
           >
-            <SimpleSelectItem value="ALL">Semua Peringkat</SimpleSelectItem>
+            <SimpleSelectItem value="ALL">Semua</SimpleSelectItem>
             <SimpleSelectItem value="MENENGAH">Menengah</SimpleSelectItem>
             <SimpleSelectItem value="RENDAH">Rendah</SimpleSelectItem>
           </SimpleSelect>
@@ -111,12 +118,14 @@ export function FilterBar({
           <SimpleSelect
             size="small"
             variant="ghost"
-            triggerClassName="!p-0 leading-tight"
+            triggerClassName="!p-0 leading-tight w-full min-w-0"
+            // Rightmost pill on mobile: open leftwards to stay on screen.
+            contentClassName="right-0 min-w-[240px] md:right-auto"
             value={selectedJenis}
             onValueChange={setSelectedJenis}
-            placeholder="Semua Jenis"
+            placeholder="Semua"
           >
-            <SimpleSelectItem value="ALL">Semua Jenis</SimpleSelectItem>
+            <SimpleSelectItem value="ALL">Semua</SimpleSelectItem>
             {jenisList
               .filter((x): x is string => typeof x === "string")
               .sort((a, b) => {
@@ -141,7 +150,9 @@ export function FilterBar({
             {dataTotal.toLocaleString("ms-MY")}
           </span>
           <span className="font-body text-sm text-txt-black-500">
-            sekolah ditemui
+            {nearbyRadiusKm
+              ? `sekolah dalam lingkungan ${nearbyRadiusKm} km dari lokasi anda`
+              : "sekolah ditemui"}
           </span>
         </div>
         {hasActiveFilter && (

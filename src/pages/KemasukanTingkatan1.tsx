@@ -302,7 +302,7 @@ export default function KemasukanTingkatan1() {
                   key={l.title}
                   className="flex flex-col gap-3 rounded-2xl border border-otl-divider bg-bg-white p-[22px]"
                 >
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-2.5">
                       <div
                         className="flex size-10 shrink-0 items-center justify-center rounded-[10px]"

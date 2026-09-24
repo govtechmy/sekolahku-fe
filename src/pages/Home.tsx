@@ -110,7 +110,7 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="mx-auto flex-1 px-0 md:px-[24px] lg:px-[24px] xl:px-[24px] max-w-[1328px] pt-12 pb-16 flex flex-col gap-12">
+      <div className="mx-auto flex-1 px-4 md:px-[24px] max-w-[1328px] pt-12 pb-16 flex flex-col gap-12">
         <SectionItemLayanan />
         <SectionItemNearby />
 
@@ -122,7 +122,7 @@ export default function HomePage() {
                 header="PEMBERITAHUAN TERKINI"
                 title="Berita"
                 isLastSection={true}
-                className="lg:px-0"
+                className="px-0"
                 headerAction={
                   <button
                     type="button"
@@ -144,7 +144,7 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Right column: Kalendar Aktiviti Persekolahan, then Pautan Pantas */}
+          {/* Right column: Kalendar Aktiviti Persekolahan, then Pautan Pintas */}
           <div className="flex flex-col gap-8">
             {dataItemCalendar && dataItemCalendar.length > 0 && (
               <div className="flex flex-col gap-2.5">
@@ -164,7 +164,7 @@ export default function HomePage() {
 
             <div id="pautan" className="flex flex-col gap-3">
               <h2 className="font-heading text-body-lg font-bold text-txt-black-900">
-                Pautan Pantas
+                Pautan Pintas
               </h2>
               <SectionItemLinks dataItemLinks={dataItemLinks} />
             </div>
@@ -180,7 +180,7 @@ export default function HomePage() {
             subTitle={formatFileVersion(analytics?.fileVersion)}
             sourceBtn={true}
             isLastSection={true}
-            className="lg:px-0"
+            className="px-0"
             children={<SectionItemAnalytics analytics={analytics} />}
           />
         )}

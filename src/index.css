@@ -71,3 +71,12 @@ input[aria-controls="search-input"][cmdk-input][role="combobox"] {
   padding: 8px 10px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
+
+/* Mobile: lift map controls/attribution clear of floating browser toolbars
+   (e.g. iOS 26 Safari), which overlay the page even within 100dvh. */
+@media (max-width: 767px) {
+  .maplibregl-ctrl-bottom-right,
+  .maplibregl-ctrl-bottom-left {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);
+  }
+}

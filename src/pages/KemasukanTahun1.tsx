@@ -119,7 +119,7 @@ export default function KemasukanTahun1() {
               </p>
               <p className="font-body text-base font-semibold text-txt-black-900">
                 Proses permohonan boleh dilakukan secara dalam talian melalui
-                Modul Bersepadu Kementerian Pendidikan Malaysia (MOEIS).
+                Sistem Bersepadu Kementerian Pendidikan Malaysia (MOEIS).
               </p>
             </div>
 
@@ -190,7 +190,7 @@ export default function KemasukanTahun1() {
                 Mohon secara dalam talian
               </h3>
               <p className="mt-2 font-body text-sm text-white/85">
-                Permohonan Tahun 1 dibuat melalui Modul Bersepadu KPM (MOEIS)
+                Permohonan Tahun 1 dibuat melalui Sistem Bersepadu KPM (MOEIS)
                 menggunakan idMe.
               </p>
               <a

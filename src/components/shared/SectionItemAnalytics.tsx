@@ -57,7 +57,7 @@ export default function SectionItemAnalytics({
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       {/* Sekolah Mengikut Peringkat */}
       <div className="flex flex-col gap-[18px] rounded-2xl border border-otl-gray-200 bg-[#F7F8FA] p-[22px]">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h3
             className="text-body-lg font-bold text-txt-black-900"
             tabIndex={0}
