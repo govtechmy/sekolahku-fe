@@ -40,14 +40,17 @@
   {
     "slug": "program-susu-sekolah-pss",
     "title": "Program Susu Sekolah (PSS)",
-    "description": "1. Sebagai tambahan kepada program Rancangan Makanan Tambahan (RMT),",
+    "description": "1. Sebagai tambahan kepada program Rancangan Makanan Tambahan (RMT), Program Susu Sekolah (PSS) telah diperkenalkan pada tahun 1983 sebagai makanan tambahan untuk membekalkan nutrisi yang mencukupi dan pemakanan yang seimbang serta memupuk tabiat pemakanan yang baik supaya murid sihat dan sentiasa segar.",
     "heroMeta": "Kadar: 1 kotak susu / hari persekolahan",
     "requirements": [
-      "PSS diberikan kepada semua murid warganegara Malaysia dari Tahun 1 hingga",
-      "1. Pendapatan isi rumah di bawah Pendapatan Garis Kemiskinan (PGK) Nasional"
+      "PSS diberikan kepada semua murid warganegara Malaysia dari Tahun 1 hingga Tahun 6 di semua Sekolah Kerajaan (SK) dan Sekolah Bantuan Kerajaan (SBK) yang memenuhi kriteria berikut:",
+      "1. Pendapatan isi rumah di bawah Pendapatan Garis Kemiskinan (PGK) Nasional semasa; atau",
+      "2. Semua murid yang bersekolah di Sekolah Orang Asli/ Penan; atau",
+      "3. Semua Murid Berkeperluan Pendidikan Khas (MBPK) yang memegang Kad Orang Kurang Upaya (OKU) yang dikeluarkan oleh Jabatan Kebajikan Masyarakat (JKM).",
+      "4. Murid yang tinggal di asrama tidak layak menerima PSS."
     ],
     "applicationGuide": [
-      "Susu kotak UHT (Ultra High Temperature) dibekalkan kepada sekolah untuk diedar"
+      "Susu kotak UHT (Ultra High Temperature) dibekalkan kepada sekolah untuk diedar kepada murid."
     ],
     "sections": [
       {
@@ -57,8 +60,8 @@
       {
         "heading": "PENGENALAN",
         "content": [
-          "1. Sebagai tambahan kepada program Rancangan Makanan Tambahan (RMT),",
-          "2. Program ini juga adalah untuk meningkatkan tahap pemakanan dan kesihatan di"
+          "1. Sebagai tambahan kepada program Rancangan Makanan Tambahan (RMT), Program Susu Sekolah (PSS) telah diperkenalkan pada tahun 1983 sebagai makanan tambahan untuk membekalkan nutrisi yang mencukupi dan pemakanan yang seimbang serta memupuk tabiat pemakanan yang baik supaya murid sihat dan sentiasa segar.",
+          "2. Program ini juga adalah untuk meningkatkan tahap pemakanan dan kesihatan di kalangan murid-murid sekolah rendah bagi memastikan pertumbuhan fizikal, mental dan kesihatan murid-murid sekolah rendah bertambah baik."
         ]
       },
       {
@@ -70,14 +73,17 @@
       {
         "heading": "PEMILIHAN",
         "content": [
-          "PSS diberikan kepada semua murid warganegara Malaysia dari Tahun 1 hingga",
-          "1. Pendapatan isi rumah di bawah Pendapatan Garis Kemiskinan (PGK) Nasional"
+          "PSS diberikan kepada semua murid warganegara Malaysia dari Tahun 1 hingga Tahun 6 di semua Sekolah Kerajaan (SK) dan Sekolah Bantuan Kerajaan (SBK) yang memenuhi kriteria berikut:",
+          "1. Pendapatan isi rumah di bawah Pendapatan Garis Kemiskinan (PGK) Nasional semasa; atau",
+          "2. Semua murid yang bersekolah di Sekolah Orang Asli/ Penan; atau",
+          "3. Semua Murid Berkeperluan Pendidikan Khas (MBPK) yang memegang Kad Orang Kurang Upaya (OKU) yang dikeluarkan oleh Jabatan Kebajikan Masyarakat (JKM).",
+          "4. Murid yang tinggal di asrama tidak layak menerima PSS."
         ]
       },
       {
         "heading": "KAEDAH PELAKSANAAN",
         "content": [
-          "Susu kotak UHT (Ultra High Temperature) dibekalkan kepada sekolah untuk diedar"
+          "Susu kotak UHT (Ultra High Temperature) dibekalkan kepada sekolah untuk diedar kepada murid."
         ]
       }
     ],
@@ -528,7 +534,7 @@
       "Berdasarkan enrolmen murid yang bersekolah di SK dan SBK."
     ],
     "applicationGuide": [
-      "Dikreditkan terus ke akaun bank (Kumpulan Wang Sekolah) sekolah; kecuali",
+      "Dikreditkan terus ke akaun bank (Kumpulan Wang Sekolah) sekolah; kecuali Skim Perlindungan Takaful dibayar terus oleh Kementerian Pendidikan Malaysia (KPM) kepada syarikat penyedia perlindungan.",
       "Skim Perlindungan Takaful dibayar terus oleh Kementerian Pendidikan Malaysia (KPM) kepada syarikat penyedia perlindungan."
     ],
     "sections": [
@@ -556,7 +562,7 @@
       {
         "heading": "KAEDAH PENYALURAN",
         "content": [
-          "Dikreditkan terus ke akaun bank (Kumpulan Wang Sekolah) sekolah; kecuali",
+          "Dikreditkan terus ke akaun bank (Kumpulan Wang Sekolah) sekolah; kecuali Skim Perlindungan Takaful dibayar terus oleh Kementerian Pendidikan Malaysia (KPM) kepada syarikat penyedia perlindungan.",
           "Skim Perlindungan Takaful dibayar terus oleh Kementerian Pendidikan Malaysia (KPM) kepada syarikat penyedia perlindungan."
         ]
       },
