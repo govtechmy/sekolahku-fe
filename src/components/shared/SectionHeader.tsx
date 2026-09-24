@@ -61,7 +61,7 @@ export default function SectionHeader({
           <div
             className={clx("flex flex-col gap-4", subTitle ? "pb-12" : "pb-6")}
           >
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="flex flex-col gap-1">
                 <div
                   className={clx(

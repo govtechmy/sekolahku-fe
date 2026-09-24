@@ -16,7 +16,7 @@ export const InfoGridItem = ({ label, value, note }: InfoGridItemProps) => {
       <div className="py-8 px-2.5 rounded-xl shadow text-center">
         <div className="text-txt-primary uppercase pb-2">{label}</div>
         {typeof value === "string" ? (
-          <div className="text-txt-black-500">
+          <div className="text-txt-black-500 uppercase">
             {value} {note && `| ${note}`}
           </div>
         ) : value === true ? (

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Pie, PieChart, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import { ChevronRightIcon } from "@govtechmy/myds-react/icon";
 import type { CategoryItem } from "../models/response";
 import {
   SCHOOL_JENIS_BANTUAN,
@@ -189,14 +188,6 @@ export default function DoughnutChart({
               <div className="shrink-0 text-body-sm font-semibold text-txt-black-500">
                 {item.total.toLocaleString()}
               </div>
-              <ChevronRightIcon
-                className="size-3.5 shrink-0"
-                style={{
-                  color: isActive
-                    ? (chartColors[index] ?? "#0062FF")
-                    : "transparent",
-                }}
-              />
             </div>
           );
         })}
