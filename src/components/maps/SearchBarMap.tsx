@@ -187,6 +187,8 @@ export function SearchBarMap({
   const inputARef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const isSwappingRef = useRef(false);
+  // Name of the school behind pointB, so a new query can drop its pin.
+  const selectedNameRef = useRef<string | null>(null);
 
   const prevPeringkatRef = useRef(selectedPeringkat);
 
@@ -362,6 +364,12 @@ export function SearchBarMap({
     // Swap coordinates
     setPointA(pointBCoords);
     setPointB(pointACoords);
+    // The swapped-in destination belongs to the Field B text set above.
+    selectedNameRef.current = pointACoords
+      ? currentAIsLocation || currentA === "Lokasi Semasa"
+        ? ""
+        : currentA.trim()
+      : null;
 
     // Pan map to new destination (pointB = old pointA)
     if (pointACoords) {
@@ -483,6 +491,16 @@ export function SearchBarMap({
   // Send every school query and supported filter directly to the backend.
   useEffect(() => {
     if (isSwappingRef.current) return;
+
+    // A different query drops the previously selected school's pin, card and route.
+    if (
+      selectedNameRef.current !== null &&
+      query.trim() !== selectedNameRef.current
+    ) {
+      selectedNameRef.current = null;
+      setPointB(null);
+      setViewSchool(null);
+    }
 
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
@@ -609,6 +627,7 @@ export function SearchBarMap({
 
         // Set pointB when a school is selected
         setPointB([school.koordinatYY, school.koordinatXX]);
+        selectedNameRef.current = school.namaSekolah;
 
         // Populate Field B with school name
         isSwappingRef.current = true;
