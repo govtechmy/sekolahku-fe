@@ -61,6 +61,32 @@ describe("school.svc request caching", () => {
       expect(get.mock.calls[0][0]).not.toContain("longitude=");
     });
 
+    it("sends the origin for a name search so results come nearest-first", async () => {
+      get.mockResolvedValue({
+        data: { data: { items: [], totalRecords: 0, pageSize: 12 } },
+      });
+      const { getSchoolSuggestion } = await loadService();
+
+      await getSchoolSuggestion(
+        { namaSekolah: "gombak" },
+        1,
+        undefined,
+        [3.1, 101.7],
+      );
+      await getSchoolSuggestion(
+        { negeri: "SELANGOR" },
+        1,
+        undefined,
+        [3.1, 101.7],
+      );
+
+      expect(get.mock.calls[0][0]).toContain(
+        "originLatitude=3.1&originLongitude=101.7&",
+      );
+      expect(get.mock.calls[0][0]).not.toContain("latitude=3.1&longitude");
+      expect(get.mock.calls[1][0]).not.toContain("originLatitude=");
+    });
+
     it("keeps an empty search ordered from the user's location", async () => {
       get.mockResolvedValue({
         data: {
@@ -78,6 +104,7 @@ describe("school.svc request caching", () => {
 
       expect(get.mock.calls[0][0]).toContain("latitude=3.139");
       expect(get.mock.calls[0][0]).toContain("longitude=101.6869");
+      expect(get.mock.calls[0][0]).toContain("radiusInMeter=20000");
     });
 
     it("uses API pagination metadata before dropping invalid coordinates", async () => {
