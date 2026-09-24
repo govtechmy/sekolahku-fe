@@ -9,6 +9,7 @@ import {
 import {
   ArrowBackIcon,
   ChevronRightIcon,
+  InfoIcon,
   PinIcon,
 } from "@govtechmy/myds-react/icon";
 import { SearchFallbackIndicator } from "../shared/SearchFallbackIndicator";
@@ -24,6 +25,11 @@ import {
 } from "@govtechmy/myds-react/search-bar";
 import { clx } from "@govtechmy/myds-react/utils";
 import { Button } from "@govtechmy/myds-react/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@govtechmy/myds-react/tooltip";
 import { SchoolInfoWindow } from "./SchoolInfoWindow";
 import { useMapViewStore } from "../../store/mapView";
 import { calculateDistance } from "../../utils/calculateDistance";
@@ -198,10 +204,7 @@ export function SearchBarMap({
   // Origin / destination + computed driving route (OSRM).
   const pointA = useMapViewStore((s) => s.pointA);
   const pointB = useMapViewStore((s) => s.pointB);
-  const routeDistance = useMapViewStore((s) => s.routeDistance);
-  const routeDuration = useMapViewStore((s) => s.routeDuration);
   const resortByOrigin = useMapViewStore((s) => s.resortByOrigin);
-  const hasActiveNameSearch = useMapViewStore((s) => s.hasActiveNameSearch);
   // Origin coords as primitives — stable, statically-checkable effect deps.
   const originLat = pointA?.[0];
   const originLng = pointA?.[1];
@@ -216,9 +219,12 @@ export function SearchBarMap({
 
   // Road (driving) distance in meters for the nearest few results, keyed by
   // kodSekolah. Filled by one OSRM /table call; other rows keep straight-line.
-  const [roadDistances, setRoadDistances] = useState<Map<string, number>>(
-    new Map(),
-  );
+  // kodSekolah whose drive-time disclaimer is open; controlled so a tap
+  // opens it on touch devices (Radix tooltips are hover/focus only).
+  const [driveTipKod, setDriveTipKod] = useState<string | null>(null);
+  const [roadDistances, setRoadDistances] = useState<
+    Map<string, { distance: number; duration: number | null }>
+  >(new Map());
   const tableAbortRef = useRef<AbortController | null>(null);
   const tableDebounceRef = useRef<number | null>(null);
   // Surfaced when selecting a school fails to load its detail (see handleSelect).
@@ -502,6 +508,14 @@ export function SearchBarMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runBackendSearch]);
 
+  // Re-sort name results (nearest-first) when the origin (Field A) changes. Kept apart from the
+  // effect above so it doesn't re-run its exact-match auto-select.
+  useEffect(() => {
+    if (isSwappingRef.current || query.trim().length < 2) return;
+    void runBackendSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pointA?.[0], pointA?.[1]]);
+
   // Road distances for the nearest N results (one OSRM /table call). Keyed off
   // the top-N kodSekolah so paging (append) doesn't re-trigger the request.
   const topKods = localSuggestions
@@ -529,10 +543,14 @@ export function SearchBarMap({
       getRouteDistances([originLat, originLng], dests, controller.signal).then(
         (results) => {
           if (tableAbortRef.current !== controller) return; // stale
-          const next = new Map<string, number>();
+          const next = new Map<
+            string,
+            { distance: number; duration: number | null }
+          >();
           results.forEach((r, i) => {
             const kod = top[i].kodSekolah;
-            if (kod && r.distance != null) next.set(kod, r.distance);
+            if (kod && r.distance != null)
+              next.set(kod, { distance: r.distance, duration: r.duration });
           });
           setRoadDistances(next);
         },
@@ -558,10 +576,7 @@ export function SearchBarMap({
   // above, re-sort just that slice by the more accurate road distance —
   // items beyond ROAD_DISTANCE_TOP_N keep the straight-line order.
   const orderedSuggestions = useMemo(() => {
-    // During a name/acronym search, keep the backend relevance order (best match
-    // first). Road-distance reordering only applies to nearest-first browsing.
-    if (hasActiveNameSearch || roadDistances.size === 0)
-      return localSuggestions;
+    if (roadDistances.size === 0) return localSuggestions;
     const head = localSuggestions.slice(0, ROAD_DISTANCE_TOP_N);
     const tail = localSuggestions.slice(ROAD_DISTANCE_TOP_N);
     const sortedHead = [...head].sort((a, b) => {
@@ -569,10 +584,10 @@ export function SearchBarMap({
       const db = b.kodSekolah ? roadDistances.get(b.kodSekolah) : undefined;
       if (da == null) return db == null ? 0 : 1;
       if (db == null) return -1;
-      return da - db;
+      return da.distance - db.distance;
     });
     return [...sortedHead, ...tail];
-  }, [localSuggestions, roadDistances, hasActiveNameSearch]);
+  }, [localSuggestions, roadDistances]);
 
   const handleSelect = async (school: SearchBarMapProps) => {
     try {
@@ -929,21 +944,6 @@ export function SearchBarMap({
             </div>
           )}
 
-          {isExpanded && (
-            <>
-              {routeDistance != null && routeDuration != null && (
-                <div className="px-4 pb-2 flex items-center gap-2 text-sm text-txt-primary">
-                  <span className="font-semibold">
-                    {(routeDistance / 1000).toFixed(1)} km
-                  </span>
-                  <span className="text-gray-300">•</span>
-                  <span>{Math.max(1, Math.round(routeDuration / 60))} min</span>
-                  <span className="text-xs text-gray-500">anggaran pandu</span>
-                </div>
-              )}
-            </>
-          )}
-
           {selectError && (
             <div
               role="alert"
@@ -999,7 +999,7 @@ export function SearchBarMap({
                           )}
                         </span>
 
-                        <span className="mt-1 flex items-center text-sm text-primary-600 gap-1">
+                        <span className="mt-1 flex flex-wrap items-center text-sm text-primary-600 gap-1">
                           {(() => {
                             const oLat =
                               pointA?.[0] ?? initialLocationUser?.[0];
@@ -1017,13 +1017,60 @@ export function SearchBarMap({
                               : undefined;
                             if (road != null) {
                               const text =
-                                road > 1000
-                                  ? `${(road / 1000).toFixed(2)} km ikut jalan dari ${fromLabel}`
-                                  : `${Math.round(road)} meter ikut jalan dari ${fromLabel}`;
+                                road.distance > 1000
+                                  ? `${(road.distance / 1000).toFixed(2)} km ikut jalan dari ${fromLabel}`
+                                  : `${Math.round(road.distance)} meter ikut jalan dari ${fromLabel}`;
                               return (
                                 <>
                                   <PinIcon className="w-4 h-4" />
                                   {text}
+                                  {road.duration != null && (
+                                    <span className="text-xs text-gray-500">
+                                      ·{" "}
+                                      {Math.max(
+                                        1,
+                                        Math.round(road.duration / 60),
+                                      )}{" "}
+                                      min anggaran pandu
+                                      <Tooltip
+                                        open={driveTipKod === school.kodSekolah}
+                                        onOpenChange={(open) =>
+                                          setDriveTipKod(
+                                            open
+                                              ? (school.kodSekolah ?? null)
+                                              : null,
+                                          )
+                                        }
+                                      >
+                                        <TooltipTrigger asChild>
+                                          <button
+                                            type="button"
+                                            aria-label="Maklumat anggaran pandu"
+                                            onClick={(e) => {
+                                              // Don't select the school row, and
+                                              // stop Radix closing it on click so
+                                              // a tap opens it on touch devices.
+                                              e.stopPropagation();
+                                              e.preventDefault();
+                                              setDriveTipKod(
+                                                school.kodSekolah ?? null,
+                                              );
+                                            }}
+                                            className="ml-1 inline-flex align-middle text-gray-400 hover:text-gray-600"
+                                          >
+                                            <InfoIcon className="size-3.5" />
+                                          </button>
+                                        </TooltipTrigger>
+                                        <TooltipContent className="z-[600] max-w-[240px] text-xs">
+                                          Anggaran masa memandu berdasarkan
+                                          laluan jalan raya tanpa mengambil kira
+                                          trafik semasa. Sila rujuk aplikasi
+                                          navigasi untuk maklumat perjalanan
+                                          yang lebih tepat.
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </span>
+                                  )}
                                 </>
                               );
                             }
@@ -1098,7 +1145,8 @@ export function SearchBarMap({
           >
             <div
               className={clx(
-                "overflow-y-auto overscroll-none",
+                // Rounded sheet top; overflow clips the card's square white corners.
+                "overflow-y-auto overscroll-none rounded-t-2xl bg-white shadow-[0_-4px_16px_rgba(0,0,0,0.12)]",
                 isFullScreen ? "h-full" : "flex-1",
               )}
             >

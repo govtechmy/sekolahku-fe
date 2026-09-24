@@ -14,9 +14,6 @@ interface MapViewState {
   zoom: number;
   initialLocationSet: boolean;
   locationPickerOpen: boolean;
-  // True while a school-name/acronym query is active. When set, suggestions keep
-  // the backend's relevance order instead of being re-sorted nearest-first.
-  hasActiveNameSearch: boolean;
   radius: number;
   mapFilters: {
     negeri: string;
@@ -100,7 +97,6 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   mapQuery: "",
   initialLocationSet: false,
   locationPickerOpen: false,
-  hasActiveNameSearch: false,
   schoolMarkers: new Map() as MarkerMap,
   userMarkers: new Map() as MarkerMap,
   localSuggestions: [],
@@ -211,10 +207,6 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
       (params?.peringkat && params.peringkat !== "ALL"),
     );
 
-    // Only a name/acronym query should preserve backend relevance order.
-    // Filter-only browsing (negeri/jenis/peringkat) still sorts nearest-first.
-    set({ hasActiveNameSearch: Boolean(params?.namaSekolah?.trim()) });
-
     try {
       const initialLocationUser =
         useLocationSessionStore.getState().initialLocationUser;
@@ -222,6 +214,8 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
         params,
         pageNumber,
         hasActiveMapSearch ? undefined : initialLocationUser,
+        // Name results nearest-first from the chosen origin (Field A), else the user.
+        get().pointA ?? initialLocationUser,
       );
 
       // If a newer request was fired while we were waiting, discard this response
@@ -356,12 +350,9 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
           s.koordinatXX,
         ),
       }));
-      // Distances are always refreshed for display, but a name/acronym search
-      // keeps the backend's relevance order (best match first). Only nearest-first
-      // browsing re-sorts by distance.
-      if (!state.hasActiveNameSearch) {
-        next.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
-      }
+      // Nearest-first for every search: the backend already orders name
+      // matches by distance from the same origin.
+      next.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
       return { localSuggestions: next };
     });
   },

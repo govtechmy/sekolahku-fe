@@ -144,7 +144,7 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Right column: Kalendar Aktiviti Persekolahan, then Pautan Pantas */}
+          {/* Right column: Kalendar Aktiviti Persekolahan, then Pautan Pintas */}
           <div className="flex flex-col gap-8">
             {dataItemCalendar && dataItemCalendar.length > 0 && (
               <div className="flex flex-col gap-2.5">
@@ -164,7 +164,7 @@ export default function HomePage() {
 
             <div id="pautan" className="flex flex-col gap-3">
               <h2 className="font-heading text-body-lg font-bold text-txt-black-900">
-                Pautan Pantas
+                Pautan Pintas
               </h2>
               <SectionItemLinks dataItemLinks={dataItemLinks} />
             </div>

@@ -33,16 +33,6 @@ export type MarkerType =
   | "PARLIMEN"
   | "WEST_EAST_MALAYSIA";
 
-export type SchoolMarkerInfo = {
-  markerType: MarkerType;
-  radiusInMeter: number;
-  koordinatXX: number;
-  koordinatYY: number;
-  id?: string;
-  name?: string;
-  total?: number;
-};
-
 export interface Coordinates {
   koordinatXX: number;
   koordinatYY: number;
@@ -60,9 +50,4 @@ export interface BaseMarkerGroup {
 
 export interface IndividualMarkerGroup extends BaseMarkerGroup {
   kodSekolah: string;
-}
-
-export interface FindNearbyUpdatedEndpoint {
-  viewInfoLokasi: ViewInfoLokasi;
-  markerGroups: IndividualMarkerGroup[];
 }

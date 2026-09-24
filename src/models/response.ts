@@ -129,13 +129,6 @@ export interface NearbySchoolsParams {
   name?: string;
 }
 
-export interface S3JsonModel {
-  dataUrl?: string;
-  negeri?: string;
-  parlimen?: string;
-  kodSekolah?: string;
-}
-
 export interface PeringkatBreakdown {
   peringkat: string;
   total: number;

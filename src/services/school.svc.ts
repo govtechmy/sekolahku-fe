@@ -8,6 +8,7 @@ import type {
   MarkerGroup,
 } from "../models/response";
 import { authAxios } from "./http";
+import { FIRST_LOAD_RADIUS_METERS } from "../constants/mapDefaults";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const SCHOOL_ENDPOINT = "/schools";
@@ -19,6 +20,8 @@ export const getSchoolSuggestion = async (
   params?: schoolSearchModel,
   pageNumber: number = 1,
   initialLocationUser?: CenterCoord,
+  /** Name searches only: list matches nearest-first from this point (no radius limit). */
+  origin?: CenterCoord,
 ): Promise<{
   filteredData: ItemSekolahModel[];
   totalSchool: number;
@@ -42,9 +45,16 @@ export const getSchoolSuggestion = async (
     const [lat, lng] = initialLocationUser || [null, null];
     const locationParams =
       !hasActiveSearch && lat != null && lng != null
-        ? `latitude=${lat}&longitude=${lng}&`
+        ? // Same 20 km as the map's outer radius circle, so "sekolah ditemui"
+          // counts what the legend shows (the API default is 8 km).
+          `latitude=${lat}&longitude=${lng}&radiusInMeter=${FIRST_LOAD_RADIUS_METERS}&`
         : "";
-    const searchParams = `/search?${locationParams}page=${pageNumber}&pageSize=12`;
+    const [originLat, originLng] = origin || [null, null];
+    const originParams =
+      params?.namaSekolah?.trim() && originLat != null && originLng != null
+        ? `originLatitude=${originLat}&originLongitude=${originLng}&`
+        : "";
+    const searchParams = `/search?${locationParams}${originParams}page=${pageNumber}&pageSize=12`;
 
     if (params?.peringkat && params.peringkat !== "ALL") {
       // peringkat is now a direct field on the school — pass it as-is to the API.

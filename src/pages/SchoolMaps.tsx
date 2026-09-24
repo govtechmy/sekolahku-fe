@@ -6,7 +6,10 @@ import { FilterBar, LocationPickerWindow } from "../components/maps";
 import { useMapViewStore } from "../store/mapView";
 import { fetchMultipleStatePolygons } from "../services/polygon.svc";
 import { NEGERI_LIST } from "../contentData";
-import { FIRST_LOAD_ZOOM } from "../constants/mapDefaults";
+import {
+  FIRST_LOAD_RADIUS_METERS,
+  FIRST_LOAD_ZOOM,
+} from "../constants/mapDefaults";
 import { useLocationSessionStore } from "../store/locationSession";
 import { getSessionInitialLocation } from "../utils/sessionInitialLocation";
 import HelmetMeta from "../seo/HelmetMeta";
@@ -39,7 +42,18 @@ export default function SchoolMaps() {
     dataTotal,
   } = useMapViewStore();
 
-  const { setInitialLocationUser } = useLocationSessionStore();
+  const { setInitialLocationUser, initialLocationUser } =
+    useLocationSessionStore();
+  const mapQuery = useMapViewStore((s) => s.mapQuery);
+  // Mirrors getSchoolSuggestion: with no query/filters the count is the
+  // schools within FIRST_LOAD_RADIUS_METERS of the user.
+  const isNearbyCount =
+    !mapQuery &&
+    selectedNegeri === "ALL" &&
+    selectedJenis === "ALL" &&
+    selectedPeringkat === "ALL" &&
+    initialLocationUser[0] != null &&
+    initialLocationUser[1] != null;
 
   const geolocationRequestedRef = useRef(false);
   const polygonsFetchedRef = useRef(false);
@@ -227,6 +241,9 @@ export default function SchoolMaps() {
           setQuery("");
         }}
         dataTotal={dataTotal}
+        nearbyRadiusKm={
+          isNearbyCount ? FIRST_LOAD_RADIUS_METERS / 1000 : undefined
+        }
       />
 
       <div className="flex-1 w-full flex relative">
@@ -241,7 +258,9 @@ export default function SchoolMaps() {
         <MapContainerMapCN />
 
         {/* Map legends (top-right) */}
-        <div className="absolute top-6 right-6 z-[500] flex flex-col gap-2">
+        {/* Mobile: below the full-width search pill (top 16px + 45px), and
+            under the z-[500] search panel so the expanded list covers it. */}
+        <div className="absolute top-[72px] right-3 z-[400] flex flex-col gap-2 md:top-6 md:right-6 md:z-[500]">
           {/* Pin colour legend */}
           <div className="rounded-lg bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm">
             <p className="mb-1 text-xs font-semibold text-gray-700">
