@@ -69,7 +69,7 @@ export default function NavbarMyds() {
       >
         <img src="/JataNegara.svg" />
         <div className="font-heading text-txt-black-900 text-body-lg font-semibold">
-          Sekolahku
+          Portal Sekolahku
         </div>
       </Link>
       <NavbarMenu
