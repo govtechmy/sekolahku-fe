@@ -30,3 +30,5 @@ public/sitemap.xml
 
 # graphify
 graphify-out
+# pi
+.pi/
