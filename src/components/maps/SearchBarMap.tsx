@@ -187,8 +187,7 @@ export function SearchBarMap({
   const originLng = pointA?.[1];
 
   // Recompute distances on already-loaded results the moment the origin
-  // resolves (initial geolocation) or changes (user picks a different Field A)
-  // — client-side only, no refetch; the list order doesn't depend on origin.
+  // resolves or changes; the backend re-query below handles the order.
   useEffect(() => {
     setDistancesFromOrigin([originLat ?? null, originLng ?? null]);
   }, [originLat, originLng, setDistancesFromOrigin]);
@@ -500,6 +499,18 @@ export function SearchBarMap({
     }, 400);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runBackendSearch]);
+
+  // Re-query so the backend re-sorts (nearest-first) when the origin (Field A) changes. Kept apart from the
+  // effect above so it doesn't re-run its exact-match auto-select.
+  useEffect(() => {
+    const hasFilter = [selectedNegeri, selectedJenis, selectedPeringkat].some(
+      (value) => value !== "ALL",
+    );
+    if (isSwappingRef.current || (query.trim().length < 2 && !hasFilter))
+      return;
+    void runBackendSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pointA?.[0], pointA?.[1]]);
 
   // Road distances for the first N results (one OSRM /table call). Keyed off
   // the top-N kodSekolah so paging (append) doesn't re-trigger the request.
@@ -969,7 +980,7 @@ export function SearchBarMap({
                               pointA != null && !fieldAIsCurrentLocation
                                 ? "titik asal"
                                 : "lokasi anda";
-                            // Prefer the OSRM road distance (top-N);
+                            // Prefer the OSRM road distance (top N);
                             // fall back to straight-line for the rest.
                             const road = school.kodSekolah
                               ? roadDistances.get(school.kodSekolah)

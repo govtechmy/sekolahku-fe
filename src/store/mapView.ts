@@ -70,7 +70,7 @@ interface MapViewState {
   ) => Promise<void>;
   setQuery: (q: string) => void;
   // Re-derives `distance` for every currently-loaded suggestion against
-  // `origin` and re-sorts ascending (nulls last). No-op if origin is
+  // `origin` (display only; the backend owns the order). No-op if origin is
   // incomplete. Called after every fetch and whenever the origin changes.
   setDistancesFromOrigin: (origin: [number | null, number | null]) => void;
   setPointA: (point: [number, number] | null) => void;
@@ -210,12 +210,13 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
     try {
       const initialLocationUser =
         useLocationSessionStore.getState().initialLocationUser;
-      // No origin: name results stay in the backend fuzzy-v2 relevance order
-      // (distance is still shown per card, see setDistancesFromOrigin).
       const results = await getSchoolSuggestion(
         params,
         pageNumber,
         hasActiveMapSearch ? undefined : initialLocationUser,
+        // Search results nearest-first (exact-word name matches first) from the
+        // chosen origin (Field A), else the user; the backend owns the order.
+        get().pointA ?? initialLocationUser,
       );
 
       // If a newer request was fired while we were waiting, discard this response
@@ -350,6 +351,8 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
           s.koordinatXX,
         ),
       }));
+      // Distance is display-only: the backend owns the list order (exact
+      // word matches first, then nearest-first from the origin we send).
       return { localSuggestions: next };
     });
   },

@@ -50,8 +50,9 @@ export const getSchoolSuggestion = async (
           `latitude=${lat}&longitude=${lng}&radiusInMeter=${FIRST_LOAD_RADIUS_METERS}&`
         : "";
     const [originLat, originLng] = origin || [null, null];
+    // Any search (name or filters) is listed nearest-first from the origin by the backend.
     const originParams =
-      params?.namaSekolah?.trim() && originLat != null && originLng != null
+      hasActiveSearch && originLat != null && originLng != null
         ? `originLatitude=${originLat}&originLongitude=${originLng}&`
         : "";
     const searchParams = `/search?${locationParams}${originParams}page=${pageNumber}&pageSize=12`;
