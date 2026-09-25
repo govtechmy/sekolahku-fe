@@ -37,26 +37,6 @@ import { useLocationSessionStore } from "../../store/locationSession";
 import SekolahAngkatMadaniIcon from "../../icons/SekolahAngkatMadaniIcon";
 import underScoreRemover from "../../utils/underscoreRemover";
 
-/**
- * Highlights matching text portions by wrapping them in a styled <mark> element.
- */
-function highlightMatch(text: string, query: string): React.ReactNode {
-  if (!query || query.trim().length < 2) return text;
-  const escaped = query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const regex = new RegExp(`(${escaped})`, "gi");
-  const parts = text.split(regex);
-  if (parts.length === 1) return text;
-  return parts.map((part, i) =>
-    regex.test(part) ? (
-      <mark key={i} className="bg-yellow-200 text-gray-900 rounded-sm px-0.5">
-        {part}
-      </mark>
-    ) : (
-      <span key={i}>{part}</span>
-    ),
-  );
-}
-
 // Desktop sidebar width bounds (px) — drag-resizable between these.
 const SIDEBAR_DEFAULT_WIDTH = 350;
 const SIDEBAR_MIN_WIDTH = 280;
@@ -1005,17 +985,11 @@ export function SearchBarMap({
                         </div>
 
                         <span className="text-base font-medium text-gray-900">
-                          {highlightMatch(
-                            `${school?.namaSekolah ?? "Sekolah"} ${school?.kodSekolah ?? ""}`.trim(),
-                            query,
-                          )}
+                          {`${school?.namaSekolah ?? "Sekolah"} ${school?.kodSekolah ?? ""}`.trim()}
                         </span>
 
                         <span className="text-sm text-gray-500 pb-3">
-                          {highlightMatch(
-                            `${underScoreRemover(school.bandarSurat ?? "")}, ${underScoreRemover(school.negeri ?? "")}`,
-                            query,
-                          )}
+                          {`${underScoreRemover(school.bandarSurat ?? "")}, ${underScoreRemover(school.negeri ?? "")}`}
                         </span>
 
                         <span className="mt-1 flex flex-wrap items-center text-sm text-primary-600 gap-1">
@@ -1151,7 +1125,6 @@ export function SearchBarMap({
               setSelected={() => setViewSchool(null)}
               mobile={false}
               layout="horizontal"
-              searchQuery={query}
             />
           </div>
 
@@ -1178,7 +1151,6 @@ export function SearchBarMap({
                 mobile={true}
                 isFullScreen={isFullScreen}
                 onToggleFullScreen={() => setIsFullScreen(!isFullScreen)}
-                searchQuery={query}
               />
             </div>
           </div>
