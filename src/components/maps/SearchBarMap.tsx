@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useCallback, type UIEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+  type UIEvent,
+} from "react";
 import {
   ArrowBackIcon,
   ChevronRightIcon,
@@ -179,22 +186,20 @@ export function SearchBarMap({
   // Origin / destination + computed driving route (OSRM).
   const pointA = useMapViewStore((s) => s.pointA);
   const pointB = useMapViewStore((s) => s.pointB);
-  const setDistancesFromOrigin = useMapViewStore(
-    (s) => s.setDistancesFromOrigin,
-  );
+  const resortByOrigin = useMapViewStore((s) => s.resortByOrigin);
   // Origin coords as primitives — stable, statically-checkable effect deps.
   const originLat = pointA?.[0];
   const originLng = pointA?.[1];
 
-  // Recompute distances on already-loaded results the moment the origin
-  // resolves (initial geolocation) or changes (user picks a different Field A)
-  // — client-side only, no refetch; the list order doesn't depend on origin.
+  // Re-rank already-loaded results the moment the origin resolves (initial
+  // geolocation) or changes (user picks a different Field A) — client-side
+  // only, no refetch, since the result set itself doesn't depend on origin.
   useEffect(() => {
-    setDistancesFromOrigin([originLat ?? null, originLng ?? null]);
-  }, [originLat, originLng, setDistancesFromOrigin]);
+    resortByOrigin([originLat ?? null, originLng ?? null]);
+  }, [originLat, originLng, resortByOrigin]);
   const routeAbortRef = useRef<AbortController | null>(null);
 
-  // Road (driving) distance in meters for the first few results, keyed by
+  // Road (driving) distance in meters for the nearest few results, keyed by
   // kodSekolah. Filled by one OSRM /table call; other rows keep straight-line.
   // kodSekolah whose drive-time disclaimer is open; controlled so a tap
   // opens it on touch devices (Radix tooltips are hover/focus only).
@@ -206,7 +211,7 @@ export function SearchBarMap({
   const tableDebounceRef = useRef<number | null>(null);
   // Surfaced when selecting a school fails to load its detail (see handleSelect).
   const [selectError, setSelectError] = useState<string | null>(null);
-  // How many of the top suggestions get a real road distance.
+  // How many of the top (nearest) suggestions get a real road distance.
   // Matches the backend pageSize (12) so the whole visible page shows an OSRM
   // road distance in one /table call, instead of straight-line for rows 11–12.
   const ROAD_DISTANCE_TOP_N = 12;
@@ -501,7 +506,15 @@ export function SearchBarMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runBackendSearch]);
 
-  // Road distances for the first N results (one OSRM /table call). Keyed off
+  // Re-sort name results (nearest-first) when the origin (Field A) changes. Kept apart from the
+  // effect above so it doesn't re-run its exact-match auto-select.
+  useEffect(() => {
+    if (isSwappingRef.current || query.trim().length < 2) return;
+    void runBackendSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pointA?.[0], pointA?.[1]]);
+
+  // Road distances for the nearest N results (one OSRM /table call). Keyed off
   // the top-N kodSekolah so paging (append) doesn't re-trigger the request.
   const topKods = localSuggestions
     .slice(0, ROAD_DISTANCE_TOP_N)
@@ -556,6 +569,24 @@ export function SearchBarMap({
     };
   }, []);
 
+  // `localSuggestions` (from the store) is already nearest-first by
+  // straight-line distance. Once road distances resolve for the head slice
+  // above, re-sort just that slice by the more accurate road distance —
+  // items beyond ROAD_DISTANCE_TOP_N keep the straight-line order.
+  const orderedSuggestions = useMemo(() => {
+    if (roadDistances.size === 0) return localSuggestions;
+    const head = localSuggestions.slice(0, ROAD_DISTANCE_TOP_N);
+    const tail = localSuggestions.slice(ROAD_DISTANCE_TOP_N);
+    const sortedHead = [...head].sort((a, b) => {
+      const da = a.kodSekolah ? roadDistances.get(a.kodSekolah) : undefined;
+      const db = b.kodSekolah ? roadDistances.get(b.kodSekolah) : undefined;
+      if (da == null) return db == null ? 0 : 1;
+      if (db == null) return -1;
+      return da.distance - db.distance;
+    });
+    return [...sortedHead, ...tail];
+  }, [localSuggestions, roadDistances]);
+
   const handleSelect = async (school: SearchBarMapProps) => {
     try {
       setSelectError(null);
@@ -602,7 +633,10 @@ export function SearchBarMap({
   // otherwise fall back to the first (best-ranked) suggestion. Wired to Enter
   // and the search button so live typing itself never hijacks the map.
   const commitTopResult = () => {
-    const current = localSuggestions;
+    // Use the same list the user sees (road-distance reordered head), not the
+    // store's straight-line order — otherwise Enter can pinpoint a different
+    // school than the visible first row.
+    const current = orderedSuggestions;
     if (current.length === 0) return;
     const trimmed = query.trim().toLowerCase();
     const exact = current.find(
@@ -932,8 +966,8 @@ export function SearchBarMap({
               tabIndex={0}
               className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1 focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 "
             >
-              {localSuggestions.length > 0 ? (
-                localSuggestions.map((school, idx) => (
+              {orderedSuggestions.length > 0 ? (
+                orderedSuggestions.map((school, idx) => (
                   <li
                     key={school.kodSekolah || idx}
                     onClick={() => handleSelect(school)}
@@ -969,7 +1003,7 @@ export function SearchBarMap({
                               pointA != null && !fieldAIsCurrentLocation
                                 ? "titik asal"
                                 : "lokasi anda";
-                            // Prefer the OSRM road distance (top-N);
+                            // Prefer the OSRM road distance (top-N nearest);
                             // fall back to straight-line for the rest.
                             const road = school.kodSekolah
                               ? roadDistances.get(school.kodSekolah)
@@ -1066,7 +1100,7 @@ export function SearchBarMap({
                   Tiada hasil carian
                 </li>
               )}
-              {localSuggestions.length > 0 && isLoadingLocalSuggestions && (
+              {orderedSuggestions.length > 0 && isLoadingLocalSuggestions && (
                 <li className="border-t border-otl-divider">
                   <SearchFallbackIndicator visible={true} className="py-3" />
                 </li>
