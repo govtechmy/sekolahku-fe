@@ -26,35 +26,14 @@ type SchoolInfoWindowProps = {
   mobile?: boolean;
   isFullScreen?: boolean;
   onToggleFullScreen?: () => void;
-  searchQuery?: string;
   /** "horizontal" renders the wide bottom bar used on desktop to match the
    * pen.dev design; "vertical" (default) is the narrow sidebar/mobile card. */
   layout?: "vertical" | "horizontal";
 };
 
-/**
- * Highlights matching text portions by wrapping them in a styled <mark> element.
- */
 // label | colon | value columns, so InfoRow labels and colons line up.
 const FACT_GRID =
   "grid grid-cols-[max-content_max-content_minmax(0,1fr)] items-baseline gap-x-1.5 gap-y-2";
-
-function highlightMatch(text: string, query?: string): React.ReactNode {
-  if (!query || query.trim().length < 2) return text;
-  const escaped = query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const regex = new RegExp(`(${escaped})`, "gi");
-  const parts = text.split(regex);
-  if (parts.length === 1) return text;
-  return parts.map((part, i) =>
-    regex.test(part) ? (
-      <mark key={i} className="bg-yellow-200 text-gray-900 rounded-sm px-0.5">
-        {part}
-      </mark>
-    ) : (
-      <span key={i}>{part}</span>
-    ),
-  );
-}
 
 export function SchoolInfoWindow({
   school,
@@ -62,7 +41,6 @@ export function SchoolInfoWindow({
   mobile,
   isFullScreen,
   onToggleFullScreen,
-  searchQuery,
   layout = "vertical",
 }: SchoolInfoWindowProps) {
   const navigate = useNavigate();
@@ -79,10 +57,8 @@ export function SchoolInfoWindow({
     school?.data?.infoPentadbiran?.parlimen,
     school?.kodSekolah,
   );
-  const schoolName = highlightMatch(
-    `${school?.namaSekolah ?? "Sekolah"} ${school?.kodSekolah ?? ""}`.trim(),
-    searchQuery,
-  );
+  const schoolName =
+    `${school?.namaSekolah ?? "Sekolah"} ${school?.kodSekolah ?? ""}`.trim();
   const jenisLabel = school?.data?.infoSekolah?.jenisLabel || "Sekolah";
   const goToSchoolPage = () => {
     if (school?.kodSekolah) {
@@ -103,10 +79,7 @@ export function SchoolInfoWindow({
       />
       <InfoIconRow
         icon={<PinIcon />}
-        value={highlightMatch(
-          toTitleCase(formatSchoolAddress(school)) || "Tiada Maklumat",
-          searchQuery,
-        )}
+        value={toTitleCase(formatSchoolAddress(school)) || "Tiada Maklumat"}
       />
     </>
   );
@@ -124,12 +97,11 @@ export function SchoolInfoWindow({
       />
       <InfoRow
         label="Lokasi"
-        value={highlightMatch(
+        value={
           school?.data?.infoPentadbiran?.negeri
             ? toTitleCase(underScoreRemover(school.data.infoPentadbiran.negeri))
-            : "Tiada Maklumat",
-          searchQuery,
-        )}
+            : "Tiada Maklumat"
+        }
       />
       <InfoRow
         label="PPD"
@@ -144,11 +116,8 @@ export function SchoolInfoWindow({
     <>
       <InfoRow
         label="Daerah"
-        value={highlightMatch(
-          toTitleCase(
-            school?.data?.infoKomunikasi?.bandarSurat || "Tiada Maklumat",
-          ),
-          searchQuery,
+        value={toTitleCase(
+          school?.data?.infoKomunikasi?.bandarSurat || "Tiada Maklumat",
         )}
       />
       <InfoRow
