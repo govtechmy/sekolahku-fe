@@ -72,7 +72,7 @@ interface MapViewState {
   // Re-derives `distance` for every currently-loaded suggestion against
   // `origin` and re-sorts ascending (nulls last). No-op if origin is
   // incomplete. Called after every fetch and whenever the origin changes.
-  resortByOrigin: (origin: [number | null, number | null]) => void;
+  setDistancesFromOrigin: (origin: [number | null, number | null]) => void;
   setPointA: (point: [number, number] | null) => void;
   setPointB: (point: [number, number] | null) => void;
   setRoute: (
@@ -210,12 +210,12 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
     try {
       const initialLocationUser =
         useLocationSessionStore.getState().initialLocationUser;
+      // No origin: name results stay in the backend fuzzy-v2 relevance order
+      // (distance is still shown per card, see setDistancesFromOrigin).
       const results = await getSchoolSuggestion(
         params,
         pageNumber,
         hasActiveMapSearch ? undefined : initialLocationUser,
-        // Name results nearest-first from the chosen origin (Field A), else the user.
-        get().pointA ?? initialLocationUser,
       );
 
       // If a newer request was fired while we were waiting, discard this response
@@ -259,7 +259,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
       // Re-derives distance for EVERY currently-loaded item (not just the
       // page just fetched) so pagination and origin changes never leave
       // stale/undefined distances behind.
-      get().resortByOrigin([
+      get().setDistancesFromOrigin([
         get().pointA?.[0] ?? initialLocationUser[0],
         get().pointA?.[1] ?? initialLocationUser[1],
       ]);
@@ -338,7 +338,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
   setQuery: (q) => {
     set({ query: q });
   },
-  resortByOrigin: ([originLat, originLng]) => {
+  setDistancesFromOrigin: ([originLat, originLng]) => {
     if (originLat == null || originLng == null) return;
     set((state) => {
       const next = state.localSuggestions.map((s) => ({
@@ -350,9 +350,6 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
           s.koordinatXX,
         ),
       }));
-      // Nearest-first for every search: the backend already orders name
-      // matches by distance from the same origin.
-      next.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
       return { localSuggestions: next };
     });
   },
