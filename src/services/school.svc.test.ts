@@ -61,7 +61,7 @@ describe("school.svc request caching", () => {
       expect(get.mock.calls[0][0]).not.toContain("longitude=");
     });
 
-    it("sends the origin for a name search so results come nearest-first", async () => {
+    it("sends the origin for name and filter searches so the backend lists them nearest-first", async () => {
       get.mockResolvedValue({
         data: { data: { items: [], totalRecords: 0, pageSize: 12 } },
       });
@@ -84,7 +84,9 @@ describe("school.svc request caching", () => {
         "originLatitude=3.1&originLongitude=101.7&",
       );
       expect(get.mock.calls[0][0]).not.toContain("latitude=3.1&longitude");
-      expect(get.mock.calls[1][0]).not.toContain("originLatitude=");
+      expect(get.mock.calls[1][0]).toContain(
+        "originLatitude=3.1&originLongitude=101.7&",
+      );
     });
 
     it("keeps an empty search ordered from the user's location", async () => {
