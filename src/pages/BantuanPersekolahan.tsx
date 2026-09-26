@@ -128,9 +128,9 @@ export default function BantuanPersekolahan() {
             <h2 className="font-heading text-2xl font-bold text-txt-black-900 md:text-[28px]">
               {items.length} Program Bantuan Tersedia
             </h2>
-            <p className="max-w-[760px] font-body text-sm text-txt-black-500">
+            <p className="font-body text-sm text-txt-black-500">
               Senarai bantuan persekolahan dan pembelajaran daripada Kementerian
-              Pendidikan Malaysia. Klik mana-mana kad untuk ke maklumat rasmi.
+              Pendidikan. Klik mana-mana kad untuk ke maklumat rasmi.
             </p>
           </div>
 
