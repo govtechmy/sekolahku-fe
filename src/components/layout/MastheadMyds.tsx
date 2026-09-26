@@ -16,24 +16,24 @@ export default function MastheadMyds() {
   return (
     <Masthead>
       <MastheadHeader>
-        <MastheadTitle>Official Malaysian Government Website</MastheadTitle>
-        <MastheadTrigger>Here's how you know</MastheadTrigger>
+        <MastheadTitle>Laman Web Rasmi Kerajaan Malaysia</MastheadTitle>
+        <MastheadTrigger>Cara untuk mengenal pasti</MastheadTrigger>
       </MastheadHeader>
       <MastheadContent>
         <MastheadSection
           icon={<PutrajayaIcon />}
-          title="Official government websites end with .gov.my"
+          title="Laman web rasmi kerajaan berakhir dengan .gov.my"
         >
-          If the link does not end with <b>.gov.my</b>, exit the website
-          immediately even if it looks similar.
+          Jika pautan tidak berakhir dengan <b>.gov.my</b>, keluar dari laman
+          web tersebut dengan segera walaupun ia kelihatan serupa.
         </MastheadSection>
         <MastheadSection
           icon={<Lock2Icon className="inline-block size-3.5" />}
-          title="Secure websites use HTTPS"
+          title="Laman web yang selamat menggunakan HTTPS"
         >
-          Look for a lock (<LockFillIcon className="inline-block size-3.5" />)
-          or https:// as an added precaution. If not present, do not share any
-          sensitive information.
+          Cari ikon mangga (<LockFillIcon className="inline-block size-3.5" />)
+          atau https:// sebagai langkah berjaga-jaga tambahan. Jika tiada,
+          jangan kongsi sebarang maklumat sensitif.
         </MastheadSection>
       </MastheadContent>
     </Masthead>
