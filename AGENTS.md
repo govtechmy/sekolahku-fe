@@ -50,12 +50,12 @@ pen.dev's own canvas preview and Chrome composite `radial-gradient`/`linear-grad
 
 `getSchoolLogoUrl` builds `{VITE_DATA_BASE_URL}/{negeri}/{parlimen}/{kod}/assets/logo.png` on the data CDN, which the data pipeline populates. As of Sep 2026 ~1,012 of 10,258 schools have no `logo.png` there (CDN returns 403), concentrated in Sabah and Sarawak.
 
-To cover those without touching the pipeline, `public/logo-sekolah/{kod}.{ext}` holds 964 logos extracted once from EMIS RisalahMap's public Power BI report (column `LOGO` on `T_SekolahBeroperasi_PraIPG`, base64 images ~100px tall — lower-res than the CDN's). `src/data/schoolLogoFallback.json` maps kod → file extension. Every logo `<img onError>` calls `trySchoolLogoFallback(img, kod)` first and only shows its own default image when that returns false.
+To cover those without touching the pipeline, `public/logo-sekolah/{kod}.{ext}` holds 971 logos: 964 extracted once from EMIS RisalahMap's public Power BI report (column `LOGO` on `T_SekolahBeroperasi_PraIPG`, base64 images ~100px tall — lower-res than the CDN's), plus 7 from the schools' ms.wikipedia infobox (each checked by eye against the school name; large ones downscaled to 512px). `src/data/schoolLogoFallback.json` maps kod → file extension. Every logo `<img onError>` calls `trySchoolLogoFallback(img, kod)` first and only shows its own default image when that returns false.
 
 - The CDN always wins: once the pipeline uploads a real `logo.png`, the local file is simply never requested. Entries can be deleted as the pipeline catches up.
 - The manifest is required, not an optimisation: the SPA host answers any unknown `/logo-sekolah/*` path with `index.html` (200), so the image would break instead of falling through to the default.
 - `schoolHelpers.test.ts` asserts every manifest entry has a file in `public/logo-sekolah/`. Keep the two in sync by hand, like `bantuanImages.ts`.
-- 17 schools had only a Jata Negara placeholder in RisalahMap and 31 had nothing; those 48 still show the default image.
+- 17 schools had only a Jata Negara placeholder in RisalahMap and 31 had nothing; Wikipedia covered 7 of those 48, so 41 still show the default image. Wikipedia is not trustworthy on its own: the SK Kanibongan (XBA5203) article's logo is actually SMK Kanibongan's, so it was rejected.
 
 ## Gotcha: the pre-commit hook lints and builds the whole repo
 
