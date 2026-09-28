@@ -168,7 +168,7 @@ export default function BantuanPersekolahan() {
                 moe.gov.my. Klik mana-mana kad untuk maklumat lanjut.
               </p>
               <a
-                href="https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/penajaan-dan-bantuan-kewangan"
+                href="https://www.moe.gov.my/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-1 inline-flex items-center gap-1.5 font-body text-xs font-bold text-[#0062FF] hover:underline"
