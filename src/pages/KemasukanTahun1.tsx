@@ -8,7 +8,6 @@ import {
   DocumentIcon,
   CheckShieldIcon,
   ArrowOutgoingIcon,
-  BookIcon,
   QuestionCircleIcon,
 } from "@govtechmy/myds-react/icon";
 import HelmetMeta from "../seo/HelmetMeta";
@@ -154,30 +153,6 @@ export default function KemasukanTahun1() {
                 </ul>
               </section>
             ))}
-
-            <section className="flex gap-5 rounded-2xl border border-otl-divider bg-bg-white p-6">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-[#E7EAF1]">
-                <BookIcon className="size-5 text-txt-black-700" />
-              </div>
-              <div className="flex flex-col gap-2">
-                <h2 className="font-heading text-lg font-bold text-txt-black-900">
-                  Rujukan
-                </h2>
-                <p className="font-body text-sm text-txt-black-500">
-                  Kandungan halaman ini diadaptasi daripada portal rasmi
-                  malaysia.gov.my. Dikemas kini pada 5 September 2025.
-                </p>
-                <a
-                  href="https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-rendah/memohon-tahun-1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-1 inline-flex items-center gap-1.5 font-body text-sm font-semibold text-[#0062FF] hover:underline"
-                >
-                  <ArrowOutgoingIcon className="size-3.5" />
-                  Memohon Tahun 1 — malaysia.gov.my
-                </a>
-              </div>
-            </section>
           </div>
 
           {/* Sidebar */}
