@@ -27,7 +27,10 @@ import {
   subscribeSchoolMarkers,
 } from "../../services/school.svc";
 import type { SchoolPoint } from "../../services/school.svc";
-import { getSchoolLogoUrl } from "../../utils/schoolHelpers";
+import {
+  getSchoolLogoUrl,
+  trySchoolLogoFallback,
+} from "../../utils/schoolHelpers";
 import type { ViewStateChangeEvent, MapRef } from "react-map-gl/maplibre";
 import {
   CLUSTER_MAX_ZOOM,
@@ -736,6 +739,8 @@ export function MapContainerMapCN() {
               alt={hoveredMarker.name}
               className="h-10 w-10 flex-shrink-0 rounded object-contain"
               onError={(e) => {
+                if (trySchoolLogoFallback(e.currentTarget, hoveredMarker.kod))
+                  return;
                 e.currentTarget.src = "/utama/info-school-default.svg";
               }}
             />
