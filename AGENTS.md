@@ -46,13 +46,24 @@ pen.dev's own canvas preview and Chrome composite `radial-gradient`/`linear-grad
 - The `BantuanId.tsx` sidebar "Ringkasan Bantuan" card headline uses the program's `Kadar` section content when one exists, falling back to the program title when it doesn't (not every program has a flat-rate "Kadar" section — e.g. KWAPM).
 - Headings are not a fixed set across programs (Program 3K3C uses ANJAKAN/INISIATIF/SASARAN instead of KADAR/PEMILIHAN), so `resolveIcon` falls back to a generic icon rather than breaking on unrecognised ones.
 
+## School logos: CDN first, local fallback second
+
+`getSchoolLogoUrl` builds `{VITE_DATA_BASE_URL}/{negeri}/{parlimen}/{kod}/assets/logo.png` on the data CDN, which the data pipeline populates. As of Sep 2026 ~1,012 of 10,258 schools have no `logo.png` there (CDN returns 403), concentrated in Sabah and Sarawak.
+
+To cover those without touching the pipeline, `public/logo-sekolah/{kod}.{ext}` holds 964 logos extracted once from EMIS RisalahMap's public Power BI report (column `LOGO` on `T_SekolahBeroperasi_PraIPG`, base64 images ~100px tall — lower-res than the CDN's). `src/data/schoolLogoFallback.json` maps kod → file extension. Every logo `<img onError>` calls `trySchoolLogoFallback(img, kod)` first and only shows its own default image when that returns false.
+
+- The CDN always wins: once the pipeline uploads a real `logo.png`, the local file is simply never requested. Entries can be deleted as the pipeline catches up.
+- The manifest is required, not an optimisation: the SPA host answers any unknown `/logo-sekolah/*` path with `index.html` (200), so the image would break instead of falling through to the default.
+- `schoolHelpers.test.ts` asserts every manifest entry has a file in `public/logo-sekolah/`. Keep the two in sync by hand, like `bantuanImages.ts`.
+- 17 schools had only a Jata Negara placeholder in RisalahMap and 31 had nothing; those 48 still show the default image.
+
 ## Gotcha: the pre-commit hook lints and builds the whole repo
 
 `.husky/pre-commit` runs `prettier . --write`, `bun run lint:fix`, **and a full `bun run build`** — across the entire working tree, not just staged files. A lint error or type error anywhere (even in an untracked file you didn't touch) blocks every commit until it's fixed. Budget ~10s per commit and expect unrelated pre-existing errors to surface as blockers rather than warnings.
 
 ## Tests
 
-Vitest, colocated as `*.test.ts` next to the code under test (`src/services/bantuan.svc.test.ts`, `src/services/school.svc.test.ts`, `src/utils/*.test.ts`, `src/components/maps/schoolPinImage.test.ts`). 44 tests across 6 files as of Sep 2026. No component-render tests — coverage is service/util logic only.
+Vitest, colocated as `*.test.ts` next to the code under test (`src/services/bantuan.svc.test.ts`, `src/services/school.svc.test.ts`, `src/utils/*.test.ts` (incl. `schoolHelpers.test.ts`), `src/components/maps/schoolPinImage.test.ts`). 51 tests across 7 files as of Sep 2026. No component-render tests — coverage is service/util logic only.
 
 ## graphify
 

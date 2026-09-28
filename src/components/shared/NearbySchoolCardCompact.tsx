@@ -1,5 +1,6 @@
 import { PinIcon, ArrowForwardIcon } from "@govtechmy/myds-react/icon";
 import type { ItemSekolahModel } from "../../models/response";
+import { trySchoolLogoFallback } from "../../utils/schoolHelpers";
 
 interface NearbySchoolCardCompactProps {
   school: ItemSekolahModel;
@@ -17,6 +18,7 @@ export default function NearbySchoolCardCompact({
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
+    if (trySchoolLogoFallback(e.currentTarget, school.kodSekolah)) return;
     e.currentTarget.src = "/utama/nearby-school-default.svg";
   };
 
