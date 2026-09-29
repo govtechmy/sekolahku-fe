@@ -21,6 +21,8 @@ type FilterBarProps = {
   dataTotal: number;
   /** Set when the count is "schools near the user" rather than search results. */
   nearbyRadiusKm?: number;
+  /** What the nearby count is measured from. */
+  nearbyFromLabel?: string;
 };
 
 function FilterPill({
@@ -59,6 +61,7 @@ export function FilterBar({
   onClearFilters,
   dataTotal,
   nearbyRadiusKm,
+  nearbyFromLabel = "lokasi anda",
 }: FilterBarProps) {
   const hasActiveFilter =
     selectedNegeri !== "ALL" ||
@@ -151,7 +154,7 @@ export function FilterBar({
           </span>
           <span className="font-body text-sm text-txt-black-500">
             {nearbyRadiusKm
-              ? `sekolah dalam lingkungan ${nearbyRadiusKm} km dari lokasi anda`
+              ? `sekolah dalam lingkungan ${nearbyRadiusKm} km dari ${nearbyFromLabel}`
               : "sekolah ditemui"}
           </span>
         </div>
