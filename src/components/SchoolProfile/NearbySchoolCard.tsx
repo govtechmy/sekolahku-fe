@@ -1,5 +1,8 @@
 import type { ItemSekolahModel } from "../../models/response";
-import { formatSchoolAddress } from "../../utils/schoolHelpers";
+import {
+  formatSchoolAddress,
+  trySchoolLogoFallback,
+} from "../../utils/schoolHelpers";
 import underScoreRemover from "../../utils/underscoreRemover";
 
 interface NearbySchoolCardProps {
@@ -16,6 +19,7 @@ export const NearbySchoolCard = ({
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
+    if (trySchoolLogoFallback(e.currentTarget, school.kodSekolah)) return;
     e.currentTarget.src = "/utama/nearby-school-default.svg";
     e.currentTarget.className = "h-full w-full object-cover";
   };

@@ -45,6 +45,12 @@ export default function SchoolMaps() {
   const { setInitialLocationUser, initialLocationUser } =
     useLocationSessionStore();
   const mapQuery = useMapViewStore((s) => s.mapQuery);
+  const pointA = useMapViewStore((s) => s.pointA);
+  // A picked origin (e.g. a mall) differs from the device location.
+  const originIsPickedPlace =
+    pointA != null &&
+    (pointA[0] !== initialLocationUser[0] ||
+      pointA[1] !== initialLocationUser[1]);
   // Mirrors getSchoolSuggestion: with no query/filters the count is the
   // schools within FIRST_LOAD_RADIUS_METERS of the user.
   const isNearbyCount =
@@ -61,6 +67,14 @@ export default function SchoolMaps() {
   useEffect(() => {
     setQuery(urlQuery);
   }, [setQuery, urlQuery]);
+
+  // The store outlives this page; drop the previous visit's card, pin and route.
+  useEffect(() => {
+    const { setViewSchool, setPointB, clearRoute } = useMapViewStore.getState();
+    setViewSchool(null);
+    setPointB(null);
+    clearRoute();
+  }, []);
 
   // Keep peringkat (owned here, not by the remounted SearchBarMap) in sync when
   // only the URL query params change while this route stays mounted.
@@ -244,6 +258,7 @@ export default function SchoolMaps() {
         nearbyRadiusKm={
           isNearbyCount ? FIRST_LOAD_RADIUS_METERS / 1000 : undefined
         }
+        nearbyFromLabel={originIsPickedPlace ? "titik asal" : "lokasi anda"}
       />
 
       <div className="flex-1 w-full flex relative">

@@ -213,8 +213,10 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
       const results = await getSchoolSuggestion(
         params,
         pageNumber,
-        hasActiveMapSearch ? undefined : initialLocationUser,
-        // Search results nearest-first (exact-word name matches first) from the
+        // No search: the schools near the chosen origin (Field A, e.g. a mall),
+        // else near the user.
+        hasActiveMapSearch ? undefined : (get().pointA ?? initialLocationUser),
+        // Search results nearest-first from the
         // chosen origin (Field A), else the user; the backend owns the order.
         get().pointA ?? initialLocationUser,
       );
@@ -333,7 +335,10 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
         dataTotal: append ? state.dataTotal : 0,
       }));
     } finally {
-      set({ isLoadingLocalSuggestions: false });
+      // A superseded request must not hide the newer one's spinner.
+      if (get()._searchRequestId === requestId) {
+        set({ isLoadingLocalSuggestions: false });
+      }
     }
   },
   setQuery: (q) => {

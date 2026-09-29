@@ -7,7 +7,6 @@ import {
   DocumentIcon,
   MapIcon,
   InfoIcon,
-  BookIcon,
   GovtOfficeIcon,
   TrophyIcon,
   MoonIcon,
@@ -146,74 +145,6 @@ const SCHOOL_OPTIONS: SchoolOption[] = [
         href: "https://www.moe.gov.my/sekolah-sukan-malaysia",
       },
     ],
-  },
-];
-
-type RefLink = { label: string; href: string };
-
-const REF_COL_A: RefLink[] = [
-  {
-    label: "Sekolah Menengah",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah",
-  },
-  {
-    label: "Sekolah Menengah Kebangsaan di Malaysia",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/sekolah-menengah-kebangsaan-di-malaysia",
-  },
-  {
-    label: "Memilih Aliran Akademik",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/memilih-aliran-akademik",
-  },
-  {
-    label: "Memohon Sekolah Khusus Tingkatan 1",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/memohon-sekolah-khusus-tingkatan-1",
-  },
-  {
-    label: "Memohon Sekolah Khusus Tingkatan 4",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/memohon-sekolah-khusus-tingkatan-4",
-  },
-  {
-    label: "Sekolah Berasrama Penuh (SBP)",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/sekolah-berasrama-penuh-sbp",
-  },
-  {
-    label: "Sekolah Menengah Kebangsaan Agama (SMKA)",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/sekolah-menengah-kebangsaan-agama-smka",
-  },
-  {
-    label: "Maktab Rendah Sains MARA (MRSM)",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/maktab-rendah-sains-mara-mrsm",
-  },
-];
-
-const REF_COL_B: RefLink[] = [
-  {
-    label: "Kolej Vokasional (KV)",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/kolej-vokasional-kv",
-  },
-  {
-    label: "Sekolah Menengah Teknik (SMT)",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/sekolah-menengah-teknik-smt",
-  },
-  {
-    label: "Maktab Tentera Diraja (MTD)",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/maktab-tentera-diraja-mtd",
-  },
-  {
-    label: "Sekolah Seni Malaysia (SSeM)",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/sekolah-seni-malaysia-ssem",
-  },
-  {
-    label: "Sekolah Sukan Malaysia (SSM)",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/sekolah-sukan-malaysia-ssm",
-  },
-  {
-    label: "Sekolah Menengah Swasta",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/sekolah-menengah-swasta",
-  },
-  {
-    label: "Pilihan Selain Sekolah Menengah Kebangsaan",
-    href: "https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/pilihan-selain-sekolah-menengah-kebangsaan",
   },
 ];
 
@@ -473,38 +404,6 @@ export default function KemasukanTingkatan1() {
                 </a>
               </div>
             </div>
-
-            {/* Rujukan */}
-            <section className="flex flex-col gap-5 rounded-2xl border border-otl-divider bg-bg-white p-6">
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-[#E7EAF1]">
-                  <BookIcon className="size-5 text-txt-black-700" />
-                </div>
-                <div className="flex flex-col gap-0.5">
-                  <h2 className="font-heading text-lg font-bold text-txt-black-900">
-                    Rujukan
-                  </h2>
-                  <p className="font-body text-xs text-txt-black-500">
-                    Kandungan halaman ini diadaptasi daripada portal
-                    malaysia.gov.my
-                  </p>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {[...REF_COL_A, ...REF_COL_B].map((ref) => (
-                  <a
-                    key={ref.href}
-                    href={ref.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 font-body text-xs font-semibold text-[#0062FF] hover:underline"
-                  >
-                    <ArrowOutgoingIcon className="size-3" />
-                    {ref.label}
-                  </a>
-                ))}
-              </div>
-            </section>
           </div>
 
           {/* Sidebar */}

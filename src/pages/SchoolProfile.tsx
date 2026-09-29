@@ -23,7 +23,7 @@ import { formatSchoolAddress, getSchoolLogoUrl } from "../utils/schoolHelpers";
 import { SCHOOL_JENIS_BANTUAN } from "../constants/schoolTypes";
 import underScoreRemover from "../utils/underscoreRemover";
 import PageContainer from "../components/layout/PageContainer";
-import { removePPD } from "../utils/ppdRemover";
+import { formatPPD } from "../utils/ppdRemover";
 
 export default function SchoolProfile() {
   const { id } = useParams();
@@ -214,9 +214,8 @@ export default function SchoolProfile() {
                   <InfoGridItem
                     label="PPD"
                     value={
-                      removePPD(school.data.infoPentadbiran.ppd)
-                        ? `${removePPD(school.data.infoPentadbiran.ppd)}`
-                        : "Tiada Maklumat"
+                      formatPPD(school.data.infoPentadbiran.ppd) ||
+                      "Tiada Maklumat"
                     }
                   />
                 )}

@@ -12,11 +12,14 @@ interface SearchFallbackIndicatorProps {
   visible: boolean;
   /** Additional CSS classes for the container. */
   className?: string;
+  /** Text next to the spinner. */
+  label?: string;
 }
 
 export function SearchFallbackIndicator({
   visible,
   className = "",
+  label = "Mencari lagi...",
 }: SearchFallbackIndicatorProps) {
   if (!visible) return null;
 
@@ -27,7 +30,7 @@ export function SearchFallbackIndicator({
       aria-live="polite"
     >
       <span className="inline-block w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-      <span>Mencari lagi...</span>
+      <span>{label}</span>
     </div>
   );
 }

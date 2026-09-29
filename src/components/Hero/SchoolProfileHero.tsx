@@ -3,6 +3,7 @@ import BgSchoolProfile from "../../asset/BgSchoolProfile";
 import type { ItemSekolahModel } from "../../models/response";
 import { useState } from "react";
 import BgSchoolProfileNoLogo from "../../asset/BgSchoolProfileNoLogo";
+import { trySchoolLogoFallback } from "../../utils/schoolHelpers";
 
 interface SchoolProfileHeroProps {
   school: ItemSekolahModel;
@@ -16,7 +17,10 @@ export default function SchoolProfileHero({
   const [imageError, setImageError] = useState(false);
   const hasLogo = url && !imageError;
 
-  const handleImageError = () => {
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+  ) => {
+    if (trySchoolLogoFallback(e.currentTarget, school?.kodSekolah)) return;
     setImageError(true);
   };
 

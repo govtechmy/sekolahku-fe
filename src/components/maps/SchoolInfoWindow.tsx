@@ -14,8 +14,9 @@ import { useNavigate } from "react-router-dom";
 import {
   formatSchoolAddress,
   getSchoolLogoUrl,
+  trySchoolLogoFallback,
 } from "../../utils/schoolHelpers";
-import { removePPD } from "../../utils/ppdRemover";
+import { formatPPD } from "../../utils/ppdRemover";
 import { SCHOOL_JENIS_BANTUAN } from "../../constants/schoolTypes";
 import underScoreRemover from "../../utils/underscoreRemover";
 import SekolahAngkatMadaniImage from "../../icons/SekolahAngkatMadaniImage";
@@ -48,6 +49,7 @@ export function SchoolInfoWindow({
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
+    if (trySchoolLogoFallback(e.currentTarget, school?.kodSekolah)) return;
     e.currentTarget.src = "/utama/info-school-default.svg";
     e.currentTarget.className = "h-full w-full object-cover";
   };
@@ -105,9 +107,9 @@ export function SchoolInfoWindow({
       />
       <InfoRow
         label="PPD"
-        value={toTitleCase(
-          removePPD(school?.data?.infoPentadbiran?.ppd) || "Tiada Maklumat",
-        )}
+        value={
+          formatPPD(school?.data?.infoPentadbiran?.ppd) || "Tiada Maklumat"
+        }
       />
     </>
   );

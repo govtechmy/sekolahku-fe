@@ -1,10 +1,18 @@
-import { useState, useEffect, useRef, useCallback, type UIEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  type UIEvent,
+} from "react";
 import {
   ArrowBackIcon,
   ChevronRightIcon,
   InfoIcon,
   PinIcon,
 } from "@govtechmy/myds-react/icon";
+import { FIRST_LOAD_ZOOM } from "../../constants/mapDefaults";
 import { SearchFallbackIndicator } from "../shared/SearchFallbackIndicator";
 import type { SearchBarMapProps } from "../../types/maps";
 import { getSchoolS3Json } from "../../services/school.svc";
@@ -159,9 +167,13 @@ export function SearchBarMap({
   const inputRef = useRef<HTMLInputElement>(null);
   const inputARef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
-  const isSwappingRef = useRef(false);
+  // True while handleSelect writes the school name into the query, so that write does not trigger a search.
+  const isSelectingRef = useRef(false);
+  const selectingTimerRef = useRef<number | null>(null);
   // Name of the school behind pointB, so a new query can drop its pin.
   const selectedNameRef = useRef<string | null>(null);
+  // Only the latest handleSelect fetch may set the card.
+  const selectRequestIdRef = useRef(0);
 
   const prevPeringkatRef = useRef(selectedPeringkat);
 
@@ -269,9 +281,12 @@ export function SearchBarMap({
     setFieldAValue(value);
     if (value === "" || value === "Lokasi Semasa") {
       setFieldAIsCurrentLocation(true);
-      if (initialLocationUser[0] != null && initialLocationUser[1] != null) {
-        setPointA([initialLocationUser[0], initialLocationUser[1]]);
-      }
+      // Never keep a previously picked place as the origin once Field A is cleared.
+      setPointA(
+        initialLocationUser[0] != null && initialLocationUser[1] != null
+          ? [initialLocationUser[0], initialLocationUser[1]]
+          : null,
+      );
     } else {
       setFieldAIsCurrentLocation(false);
       // Origin is unknown until the user picks a POI suggestion.
@@ -285,6 +300,9 @@ export function SearchBarMap({
     setFieldAValue(poi.label);
     setFieldAIsCurrentLocation(false);
     setPointA([poi.lat, poi.lng]);
+    // Show the area around the picked place, where the nearby schools are listed.
+    setCenter([poi.lat, poi.lng]);
+    setZoom(FIRST_LOAD_ZOOM);
     setFieldASuggestions([]);
     setFieldALoading(false);
     setFieldAFocused(false);
@@ -296,60 +314,15 @@ export function SearchBarMap({
     fieldACommittedRef.current = true;
     setFieldAValue("Lokasi Semasa");
     setFieldAIsCurrentLocation(true);
-    if (initialLocationUser[0] != null && initialLocationUser[1] != null) {
-      setPointA([initialLocationUser[0], initialLocationUser[1]]);
-    }
+    setPointA(
+      initialLocationUser[0] != null && initialLocationUser[1] != null
+        ? [initialLocationUser[0], initialLocationUser[1]]
+        : null,
+    );
     setFieldASuggestions([]);
     setFieldALoading(false);
     setFieldAFocused(false);
     inputARef.current?.blur();
-  };
-
-  // Swap A and B values
-  const handleSwap = () => {
-    const currentA = fieldAValue;
-    const currentAIsLocation = fieldAIsCurrentLocation;
-    const currentB = query;
-    const pointACoords = useMapViewStore.getState().pointA;
-    const pointBCoords = useMapViewStore.getState().pointB;
-
-    // Move B text → A
-    if (currentB && currentB.trim().length > 0) {
-      setFieldAValue(currentB);
-      setFieldAIsCurrentLocation(false);
-    } else {
-      setFieldAValue("Lokasi Semasa");
-      setFieldAIsCurrentLocation(true);
-    }
-
-    // Move A text → B
-    if (currentAIsLocation) {
-      setQuery("");
-    } else if (
-      currentA &&
-      currentA.trim().length > 0 &&
-      currentA !== "Lokasi Semasa"
-    ) {
-      setQuery(currentA);
-    } else {
-      setQuery("");
-    }
-
-    // Swap coordinates
-    setPointA(pointBCoords);
-    setPointB(pointACoords);
-    // The swapped-in destination belongs to the Field B text set above.
-    selectedNameRef.current = pointACoords
-      ? currentAIsLocation || currentA === "Lokasi Semasa"
-        ? ""
-        : currentA.trim()
-      : null;
-
-    // Pan map to new destination (pointB = old pointA)
-    if (pointACoords) {
-      setCenter(pointACoords);
-      setZoom(15);
-    }
   };
 
   useEffect(() => {
@@ -464,7 +437,7 @@ export function SearchBarMap({
 
   // Send every school query and supported filter directly to the backend.
   useEffect(() => {
-    if (isSwappingRef.current) return;
+    if (isSelectingRef.current) return;
 
     // A different query drops the previously selected school's pin, card and route.
     if (
@@ -472,6 +445,7 @@ export function SearchBarMap({
       query.trim() !== selectedNameRef.current
     ) {
       selectedNameRef.current = null;
+      selectRequestIdRef.current++;
       setPointB(null);
       setViewSchool(null);
     }
@@ -486,6 +460,8 @@ export function SearchBarMap({
       setIsExpanded(true);
     }
 
+    // Show the spinner through the debounce too, not just once the request starts.
+    useMapViewStore.setState({ isLoadingLocalSuggestions: true });
     debounceTimerRef.current = window.setTimeout(() => {
       void runBackendSearch().then(() => {
         if (trimmedQuery.length < 2) return;
@@ -500,13 +476,76 @@ export function SearchBarMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runBackendSearch]);
 
-  // Re-query so the backend re-sorts (nearest-first) when the origin (Field A) changes. Kept apart from the
-  // effect above so it doesn't re-run its exact-match auto-select.
+  // Write a selected school's name into Field B without that write (or a search
+  // already waiting on the old text) replacing the results list.
+  const setQueryFromSelection = (name: string) => {
+    selectedNameRef.current = name;
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    if (selectingTimerRef.current) clearTimeout(selectingTimerRef.current);
+    isSelectingRef.current = true;
+    setQuery(name);
+    selectingTimerRef.current = window.setTimeout(() => {
+      isSelectingRef.current = false;
+    }, 500);
+  };
+
+  // A school opened from the map (pin click) never went through handleSelect, so
+  // mirror it into Field B the same way: name in the box, no new search fired.
+  useEffect(() => {
+    const name = viewSchool?.namaSekolah;
+    if (!name) return;
+    if (query.trim() === name) {
+      // Typed exactly: still remember it, so editing the box later closes the card.
+      selectedNameRef.current = name;
+      return;
+    }
+    setQueryFromSelection(name);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewSchool?.kodSekolah]);
+
+  // Keep the highlighted result in view when a school is opened from the map.
+  // "nearest" leaves the list alone if the row is already visible.
+  useEffect(() => {
+    if (!isExpanded || !viewSchool?.kodSekolah) return;
+    listRef.current
+      ?.querySelector('[aria-current="true"]')
+      ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [viewSchool?.kodSekolah, isExpanded]);
+
+  // The map's "my location" button resets the origin to the user's location;
+  // reflect that in Field A (text and current-location mode).
+  useEffect(() => {
+    if (
+      !fieldAIsCurrentLocation &&
+      originLat != null &&
+      originLat === initialLocationUser[0] &&
+      originLng === initialLocationUser[1]
+    ) {
+      fieldACommittedRef.current = true;
+      setFieldAValue("Lokasi Semasa");
+      setFieldAIsCurrentLocation(true);
+      setFieldASuggestions([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originLat, originLng]);
+
+  // Re-query when the origin (Field A) changes: the backend re-sorts a name/filter
+  // search nearest-first, and with no query or filter it lists the schools within
+  // the radius of the origin (the user's location, or a picked place such as a mall).
+  // This also covers the location resolving after the first search fired, which
+  // would otherwise count every school (~10k). Kept apart from the effect above
+  // so it doesn't re-run its exact-match auto-select.
   useEffect(() => {
     const hasFilter = [selectedNegeri, selectedJenis, selectedPeringkat].some(
       (value) => value !== "ALL",
     );
-    if (isSwappingRef.current || (query.trim().length < 2 && !hasFilter))
+    const isIdle = query.trim().length < 2 && !hasFilter;
+    // Idle with no origin: skip only while Field A is being typed (origin unknown
+    // until a place is picked); with "Lokasi Semasa" it re-lists around the user.
+    if (
+      isSelectingRef.current ||
+      (isIdle && originLat == null && !fieldAIsCurrentLocation)
+    )
       return;
     void runBackendSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -559,6 +598,49 @@ export function SearchBarMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topKods, originLat, originLng]);
 
+  // The backend orders by straight-line distance, which can disagree with the
+  // road distance shown on each card. Once every top-N row has a road distance,
+  // re-order those rows to match it; later pages keep the backend order.
+  const orderedSuggestions = useMemo(() => {
+    const top = localSuggestions.slice(0, ROAD_DISTANCE_TOP_N);
+    const road = (s: (typeof top)[number]) =>
+      s.kodSekolah ? roadDistances.get(s.kodSekolah)?.distance : undefined;
+    if (top.length === 0 || top.some((s) => road(s) == null)) {
+      return localSuggestions;
+    }
+    const sorted = [...top].sort((a, b) => road(a)! - road(b)!);
+    return [...sorted, ...localSuggestions.slice(ROAD_DISTANCE_TOP_N)];
+  }, [localSuggestions, roadDistances]);
+
+  // A school opened from a map pin can be outside the radius or beyond the pages
+  // loaded so far; pin it to the top of the list so the highlighted row exists.
+  const displayedSuggestions = useMemo(() => {
+    const kod = viewSchool?.kodSekolah;
+    if (
+      !viewSchool ||
+      !kod ||
+      orderedSuggestions.some((s) => s.kodSekolah === kod)
+    ) {
+      return orderedSuggestions;
+    }
+    const { infoLokasi, infoPentadbiran, infoKomunikasi, infoSekolah } =
+      viewSchool.data;
+    const selected: SearchBarMapProps = {
+      namaSekolah: viewSchool.namaSekolah ?? "Sekolah Tidak Diketahui",
+      kodSekolah: kod,
+      koordinatYY: infoLokasi.koordinatYY,
+      koordinatXX: infoLokasi.koordinatXX,
+      negeri: infoPentadbiran?.negeri ?? "",
+      parlimen: infoPentadbiran?.parlimen ?? "",
+      bandarSurat: infoKomunikasi?.bandarSurat,
+      jenisLabel: infoSekolah?.jenisLabel ?? "",
+      jumlahPelajar: infoSekolah?.jumlahPelajar ?? 0,
+      jumlahGuru: infoSekolah?.jumlahGuru ?? 0,
+      isSekolahAngkatMADANI: viewSchool.isSekolahAngkatMADANI ?? false,
+    };
+    return [selected, ...orderedSuggestions];
+  }, [viewSchool, orderedSuggestions]);
+
   // Cleanup the /table request/timer on unmount.
   useEffect(() => {
     return () => {
@@ -574,12 +656,14 @@ export function SearchBarMap({
         console.error("School code is null");
         return;
       }
+      const requestId = ++selectRequestIdRef.current;
       const detail = await getSchoolS3Json(
         undefined,
         school.negeri,
         school.parlimen,
         school.kodSekolah,
       );
+      if (requestId !== selectRequestIdRef.current) return;
       if (detail) {
         setViewSchool(detail);
         setCenter([school.koordinatYY, school.koordinatXX]);
@@ -587,14 +671,9 @@ export function SearchBarMap({
 
         // Set pointB when a school is selected
         setPointB([school.koordinatYY, school.koordinatXX]);
-        selectedNameRef.current = school.namaSekolah;
 
         // Populate Field B with school name
-        isSwappingRef.current = true;
-        setQuery(school.namaSekolah);
-        setTimeout(() => {
-          isSwappingRef.current = false;
-        }, 500);
+        setQueryFromSelection(school.namaSekolah);
 
         // Close the expanded search panel on mobile/tablet (md and smaller)
         if (window.innerWidth < 768) {
@@ -612,8 +691,17 @@ export function SearchBarMap({
   // Commit the current query: pinpoint the exact-name match if there is one,
   // otherwise fall back to the first (best-ranked) suggestion. Wired to Enter
   // and the search button so live typing itself never hijacks the map.
-  const commitTopResult = () => {
-    const current = localSuggestions;
+  const commitTopResult = async () => {
+    // On a slow network the list can still hold the previous query's results,
+    // so Enter would re-select the old school. Flush the pending search and
+    // pick from the fresh results instead.
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    const search = runBackendSearch();
+    const requestId = useMapViewStore.getState()._searchRequestId;
+    await search;
+    // Superseded by a newer search (the user kept typing): let that one win.
+    if (useMapViewStore.getState()._searchRequestId !== requestId) return;
+    const current = useMapViewStore.getState().localSuggestions;
     if (current.length === 0) return;
     const trimmed = query.trim().toLowerCase();
     const exact = current.find(
@@ -841,7 +929,7 @@ export function SearchBarMap({
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
-                        commitTopResult();
+                        void commitTopResult();
                       }
                     }}
                     className="flex-1 bg-transparent text-sm outline-none text-txt-primary"
@@ -863,39 +951,6 @@ export function SearchBarMap({
                   </svg>
                 </div>
               </div>
-
-              {/* Swap button */}
-              <div className="flex items-center justify-center">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleSwap();
-                  }}
-                  className="p-2 rounded-full hover:bg-gray-100 active:bg-gray-200 transition-colors text-txt-primary pointer-events-auto cursor-pointer"
-                  title="Tukar A dan B"
-                  aria-label="Tukar lokasi asal dan destinasi"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="pointer-events-none"
-                  >
-                    <path d="M7 3l-4 4 4 4" />
-                    <path d="M3 7h18" />
-                    <path d="M17 21l4-4-4-4" />
-                    <path d="M21 17H3" />
-                  </svg>
-                </button>
-              </div>
             </div>
           ) : (
             /* Collapsed view - single search bar */
@@ -909,12 +964,14 @@ export function SearchBarMap({
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
-                        commitTopResult();
+                        void commitTopResult();
                       }
                     }}
                     className=""
                   />
-                  <SearchBarSearchButton onClick={commitTopResult} />
+                  <SearchBarSearchButton
+                    onClick={() => void commitTopResult()}
+                  />
                 </SearchBarInputContainer>
               </SearchBar>
             </div>
@@ -943,12 +1000,19 @@ export function SearchBarMap({
               tabIndex={0}
               className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1 focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 "
             >
-              {localSuggestions.length > 0 ? (
-                localSuggestions.map((school, idx) => (
+              {displayedSuggestions.length > 0 ? (
+                displayedSuggestions.map((school, idx) => (
                   <li
                     key={school.kodSekolah || idx}
                     onClick={() => handleSelect(school)}
-                    className="px-4 py-4 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                    aria-current={viewSchool?.kodSekolah === school.kodSekolah}
+                    className={clx(
+                      "px-4 py-4 cursor-pointer border-b last:border-b-0",
+                      // Soft blue marks the school whose card is open.
+                      viewSchool?.kodSekolah === school.kodSekolah
+                        ? "bg-[#EEF4FF] hover:bg-[#E5EEFF]"
+                        : "hover:bg-gray-50",
+                    )}
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col">
@@ -1070,7 +1134,11 @@ export function SearchBarMap({
                 ))
               ) : isLoadingLocalSuggestions ? (
                 <li>
-                  <SearchFallbackIndicator visible={true} className="py-5" />
+                  <SearchFallbackIndicator
+                    visible={true}
+                    className="py-5"
+                    label="Mencari..."
+                  />
                 </li>
               ) : (
                 <li className="px-4 py-4 text-sm text-gray-500">
@@ -1094,12 +1162,15 @@ export function SearchBarMap({
               "hidden md:block pointer-events-auto bg-transparent rounded-xl overflow-y-auto",
               isExpanded
                 ? "flex-1 self-end mb-2 mr-3 max-h-[42vh]"
-                : "absolute top-[61px] left-3 right-3 md:right-6 max-h-[60vh]",
+                : "fixed bottom-3 left-3 right-20 max-h-[42vh]",
             )}
           >
             <SchoolInfoWindow
               school={viewSchool}
-              setSelected={() => setViewSchool(null)}
+              setSelected={() => {
+                setViewSchool(null);
+                setPointB(null);
+              }}
               mobile={false}
               layout="horizontal"
             />
@@ -1123,6 +1194,7 @@ export function SearchBarMap({
                 school={viewSchool}
                 setSelected={() => {
                   setViewSchool(null);
+                  setPointB(null);
                   setIsFullScreen(false);
                 }}
                 mobile={true}
