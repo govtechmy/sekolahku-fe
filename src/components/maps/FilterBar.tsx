@@ -155,7 +155,9 @@ export function FilterBar({
           <span className="font-body text-sm text-txt-black-500">
             {nearbyRadiusKm
               ? `sekolah dalam lingkungan ${nearbyRadiusKm} km dari ${nearbyFromLabel}`
-              : "sekolah ditemui"}
+              : selectedNegeri === "ALL"
+                ? "sekolah ditemui di seluruh Malaysia"
+                : "sekolah ditemui"}
           </span>
         </div>
         {hasActiveFilter && (
