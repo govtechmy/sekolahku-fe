@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useCallback, type UIEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  type UIEvent,
+} from "react";
 import {
   ArrowBackIcon,
   ChevronRightIcon,
@@ -162,6 +169,8 @@ export function SearchBarMap({
   const isSwappingRef = useRef(false);
   // Name of the school behind pointB, so a new query can drop its pin.
   const selectedNameRef = useRef<string | null>(null);
+  // Only the latest handleSelect fetch may set the card.
+  const selectRequestIdRef = useRef(0);
 
   const prevPeringkatRef = useRef(selectedPeringkat);
 
@@ -472,6 +481,7 @@ export function SearchBarMap({
       query.trim() !== selectedNameRef.current
     ) {
       selectedNameRef.current = null;
+      selectRequestIdRef.current++;
       setPointB(null);
       setViewSchool(null);
     }
@@ -486,6 +496,8 @@ export function SearchBarMap({
       setIsExpanded(true);
     }
 
+    // Show the spinner through the debounce too, not just once the request starts.
+    useMapViewStore.setState({ isLoadingLocalSuggestions: true });
     debounceTimerRef.current = window.setTimeout(() => {
       void runBackendSearch().then(() => {
         if (trimmedQuery.length < 2) return;
@@ -511,6 +523,19 @@ export function SearchBarMap({
     void runBackendSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pointA?.[0], pointA?.[1]]);
+
+  // The first search can fire before geolocation resolves and then counts every
+  // school (~10k). Re-run the idle "nearby" search once the user location lands.
+  useEffect(() => {
+    if (initialLocationUser[0] == null || initialLocationUser[1] == null)
+      return;
+    const hasFilter = [selectedNegeri, selectedJenis, selectedPeringkat].some(
+      (value) => value !== "ALL",
+    );
+    if (query.trim() || hasFilter) return;
+    void runBackendSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialLocationUser[0], initialLocationUser[1]]);
 
   // Road distances for the first N results (one OSRM /table call). Keyed off
   // the top-N kodSekolah so paging (append) doesn't re-trigger the request.
@@ -559,6 +584,20 @@ export function SearchBarMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topKods, originLat, originLng]);
 
+  // The backend orders by straight-line distance, which can disagree with the
+  // road distance shown on each card. Once every top-N row has a road distance,
+  // re-order those rows to match it; later pages keep the backend order.
+  const displayedSuggestions = useMemo(() => {
+    const top = localSuggestions.slice(0, ROAD_DISTANCE_TOP_N);
+    const road = (s: (typeof top)[number]) =>
+      s.kodSekolah ? roadDistances.get(s.kodSekolah)?.distance : undefined;
+    if (top.length === 0 || top.some((s) => road(s) == null)) {
+      return localSuggestions;
+    }
+    const sorted = [...top].sort((a, b) => road(a)! - road(b)!);
+    return [...sorted, ...localSuggestions.slice(ROAD_DISTANCE_TOP_N)];
+  }, [localSuggestions, roadDistances]);
+
   // Cleanup the /table request/timer on unmount.
   useEffect(() => {
     return () => {
@@ -574,12 +613,14 @@ export function SearchBarMap({
         console.error("School code is null");
         return;
       }
+      const requestId = ++selectRequestIdRef.current;
       const detail = await getSchoolS3Json(
         undefined,
         school.negeri,
         school.parlimen,
         school.kodSekolah,
       );
+      if (requestId !== selectRequestIdRef.current) return;
       if (detail) {
         setViewSchool(detail);
         setCenter([school.koordinatYY, school.koordinatXX]);
@@ -612,8 +653,17 @@ export function SearchBarMap({
   // Commit the current query: pinpoint the exact-name match if there is one,
   // otherwise fall back to the first (best-ranked) suggestion. Wired to Enter
   // and the search button so live typing itself never hijacks the map.
-  const commitTopResult = () => {
-    const current = localSuggestions;
+  const commitTopResult = async () => {
+    // On a slow network the list can still hold the previous query's results,
+    // so Enter would re-select the old school. Flush the pending search and
+    // pick from the fresh results instead.
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    const search = runBackendSearch();
+    const requestId = useMapViewStore.getState()._searchRequestId;
+    await search;
+    // Superseded by a newer search (the user kept typing): let that one win.
+    if (useMapViewStore.getState()._searchRequestId !== requestId) return;
+    const current = useMapViewStore.getState().localSuggestions;
     if (current.length === 0) return;
     const trimmed = query.trim().toLowerCase();
     const exact = current.find(
@@ -841,7 +891,7 @@ export function SearchBarMap({
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
-                        commitTopResult();
+                        void commitTopResult();
                       }
                     }}
                     className="flex-1 bg-transparent text-sm outline-none text-txt-primary"
@@ -909,12 +959,14 @@ export function SearchBarMap({
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
-                        commitTopResult();
+                        void commitTopResult();
                       }
                     }}
                     className=""
                   />
-                  <SearchBarSearchButton onClick={commitTopResult} />
+                  <SearchBarSearchButton
+                    onClick={() => void commitTopResult()}
+                  />
                 </SearchBarInputContainer>
               </SearchBar>
             </div>
@@ -943,8 +995,8 @@ export function SearchBarMap({
               tabIndex={0}
               className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1 focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 "
             >
-              {localSuggestions.length > 0 ? (
-                localSuggestions.map((school, idx) => (
+              {displayedSuggestions.length > 0 ? (
+                displayedSuggestions.map((school, idx) => (
                   <li
                     key={school.kodSekolah || idx}
                     onClick={() => handleSelect(school)}
@@ -1070,7 +1122,11 @@ export function SearchBarMap({
                 ))
               ) : isLoadingLocalSuggestions ? (
                 <li>
-                  <SearchFallbackIndicator visible={true} className="py-5" />
+                  <SearchFallbackIndicator
+                    visible={true}
+                    className="py-5"
+                    label="Mencari..."
+                  />
                 </li>
               ) : (
                 <li className="px-4 py-4 text-sm text-gray-500">
@@ -1094,7 +1150,7 @@ export function SearchBarMap({
               "hidden md:block pointer-events-auto bg-transparent rounded-xl overflow-y-auto",
               isExpanded
                 ? "flex-1 self-end mb-2 mr-3 max-h-[42vh]"
-                : "absolute top-[61px] left-3 right-3 md:right-6 max-h-[60vh]",
+                : "fixed bottom-3 left-3 right-20 max-h-[42vh]",
             )}
           >
             <SchoolInfoWindow

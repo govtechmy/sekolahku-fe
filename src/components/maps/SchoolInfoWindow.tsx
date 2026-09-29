@@ -16,7 +16,7 @@ import {
   getSchoolLogoUrl,
   trySchoolLogoFallback,
 } from "../../utils/schoolHelpers";
-import { removePPD } from "../../utils/ppdRemover";
+import { formatPPD } from "../../utils/ppdRemover";
 import { SCHOOL_JENIS_BANTUAN } from "../../constants/schoolTypes";
 import underScoreRemover from "../../utils/underscoreRemover";
 import SekolahAngkatMadaniImage from "../../icons/SekolahAngkatMadaniImage";
@@ -107,9 +107,9 @@ export function SchoolInfoWindow({
       />
       <InfoRow
         label="PPD"
-        value={toTitleCase(
-          removePPD(school?.data?.infoPentadbiran?.ppd) || "Tiada Maklumat",
-        )}
+        value={
+          formatPPD(school?.data?.infoPentadbiran?.ppd) || "Tiada Maklumat"
+        }
       />
     </>
   );
