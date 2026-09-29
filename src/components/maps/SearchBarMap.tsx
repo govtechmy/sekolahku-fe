@@ -613,7 +613,8 @@ export function SearchBarMap({
   }, [localSuggestions, roadDistances]);
 
   // A school opened from a map pin can be outside the radius or beyond the pages
-  // loaded so far; pin it to the top of the list so the highlighted row exists.
+  // loaded so far; insert it by distance so the highlighted row exists and the
+  // list stays in order.
   const displayedSuggestions = useMemo(() => {
     const kod = viewSchool?.kodSekolah;
     if (
@@ -638,8 +639,34 @@ export function SearchBarMap({
       jumlahGuru: infoSekolah?.jumlahGuru ?? 0,
       isSekolahAngkatMADANI: viewSchool.isSekolahAngkatMADANI ?? false,
     };
-    return [selected, ...orderedSuggestions];
-  }, [viewSchool, orderedSuggestions]);
+    const fromLat = originLat ?? initialLocationUser[0];
+    const fromLng = originLng ?? initialLocationUser[1];
+    if (fromLat == null || fromLng == null) {
+      return [selected, ...orderedSuggestions];
+    }
+    selected.distance = calculateDistance(
+      fromLat,
+      fromLng,
+      selected.koordinatYY,
+      selected.koordinatXX,
+    );
+    const at = orderedSuggestions.findIndex(
+      (s) => s.distance != null && s.distance > selected.distance!,
+    );
+    return at === -1
+      ? [...orderedSuggestions, selected]
+      : [
+          ...orderedSuggestions.slice(0, at),
+          selected,
+          ...orderedSuggestions.slice(at),
+        ];
+  }, [
+    viewSchool,
+    orderedSuggestions,
+    originLat,
+    originLng,
+    initialLocationUser,
+  ]);
 
   // Cleanup the /table request/timer on unmount.
   useEffect(() => {
