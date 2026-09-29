@@ -333,7 +333,10 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
         dataTotal: append ? state.dataTotal : 0,
       }));
     } finally {
-      set({ isLoadingLocalSuggestions: false });
+      // A superseded request must not hide the newer one's spinner.
+      if (get()._searchRequestId === requestId) {
+        set({ isLoadingLocalSuggestions: false });
+      }
     }
   },
   setQuery: (q) => {

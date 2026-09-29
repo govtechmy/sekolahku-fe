@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMapViewStore } from "../../store/mapView";
 import { SearchIcon, ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
 import { useRef } from "react";
+import { SearchFallbackIndicator } from "../shared/SearchFallbackIndicator";
 import { buildSchoolSearchPath } from "../../utils/schoolSearchUrl";
 
 export default function HomeHero() {
@@ -26,6 +27,7 @@ export default function HomeHero() {
     }
     const trimmedValue = value.trim();
     if (trimmedValue.length >= 3) {
+      useMapViewStore.setState({ isLoadingLocalSuggestions: true });
       debounceTimerRef.current = window.setTimeout(() => {
         handleSearch({ namaSekolah: value, negeri: "ALL", jenis: "ALL" });
       }, 500);
@@ -101,6 +103,11 @@ export default function HomeHero() {
               Cari
               <ArrowOutgoingIcon className="size-3.5" />
             </button>
+            {isLoadingLocalSuggestions && query.trim().length >= 3 && (
+              <div className="absolute left-0 top-full z-30 mt-1 w-full rounded-md border border-otl-gray-200 bg-bg-dialog shadow-context-menu">
+                <SearchFallbackIndicator visible={true} label="Mencari..." />
+              </div>
+            )}
             {isLoadingLocalSuggestions === false &&
               query.trim().length >= 3 &&
               localSuggestions.length > 0 && (

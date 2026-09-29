@@ -62,6 +62,14 @@ export default function SchoolMaps() {
     setQuery(urlQuery);
   }, [setQuery, urlQuery]);
 
+  // The store outlives this page; drop the previous visit's card, pin and route.
+  useEffect(() => {
+    const { setViewSchool, setPointB, clearRoute } = useMapViewStore.getState();
+    setViewSchool(null);
+    setPointB(null);
+    clearRoute();
+  }, []);
+
   // Keep peringkat (owned here, not by the remounted SearchBarMap) in sync when
   // only the URL query params change while this route stays mounted.
   useEffect(() => {
