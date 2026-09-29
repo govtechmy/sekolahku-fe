@@ -169,6 +169,7 @@ export function SearchBarMap({
   const listRef = useRef<HTMLDivElement | null>(null);
   // True while handleSelect writes the school name into the query, so that write does not trigger a search.
   const isSelectingRef = useRef(false);
+  const selectingTimerRef = useRef<number | null>(null);
   // Name of the school behind pointB, so a new query can drop its pin.
   const selectedNameRef = useRef<string | null>(null);
   // Only the latest handleSelect fetch may set the card.
@@ -475,6 +476,59 @@ export function SearchBarMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runBackendSearch]);
 
+  // Write a selected school's name into Field B without that write (or a search
+  // already waiting on the old text) replacing the results list.
+  const setQueryFromSelection = (name: string) => {
+    selectedNameRef.current = name;
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    if (selectingTimerRef.current) clearTimeout(selectingTimerRef.current);
+    isSelectingRef.current = true;
+    setQuery(name);
+    selectingTimerRef.current = window.setTimeout(() => {
+      isSelectingRef.current = false;
+    }, 500);
+  };
+
+  // A school opened from the map (pin click) never went through handleSelect, so
+  // mirror it into Field B the same way: name in the box, no new search fired.
+  useEffect(() => {
+    const name = viewSchool?.namaSekolah;
+    if (!name) return;
+    if (query.trim() === name) {
+      // Typed exactly: still remember it, so editing the box later closes the card.
+      selectedNameRef.current = name;
+      return;
+    }
+    setQueryFromSelection(name);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewSchool?.kodSekolah]);
+
+  // Keep the highlighted result in view when a school is opened from the map.
+  // "nearest" leaves the list alone if the row is already visible.
+  useEffect(() => {
+    if (!isExpanded || !viewSchool?.kodSekolah) return;
+    listRef.current
+      ?.querySelector('[aria-current="true"]')
+      ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [viewSchool?.kodSekolah, isExpanded]);
+
+  // The map's "my location" button resets the origin to the user's location;
+  // reflect that in Field A (text and current-location mode).
+  useEffect(() => {
+    if (
+      !fieldAIsCurrentLocation &&
+      originLat != null &&
+      originLat === initialLocationUser[0] &&
+      originLng === initialLocationUser[1]
+    ) {
+      fieldACommittedRef.current = true;
+      setFieldAValue("Lokasi Semasa");
+      setFieldAIsCurrentLocation(true);
+      setFieldASuggestions([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originLat, originLng]);
+
   // Re-query when the origin (Field A) changes: the backend re-sorts a name/filter
   // search nearest-first, and with no query or filter it lists the schools within
   // the radius of the origin (the user's location, or a picked place such as a mall).
@@ -547,7 +601,7 @@ export function SearchBarMap({
   // The backend orders by straight-line distance, which can disagree with the
   // road distance shown on each card. Once every top-N row has a road distance,
   // re-order those rows to match it; later pages keep the backend order.
-  const displayedSuggestions = useMemo(() => {
+  const orderedSuggestions = useMemo(() => {
     const top = localSuggestions.slice(0, ROAD_DISTANCE_TOP_N);
     const road = (s: (typeof top)[number]) =>
       s.kodSekolah ? roadDistances.get(s.kodSekolah)?.distance : undefined;
@@ -557,6 +611,35 @@ export function SearchBarMap({
     const sorted = [...top].sort((a, b) => road(a)! - road(b)!);
     return [...sorted, ...localSuggestions.slice(ROAD_DISTANCE_TOP_N)];
   }, [localSuggestions, roadDistances]);
+
+  // A school opened from a map pin can be outside the radius or beyond the pages
+  // loaded so far; pin it to the top of the list so the highlighted row exists.
+  const displayedSuggestions = useMemo(() => {
+    const kod = viewSchool?.kodSekolah;
+    if (
+      !viewSchool ||
+      !kod ||
+      orderedSuggestions.some((s) => s.kodSekolah === kod)
+    ) {
+      return orderedSuggestions;
+    }
+    const { infoLokasi, infoPentadbiran, infoKomunikasi, infoSekolah } =
+      viewSchool.data;
+    const selected: SearchBarMapProps = {
+      namaSekolah: viewSchool.namaSekolah ?? "Sekolah Tidak Diketahui",
+      kodSekolah: kod,
+      koordinatYY: infoLokasi.koordinatYY,
+      koordinatXX: infoLokasi.koordinatXX,
+      negeri: infoPentadbiran?.negeri ?? "",
+      parlimen: infoPentadbiran?.parlimen ?? "",
+      bandarSurat: infoKomunikasi?.bandarSurat,
+      jenisLabel: infoSekolah?.jenisLabel ?? "",
+      jumlahPelajar: infoSekolah?.jumlahPelajar ?? 0,
+      jumlahGuru: infoSekolah?.jumlahGuru ?? 0,
+      isSekolahAngkatMADANI: viewSchool.isSekolahAngkatMADANI ?? false,
+    };
+    return [selected, ...orderedSuggestions];
+  }, [viewSchool, orderedSuggestions]);
 
   // Cleanup the /table request/timer on unmount.
   useEffect(() => {
@@ -588,14 +671,9 @@ export function SearchBarMap({
 
         // Set pointB when a school is selected
         setPointB([school.koordinatYY, school.koordinatXX]);
-        selectedNameRef.current = school.namaSekolah;
 
         // Populate Field B with school name
-        isSelectingRef.current = true;
-        setQuery(school.namaSekolah);
-        setTimeout(() => {
-          isSelectingRef.current = false;
-        }, 500);
+        setQueryFromSelection(school.namaSekolah);
 
         // Close the expanded search panel on mobile/tablet (md and smaller)
         if (window.innerWidth < 768) {
@@ -927,7 +1005,14 @@ export function SearchBarMap({
                   <li
                     key={school.kodSekolah || idx}
                     onClick={() => handleSelect(school)}
-                    className="px-4 py-4 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                    aria-current={viewSchool?.kodSekolah === school.kodSekolah}
+                    className={clx(
+                      "px-4 py-4 cursor-pointer border-b last:border-b-0",
+                      // Soft blue marks the school whose card is open.
+                      viewSchool?.kodSekolah === school.kodSekolah
+                        ? "bg-[#EEF4FF] hover:bg-[#E5EEFF]"
+                        : "hover:bg-gray-50",
+                    )}
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col">

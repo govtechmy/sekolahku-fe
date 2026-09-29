@@ -125,6 +125,7 @@ export function MapContainerMapCN() {
     zoom,
     setViewSchool,
     setPointB,
+    setPointA,
     statePolygons,
     userMarkers,
     pointA,
@@ -609,7 +610,9 @@ export function MapContainerMapCN() {
     }
     setCenter([lat, lng]);
     setZoom(ZOOM_LEVELS.USER);
-  }, [setCenter, setZoom, setLocationPickerOpen]);
+    // Also make it the route/nearby origin, replacing a picked place in Field A.
+    setPointA([lat, lng]);
+  }, [setCenter, setZoom, setLocationPickerOpen, setPointA]);
 
   return (
     <Map
