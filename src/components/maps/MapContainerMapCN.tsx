@@ -124,6 +124,7 @@ export function MapContainerMapCN() {
     setZoom,
     zoom,
     setViewSchool,
+    setPointB,
     statePolygons,
     userMarkers,
     pointA,
@@ -364,19 +365,26 @@ export function MapContainerMapCN() {
       };
     }, [pointA, pointB, routeCoordinates]);
 
-  // User radius circle GeoJSON (Tier 1: 3km)
-  const userCircleGeoJSON = useMemo(() => {
-    const [lat, lng] = initialLocationUser;
-    if (lat == null || lng == null) return null;
-    return createCirclePolygon([lng, lat], 3000);
-  }, [initialLocationUser]);
+  // The radius rings centre on the chosen origin (Field A: a picked place such
+  // as a mall, or the user's location), which is what the nearby list is
+  // measured from.
+  const [ringLat, ringLng] = pointA ?? initialLocationUser;
+  const originIsPickedPlace =
+    pointA != null &&
+    (pointA[0] !== initialLocationUser[0] ||
+      pointA[1] !== initialLocationUser[1]);
 
-  // User radius circle GeoJSON (Tier 2: 20km)
+  // Radius circle GeoJSON (Tier 1: 3km)
+  const userCircleGeoJSON = useMemo(() => {
+    if (ringLat == null || ringLng == null) return null;
+    return createCirclePolygon([ringLng, ringLat], 3000);
+  }, [ringLat, ringLng]);
+
+  // Radius circle GeoJSON (Tier 2: 20km)
   const userCircleOuterGeoJSON = useMemo(() => {
-    const [lat, lng] = initialLocationUser;
-    if (lat == null || lng == null) return null;
-    return createCirclePolygon([lng, lat], 20000);
-  }, [initialLocationUser]);
+    if (ringLat == null || ringLng == null) return null;
+    return createCirclePolygon([ringLng, ringLat], 20000);
+  }, [ringLat, ringLng]);
 
   // Route layer styles
   const routeLineLayer: LineLayerSpecification = useMemo(
@@ -491,13 +499,15 @@ export function MapContainerMapCN() {
         .then((detail) => {
           if (requestId === hoverRequestIdRef.current && detail) {
             setViewSchool(detail);
+            // Same as picking the school from the list: pin it and draw the route.
+            setPointB([lat, lng]);
           }
         })
         .catch((error) =>
           console.error("[MapCN] Failed to load school detail:", error),
         );
     },
-    [setCenter, setZoom, setViewSchool],
+    [setCenter, setZoom, setViewSchool, setPointB],
   );
 
   // Hover over an individual school pin → show tooltip above it.
@@ -631,14 +641,14 @@ export function MapContainerMapCN() {
           />
         ))}
 
-      {/* User Markers */}
+      {/* User Markers — the origin dot follows a picked place (e.g. a mall) */}
       {Array.from(userMarkers.entries()).map(([id, coords]) => (
         <SchoolMapMarkerMapCN
           key={`user-${id}`}
           id={`user-${id}`}
           markerType={coords.markerType}
-          koordinatXX={coords.koordinatXX}
-          koordinatYY={coords.koordinatYY}
+          koordinatXX={originIsPickedPlace ? pointA[0] : coords.koordinatXX}
+          koordinatYY={originIsPickedPlace ? pointA[1] : coords.koordinatYY}
           total={coords.total}
           onClick={handleUserMarkerClick}
         />
@@ -669,8 +679,8 @@ export function MapContainerMapCN() {
         </Source>
       )}
 
-      {/* Origin (A) dot — shown while a route/destination is active */}
-      {pointA && pointB && (
+      {/* Origin (A) dot — shown while a route/destination is active (a picked place is already marked above) */}
+      {pointA && pointB && !originIsPickedPlace && (
         <Marker
           longitude={toMapLibre(pointA)[0]}
           latitude={toMapLibre(pointA)[1]}
