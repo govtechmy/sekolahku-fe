@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useCallback, type UIEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  type UIEvent,
+} from "react";
 import {
   ArrowBackIcon,
   ChevronRightIcon,
@@ -577,6 +584,20 @@ export function SearchBarMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topKods, originLat, originLng]);
 
+  // The backend orders by straight-line distance, which can disagree with the
+  // road distance shown on each card. Once every top-N row has a road distance,
+  // re-order those rows to match it; later pages keep the backend order.
+  const displayedSuggestions = useMemo(() => {
+    const top = localSuggestions.slice(0, ROAD_DISTANCE_TOP_N);
+    const road = (s: (typeof top)[number]) =>
+      s.kodSekolah ? roadDistances.get(s.kodSekolah)?.distance : undefined;
+    if (top.length === 0 || top.some((s) => road(s) == null)) {
+      return localSuggestions;
+    }
+    const sorted = [...top].sort((a, b) => road(a)! - road(b)!);
+    return [...sorted, ...localSuggestions.slice(ROAD_DISTANCE_TOP_N)];
+  }, [localSuggestions, roadDistances]);
+
   // Cleanup the /table request/timer on unmount.
   useEffect(() => {
     return () => {
@@ -974,8 +995,8 @@ export function SearchBarMap({
               tabIndex={0}
               className="w-full h-full overflow-y-auto overflow-x-auto border-t border-otl-divider flex-1 focus:outline-2 focus:outline-otl-primary-200 focus:outline-offset-2 "
             >
-              {localSuggestions.length > 0 ? (
-                localSuggestions.map((school, idx) => (
+              {displayedSuggestions.length > 0 ? (
+                displayedSuggestions.map((school, idx) => (
                   <li
                     key={school.kodSekolah || idx}
                     onClick={() => handleSelect(school)}

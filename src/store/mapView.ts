@@ -214,7 +214,7 @@ export const useMapViewStore = create<MapViewState>((set, get) => ({
         params,
         pageNumber,
         hasActiveMapSearch ? undefined : initialLocationUser,
-        // Search results nearest-first (exact-word name matches first) from the
+        // Search results nearest-first from the
         // chosen origin (Field A), else the user; the backend owns the order.
         get().pointA ?? initialLocationUser,
       );
