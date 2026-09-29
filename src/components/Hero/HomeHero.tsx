@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useMapViewStore } from "../../store/mapView";
 import { SearchIcon, ArrowOutgoingIcon } from "@govtechmy/myds-react/icon";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { SearchFallbackIndicator } from "../shared/SearchFallbackIndicator";
 import { buildSchoolSearchPath } from "../../utils/schoolSearchUrl";
 
@@ -19,6 +19,12 @@ export default function HomeHero() {
     (state) => state.isLoadingLocalSuggestions,
   );
   const debounceTimerRef = useRef<number | null>(null);
+
+  // The store outlives this page; drop the previous search when returning home.
+  useEffect(() => {
+    useMapViewStore.getState().setQuery("");
+    useMapViewStore.getState().setLocalSuggestions([]);
+  }, []);
 
   const handleValueChange = (value: string) => {
     setQuery(value);
