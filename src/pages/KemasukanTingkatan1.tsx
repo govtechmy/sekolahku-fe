@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import {
-  GlobeIcon,
   ArrowOutgoingIcon,
   CheckCircleIcon,
   DocumentIcon,
@@ -189,10 +188,6 @@ export default function KemasukanTingkatan1() {
             Permohonan berasingan hanya diperlukan untuk sekolah khusus seperti
             SBP, SMKA dan MRSM.
           </p>
-          <div className="flex items-center gap-2 pt-2 text-[#0A1930]">
-            <GlobeIcon className="size-3.5" />
-            <span className="font-body text-sm">Sumber: malaysia.gov.my</span>
-          </div>
         </div>
       </section>
 
