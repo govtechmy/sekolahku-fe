@@ -28,8 +28,8 @@ const SECTIONS: ChecklistSection[] = [
     accent: "#0062FF",
     title: "Syarat Kelayakan",
     items: [
-      "Kanak-kanak mestilah warganegara Malaysia",
-      "Tarikh Lahir: Pastikan anak anda lahir pada tahun kelayakan sesi persekolahan yang ingin didaftarkan",
+      "Warganegara Malaysia",
+      "Tarikh Lahir: Anak lahir pada tahun kelayakan sesi persekolahan yang ingin didaftarkan",
       "Tarikh buka dan tutup pendaftaran: Anda perlu mengambil maklum mengenai tarikh buka dan tutup pendaftaran di portal KPM",
     ],
   },
@@ -43,7 +43,9 @@ const SECTIONS: ChecklistSection[] = [
       "Kad pengenalan ibu bapa atau penjaga",
       "Bukti alamat tempat tinggal seperti bil utiliti terkini",
       "Dokumen sekiranya berkaitan seperti surat perakuan penjagaan",
-      "Dokumen sokongan perlu dimuat naik semasa proses permohonan dalam talian",
+      "Sijil Nikah / Sijil Daftar Perkahwinan / Sijil Cerai (jika berkenaan).",
+      "Buku Rekod Kesihatan dan Imunisasi Kanak-kanak.",
+      "Dokumen sokongan perlu dimuat naik semasa proses permohonan dalam talian. Ibu bapa juga perlu mencetak slip permohonan dan membawa dokumen fizikal (asal dan salinan) ke sekolah yang dipohon untuk tujuan pengesahan dalam tempoh yang ditetapkan.",
     ],
   },
   {
