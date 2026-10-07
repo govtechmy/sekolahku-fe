@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 import {
   ReloadIcon,
-  GlobeIcon,
   CheckCircleIcon,
   UserIcon,
   DocumentIcon,
@@ -97,10 +96,6 @@ export default function KemasukanTahun1() {
             <div className="flex items-center gap-2 text-[#0A1930]">
               <ReloadIcon className="size-3.5" />
               <span className="font-body text-sm">Dikemas kini 5 Sep 2025</span>
-            </div>
-            <div className="flex items-center gap-2 text-[#0A1930]">
-              <GlobeIcon className="size-3.5" />
-              <span className="font-body text-sm">Sumber: malaysia.gov.my</span>
             </div>
           </div>
         </div>
