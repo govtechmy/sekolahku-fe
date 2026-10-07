@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import {
   GlobeIcon,
-  LinkIcon,
   ArrowOutgoingIcon,
   CheckCircleIcon,
   DocumentIcon,
@@ -26,7 +25,7 @@ type Laluan = {
   badge: string;
   badgeBg: string;
   badgeColor: string;
-  desc: string;
+  desc: string | string[];
 };
 
 const LALUAN: Laluan[] = [
@@ -38,7 +37,13 @@ const LALUAN: Laluan[] = [
     badge: "Tiada permohonan",
     badgeBg: "#E7F8EF",
     badgeColor: "#0FA968",
-    desc: "Penempatan automatik mengikut alamat semasa murid. Didaftarkan oleh guru Tahun 6 melalui eDaftar Sekolah Menengah.",
+    desc: [
+      "Terbuka kepada semua murid.",
+      "Menggunakan Bahasa Melayu sebagai bahasa pengantar utama.",
+      "Menawarkan pelbagai aliran kurikulum kebangsaan termasuk akademik dan teknikal.",
+      "Kemasukan dan penempatan murid ke sekolah menengah akan diuruskan oleh guru kelas sekolah rendah semasa murid berada di Tahun 6 menerusi aplikasi eDaftar Sekolah Menengah (Modul Pengurusan Murid).",
+      "Semua murid warganegara Malaysia akan ditawarkan penempatan ke sekolah menengah berdasarkan zon atau alamat kediaman semasa bagi memastikan tiada keciciran dalam mendapat akses pendidikan.",
+    ],
   },
   {
     Icon: TrophyIcon,
@@ -148,20 +153,6 @@ const SCHOOL_OPTIONS: SchoolOption[] = [
   },
 ];
 
-function SumberLink({ label, href }: { label: string; href: string }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex items-center gap-1.5 border-t border-[#F0F1F4] pt-3 font-body text-[10px] text-txt-black-500 hover:underline"
-    >
-      <LinkIcon className="size-[11px]" />
-      {label}
-    </a>
-  );
-}
-
 export default function KemasukanTingkatan1() {
   const { lang } = useParams<{ lang: string }>();
   const domain = import.meta.env.VITE_DOMAIN_NAME;
@@ -216,14 +207,11 @@ export default function KemasukanTingkatan1() {
                 sekolah menengah berdasarkan alamat semasa murid.
               </p>
               <p className="font-body text-base leading-relaxed text-txt-black-700">
-                Kemasukan dan penempatan murid ke sekolah menengah kebangsaan
-                akan didaftarkan oleh guru sekolah rendah kebangsaan semasa
-                Tahun 6 menerusi aplikasi eDaftar Sekolah Menengah.
+                Kemasukan dan penempatan murid ke sekolah menengah akan
+                diuruskan oleh guru kelas sekolah rendah semasa murid berada di
+                Tahun 6 menerusi aplikasi eDaftar Sekolah Menengah (Modul
+                Pengurusan Murid).
               </p>
-              <SumberLink
-                label="Sumber: Sekolah Menengah Kebangsaan di Malaysia — malaysia.gov.my"
-                href="https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/sekolah-menengah-kebangsaan-di-malaysia"
-              />
             </div>
 
             {/* Dua Laluan */}
@@ -258,9 +246,25 @@ export default function KemasukanTingkatan1() {
                       {l.badge}
                     </span>
                   </div>
-                  <p className="font-body text-[13px] leading-relaxed text-[#404A5A]">
-                    {l.desc}
-                  </p>
+                  {Array.isArray(l.desc) ? (
+                    <ul className="flex flex-col gap-2">
+                      {l.desc.map((item) => (
+                        <li key={item} className="flex items-start gap-2">
+                          <CheckCircleIcon
+                            className="mt-0.5 size-4 shrink-0"
+                            style={{ color: l.iconColor }}
+                          />
+                          <span className="font-body text-[13px] leading-relaxed text-[#404A5A]">
+                            {item}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="font-body text-[13px] leading-relaxed text-[#404A5A]">
+                      {l.desc}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
@@ -292,10 +296,6 @@ export default function KemasukanTingkatan1() {
                   </li>
                 ))}
               </ul>
-              <SumberLink
-                label="Sumber: Memohon Sekolah Khusus Tingkatan 1 — malaysia.gov.my"
-                href="https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/memohon-sekolah-khusus-tingkatan-1"
-              />
             </section>
 
             {/* Pilihan Sekolah Khusus */}
@@ -373,10 +373,6 @@ export default function KemasukanTingkatan1() {
                 menengah yang menyeluruh, mereka juga boleh meneroka
                 peluang-peluang yang sesuai dengan kecenderungan mereka.
               </p>
-              <SumberLink
-                label="Sumber: Memilih Aliran Akademik — malaysia.gov.my"
-                href="https://www.malaysia.gov.my/my/categories/sekolah--pendidikan/sekolah-menengah/memilih-aliran-akademik"
-              />
             </section>
 
             {/* Nota Tingkatan 4 */}
