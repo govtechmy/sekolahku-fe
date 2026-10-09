@@ -10,6 +10,7 @@ import SectionItemTakwim, {
 import PdfIconTakwim from "../../icons/pdfIconTakwim";
 import HelmetMeta from "../../seo/HelmetMeta";
 import { useParams } from "react-router-dom";
+import { getMoeTakwimTitle } from "../../utils/moeTakwimTitle";
 
 export default function Takwim() {
   const [items, setItems] = useState<TakwimItem[]>([]);
@@ -88,6 +89,7 @@ export default function Takwim() {
 
   const { lang } = useParams<{ lang: string }>();
   const domain = import.meta.env.VITE_DOMAIN_NAME;
+  const moeTakwimTitle = moeTakwim ? getMoeTakwimTitle(moeTakwim.url) : "";
 
   return (
     <>
@@ -169,8 +171,8 @@ export default function Takwim() {
                   <PdfIconTakwim className="size-8" />
                 </div>
               }
-              title="Kalendar Akademik 2026"
-              ariaLabel="Muat turun Kalendar Akademik 2026 (moe.gov.my)"
+              title={moeTakwimTitle}
+              ariaLabel={`Muat turun ${moeTakwimTitle} (moe.gov.my)`}
             />
           )}
 
