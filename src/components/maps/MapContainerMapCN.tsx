@@ -7,7 +7,12 @@ import {
   Marker,
   useControl,
 } from "react-map-gl/maplibre";
-import maplibregl from "maplibre-gl";
+// maplibre-gl v6 is ESM-only with no default export.
+import * as maplibregl from "maplibre-gl";
+// v6 loads its web worker from a real URL, which a bundler can't resolve on its
+// own; without this the map throws "Worker failed to load" and draws no data.
+// Vite's `?worker&url` emits the worker as a self-contained same-origin asset.
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import type {
   LineLayerSpecification,
   FillLayerSpecification,
@@ -40,6 +45,8 @@ import {
   schoolClusterLayer,
   schoolUnclusteredLayer,
 } from "./schoolLayers";
+
+maplibregl.setWorkerUrl(maplibreWorkerUrl);
 
 const MAP_STYLE =
   "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
