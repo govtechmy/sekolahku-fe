@@ -1,3 +1,8 @@
 onlyBuiltDependencies:
   - esbuild
   - sharp
+
+# Security assessment F-09: monaco-editor 0.55.1 (pulled in via the Payload
+# rich-text peers, not shipped in the bundle) pins dompurify 3.2.7.
+overrides:
+  dompurify: ^3.4.16
