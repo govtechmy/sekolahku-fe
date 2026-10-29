@@ -103,7 +103,7 @@ export const dataItemLinks = [
   // },
   {
     icon: <CopyIcon className="size-[18px] text-[#F59E0B]" />,
-    name: "DELIMa",
+    name: "DELIMa 3.0",
     link: "https://d2.delima.edu.my/",
     desc: "Pembelajaran Digital Maya",
     iconBg: "#FDF1DE",
