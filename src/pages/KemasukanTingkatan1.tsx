@@ -57,7 +57,7 @@ const LALUAN: Laluan[] = [
 ];
 
 const MEMOHON_T1_LIST = [
-  "Permohonan boleh dibuat secara dalam talian melalui portal rasmi Kementerian Pendidikan Malaysia (KPM).",
+  "Permohonan boleh dibuat secara dalam talian melalui portal rasmi Kementerian Pendidikan (KPM).",
   "Anda digalakkan untuk menyemak panduan permohonan dan syarat kemasukan yang ditetapkan.",
   "Semak tawaran permohonan kemasukan ke Sekolah Khusus melalui pautan semakan.",
 ];
