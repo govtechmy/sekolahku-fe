@@ -6,3 +6,5 @@ onlyBuiltDependencies:
 # rich-text peers, not shipped in the bundle) pins dompurify 3.2.7.
 overrides:
   dompurify: ^3.4.16
+  # Security reassessment (CVE-2026-115895): @lexical/headless 0.50.0 pins happy-dom ^20.
+  happy-dom: ^21.0.4
