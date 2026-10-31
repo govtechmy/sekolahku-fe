@@ -6,10 +6,14 @@ import { dataItemLinks } from "../contentData";
 import { useEffect, useRef, useState } from "react";
 import HomeHero from "../components/Hero/HomeHero";
 import { getAllTakwim } from "../services/takwim.svc";
-import type { TakwimItem } from "../types/takwim";
+import type { MoeTakwimResource, TakwimItem } from "../types/takwim";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSiaranList } from "../services/siaran.svc";
-import SectionItemTakwim from "../components/shared/SectionItemTakwim";
+import SectionItemTakwim, {
+  TakwimListItem,
+} from "../components/shared/SectionItemTakwim";
+import PdfIconTakwim from "../icons/pdfIconTakwim";
+import { getMoeTakwimTitle } from "../utils/moeTakwimTitle";
 import SectionItemAnalytics from "../components/shared/SectionItemAnalytics";
 import SectionItemStats from "../components/shared/SectionItemStats";
 import SectionItemLayanan from "../components/shared/SectionItemLayanan";
@@ -24,6 +28,7 @@ export default function HomePage() {
   const [analytics, setAnalytics] = useState<AnalyticsModel | null>(null);
   //later add loading for all , check design
   const [dataItemCalendar, setDataItemCalendar] = useState<TakwimItem[]>();
+  const [moeTakwim, setMoeTakwim] = useState<MoeTakwimResource | null>(null);
   const [dataItemNews, setDataItemNews] = useState<SiaranItem[]>();
   const inputRef = useRef<HTMLInputElement>(null!);
   const { lang } = useParams<{ lang: string }>();
@@ -43,6 +48,8 @@ export default function HomePage() {
       try {
         const data = await getAllTakwim();
         setDataItemCalendar(data.items.slice(0, 5)); // Get only the first 5 items for the homepage
+        // The MOE calendar PDF comes back outside `items`; pin it on top like the Takwim page.
+        setMoeTakwim(data.moeTakwim ?? null);
       } catch (error) {
         console.error("Error fetching Takwim:", error);
       }
@@ -146,12 +153,25 @@ export default function HomePage() {
 
           {/* Right column: Kalendar Aktiviti Persekolahan, then Pautan Pintas */}
           <div className="flex flex-col gap-8">
-            {dataItemCalendar && dataItemCalendar.length > 0 && (
+            {(moeTakwim ||
+              (dataItemCalendar && dataItemCalendar.length > 0)) && (
               <div className="flex flex-col gap-2.5">
                 <h2 className="font-heading text-body-lg font-bold text-txt-black-900">
                   Kalendar Aktiviti Persekolahan
                 </h2>
-                <SectionItemTakwim dataItemCalendar={dataItemCalendar} />
+                {moeTakwim && (
+                  <TakwimListItem
+                    href={moeTakwim.url}
+                    leading={
+                      <div className="flex h-[60px] w-[52px] shrink-0 items-center justify-center rounded-[10px] bg-bg-white">
+                        <PdfIconTakwim className="size-8" />
+                      </div>
+                    }
+                    title={getMoeTakwimTitle(moeTakwim.url)}
+                    ariaLabel={`Muat turun ${getMoeTakwimTitle(moeTakwim.url)} (moe.gov.my)`}
+                  />
+                )}
+                <SectionItemTakwim dataItemCalendar={dataItemCalendar ?? []} />
                 <button
                   type="button"
                   onClick={() => navigate(`/${lang}/takwim`)}
