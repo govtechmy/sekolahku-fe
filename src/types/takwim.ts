@@ -44,6 +44,7 @@ export type ArticleContent = SerializedEditorState<SerializedLexicalNode>;
 export interface MoeTakwimResource {
   url: string;
   alt?: string;
+  date?: string;
 }
 
 export interface TakwimListResponse {
