@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import { getAllTakwim, getSearchTakwim } from "../../services/takwim.svc";
 import type { MoeTakwimResource, TakwimItem } from "../../types/takwim";
 import SectionItemTakwim, {
+  TakwimDateBadge,
   TakwimListItem,
 } from "../../components/shared/SectionItemTakwim";
 import PdfIconTakwim from "../../icons/pdfIconTakwim";
@@ -167,9 +168,13 @@ export default function Takwim() {
             <TakwimListItem
               href={moeTakwim.url}
               leading={
-                <div className="flex h-[60px] w-[52px] shrink-0 items-center justify-center rounded-[10px] bg-bg-white">
-                  <PdfIconTakwim className="size-8" />
-                </div>
+                moeTakwim.date ? (
+                  <TakwimDateBadge date={moeTakwim.date} />
+                ) : (
+                  <div className="flex h-[60px] w-[52px] shrink-0 items-center justify-center rounded-[10px] bg-bg-white">
+                    <PdfIconTakwim className="size-8" />
+                  </div>
+                )
               }
               title={moeTakwimTitle}
               ariaLabel={`Muat turun ${moeTakwimTitle} (moe.gov.my)`}

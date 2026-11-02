@@ -76,6 +76,21 @@ export function TakwimListItem({
   );
 }
 
+export function TakwimDateBadge({ date }: { date: string }) {
+  return (
+    <div className="flex w-[52px] shrink-0 flex-col items-center rounded-[10px] bg-bg-white py-2">
+      <div className="text-body-xs font-bold text-txt-danger">
+        {new Date(date)
+          .toLocaleString("default", { month: "short" })
+          .toUpperCase()}
+      </div>
+      <div className="text-body-lg font-bold text-txt-black-900">
+        {date.slice(8, 10)}
+      </div>
+    </div>
+  );
+}
+
 // Takwim items carry no plain description, so pull the first non-empty
 // paragraph out of the Lexical content for the row subtitle.
 const firstParagraph = (content?: ArticleContent): string => {
@@ -113,20 +128,7 @@ export default function SectionItemTakwim({
         return (
           <TakwimListItem
             key={item._id ?? index}
-            leading={
-              eventDate ? (
-                <div className="flex w-[52px] shrink-0 flex-col items-center rounded-[10px] bg-bg-white py-2">
-                  <div className="text-body-xs font-bold text-txt-danger">
-                    {new Date(eventDate)
-                      .toLocaleString("default", { month: "short" })
-                      .toUpperCase()}
-                  </div>
-                  <div className="text-body-lg font-bold text-txt-black-900">
-                    {eventDate.slice(8, 10)}
-                  </div>
-                </div>
-              ) : null
-            }
+            leading={eventDate ? <TakwimDateBadge date={eventDate} /> : null}
             title={item.title ?? "Acara takwim"}
             description={desc}
             onClick={() => openAttachmentByIndex(item, index)}
