@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Button, ButtonIcon } from "@govtechmy/myds-react/button";
 import {
-  ReloadIcon,
   CheckCircleIcon,
   UserIcon,
   DocumentIcon,
@@ -92,12 +91,6 @@ export default function KemasukanTahun1() {
             Panduan permohonan kemasukan anak ke Tahun 1 — syarat kelayakan,
             dokumen sokongan dan semakan penempatan.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-6 pt-2">
-            <div className="flex items-center gap-2 text-[#0A1930]">
-              <ReloadIcon className="size-3.5" />
-              <span className="font-body text-sm">Dikemas kini 5 Sep 2025</span>
-            </div>
-          </div>
         </div>
       </section>
 
