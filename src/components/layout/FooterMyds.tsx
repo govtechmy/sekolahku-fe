@@ -10,7 +10,7 @@ import SocialLinks from "../shared/SocialLinks";
 import { SiteLink } from "@govtechmy/myds-react/footer";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getVisitorDaily, getVisitorOverall } from "../../services/visitor.svc";
+import { getVisitorCounts } from "../../services/visitor.svc";
 
 export default function FooterMyds() {
   const lang = localStorage.getItem("lang") || "ms";
@@ -20,10 +20,10 @@ export default function FooterMyds() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([getVisitorDaily(), getVisitorOverall()])
-      .then(([dailyCount, overallCount]) => {
-        setDaily(dailyCount.toLocaleString("ms-MY"));
-        setOverall(overallCount.toLocaleString("ms-MY"));
+    getVisitorCounts()
+      .then((counts) => {
+        setDaily(counts.daily.toLocaleString("ms-MY"));
+        setOverall(counts.overall.toLocaleString("ms-MY"));
       })
       .catch((err) => console.error("Failed to fetch visitor counts:", err))
       .finally(() => setLoading(false));

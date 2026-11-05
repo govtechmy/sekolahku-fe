@@ -4,15 +4,13 @@ import { BrowserRouter } from "react-router-dom";
 
 function App() {
   useEffect(() => {
+    const websiteId = import.meta.env.VITE_UMAMI_WEBSITE_ID;
+    if (!websiteId) return;
     const script = document.createElement("script");
-    script.src = "https://unpkg.com/@tinybirdco/flock.js";
+    script.src = import.meta.env.VITE_UMAMI_SCRIPT_URL;
     script.defer = true;
-    script.setAttribute("data-token", import.meta.env.VITE_TINYBIRD_TOKEN);
-    script.setAttribute("data-host", import.meta.env.VITE_TINYBIRD_HOST);
-    script.setAttribute(
-      "data-datasource",
-      import.meta.env.VITE_TINYBIRD_DATASOURCE,
-    );
+    script.setAttribute("data-website-id", websiteId);
+    script.setAttribute("data-domains", import.meta.env.VITE_UMAMI_DOMAINS);
     document.body.appendChild(script);
     return () => {
       document.body.removeChild(script);
