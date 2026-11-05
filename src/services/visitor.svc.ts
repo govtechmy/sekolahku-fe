@@ -1,18 +1,16 @@
-import { unauthAxios } from "./http";
+import type { APIResponse } from "../models/response";
+import { authAxios } from "./http";
 
-interface TinybirdResponse {
-  data: { total_visitors: number }[];
+export interface VisitorCounts {
+  daily: number;
+  overall: number;
 }
 
-const OVERALL_URL = import.meta.env.VITE_GET_SEKOLAHKU_PUBLIC_VISITOR_OVERALL;
-const DAILY_URL = import.meta.env.VITE_GET_SEKOLAHKU_PUBLIC_VISITOR_DAILY;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const getVisitorOverall = async (): Promise<number> => {
-  const response = await unauthAxios.get<TinybirdResponse>(OVERALL_URL);
-  return response.data.data[0]?.total_visitors ?? 0;
-};
-
-export const getVisitorDaily = async (): Promise<number> => {
-  const response = await unauthAxios.get<TinybirdResponse>(DAILY_URL);
-  return response.data.data[0]?.total_visitors ?? 0;
+export const getVisitorCounts = async (): Promise<VisitorCounts> => {
+  const response = await authAxios.get<APIResponse<VisitorCounts>>(
+    `${BASE_URL}/pelawat`,
+  );
+  return response.data.data;
 };
